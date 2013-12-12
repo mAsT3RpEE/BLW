@@ -1,0 +1,39 @@
+{
+	"name" : "mAsT3RpEE/BLW",
+	"description" : "Ajax/PHP/JavaScript Framework",
+	"type" : "library",
+	"homepage" : "http://mast3rpee.tk",
+	"license" : "MIT",
+	"authors" : [{
+			"name" : "Walter Otsyula",
+			"email" : "wotsyula@mast3rpee.tk",
+			"homepage" : "http://mast3rpee.tk",
+			"role" : "Lead Developer"
+		}
+	],
+	"support" : {
+		"email" : "support@mast3rpee.tk",
+		"issues" : "http://support.mast3rpee.tk",
+		"forum" : "http://forum.mast3rpee.tk",
+		"source" : "https://github.com/mAsT3RpEE/BLW",
+		"wiki" : "http://mast3rpee.tk/api/BLW/"
+	},
+	"require" : {
+		"php" : ">=5.3.3",
+		"ext-curl" : "*",
+		"symfony/css-selector" : ">=2.4.x-dev",
+		"guzzle/http" : ">=3.8.0",
+		"heartsentwined/yuicompressor" : "dev-master"
+	},
+	"autoload" : {
+		"psr-0" : {
+			"BLW" : [
+				"app",
+				"lib"
+			]
+		}
+	},
+	"keywords" : [
+		"BLW"
+	]
+}

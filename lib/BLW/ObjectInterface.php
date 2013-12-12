@@ -37,7 +37,7 @@ namespace BLW; if(!defined('BLW')){trigger_error('Unsafe access of custom librar
  * @link http://mast3rpee.tk/projects/BLW/ mAsT3RpEE's Zone > Projects > BLW
  */
 
-interface ObjectInterface extends \Iterator, \Traversable, \ArrayAccess, \Countable, \SeekableIterator, \Serializable
+interface ObjectInterface extends \Iterator, \ArrayAccess, \Countable, \SeekableIterator, \Serializable
 {
 	const	INVALID_OPTION   = 0x1000;
 	const	INVALID_CALLBACK = 0x2000;
@@ -154,7 +154,7 @@ interface ObjectInterface extends \Iterator, \Traversable, \ArrayAccess, \Counta
      * @param \BLW\ObjectInterface $o
      * @return \BLW\ObjectInterface $this
      */
-    public function SetParent(ObjectInterface $o);
+    public function SetParent(\BLW\ObjectInterface &$Parent);
     
     /**
      * Clears parent of the current object.
@@ -219,7 +219,7 @@ interface ObjectInterface extends \Iterator, \Traversable, \ArrayAccess, \Counta
      * @param \Closure $Function Function to call after ID has changed.
      * @return \BLW\ObjectInterface $this
      */
-    public function onUpdate(\Cloruse $Function);
+    public function onUpdate(\Closure $Function);
     
     /**
      * Hook that is called when a child is deleted.

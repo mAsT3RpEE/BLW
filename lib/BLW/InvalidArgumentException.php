@@ -32,7 +32,7 @@ namespace BLW; if(!defined('BLW')){trigger_error('Unsafe access of custom librar
  * @link http://php.net/InvalidArgumentException PHP Reference > InvalidArgumentException Class
  */
 
-class InvalidClassException extends \InvalidArgumentException
+class InvalidArgumentException extends \InvalidArgumentException
 {
     /**
      * Overloads parent constructor

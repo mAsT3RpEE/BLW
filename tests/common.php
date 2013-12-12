@@ -1,10 +1,18 @@
 <?php
 
-define('BLW_PLATFORM',		'standalone');
-define('BLW_PLUGIN_DIR',	dirname(__DIR__) . '/build');
-define('BLW_PLUGIN_URL',	'http:://localhost/BLW/build');
-define('BLW_LIB_PHAR',		'phar://' . dirname(__DIR__) . '/build/BLW.phar');
-define('BLW_ASSETS_DIR', 	BLW_PLUGIN_DIR . '/assets');
-define('BLW_ASSETS_URL', 	BLW_PLUGIN_URL . '/assets');
+// Try PHAR file
+if(is_file(dirname(__DIR__) . '/build/BLW.phar')) {
 
-include dirname(__DIR__) . '/inc/common.php';
+    define('BLW_PLUGIN_DIR',    dirname(__DIR__) . '/build');
+    require_once 'phar://' . BLW_PLUGIN_DIR . '/BLW.phar/inc/common.php';
+}
+
+// Source library testing
+else {
+    define('BLW_PLATFORM',      'standalone');
+    define('BLW_PLUGIN_DIR',    dirname(__DIR__) . '/app');
+    define('BLW_PLUGIN_URL',    'http:://localhost/BLW/app');
+    define('BLW_LIB_PHAR',      dirname(__DIR__));
+    
+    require_once dirname(__DIR__) . '/inc/common.php';
+}

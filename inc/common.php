@@ -72,13 +72,24 @@ function blw_load_ini_file($Name = 'BLW')
     $File  = $Name .'.ini';
     
     if(defined('BLW_PLUGIN_DIR')) {
+        
         if (file_exists(BLW_PLUGIN_DIR . '/' . $File)) {
-            $cfg = parse_ini_file(BLW_PLUGIN_DIR . '/' . $File);
+            
+            $cfg = parse_ini_file(BLW_PLUGIN_DIR . '/' . $File, true);
+            
+            foreach ($cfg['CORE'] as $k => $v) {
+                if (!defined('BLW_' . $k)) define('BLW_' . $k, $v);
+            }
         }
     }
     
     elseif(file_exists($Name)) {
-         $cfg = parse_ini_file($Name);
+        
+        $cfg = parse_ini_file($Name);
+        
+        foreach ($cfg['CORE'] as $k => $v) {
+            if (!defined('BLW_' . $k)) define('BLW_' . $k, $v);
+        }
     }
     
     else {
@@ -102,18 +113,14 @@ function blw_default_config()
     
     @define('BLW', '1.0.0') or die('911');
     
-    if(!defined('BLW_LIB_PHAR'))        { define('BLW_LIB_PHAR',        strstr(__FILE__, '.phar', true) . 'phar');  }
+    if(!defined('BLW_LIB_PHAR'))        { define('BLW_LIB_PHAR',        strstr(__FILE__, '.phar', true) . '.phar'); }
     if(!defined('BLW_APP_PHAR'))        { define('BLW_APP_PHAR',        BLW_LIB_PHAR);                              }
     if(!defined('BLW_PLUGIN_DIR'))      { define('BLW_PLUGIN_DIR',      dirname(BLW_LIB_PHAR));                     }
     
-    if(!defined('BLW_ASSETS'))          { define('BLW_ASSETS',          BLW_APP_PHAR . '/assets');                  }
+    if(!defined('BLW_ASSETS'))          { define('BLW_ASSETS',          BLW_PLUGIN_DIR . '/assets');                }
     if(!defined('BLW_ASSETS_URL'))      { define('BLW_ASSETS_URL',      BLW_PLUGIN_URL . '/assets');                }
     if(!defined('BLW_FRONTEND'))        { define('BLW_FRONTEND',        BLW_APP_PHAR . '/frontend');                }
-    if(!defined('BLW_FRONTEND_URL'))    { define('BLW_FRONTEND_URL',    BLW_PLUGIN_URL . '/frontend');              }
     if(!defined('BLW_BACKEND'))         { define('BLW_BACKEND',         BLW_APP_PHAR . '/backend');                 }
-    if(!defined('BLW_BACKEND_URL'))     { define('BLW_BACKEND_URL',     BLW_PLUGIN_URL . '/backend');               }
-    
-    if(!defined('BLW_PLATFORM'))        { define('BLW_PLATFORM',        $cfg['PLATFORM']);                          }
     
     if(BLW_PLATFORM != 'standalone') {
         if(!defined('BLW_EXTENTION'))   { define('BLW_EXTENTION',       '\\Ext_' . BLW_PLATFORM);                   }
@@ -188,7 +195,7 @@ function blw_o($n,array $o=array(),$e=false)
 blw_config();
 
 \BLW\Object::init();
-\BLW\ELement::init();
+\BLW\Element::init();
 \BLW\Settings::init();
 
 

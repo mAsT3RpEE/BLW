@@ -52,17 +52,17 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
     /**
      * @var \BLW\ObjectInterface $base Pointer to main BLW Object.
      */
-    final public static $base = NULL;
+    public static $base = NULL;
     
     /**
      * @var \BLW\ObjectInterface $self Pointer to current context.
      */
-    final public static $self = NULL;
+    public static $self = NULL;
     
     /**
      * @var bool $Initialized Used to store class information status.
      */
-    final protected static $Initialized = false;
+    protected static $Initialized = false;
     
     /**
      * @var string $ID Id of the current object amongst it's siblings.
@@ -89,12 +89,26 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
     /**
      * @var int $Status Current status flag of the class.
      */
-    final protected $Status = 0;
+    protected $Status = 0;
     
     /**
      * @var \stdClass $Options Constructor Options
      */
-    final public $Options = NULL;
+    public $Options = NULL;
+    
+    /**
+     * @var array $Hooks Predifined object Hooks.
+     * @see \BLW\Object::on()
+     */
+    protected $Hooks = array(
+    	'Create'        => NULL
+        ,'SetID'        => NULL
+        ,'Add'          => NULL
+        ,'Update'       => NULL
+        ,'Delete'       => NULL
+        ,'Serialize'    => NULL
+        ,'Unserialize'  => NULL
+    );
     
     /**
      * Constructor
@@ -237,9 +251,9 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
         // Initialize self
         if(get_called_class() == __CLASS__) {
             
-            if(!self::$Initialized || isset($Options['hard_init'])) {
+            if(!self::$Initialized || isset($Data['hard_init'])) {
                 
-                self::$DefaultOptions   = array_replace(self::$DefaultOptions, $Options);
+                self::$DefaultOptions   = array_replace(self::$DefaultOptions, $Data);
                 self::$Initialized      = true;
                 
                 unset(self::$DefaultOptions['hard_init']);
@@ -267,12 +281,12 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
      */
     public static function initChild(array $Data = array())
     {
-        // Call Parent init
-        $ParentOptions = self::init();
+        if(!static::$Initialized || isset($Data['hard_init'])) {
+            // Call Parent init
+            $ParentOptions = self::init();
         
-        // Initialize self
-        if(!static::$Initialized || isset($Options['hard_init'])) {
-            static::$DefaultOptions = array_replace($ParentOptions, static::$DefaultOptions, $Options);
+            // Initialize self
+            static::$DefaultOptions = array_replace($ParentOptions, static::$DefaultOptions, $Data);
             static::$Initialized    = true;
             
             unset(static::$DefaultOptions['hard_init']);
@@ -286,9 +300,39 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
      * @param array $Options Options to use in initializing class.
      * @return \BLW\Object $thisInterface Returns a new instance of the class.
      */
-    public static function create($Options = array())
+    public static function create(array $Options = array())
     {
         return new static($Options);
+    }
+    
+    /**
+     * Generic hook handler function.
+     * @note Format is <code>mixed function (\BLW\ObjectInterface $o)</code>.
+     * @param unknown $Hook
+     * @param \Closure $Function
+     */
+    public function on($Hook, \Closure $Function = NULL)
+    {
+        if(!is_string($Hook)) {
+            throw new \BLW\InvalidArgumentException(0);
+        }
+        
+        elseif(is_null($Funtion)) {
+            if(is_callable($this->Hooks[$Hook])) {
+                $this->Hooks[$Hook]($this);
+            }
+        }
+        
+        elseif(is_callable($Function)) {
+            $this->Hooks[$Hook] = $Funtion;
+        }
+        
+        else {
+            $this->Status &= static::INVALID_CALLBACK;
+            throw new \BLW\InvalidClassException();
+        }
+        
+        return $this;
     }
     
     /**
@@ -299,21 +343,18 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
      */
     public function onCreate(\Closure $Funtion = NULL)
     {
-        static $OnCreate = NULL;
-        
         if(is_null($Funtion)) {
-            if(is_callable($OnCreate)) {
-                $OnCreate($this);
+            if(is_callable($this->Hooks['Create'])) {
+                $this->Hooks['Create']($this);
             }
         }
         
         elseif(is_callable($Function)) {
-            $OnCreate = $Funtion;
-        }         
+            $this->Hooks['Create'] = $Funtion;
+        }
         
         else {
             $this->Status &= static::INVALID_CALLBACK;
-            
             throw new \BLW\InvalidClassException();
         }
         
@@ -387,20 +428,19 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
      */
     public function onSetID(\Closure $Function)
     {
-        static $OnSetID = NULL;
-        
         if(is_null($Funtion)) {
-            if(is_callable($OnSetID)) {
-                $OnSetID($this->ID, $this->OldID, $this);
+            if(is_callable($this->Hooks['SetID'])) {
+                $this->Hooks['SetID']($this->ID, $this->OldID, $this);
             }
         }
         
         elseif(is_callable($Function)) {
-            $OnSetID = $Funtion;
+            $this->Hooks['SetID'] = $Funtion;
         }
         
         else {
-            throw new \BLW\InvalidArgumentException(0);
+            $this->Status &= static::INVALID_CALLBACK;
+            throw new \BLW\InvalidClassException();
         }
         
         return $this;
@@ -553,21 +593,18 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
      */
     public function onAdd(\Closure $Function)
     {
-        static $OnAdd = NULL;
-        
         if(is_null($Funtion)) {
-            if(is_callable($OnAdd)) {
-                $OnAdd($this, $this->Current);
+            if(is_callable($this->Hooks['Add'])) {
+                $this->Hooks['Add']($this, $this->Current);
             }
         }
         
         elseif(is_callable($Function)) {
-            $OnAdd = $Funtion;
+            $this->Hooks['Add'] = $Funtion;
         }
         
         else {
             $this->Status &= static::INVALID_CALLBACK;
-        
             throw new \BLW\InvalidClassException();
         }
         
@@ -580,23 +617,20 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
      * @param \Closure $Function Function to call after Child has changed.
      * @return \BLW\Object $this
      */
-    public function onUpdate(\Cloruse $Function)
+    public function onUpdate(\Closure $Function)
     {
-        static $OnUpdate = NULL;
-        
         if(is_null($Funtion)) {
-            if(is_callable($OnUpdate)) {
-                $OnUpdate($this, $this->Current);
+            if(is_callable($this->Hooks['Update'])) {
+                $this->Hooks['Update']($this, $this->Current);
             }
         }
         
         elseif(is_callable($Function)) {
-            $OnUpdate = $Funtion;
+            $this->Hooks['Update'] = $Funtion;
         }
         
         else {
             $this->Status &= static::INVALID_CALLBACK;
-            
             throw new \BLW\InvalidClassException();
         }
         
@@ -611,21 +645,18 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
      */
     public function onDelete(\Closure $Function)
     {
-        static $OnDelete = NULL;
-        
         if(is_null($Funtion)) {
-            if(is_callable($OnDelete)) {
-                $OnDelete($this, $this->Current);
+            if(is_callable($this->Hooks['Delete'])) {
+                $this->Hooks['Delete']($this, $this->Current);
             }
         }
         
         elseif(is_callable($Function)) {
-            $OnDelete = $Funtion;
+            $this->Hooks['Delete'] = $Funtion;
         }
         
         else {
             $this->Status &= static::INVALID_CALLBACK;
-            
             throw new \BLW\InvalidClassException();
         }
         
@@ -640,21 +671,18 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
      */
     public function onSerialize(\Closure $Function)
     {
-        static $OnSerialize = NULL;
-        
         if(is_null($Funtion)) {
-            if(is_callable($OnSerialize)) {
-                $OnSerialize($this);
+            if(is_callable($this->Hooks['Serialize'])) {
+                $this->Hooks['Serialize']($this);
             }
         }
         
         elseif(is_callable($Function)) {
-            $OnSerialize = $Funtion;
+            $this->Hooks['Serialize'] = $Funtion;
         }
         
         else {
             $this->Status &= static::INVALID_CALLBACK;
-            
             throw new \BLW\InvalidClassException();
         }
         
@@ -669,21 +697,18 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
      */
     public function onUnSerialize(\Closure $Function)
     {
-        static $OnUnSerialize = NULL;
-        
         if(is_null($Funtion)) {
-            if(is_callable($OnUnSerialize)) {
-                $OnUnSerialize($this);
+            if(is_callable($this->Hooks['UnSerialize'])) {
+                $this->Hooks['UnSerialize']($this);
             }
         }
         
         elseif(is_callable($Function)) {
-            $OnUnSerialize = $Funtion;
+            $this->Hooks['UnSerialize'] = $Funtion;
         }
         
         else {
             $this->Status &= static::INVALID_CALLBACK;
-            
             throw new \BLW\InvalidClassException();
         }
         
@@ -716,7 +741,7 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
     final public function Save($File = NULL, array $Data = array())
     {
         if(!is_string($File)) {
-            throw new InvalidArgumentException(0);
+            throw new \BLW\InvalidArgumentException(0);
             return $this;
         }
         
@@ -728,13 +753,14 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
         $Contents = sprintf(
             '<?php '
             .'namespace %s;'
-            ."if(!defined('BLW')){trigger_error('Unsafe access of custom library',E_USER_WARNING);return NULL;};"
+            ."if(!defined('BLW')){trigger_error('Unsafe access of custom library',E_USER_WARNING);return NULL;}"
+            .get_class($this).'::init();'
             .'return unserialize(%s)->Load(%s);'
             ,__NAMESPACE__
             ,var_export(serialize($this), true)
             ,var_export($Data, true)
         );
-    
+        
         if(@!file_put_contents($File, $Contents)) {
             throw new \BLW\FileException($File, 'Unable to save object.');
             return $this;

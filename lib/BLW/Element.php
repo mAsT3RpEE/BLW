@@ -160,7 +160,7 @@ class Element extends \BLW\Object implements \BLW\ElementInterface
                 return NULL;
             }
             
-            $this->Document = new DOMDocument($this->Options->DocumentVersion, 'UTF-8');
+            $this->Document = new \DOMDocument($this->Options->DocumentVersion, 'UTF-8');
         }
         
         return $this->Document;
@@ -177,7 +177,7 @@ class Element extends \BLW\Object implements \BLW\ElementInterface
     {
         // Validate HTML
         if(!is_string($HTML) || empty($HTML)) {
-            throw new InvalidArgumentException(0);
+            throw new \BLW\InvalidArgumentException(0);
             return $this;
         }
         

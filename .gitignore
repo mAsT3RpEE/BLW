@@ -1,7 +1,9 @@
-/vendor
 /.settings
 /.buildpath
 /.project
+/.classpath
+/.metadata
 /composer.lock
+/vendor
 /build
 /temp/*

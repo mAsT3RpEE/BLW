@@ -1,5 +1,5 @@
 {
-	"name" : "mAsT3RpEE/BLW",
+	"name" : "mast3rpee/blw",
 	"description" : "Ajax/PHP/JavaScript Framework",
 	"type" : "library",
 	"homepage" : "http://mast3rpee.tk",
@@ -13,9 +13,8 @@
 	],
 	"support" : {
 		"email" : "support@mast3rpee.tk",
-		"issues" : "http://support.mast3rpee.tk",
-		"forum" : "http://forum.mast3rpee.tk",
-		"source" : "https://github.com/mAsT3RpEE/BLW",
+		"issues" : "https://github.com/mAsT3RpEE/BLW/issues",
+		"source" : "https://github.com/mAsT3RpEE/BLW/tree/master",
 		"wiki" : "http://mast3rpee.tk/api/BLW/"
 	},
 	"require" : {
@@ -25,7 +24,7 @@
 		"ext-json" : "*",
 		"ext-Phar" : "*",
 		"ext-SPL" : "*",
-		"symfony/css-selector" : ">=2.4.x-dev",
+		"symfony/css-selector" : ">=2.4.0",
 		"guzzle/http" : ">=3.8.0",
 		"heartsentwined/yuicompressor" : "dev-master"
 	},
@@ -38,6 +37,7 @@
 		}
 	},
 	"keywords" : [
-		"BLW"
+		"BLW",
+		"Framework"
 	]
 }

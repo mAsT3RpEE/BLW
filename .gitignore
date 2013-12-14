@@ -9,3 +9,4 @@
 !/build/*.gz
 !/build/*.phar
 /temp/*
+!/temp/.keep

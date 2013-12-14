@@ -902,6 +902,10 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
     public function __clone()
     {
         $this->ClearParent();
+        
+        foreach ($this as $k => $Child) {
+            $this[$k] = clone $Child;
+        }
     }
     
     /**
@@ -914,14 +918,23 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
             
             $this->ID      = $Parent->GetID();
             $this->Options = $Parent->GetOptions();
-
+            
             $this->onSerialize();
+            
+            unset($this->Options->Parent);
             
             $this->Hooks = array_fill_keys(array_keys($this->Hooks), NULL);
             
-            parent::push(get_object_vars($this));
+            if(version_compare(PHP_VERSION, '6.4.0', '>=')) {
+                parent::push(get_object_vars($this));
+                return parent::serialize();
+            }
             
-            return parent::serialize();
+            else {
+                $data = iterator_to_array($this);
+                array_push($data, get_object_vars($this));
+                return serialize($data);
+            }
         }
         
         $New = clone $this;
@@ -934,7 +947,15 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
      */ 
     final public function unserialize($serialized)
     {
-        parent::unserialize($serialized);
+        if(version_compare(PHP_VERSION, '6.4.0', '>=')) {
+            parent::unserialize($serialized);
+        }
+        
+        else {
+            foreach (unserialize($serialized) as $data) {
+                parent::push($data);
+            }
+        }
         
         foreach (parent::pop() as $k => $v) {
             $this->{$k} = $v;

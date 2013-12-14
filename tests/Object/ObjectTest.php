@@ -157,9 +157,11 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
         self::$Parent[self::CHILD4]->push(self::$GrandChild1);
         self::$Parent[self::CHILD4]->push(self::$GrandChild2);
         
+        $self = $this;
+        
         // Assert Bar Property
-        self::$Parent->walk(function($o, $i) {
-            $this->assertEquals(1, $o->Options->bar);
+        self::$Parent->walk(function($o, $i) use(&$self) {
+            $self->assertEquals(1, $o->Options->bar);
         });
         
         // Assert ID's

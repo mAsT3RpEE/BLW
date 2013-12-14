@@ -23,9 +23,15 @@
         timeoutForLargeTests="60"
         strict="false"
         verbose="false">
+    <php>
+        <ini name="memory_limit" value="64M" />
+    </php>
     <testsuites>
-        <testsuite name="BLW Library Suite">
-            <directory>./tests</directory>
+        <testsuite name="All Tests">
+            <directory>./tests/</directory>
+        </testsuite>
+        <testsuite name="Object Tests">
+            <directory>./tests/Object/</directory>
         </testsuite>
     </testsuites>
 </phpunit>

@@ -103,7 +103,7 @@ interface ObjectInterface extends \Iterator, \ArrayAccess, \Countable, \Seekable
      * @param array $Options Options to use in initializing class.
      * @return \BLW\ObjectInterface Returns a new instance of the class.
      */
-    public static function create(array $Options = array());
+    public static function create($Options = array());
     
     /**
      * Hook that is called when a new instance is created.
@@ -111,7 +111,7 @@ interface ObjectInterface extends \Iterator, \ArrayAccess, \Countable, \Seekable
      * @param \Closure $Function Function to call after object has been created.
      * @return \BLW\ObjectInterface $this
      */
-    public function onCreate(\Closure $Funtion);
+    public function onCreate(\Closure $Funtion = NULL);
     
     /**
      * Fetches the current ID of the object.
@@ -211,7 +211,7 @@ interface ObjectInterface extends \Iterator, \ArrayAccess, \Countable, \Seekable
      * @param \Closure $Function Function to call after ID has changed.
      * @return \BLW\ObjectInterface $this
      */
-    public function onAdd(\Closure $Function);
+    public function onAdd(\Closure $Function = NULL);
     
     /**
      * Hook that is called when a child is changed.
@@ -219,7 +219,7 @@ interface ObjectInterface extends \Iterator, \ArrayAccess, \Countable, \Seekable
      * @param \Closure $Function Function to call after ID has changed.
      * @return \BLW\ObjectInterface $this
      */
-    public function onUpdate(\Closure $Function);
+    public function onUpdate(\Closure $Function = NULL);
     
     /**
      * Hook that is called when a child is deleted.
@@ -227,7 +227,7 @@ interface ObjectInterface extends \Iterator, \ArrayAccess, \Countable, \Seekable
      * @param \Closure $Function Function to call after ID has changed.
      * @return \BLW\ObjectInterface $this
      */
-    public function onDelete(\Closure $Function);
+    public function onDelete(\Closure $Function = NULL);
     
     /**
      * Loads and object data from an <code>obj.xxx.min.php</code> file.

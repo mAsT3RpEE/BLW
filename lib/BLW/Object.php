@@ -300,7 +300,7 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
      * @param array $Options Options to use in initializing class.
      * @return \BLW\Object $thisInterface Returns a new instance of the class.
      */
-    public static function create(array $Options = array())
+    public static function create($Options = array())
     {
         return new static($Options);
     }
@@ -591,9 +591,12 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
      * @param \Closure $Function Function to call after ID has changed.
      * @return \BLW\Object $this
      */
-    public function onAdd(\Closure $Function)
+    public function onAdd(\Closure $Function = NULL)
     {
         if(is_null($Funtion)) {
+            // Set Parent
+            $this[$this->Current]->SetParent($this);
+            
             if(is_callable($this->Hooks['Add'])) {
                 $this->Hooks['Add']($this, $this->Current);
             }
@@ -617,9 +620,12 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
      * @param \Closure $Function Function to call after Child has changed.
      * @return \BLW\Object $this
      */
-    public function onUpdate(\Closure $Function)
+    public function onUpdate(\Closure $Function = NULL)
     {
         if(is_null($Funtion)) {
+            // Set Parent
+            $this[$this->Current]->SetParent($this);
+            
             if(is_callable($this->Hooks['Update'])) {
                 $this->Hooks['Update']($this, $this->Current);
             }
@@ -643,7 +649,7 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
      * @param \Closure $Function Function to call before Object is deleted.
      * @return \BLW\Object $this
      */
-    public function onDelete(\Closure $Function)
+    public function onDelete(\Closure $Function = NULL)
     {
         if(is_null($Funtion)) {
             if(is_callable($this->Hooks['Delete'])) {
@@ -669,7 +675,7 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
      * @param \Closure $Function Function to call before object is serialized.
      * @return \BLW\Object $this
      */
-    public function onSerialize(\Closure $Function)
+    public function onSerialize(\Closure $Function = NULL)
     {
         if(is_null($Funtion)) {
             if(is_callable($this->Hooks['Serialize'])) {
@@ -695,7 +701,7 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
      * @param \Closure $Function Function to call after Object has been unserialized.
      * @return \BLW\Object $this
      */
-    public function onUnSerialize(\Closure $Function)
+    public function onUnSerialize(\Closure $Function = NULL)
     {
         if(is_null($Funtion)) {
             if(is_callable($this->Hooks['UnSerialize'])) {
@@ -754,7 +760,7 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
             '<?php '
             .'namespace %s;'
             ."if(!defined('BLW')){trigger_error('Unsafe access of custom library',E_USER_WARNING);return NULL;}"
-            .get_class($this).'::init();'
+            .'\\'.get_class($this).'::init();'
             .'return unserialize(%s)->Load(%s);'
             ,__NAMESPACE__
             ,var_export(serialize($this), true)
@@ -906,6 +912,7 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
             $this->Options = $Parent->GetOptions();
             
             $this->onSerialize();
+            parent::push(get_object_vars($this));
             
             return parent::serialize();
         }
@@ -921,6 +928,14 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
     final public function unserialize($serialized)
     {
         parent::unserialize($serialized);
+        
+        foreach (parent::pop() as $k => $v) {
+            $this->{$k} = $v;
+        }
+        
+        foreach ($this as $o) {
+            $o->SetParent($this);
+        }
         
         $this->onUnSerialize();
     }

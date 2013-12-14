@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc xmlns="http://www.phpdoc.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="www.w3.org/2001/XMLSchema.xsd‎">
+    <title>BLW Library</title>
+    <parser>
+        <target>temp</target>
+        <markers>
+            <item>TODO</item>
+            <item>FIXME</item>
+        </markers>
+        <extensions>
+            <extension>php</extension>
+        </extensions>
+        <visibility></visibility>
+    </parser>
+    <plugins>
+        <plugin path="Core" />
+    </plugins>
+	<transformer>
+        <target>doc</target>
+		<external-class-documentation>
+			<prefix>Guzzle</prefix>
+			<uri>http://api.guzzlephp.org/class-{CLASS}.html</uri>
+		</external-class-documentation>
+    </transformer>
+    <transformations>
+        <template name="responsive" />
+    </transformations>
+    <files>
+        <directory>lib</directory>
+        <directory>app</directory>
+        <file>vendor/guzzle/http/Guzzle/Http/Client.php</file>
+        <ignore>*/test/*</ignore>
+        <ignore>*/tests/*</ignore>
+
+    </files>
+</phpdoc>

@@ -243,6 +243,8 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
     
     /**
      * Initializes Class for subsequent use.
+     * @api BLW
+     * @since 0.1.0
      * @param array $Data Optional initialization data.
      * @return array Returns the options generated. Used by child classes.
      */
@@ -297,6 +299,8 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
     
     /**
      * Creates a new instance of the object.
+     * @api BLW
+     * @since 0.1.0
      * @param array $Options Options to use in initializing class.
      * @return \BLW\Object $thisInterface Returns a new instance of the class.
      */
@@ -307,6 +311,8 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
     
     /**
      * Generic hook handler function.
+     * @api BLW
+     * @since 0.1.0
      * @note Format is <code>mixed function (\BLW\ObjectInterface $o)</code>.
      * @param unknown $Hook
      * @param \Closure $Function
@@ -337,6 +343,8 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
     
     /**
      * Hook that is called when a new instance is created.
+     * @api BLW
+     * @since 0.1.0
      * @note Format is <code>mixed function (\BLW\ObjectInterface $o)</code>.
      * @param \Closure $Function Function to call after object has been created.
      * @return \BLW\Object $this
@@ -385,6 +393,8 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
     
     /**
      * Fetches the current ID of the object.
+     * @api BLW
+     * @since 0.1.0
      * @return string Returns the ID of the current class.
      */
     final public function GetID()

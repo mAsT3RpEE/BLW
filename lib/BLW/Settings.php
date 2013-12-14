@@ -33,7 +33,7 @@ class Settings extends \BLW\Object implements \BLW\ObjectInterface
      * @var array $DefaultOptions Default options used by class if not set in constructor.
      * @api BLW
      * @since 0.1.0
-     * @see \BLW\Object::___construct() Object::__construct()
+     * @see \BLW\Object::__construct() Object::__construct()
      */
     public static $DefaultOptions = array(
     );

@@ -103,7 +103,7 @@ class Compiler extends \BLW\Object implements \BLW\ObjectInterface
             return $this->Options->PHAR;
         }
         
-        elseif(@preg_match('/.phar$/i', $File))  {
+        elseif(@preg_match('/.phar$/', $File))  {
             $this->Options->PHAR = $File;
         }
         
@@ -220,6 +220,36 @@ class Compiler extends \BLW\Object implements \BLW\ObjectInterface
         // Copy Config and Licence
         copy($this->Options->Root . '/LICENSE.txt', $this->Options->OutRoot . '/LICENCE.txt');
         copy($this->Options->AppRoot . '/BLW.ini',  $this->Options->OutRoot . '/BLW.ini');
+        
+        // Create Archive
+        $TAR  = str_replace('.phar', '.tar', $this->Options->PHAR);
+        
+        @unlink($this->Options->OutRoot . '/' . $TAR);
+        @unlink($this->Options->OutRoot . '/' . $TAR . '.gz');
+        
+        $PHAR = new \PharData(
+           $this->Options->OutRoot . '/' . $TAR,
+            \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_FILENAME,
+            $TAR
+        );
+        
+        $PHAR->startBuffering();
+        
+        $Iterator = new \RecursiveIteratorIterator (new \RecursiveDirectoryIterator ($this->Options->OutRoot), \RecursiveIteratorIterator::SELF_FIRST);
+        
+        foreach ($Iterator as $File) {
+            if(is_file($File)) {
+                $Path = str_replace($this->Options->OutRoot . DIRECTORY_SEPARATOR, '', $File);
+                $PHAR->addFile($File, $Path);
+            }
+        }
+        
+        $PHAR->stopBuffering();
+        $PHAR->compress(\Phar::GZ);
+        
+        unset($PHAR);
+        
+        @unlink($this->Options->OutRoot . '/' . $TAR);
         
         return $this;
     }

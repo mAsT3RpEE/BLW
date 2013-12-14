@@ -21,6 +21,10 @@
 	"require" : {
 		"php" : ">=5.3.3",
 		"ext-curl" : "*",
+		"ext-dom" : "*",
+		"ext-json" : "*",
+		"ext-Phar" : "*",
+		"ext-SPL" : "*",
 		"symfony/css-selector" : ">=2.4.x-dev",
 		"guzzle/http" : ">=3.8.0",
 		"heartsentwined/yuicompressor" : "dev-master"

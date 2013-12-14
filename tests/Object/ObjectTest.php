@@ -239,4 +239,58 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(self::$Parent, $Saved);
 		$this->assertFalse(file_exists(sys_get_temp_dir() . '/temp-' .date('l') . '.php'));
 	}
+	
+	/**
+	 * @depends test_create
+	 */
+	public function test_on()
+	{
+	    $Called   = '';
+ 	    $Test     = function() use (&$Called) {
+ 	        $debug    = debug_backtrace();
+ 	        $Called   = $debug[1]['function'];
+ 	    };
+	    
+	    Object::onCreate($Test);
+	    
+	    $Object = Object::create()
+	       ->on('Test', $Test)
+	       ->onSetID($Test)
+	       ->onAdd($Test)
+	       ->onUpdate($Test)
+	       ->onDelete($Test)
+	       ->onSerialize($Test)
+	    ;
+        
+	    $this->assertEquals('onCreate', $Called);
+	    
+	    $Object->on('Test');
+	    $this->assertEquals('on', $Called);
+	    
+	    $Object->SetID('foo');
+	    $this->assertEquals('onSetID', $Called);
+	     
+	    $Object->push(Object::create());
+	    $this->assertEquals('onAdd', $Called);
+	    
+	    $Object[0] = Object::create();
+	    $this->assertEquals('onUpdate', $Called);
+	    
+	    unset($Object[0]);
+	    $this->assertEquals('onDelete', $Called);
+	    
+	    serialize($Object);
+	    $this->assertEquals('onSerialize', $Called);
+	}
+	
+	/**
+	 * @depends test_push
+	 */
+	public function test_seek()
+	{
+	    self::$Parent->seek(self::CHILD2);
+	    
+	    $this->assertSame(self::$Child2, self::$Parent->current());
+	}
+	
 }

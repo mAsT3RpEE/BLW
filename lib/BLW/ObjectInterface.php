@@ -111,7 +111,7 @@ interface ObjectInterface extends \Iterator, \ArrayAccess, \Countable, \Seekable
      * @param \Closure $Function Function to call after object has been created.
      * @return \BLW\ObjectInterface $this
      */
-    public function onCreate(\Closure $Funtion = NULL);
+    public static function onCreate(\Closure $Function = NULL);
     
     /**
      * Fetches the current ID of the object.
@@ -132,7 +132,7 @@ interface ObjectInterface extends \Iterator, \ArrayAccess, \Countable, \Seekable
      * @param \Closure $Function Function to call after ID has changed.
      * @return \BLW\ObjectInterface $this
      */
-    public function onSetID(\Closure $Function);
+    public function onSetID(\Closure $Function = NULL);
     
     /**
      * Returns options used by class.

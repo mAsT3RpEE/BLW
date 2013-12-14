@@ -105,45 +105,31 @@ class Element extends \BLW\Object implements \BLW\ElementInterface
      * @param \Closure $Function Function to call after object has been created.
      * @return \BLW\Object Current object
      */
-    public function onCreate(\Closure $Funtion = NULL)
+    public static function onCreate(\Closure $Function = NULL)
     {
-        static $OnCreate = NULL;
-        
-        if(is_null($Funtion)) {
+        if(is_null($Function)) {
             
-            if(isset($this->Options->HTML)) {
-                $this->LoadHTML($this->Options->HTML);
-                unset($this->Options->HTML);
+            if(isset(Object::$self->Options->HTML)) {
+                Object::$self->LoadHTML(Object::$self->Options->HTML);
+                unset(Object::$self->Options->HTML);
             }
             
-            elseif(isset($this->Options->DOMNode)) {
-                $this->AddNode($this->Options->DOMNode);
-                unset($this->Options->DOMNode);
+            elseif(isset(Object::$self->Options->DOMNode)) {
+                Object::$self->AddNode(Object::$self->Options->DOMNode);
+                unset(Object::$self->Options->DOMNode);
             }
             
-            elseif(isset($this->Options->DOMNodeList)) {
-                foreach ($this->Options->DOMNodeList as $Node) {
-                    $this->AddNode($Node);
+            elseif(isset(Object::$self->Options->DOMNodeList)) {
+                foreach (Object::$self->Options->DOMNodeList as $Node) {
+                    Object::$self->AddNode($Node);
                 }
-                unset($this->Options->DOMNode);
+                unset(Object::$self->Options->DOMNode);
             }
             
-            if(is_callable($OnCreate)) {
-                $OnCreate($this);
-            }
+            return parent::onCreate();
         }
         
-        elseif(is_callable($Function)) {
-            $OnCreate = $Funtion;
-        }         
-        
-        else {
-            $this->Status &= static::INVALID_CALLBACK;
-            
-            throw new \BLW\InvalidClassException();
-        }
-        
-        return $this;
+        return parent::onCreate($Function);
     }
     
     /**

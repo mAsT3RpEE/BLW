@@ -70,26 +70,26 @@ class Compiler extends \BLW\Object implements \BLW\ObjectInterface
      * @param \Closure $Function Function to call after object has been created.
      * @return \BLW\Object $this
      */
-    public function onCreate(\Closure $Funtion = NULL)
+    public static function onCreate(\Closure $Function = NULL)
     {
-        if(is_null($Funtion)) {
+        if(is_null($Function)) {
             
             // Build Paths 
-            if(!is_dir($this->Options->Root)) {
-                $this->Options->Root = getcwd();
+            if(!is_dir(Object::$self->Options->Root)) {
+                Object::$self->Options->Root = getcwd();
             }
             
-            $this->Options->AppRoot = $this->Options->Root . '/app';
-            $this->Options->ExtRoot = $this->Options->Root . '/vendor';
-            $this->Options->LibRoot = $this->Options->Root . '/lib';
-            $this->Options->IncRoot = $this->Options->Root . '/inc';
-            $this->Options->OutRoot = $this->Options->Root . '/build';
+            Object::$self->Options->AppRoot = Object::$self->Options->Root . '/app';
+            Object::$self->Options->ExtRoot = Object::$self->Options->Root . '/vendor';
+            Object::$self->Options->LibRoot = Object::$self->Options->Root . '/lib';
+            Object::$self->Options->IncRoot = Object::$self->Options->Root . '/inc';
+            Object::$self->Options->OutRoot = Object::$self->Options->Root . '/build';
             
             // Call parent
             return parent::onCreate();
         }
         
-        return parent::onCreate($Funtion);
+        return parent::onCreate($Function);
     }
     
     /**

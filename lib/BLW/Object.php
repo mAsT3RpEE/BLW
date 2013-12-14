@@ -107,7 +107,7 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
         ,'Update'       => NULL
         ,'Delete'       => NULL
         ,'Serialize'    => NULL
-        ,'Unserialize'  => NULL
+        ,'UnSerialize'  => NULL
     );
     
     /**
@@ -167,11 +167,11 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
             : NULL
         ;
         
-        // OnCreate Hook
-        $this->onCreate();
-        
         // Change global blw_self to this
         Object::$self = &$this;
+        
+        // OnCreate Hook
+        static::onCreate();
     }
     
     /**
@@ -310,6 +310,35 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
     }
     
     /**
+     * Hook that is called when a new instance is created.
+     * @api BLW
+     * @since 0.1.0
+     * @note Format is <code>mixed function (\BLW\ObjectInterface $o)</code>.
+     * @param \Closure $Function Function to call after object has been created.
+     * @return \BLW\Object $this
+     */
+    public static function onCreate(\Closure $Function = NULL)
+    {
+        static $OnCreate = NULL;
+        
+        if(is_null($Function)) {
+            if(is_callable($OnCreate)) {
+                $OnCreate(Object::$self);
+            }
+        }
+        
+        elseif(is_callable($Function)) {
+            $OnCreate = $Function;
+        }
+        
+        else {
+            throw new \BLW\InvalidArgumentException(0);
+        }
+        
+        return Object::$self;
+    }
+    
+    /**
      * Generic hook handler function.
      * @api BLW
      * @since 0.1.0
@@ -323,42 +352,14 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
             throw new \BLW\InvalidArgumentException(0);
         }
         
-        elseif(is_null($Funtion)) {
+        elseif(is_null($Function)) {
             if(is_callable($this->Hooks[$Hook])) {
                 $this->Hooks[$Hook]($this);
             }
         }
         
         elseif(is_callable($Function)) {
-            $this->Hooks[$Hook] = $Funtion;
-        }
-        
-        else {
-            $this->Status &= static::INVALID_CALLBACK;
-            throw new \BLW\InvalidClassException();
-        }
-        
-        return $this;
-    }
-    
-    /**
-     * Hook that is called when a new instance is created.
-     * @api BLW
-     * @since 0.1.0
-     * @note Format is <code>mixed function (\BLW\ObjectInterface $o)</code>.
-     * @param \Closure $Function Function to call after object has been created.
-     * @return \BLW\Object $this
-     */
-    public function onCreate(\Closure $Funtion = NULL)
-    {
-        if(is_null($Funtion)) {
-            if(is_callable($this->Hooks['Create'])) {
-                $this->Hooks['Create']($this);
-            }
-        }
-        
-        elseif(is_callable($Function)) {
-            $this->Hooks['Create'] = $Funtion;
+            $this->Hooks[$Hook] = $Function;
         }
         
         else {
@@ -436,16 +437,16 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
      * @param \Closure $Function Function to call after ID has changed.
      * @return \BLW\Object $this
      */
-    public function onSetID(\Closure $Function)
+    public function onSetID(\Closure $Function = NULL)
     {
-        if(is_null($Funtion)) {
+        if(is_null($Function)) {
             if(is_callable($this->Hooks['SetID'])) {
                 $this->Hooks['SetID']($this->ID, $this->OldID, $this);
             }
         }
         
         elseif(is_callable($Function)) {
-            $this->Hooks['SetID'] = $Funtion;
+            $this->Hooks['SetID'] = $Function;
         }
         
         else {
@@ -603,7 +604,7 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
      */
     public function onAdd(\Closure $Function = NULL)
     {
-        if(is_null($Funtion)) {
+        if(is_null($Function)) {
             // Set Parent
             $this[$this->Current]->SetParent($this);
             
@@ -613,7 +614,7 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
         }
         
         elseif(is_callable($Function)) {
-            $this->Hooks['Add'] = $Funtion;
+            $this->Hooks['Add'] = $Function;
         }
         
         else {
@@ -632,7 +633,7 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
      */
     public function onUpdate(\Closure $Function = NULL)
     {
-        if(is_null($Funtion)) {
+        if(is_null($Function)) {
             // Set Parent
             $this[$this->Current]->SetParent($this);
             
@@ -642,7 +643,7 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
         }
         
         elseif(is_callable($Function)) {
-            $this->Hooks['Update'] = $Funtion;
+            $this->Hooks['Update'] = $Function;
         }
         
         else {
@@ -661,14 +662,14 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
      */
     public function onDelete(\Closure $Function = NULL)
     {
-        if(is_null($Funtion)) {
+        if(is_null($Function)) {
             if(is_callable($this->Hooks['Delete'])) {
                 $this->Hooks['Delete']($this, $this->Current);
             }
         }
         
         elseif(is_callable($Function)) {
-            $this->Hooks['Delete'] = $Funtion;
+            $this->Hooks['Delete'] = $Function;
         }
         
         else {
@@ -687,14 +688,14 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
      */
     public function onSerialize(\Closure $Function = NULL)
     {
-        if(is_null($Funtion)) {
+        if(is_null($Function)) {
             if(is_callable($this->Hooks['Serialize'])) {
                 $this->Hooks['Serialize']($this);
             }
         }
         
         elseif(is_callable($Function)) {
-            $this->Hooks['Serialize'] = $Funtion;
+            $this->Hooks['Serialize'] = $Function;
         }
         
         else {
@@ -713,14 +714,14 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
      */
     public function onUnSerialize(\Closure $Function = NULL)
     {
-        if(is_null($Funtion)) {
+        if(is_null($Function)) {
             if(is_callable($this->Hooks['UnSerialize'])) {
                 $this->Hooks['UnSerialize']($this);
             }
         }
         
         elseif(is_callable($Function)) {
-            $this->Hooks['UnSerialize'] = $Funtion;
+            $this->Hooks['UnSerialize'] = $Function;
         }
         
         else {
@@ -807,19 +808,12 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
      */
     final public function offsetUnset($index)
     {
-        if($newval instanceof \BLW\ObjectInterface) {
-            
-            if(parent::offsetExists($index)) {    
-                $this->Current = $index;
-                $this->onDelete();
-            }
-            
-            parent::offsetUnset($index);
+        if(parent::offsetExists($index)) {    
+            $this->Current = $index;
+            $this->onDelete();
         }
-        
-        else {
-            self::InvalidValue($Value);
-        }
+            
+        parent::offsetUnset($index);
     }
     
     /**
@@ -920,8 +914,11 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
             
             $this->ID      = $Parent->GetID();
             $this->Options = $Parent->GetOptions();
-            
+
             $this->onSerialize();
+            
+            $this->Hooks = array_fill_keys(array_keys($this->Hooks), NULL);
+            
             parent::push(get_object_vars($this));
             
             return parent::serialize();

@@ -1,6 +1,6 @@
 <?php
 /**
- * ObjectTest.php | Dec 13, 2013
+ * ElementTest.php | Dec 15, 2013
  * 
  * Copyright (c) mAsT3RpEE's Zone
  *
@@ -17,29 +17,26 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests;
-
-use BLW\ObjectInterface;
-use BLW\Object;
+namespace BLW; if(!defined('BLW')){trigger_error('Unsafe access of custom library',E_USER_WARNING);return;}
 
 /**
- * Tests BLW Library Object functionality.
+ * Tests BLW Library Element functionality.
  * @package BLW\Core
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  */
-class ObjectTest extends \PHPUnit_Framework_TestCase
+class ElementTest extends \PHPUnit_Framework_TestCase
 {
-    const CHILD1 = 0;
-    const CHILD2 = 1;
-    const CHILD3 = 2;
-    const CHILD4 = 3;
+    const CHILD1 = 1;
+    const CHILD2 = 2;
+    const CHILD3 = 3;
+    const CHILD4 = 4;
     
-    const GRANDCHILD1 = 0;
-    const GRANDCHILD2 = 1;
-    const GRANDCHILD3 = 0;
-    const GRANDCHILD4 = 1;
-    const GRANDCHILD5 = 0;
-    const GRANDCHILD6 = 1;
+    const GRANDCHILD1 = 1;
+    const GRANDCHILD2 = 2;
+    const GRANDCHILD3 = 1;
+    const GRANDCHILD4 = 2;
+    const GRANDCHILD5 = 1;
+    const GRANDCHILD6 = 2;
     
     private static $Parent         = NULL;
     private static $Child1         = NULL;
@@ -55,21 +52,16 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
     
     public function test_init()
     {
-        Object::init(array('foo'=>1,'hard_init'=>true));
-        
+        Element::init(array('foo'=>1,'hard_init'=>true));
+    
         // Data tests
-        $this->assertArrayHasKey('foo', Object::$DefaultOptions);
-        $this->assertArrayNotHasKey('hard_init', Object::$DefaultOptions);
-        
-        // $self and $base tests
-        $this->assertInstanceOf('\\BLW\\ObjectInterface', Object::$base);
-        $this->assertInstanceOf('\\BLW\\Object', Object::$base);
-        $this->assertSame(Object::$base, Object::$self);
-        
+        $this->assertArrayHasKey('foo', Element::$DefaultOptions);
+        $this->assertArrayNotHasKey('hard_init', Element::$DefaultOptions);
+    
         // Options tests
-        if (isset(Object::$DefaultOptions['foo'])) {
-            $this->assertEquals(1, Object::$base->Options->foo);
-            unset(Object::$DefaultOptions['foo']);
+        if (isset(Element::$DefaultOptions['foo'])) {
+            $this->assertEquals(1, Element::$DefaultOptions['foo']);
+            unset(Element::$DefaultOptions['foo']);
         }
     }
     
@@ -79,64 +71,39 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
     public function test_create()
     {
         // Create Parent
-        self::$Parent = Object::create(array('ID'=>'Parent', 'bar'=>1));
-        
+      self::$Parent = Element::create(array('ID'=>'Parent', 'bar'=>1));
+    
         $this->assertEquals('Parent', self::$Parent->GetID());
         $this->assertEquals(1, self::$Parent->Options->bar);
         $this->assertNull(self::$Parent->parent());
+        $this->assertEquals('<span></span>', self::$Parent->GetHTML());
         
-        $Duplicate = Object::create(self::$Parent);
-        
-		$this->assertNotSame(self::$Parent, $Duplicate);
-		$this->assertSame(self::$Parent->GetID(), $Duplicate->GetID());
-		$this->assertSame(self::$Parent->count(), $Duplicate->count());
-		
+        $Duplicate = Element::create(self::$Parent);
+    
+        $this->assertNotSame(self::$Parent, $Duplicate);
+        $this->assertSame(self::$Parent->GetID(), $Duplicate->GetID());
+        $this->assertEquals(self::$Parent->GetHTML(), $Duplicate->GetHTML());
+        $this->assertSame(self::$Parent->count(), $Duplicate->count());
+    
         // Create Children
-        self::$Child1         = Object::create(array('ID'=>'Child1',      'Parent'=>self::$Parent, 'bar'=>1));
-        self::$Child2         = Object::create(array('ID'=>'Child2',      'Parent'=>self::$Parent, 'bar'=>1));
-        self::$Child3         = Object::create(array('ID'=>'Child3',      'Parent'=>self::$Parent, 'bar'=>1));
-        self::$Child4         = Object::create(array('ID'=>'Child4',      'Parent'=>self::$Parent, 'bar'=>1));
-        
-        foreach (self::$Parent as $Child) {
+        self::$Child1         = Element::create(array('ID'=>'Child1',      'Parent'=>self::$Parent, 'bar'=>1));
+        self::$Child2         = Element::create(array('ID'=>'Child2',      'Parent'=>self::$Parent, 'bar'=>1));
+        self::$Child3         = Element::create(array('ID'=>'Child3',      'Parent'=>self::$Parent, 'bar'=>1));
+        self::$Child4         = Element::create(array('ID'=>'Child4',      'Parent'=>self::$Parent, 'bar'=>1));
+    
+        foreach (self::$Parent as $Child) if($Child instanceof \BLW\ObjectInterface) {
             $this->assertSame(self::$Parent, $Child->parent());
         }
-        
+    
         // Create GrandChildren
-        self::$GrandChild1    = Object::create(array('ID'=>'GrandChild1', 'bar'=>1));
-        self::$GrandChild2    = Object::create(array('ID'=>'GrandChild2', 'bar'=>1));
-        self::$GrandChild3    = Object::create(array('ID'=>'GrandChild3', 'bar'=>1));
-        self::$GrandChild4    = Object::create(array('ID'=>'GrandChild4', 'bar'=>1));
-        self::$GrandChild5    = Object::create(array('ID'=>'GrandChild5', 'bar'=>1));
-        self::$GrandChild6    = Object::create(array('ID'=>'GrandChild6', 'bar'=>1));
+        self::$GrandChild1    = Element::create(array('ID'=>'GrandChild1', 'bar'=>1));
+        self::$GrandChild2    = Element::create(array('ID'=>'GrandChild2', 'bar'=>1));
+        self::$GrandChild3    = Element::create(array('ID'=>'GrandChild3', 'bar'=>1));
+        self::$GrandChild4    = Element::create(array('ID'=>'GrandChild4', 'bar'=>1));
+        self::$GrandChild5    = Element::create(array('ID'=>'GrandChild5', 'bar'=>1));
+        self::$GrandChild6    = Element::create(array('ID'=>'GrandChild6', 'bar'=>1));
     }
-
-	/**
-	 * @depends test_create
-	 * @expectedException InvalidArgumentException
-	 */
-	public function test_createException1()
-	{
-		new Object('foo');
-	}
-
-	/**
-	 * @depends test_create
-	 * @expectedException InvalidArgumentException
-	 */
-	public function test_createException2()
-	{
-		new Object(array('ID' => '   '));
-	}
-
-	/**
-	 * @depends test_create
-	 * @expectedException InvalidArgumentException
-	 */
-	public function test_createException3()
-	{
-		new Object(new \stdClass);
-	}
-	
+    
     /**
      * @depends test_create
      */
@@ -147,7 +114,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
         self::$Parent->push(self::$Child2);
         self::$Parent->push(self::$Child3);
         self::$Parent->push(self::$Child4);
-        
+    
         self::$Parent[self::CHILD1]->push(self::$GrandChild1);
         self::$Parent[self::CHILD1]->push(self::$GrandChild2);
         self::$Parent[self::CHILD2]->push(self::$GrandChild3);
@@ -156,14 +123,16 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
         self::$Parent[self::CHILD3]->push(self::$GrandChild6);
         self::$Parent[self::CHILD4]->push(self::$GrandChild1);
         self::$Parent[self::CHILD4]->push(self::$GrandChild2);
-        
+    
         $self = $this;
-        
+    
         // Assert Bar Property
         self::$Parent->walk(function($o, $i) use(&$self) {
-            $self->assertEquals(1, $o->Options->bar);
+            if ($o instanceof \BLW\ObjectInterface) {
+                $self->assertEquals(1, $o->Options->bar);
+            }
         });
-        
+    
         // Assert ID's
         $this->assertEquals('Child1', self::$Parent[self::CHILD1]->GetID());
         $this->assertEquals('Child2', self::$Parent[self::CHILD2]->GetID());
@@ -177,29 +146,34 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('GrandChild6', self::$Parent[self::CHILD3][self::GRANDCHILD6]->GetID());
         $this->assertEquals('GrandChild1', self::$Parent[self::CHILD4][self::GRANDCHILD1]->GetID());
         $this->assertEquals('GrandChild2', self::$Parent[self::CHILD4][self::GRANDCHILD2]->GetID());
-    
+
         // Assert Lineage
-        foreach (self::$Parent as $Child) {
+        foreach (self::$Parent as $Child) if ($Child instanceof \BLW\ElementInterface) {
             $this->assertSame(self::$Parent, $Child->GetParent());
-    
+
             if($Child->GetID() == 'Child4') continue;
-    
-            foreach ($Child as $GrandChild) {
+
+            foreach ($Child as $GrandChild) if ($GrandChild instanceof \BLW\ElementInterface) {
                 $this->assertSame($Child, $GrandChild->GetParent());
             }
         }
     }
-
+    
 	/**
 	 * @depends test_push
 	 */
-	public function test_child()
-	{
-		$this->assertSame(self::$Child1, self::$Parent->child('Child1'));
-		$this->assertSame(self::$Child1, Object::$self);
-	}
-
-	/**
+    public function test_filter()
+    {
+        $Nodes = self::$Parent->filter('span');
+        
+        $this->assertEquals(13, $Nodes->length);
+        
+        foreach ($Nodes as $Node) {
+            $this->assertEquals('<span></span>', $Node-> C14N());
+        }
+    }
+    
+    /**
 	 * @depends test_push
 	 */
     public function test_serialize()
@@ -213,6 +187,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
         $Serialized = unserialize(serialize(self::$Parent));
         
         $this->assertSame(self::$Parent->foo, $Serialized->foo);
+        $this->assertEquals(self::$Parent->GetHTML(), $Serialized->GetHTML());
         
         foreach (self::$Parent as $k => $v) {
             $this->assertEquals($v, $Serialized[$k]);
@@ -240,59 +215,6 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 		
 		$this->assertEquals(self::$Parent, $Saved);
 		$this->assertFalse(file_exists(sys_get_temp_dir() . '/temp-' .date('l') . '.php'));
-	}
-	
-	/**
-	 * @depends test_create
-	 */
-	public function test_on()
-	{
-	    $Called   = '';
- 	    $Test     = function() use (&$Called) {
- 	        $debug    = debug_backtrace();
- 	        $Called   = $debug[1]['function'];
- 	    };
-	    
-	    Object::onCreate($Test);
-	    
-	    $Object = Object::create()
-	       ->on('Test', $Test)
-	       ->onSetID($Test)
-	       ->onAdd($Test)
-	       ->onUpdate($Test)
-	       ->onDelete($Test)
-	       ->onSerialize($Test)
-	    ;
-        
-	    $this->assertEquals('onCreate', $Called);
-	    
-	    $Object->on('Test');
-	    $this->assertEquals('on', $Called);
-	    
-	    $Object->SetID('foo');
-	    $this->assertEquals('onSetID', $Called);
-	     
-	    $Object->push(Object::create());
-	    $this->assertEquals('onAdd', $Called);
-	    
-	    $Object[0] = Object::create();
-	    $this->assertEquals('onUpdate', $Called);
-	    
-	    unset($Object[0]);
-	    $this->assertEquals('onDelete', $Called);
-	    
-	    serialize($Object);
-	    $this->assertEquals('onSerialize', $Called);
-	}
-	
-	/**
-	 * @depends test_push
-	 */
-	public function test_seek()
-	{
-	    self::$Parent->seek(self::CHILD2);
-	    
-	    $this->assertSame(self::$Child2, self::$Parent->current());
 	}
 	
 }

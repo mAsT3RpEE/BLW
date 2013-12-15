@@ -129,7 +129,8 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
         }
         
         if($Options instanceof \BLW\ObjectInterface) {
-            $this->Options = $Options->GetOptions();
+            $this->Options     = $Options->GetOptions();
+            $this->Options->ID = $Options->GetID();
         }
         
         else {
@@ -925,7 +926,7 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
             
             $this->Hooks = array_fill_keys(array_keys($this->Hooks), NULL);
             
-            if(version_compare(PHP_VERSION, '6.4.0', '>=')) {
+            if(version_compare(PHP_VERSION, '5.4.0', '>=')) {
                 parent::push(get_object_vars($this));
                 return parent::serialize();
             }
@@ -947,7 +948,7 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
      */ 
     final public function unserialize($serialized)
     {
-        if(version_compare(PHP_VERSION, '6.4.0', '>=')) {
+        if(version_compare(PHP_VERSION, '5.4.0', '>=')) {
             parent::unserialize($serialized);
         }
         
@@ -961,12 +962,20 @@ class Object extends \SplDoublyLinkedList implements \BLW\ObjectInterface
             $this->{$k} = $v;
         }
         
-        foreach ($this as $o) {
+        foreach ($this as $o) if ($o instanceof \BLW\ObjectInterface) {
             $o->SetParent($this);
         }
         
         $this->onUnSerialize();
     }
+
+	/**
+	 * @ignore
+	 */
+	public function __toString()
+	{
+	    return $this->serialize();
+	}
 }
 
 return ;

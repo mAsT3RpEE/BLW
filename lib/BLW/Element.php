@@ -19,6 +19,8 @@
  */
 namespace BLW; if(!defined('BLW')){trigger_error('Unsafe access of custom library',E_USER_WARNING);return;}
 
+use Symfony\Component\CssSelector\CssSelector;
+
 /**
  * Core BLW DOM Element object.
  *
@@ -53,7 +55,6 @@ class Element extends \BLW\Object implements \BLW\ElementInterface
      * @var \DOMDocument $Document Pointer to current element document if created from string.
      * @link http://php.net/manual/en/class.domdocument.php
      */
-    private $Document = 0;
     
     /**
      * Overloads parent function
@@ -133,6 +134,92 @@ class Element extends \BLW\Object implements \BLW\ElementInterface
     }
     
     /**
+     * Returns options used by class.
+     * @internal Can be overloaded to add more options, etc
+     * @return \stdClass Returns Options used by the object.
+     */
+    public function GetOptions()
+    {
+        if($this->count()) {
+            $Node = \SplDoublyLinkedList::offsetGet(0);
+            
+            if($Node instanceof \DOMNode) {
+                $Options = parent::GetOptions();
+                
+                if (version_compare(PHP_VERSION, '5.3.6', '>=')) {
+                    $Options->HTML = $Node->ownerDocument->saveHTML($Node);
+                }
+                
+                else {
+                    $document = new \DOMDocument('1.0', 'UTF-8');
+                    $document->appendChild($document->importNode($Node, true));
+                    $Options->HTML = rtrim(preg_replace(array('/^.*<body[^>]*>/i', '/<\/body[^>]*>.*$/i'), '', $document->saveHTML()));
+                    unset($document);
+                }
+                
+                return $Options;
+            }
+        }
+        
+        return $this->Options;
+    }
+    
+    /**
+     * Hook that is called just before an object is serialized.
+     * @note Format is <code>mixed function (\BLW\ObjectInterface $o)</code>.
+     * @param \Closure $Function Function to call before object is serialized.
+     * @return \BLW\Object $this
+     */
+    public function onSerialize(\Closure $Function = NULL)
+    {
+        if(is_null($Function)) {
+            
+            // Save Document
+            if ($this->Document instanceof \DOMDocument) {
+                
+                foreach ($this as $k => $Node) if ($Node instanceof \DOMNode) {
+                    if ($Node->ownerDocument == $this->Document) {
+                        \SplDoublyLinkedList::offsetSet($k, $Node->getNodePath());
+                    }
+                }
+                
+                $this->Document = $this->Document->saveHTML();
+            }
+            
+            return parent::onSerialize();
+        }
+    
+        return parent::onSerialize($Function);
+    }
+    
+    /**
+     * Hook that is called just after an object is unserialized.
+     * @note Format is <code>mixed function (\BLW\ObjectInterface $o)</code>.
+     * @param \Closure $Function Function to call after Object has been unserialized.
+     * @return \BLW\Object $this
+     */
+    public function onUnSerialize(\Closure $Function = NULL)
+    {
+        if(is_null($Function)) {
+            
+            // Load Document
+            if (is_string($this->Document)) {
+                $HTML = $this->Document;
+                $this->Document()->loadHTML($HTML);
+                $XPath = new \DOMXPath($this->Document());
+                
+                foreach ($this as $k => $Node) if (is_string($Node)) {
+                    \SplDoublyLinkedList::offsetSet($k, $XPath->query($Node)->item(0));
+                }
+            }
+            
+            return parent::onSerialize();
+        }
+    
+        return parent::onSerialize($Function);
+    }
+    
+    /**
      * Returns the current elements document or creates one if it doesnt exist.
      * @api BLW
      * @since 1.0.0
@@ -172,9 +259,9 @@ class Element extends \BLW\Object implements \BLW\ElementInterface
             
             foreach ($this as $i => $o) {
                 if ($o instanceof \DOMNode || $o instanceof \BLW\ElementInterface) {
-                	unset($this[$i]);
-                	$k = false;
-                	break;
+                    unset($this[$i]);
+                    $k = false;
+                    break;
                 }
             }
             
@@ -238,7 +325,14 @@ class Element extends \BLW\Object implements \BLW\ElementInterface
     final public function AddNode(\DOMNode $Node)
     {
         if (!$Node instanceof \DOMDocument) {
-            $this->push($Node);
+            
+            if($Node->ownerDocument == $this->Document) {
+                \SplDoublyLinkedList::push($Node);
+            }
+            
+            else {
+                throw new \BLW\InvalidArgumentException(0);
+            }
         }
         
         else {
@@ -246,6 +340,135 @@ class Element extends \BLW\Object implements \BLW\ElementInterface
         }
         
         return $this;
+    }
+    
+    /**
+     * Returns HTML of current element.    
+     * @api BLW
+     * @since 1.0.1
+     * @throws \InvalidArgumentException When current node list is empty.
+     * @return string The node html
+     */
+    public function GetHTML()
+    {
+        if (!count($this)) {
+            trigger_error(sprintf('%s::GetHTML(): Current object is empty.', get_class($this)), E_USER_WARNING);
+            return '';
+        }
+        
+        $HTML = '';
+        $i = 0;
+        
+        if (version_compare(PHP_VERSION, '5.3.6', '>=')) {
+            
+            foreach($this as $k => $Node) {
+                
+                if($Node instanceof \DOMNode) {
+                    if($k == 0 || $Node->ownerDocument != $this->Document) {
+                        $HTML .= $Node->ownerDocument->saveHTML($Node);
+                    }
+                }
+                
+                elseif($Node instanceof \BLW\ElementInterface) {
+                    if(count($Node) && $Node->Document() !== $this->Document())
+                        $HTML .= $Node->GetHTML();
+                }
+            }
+        }
+        
+        else {
+            
+            foreach($this as $Node) {
+                
+                if($Node instanceof \DOMNode) {
+                    
+                    $document = new \DOMDocument('1.0', 'UTF-8');
+                    $document->appendChild($document->importNode($Node, true));
+                    $HTML .= rtrim(preg_replace(array('/^.*<body[^>]*>/i', '/<\/body[^>]*>.*$/i'), '', $document->saveHTML()));
+                    unset($document);
+                }
+                
+                elseif($Node instanceof ElementInterface) {
+                    if(count($Node) && $Node->Document() != $this->Document())
+                        $HTML .= $Node->GetHTML();
+                }
+            }
+        }
+        
+        return $HTML;
+    }
+
+    /**
+     * Echos element. (Needed for chaining)
+     * @api BLW
+     * @since 1.0.1
+     * @param bool $isDocument Whether object is a document element.
+     * @return \BLW\Element $this
+     */
+    public function PrintHTML($isDocument = false)
+    {
+        if($this->count()) {
+            print $this->GetHTML($isDocument);
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * Returns nodes that meet xpath query.
+     *
+     * <h4>Note:</h4>
+     *
+     * <p>Only allow for relative searches.</p>
+     *
+     * <hr>
+     * @api BLW
+     * @since 1.0.1
+     * @internal Based on Symphony Project DOM Crawler.
+     * @param string $Query A CSS selector.
+     * @return \DOMNodeList List of matched nodes.
+     */
+    public function filterXPath($Query)
+    {
+        if(count($this)) {
+            $Document = new \DOMDocument('1.0', 'UTF-8');
+            
+            $Document->loadHTML($this->GetHTML());
+            
+            $XPath = new \DOMXPath($Document);
+            $List  = $XPath->query($Query);
+            
+            unset($Document, $XPath);
+            
+            return $List;
+        }
+        
+        return array();
+    }
+     
+    /**
+     * Filters the list of nodes with a CSS selector.
+     * @api BLW
+     * @since 1.0.1
+     * @link http://symfony.com/doc/current/components/css_selector.html Symfony > CssSelector
+     * @param string $Selector A CSS selector
+     * @return \DOMNodeList List of matched nodes.
+     */
+    public function filter($Selector)
+    {
+        return $this->filterXPath(CssSelector::toXPath($Selector));
+    }
+    
+    /**
+     * @ignore
+     */
+    public function __toString()
+    {
+        if($this->count()) {
+            return $this->GetHTML();
+        }
+        
+        return '';
     }
 }
 

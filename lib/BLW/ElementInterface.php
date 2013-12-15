@@ -66,4 +66,24 @@ interface ElementInterface extends \BLW\ObjectInterface
 	 * @return \BLW\ElementInterface $this
 	 */
 	public function AddNode(\DOMNode $Node);
+
+    /**
+     * Returns nodes that meet xpath query.
+     * @api BLW
+     * @since 1.0.1
+     * @internal Based on Symphony Project DOM Crawler.
+     * @param string $Query A CSS selector.
+     * @return \DOMNodeList List of matched nodes.
+     */
+    public function filterXPath($Query);
+        
+    /**
+     * Filters the list of nodes with a CSS selector.
+     * @api BLW
+     * @since 1.0.1
+     * @link http://symfony.com/doc/current/components/css_selector.html Symfony > CssSelector
+     * @param string $Selector A CSS selector
+     * @return \DOMNodeList List of matched nodes.
+     */
+    public function filter($Selector);
 }

@@ -1,6 +1,7 @@
+#!/usr/bin/env php
 <?php
 /**
- * compile.php | Dec 11, 2013
+ * run.php | Dec 16, 2013
  *
  * Copyright (c) mAsT3RpEE's Zone
  *
@@ -16,15 +17,11 @@
 define('BLW_PLUGIN_DIR',    (__DIR__) . '/app');
 define('BLW_PLUGIN_URL',    'http://localhost/BLW/app');
 define('BLW_LIB_PHAR',      __DIR__);
-    
+
 // Bootstrap
-require_once __DIR__ . '/inc/common.php';
+require_once BLW_LIB_PHAR . '/inc/common.php';
 
 // Application
-\BLW\Compiler::init();
-
-return \BLW\Compiler::create()
-    ->phar('BLW.phar')
-    ->out(getcwd() . '/build')
-    ->run()
-;
+$APP = require(BLW_LIB_PHAR . '/app/APP.run.php');
+$APP->run();
+exit;

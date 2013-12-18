@@ -1,5 +1,4 @@
 <?php
-
 // Try PHAR file
 if(is_file(dirname(__DIR__) . '/build/BLW.phar')) {
 

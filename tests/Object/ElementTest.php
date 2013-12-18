@@ -107,6 +107,16 @@ class ElementTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends test_create
      */
+    public function test_tag()
+    {
+        $this->assertEquals('span', self::$Parent->tag());
+        self::$Parent->tag('div');
+        $this->assertEquals('div', self::$Parent[0]->tagName);
+    }
+    
+    /**
+     * @depends test_create
+     */
     public function test_push()
     {
         // Map all objects

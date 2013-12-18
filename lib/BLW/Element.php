@@ -101,6 +101,45 @@ class Element extends \BLW\Object implements \BLW\ElementInterface
     }
     
     /**
+     * Initializes a child class for subsequent use.
+     * @param array $Options Initialization options. (Automatically adds blw_cfg())
+     * @return array Returns Options used / generated during init.
+     */
+    public static function initChild(array $Data = array())
+    {
+        // Initialize self
+        if(get_called_class() == __CLASS__) {
+        
+            if(!self::$Initialized || isset($Data['hard_init'])) {
+        
+                $ParentOptions        = parent::init();
+                self::$DefaultOptions = array_replace($ParentOptions, self::$DefaultOptions, $Data);
+                self::$Initialized    = true;
+        
+                unset(self::$DefaultOptions['hard_init']);
+        
+                self::$base = self::create();
+                self::$self = &self::$base;
+            }
+            
+            // Return Options
+            return self::$DefaultOptions;
+        }
+        
+        else {
+            // Initialize children
+            if(!static::$Initialized || isset($Data['hard_init'])) {
+                static::$DefaultOptions = array_replace(self::$DefaultOptions, static::$DefaultOptions, $Data);
+                static::$Initialized    = true;
+                
+                unset(static::$DefaultOptions['hard_init']);
+            }
+        }
+        
+        return static::$DefaultOptions;
+    }
+    
+    /**
      * Hook that is called when a new instance is created.
      * @note Format is <code>mixed function (\BLW\ObjectInterface $o)</code>.
      * @param \Closure $Function Function to call after object has been created.
@@ -409,6 +448,54 @@ class Element extends \BLW\Object implements \BLW\ElementInterface
     {
         if($this->count()) {
             print $this->GetHTML($isDocument);
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * Set / Get Current elements tag.
+     * @note Raises <code>E_USER_ERROR</code> if default node does not exist.
+     * @param string $Tag New tag name. (<code>[A-Za-z][\w_-]*</code>)
+     * @return string | \BLW\Element Returns current tagName string or $this
+     */
+    public function tag($Tag = NULL)
+    {
+        if(is_null($Tag)) {
+            
+            if(($Node = \SplDoublyLinkedList::offsetGet(0)) instanceof \DOMElement) {
+                return $Node->tagName;
+            }
+            
+            else {
+                trigger_error(sprintf('%s::tag(): Current Element has no default node.', get_class($this)), E_USER_ERROR);
+                return '';
+            }
+        }
+        
+        elseif(preg_match('/[A-Za-z][\w_-]*/', @strval($Tag))) {
+            
+            if(($Node = \SplDoublyLinkedList::offsetGet(0)) instanceof \DOMElement) {
+                $New = $Node->ownerDocument->createElement($Tag);
+                
+                foreach ($Node->attributes as $Attribute) {
+                    $New->setAttribute($Attribute->nodeName, $Attribute->nodeValue);
+                }
+                
+                while ($Node->firstChild) {
+                    $Renamed->appendChild($Node->firstChild);
+                }
+                
+                return $Node->parentNode->replaceChild($New, $Node);
+            }
+            
+            else {
+                trigger_error(sprintf('%s::tag(): Current Element has no default node.', get_class($this)));
+            }
+        }
+        
+        else {
+            throw new \BLW\InvalidArgumentException(0);
         }
         
         return $this;

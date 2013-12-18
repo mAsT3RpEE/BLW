@@ -1,12 +1,12 @@
 <?php
 /**
  *	Compiler.php | Dec 11, 2013
- * 	
+ *
  *	Copyright (c) mAsT3RpEE's Zone
- *	
+ *
  *	This source file is subject to the MIT license that is bundled
  *	with this source code in the file LICENSE.
- *	
+ *
  *	@filesource
  *	@copyright mAsT3RpEE's Zone
  *	@license MIT
@@ -39,7 +39,7 @@ class Compiler extends \BLW\Object implements \BLW\ObjectInterface
         'PHAR'          => 'app.BLW.phar'
         ,'Root'         => NULL
     );
-    
+
     /**
      * Initializes a class for subsequent use.
      * @param array $Options Initialization options.
@@ -48,22 +48,22 @@ class Compiler extends \BLW\Object implements \BLW\ObjectInterface
     public static function init(array $Data = array())
     {
         if(!static::$Initialized || isset($Data['hard_init'])) {
-            
+
             \BLW\YUICompressor::init();
-            
+
             // Call Parent init
             $ParentOptions = parent::init();
-            
+
             // Initialize self
             static::$DefaultOptions = array_replace($ParentOptions, static::$DefaultOptions, $Data);
             static::$Initialized    = true;
-            
+
             unset(static::$DefaultOptions['hard_init']);
         }
-        
+
         return static::$DefaultOptions;
     }
-    
+
     /**
      * Hook that is called when a new instance is created.
      * @note Format is <code>mixed function (\BLW\ObjectInterface $o)</code>.
@@ -73,25 +73,25 @@ class Compiler extends \BLW\Object implements \BLW\ObjectInterface
     public static function onCreate(\Closure $Function = NULL)
     {
         if(is_null($Function)) {
-            
-            // Build Paths 
+
+            // Build Paths
             if(!is_dir(Object::$self->Options->Root)) {
                 Object::$self->Options->Root = getcwd();
             }
-            
+
             Object::$self->Options->AppRoot = Object::$self->Options->Root . '/app';
             Object::$self->Options->ExtRoot = Object::$self->Options->Root . '/vendor';
             Object::$self->Options->LibRoot = Object::$self->Options->Root . '/lib';
             Object::$self->Options->IncRoot = Object::$self->Options->Root . '/inc';
             Object::$self->Options->OutRoot = Object::$self->Options->Root . '/build';
-            
+
             // Call parent
             return parent::onCreate();
         }
-        
+
         return parent::onCreate($Function);
     }
-    
+
     /**
      * Updates the name of phar file to output
      * @param string $File
@@ -102,18 +102,18 @@ class Compiler extends \BLW\Object implements \BLW\ObjectInterface
         if(is_null($File)) {
             return $this->Options->PHAR;
         }
-        
+
         elseif(@preg_match('/.phar$/', $File))  {
             $this->Options->PHAR = $File;
         }
-        
+
         else {
             throw \BLW\InvalidArgumentException(0);
         }
-        
+
         return $this;
     }
-    
+
     /**
      * Updates the build path.
      * @param string $Dir
@@ -124,18 +124,18 @@ class Compiler extends \BLW\Object implements \BLW\ObjectInterface
         if(is_null($Dir)) {
             return $this->Options->Root;
         }
-        
+
         elseif(is_string($Dir) && !@is_file($Dir)) {
             $this->Options->OutRoot = $Dir;
         }
-        
+
         else {
             throw new \BLW\InvalidArgumentException(0);
         }
-        
+
         return $this;
     }
-    
+
     /**
      * Optimizes a file and returns the optimized version of the file.
      * @param string $File File to optimize
@@ -148,7 +148,7 @@ class Compiler extends \BLW\Object implements \BLW\ObjectInterface
             throw new \BLW\InvalidArgumentException(0);
             return '';
         }
-        
+
         switch (true)
         {
         	case preg_match('/.php$/i', $File):    return php_strip_whitespace($File);
@@ -158,7 +158,7 @@ class Compiler extends \BLW\Object implements \BLW\ObjectInterface
         	default:                               return file_get_contents($File);
         }
     }
-    
+
     /**
      * Creates a PHAR archives in the build path.
      * @return \BLW\Object $this
@@ -173,87 +173,93 @@ class Compiler extends \BLW\Object implements \BLW\ObjectInterface
             )
             : $this->GetAppFiles()
         ;
-        
+
         // Create PHAR
         @mkdir($this->Options->OutRoot);
         @unlink($File);
-        
+
         $PHAR = new \Phar(
             $File,
             \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_FILENAME,
             $this->Options->PHAR
         );
-        
+
         $PHAR->setSignatureAlgorithm(\Phar::SHA1);
         $PHAR->startBuffering();
-        
+
         // Add files to phar
         foreach ($Files as $File) {
             $Path = str_replace($this->Options->Root . '/', '', $File);
             $Path = str_replace('\\', '/', $Path);
             $PHAR->addFromString($Path, $this->Optimize($File));
         }
-        
+
         // Stub
         $PHAR['_stub.php'] = file_get_contents($this->Options->AppRoot . '/readme.php');
         $PHAR->setStub($PHAR->createDefaultStub('_stub.php'));
-        
+
         $PHAR->stopBuffering();
         // $PHAR->compressFiles(\Phar::GZ);
-        
+
         unset($PHAR);
-        
+
+        // Copy app files
+        foreach ($this->GetApplications() as $File) {
+            $New = $this->Options->OutRoot . str_replace($this->Options->AppRoot, '', $File);
+            copy ($File, $New);
+        }
+
         // Copy assets
         $Assets = $this->Options->OutRoot . '/assets/';
-        
+
         @mkdir($Assets);
-        
+
         foreach ($this->GetAssets() as $File) {
-            
+
             $New = str_replace($this->Options->Root . '/', '', $File);
             $New = str_replace('/', '.', $New);
             $New = str_replace('\\', '.', $New);
-            
+
             file_put_contents($Assets . $New, $this->Optimize($File));
         }
-        
+
         // Copy Config and Licence
         copy($this->Options->Root . '/LICENSE.txt', $this->Options->OutRoot . '/LICENCE.txt');
         copy($this->Options->AppRoot . '/BLW.ini',  $this->Options->OutRoot . '/BLW.ini');
-        
+
         // Create Archive
         $TAR  = str_replace('.phar', '.tar', $this->Options->PHAR);
-        
+
         @unlink($this->Options->OutRoot . '/' . $TAR);
         @unlink($this->Options->OutRoot . '/' . $TAR . '.gz');
-        
+
         $PHAR = new \PharData(
            $this->Options->OutRoot . '/' . $TAR,
             \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_FILENAME,
             $TAR
         );
-        
+
         $PHAR->startBuffering();
-        
+
         $Iterator = new \RecursiveIteratorIterator (new \RecursiveDirectoryIterator ($this->Options->OutRoot), \RecursiveIteratorIterator::SELF_FIRST);
-        
+
         foreach ($Iterator as $File) {
             if(is_file($File)) {
                 $Path = str_replace($this->Options->OutRoot . DIRECTORY_SEPARATOR, '', $File);
                 $PHAR->addFile($File, $Path);
             }
         }
-        
+
         $PHAR->stopBuffering();
         $PHAR->compress(\Phar::GZ);
-        
+
         unset($PHAR);
-        
+
         @unlink($this->Options->OutRoot . '/' . $TAR);
-        
+
         return $this;
     }
-    
+
     protected function GetLibFiles()
     {
         $Files = array(
@@ -262,67 +268,83 @@ class Compiler extends \BLW\Object implements \BLW\ObjectInterface
             ,$this->Options->ExtRoot . '/guzzle/http/Guzzle/Http/Resources/cacert.pem'
             ,$this->Options->ExtRoot . '/guzzle/http/Guzzle/Http/Resources/cacert.pem.md5'
         );
-        
+
         $Dirs = array(
             $this->Options->ExtRoot
             ,$this->Options->LibRoot
             ,$this->Options->IncRoot
         );
-        
+
         foreach ($Dirs as $Dir) {
-            
+
             $Iterator = new \RecursiveIteratorIterator (new \RecursiveDirectoryIterator ($Dir), \RecursiveIteratorIterator::SELF_FIRST);
-            
+
             foreach ($Iterator as $File) {
-                
+
                 if (preg_match('"/test[s]?/"i', $File)) continue;
-                
+
                 if (preg_match ('/(.php$|.htm$|.html$)/i', $File)) {
                     array_push($Files, $File);
                 }
             }
         }
-        
+
         return $Files;
     }
-    
+
     protected function GetAppFiles()
     {
         $Files = array(
             $this->Options->Root . '/LICENSE.txt'
             ,$this->Options->ExtRoot . '/autoload.php'
         );
-        
+
         $Iterator = new \RecursiveIteratorIterator (new \RecursiveDirectoryIterator ($this->Options->AppRoot), \RecursiveIteratorIterator::SELF_FIRST);
-        
+
         foreach ($Iterator as $File) {
-            if (preg_match ('/(.php$|.htm$|.html$)/i', $File)) {
+            if (preg_match ('/[\\\\\\/]APP[.].*[.]php$/i', $File)) continue;
+            if (preg_match ('/([.]php$|[.]htm$|[.]html$)/i', $File)) {
                 array_push($Files, $File);
             }
         }
-        
+
         return $Files;
     }
-    
+
+    protected function GetApplications()
+    {
+        $Files      = array();
+        $Iterator   = new \RecursiveIteratorIterator (new \RecursiveDirectoryIterator ($this->Options->AppRoot), \RecursiveIteratorIterator::SELF_FIRST);
+
+        foreach ($Iterator as $File) {
+            if (preg_match ('/[\\\\\\/]APP[.]run[.]php/i', $File)) continue;
+            if (preg_match ('/[\\\\\\/]APP[.].*[.]php$/i', $File)) {
+                array_push($Files, $File);
+            }
+        }
+
+        return $Files;
+    }
+
     protected function GetAssets()
     {
         $Files      = array();
         $Iterator   = new \RecursiveIteratorIterator (new \RecursiveDirectoryIterator ($this->Options->AppRoot), \RecursiveIteratorIterator::SELF_FIRST);
-        
+
         foreach ($Iterator as $File) {
-            if (preg_match ('/(.js$|.css$|.jpg$|.png$)/i', $File)) {
+            if (preg_match ('/([.]js$|[.]css$|[.]jpg$|[.]png$)/i', $File)) {
                 array_push($Files, $File);
             }
         }
-        
+
         $Iterator   = new \RecursiveIteratorIterator (new \RecursiveDirectoryIterator ($this->Options->LibRoot), \RecursiveIteratorIterator::SELF_FIRST);
-        
+
         foreach ($Iterator as $File) {
-            if (preg_match ('/(.js$|.css$|.jpg$|.png$)/i', $File)) {
+            if (preg_match ('/([.]js$|[.]css$|[.]jpg$|[.]png$)/i', $File)) {
                 array_push($Files, $File);
             }
         }
-        
+
         return $Files;
     }
 }

@@ -4,7 +4,7 @@ php:
   - "5.4"
   - "5.3"
 before_script:
-  - composer install -n --dev
-  - php compile.php
+  - composer install -n --no-dev
+  - php run.php -vv compile
 script:
   - phpunit

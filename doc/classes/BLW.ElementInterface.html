@@ -63,6 +63,7 @@
 <li class="method public "><a href="#method_AddNode" title="AddNode() :: Adds a DOMNode to the current object."><span class="description">Adds a DOMNode to the current object.</span><pre>AddNode()</pre></a></li>
 <li class="method public "><a href="#method_Document" title="Document() :: Returns the current elements document or creates one if it doesnt exist."><span class="description">Returns the current elements document or creates one if it doesnt exist.</span><pre>Document()</pre></a></li>
 <li class="method public "><a href="#method_LoadHTML" title="LoadHTML() :: Converts HTML string into DOMNodes and ataches them to the object."><span class="description">Converts HTML string into DOMNodes and ataches them to the object.</span><pre>LoadHTML()</pre></a></li>
+<li class="method public "><a href="#method_filter" title="filter() :: Filters the list of nodes with a CSS selector."><span class="description">Filters the list of nodes with a CSS selector.</span><pre>filter()</pre></a></li>
 </ul>
 </li></ul>
 </div>
@@ -176,6 +177,31 @@ extend the <code>\BLW\Element</code> class.
 <code><a href="../classes/BLW.ElementInterface.html">\BLW\ElementInterface</a></code>$this</div>
 </div></div>
 </div>
+<a id="method_filter"></a><div class="element clickable method public method_filter" data-toggle="collapse" data-target=".method_filter .collapse">
+<h2>Filters the list of nodes with a CSS selector.</h2>
+<pre>filter(string $Selector) : <a href="DOMNodeList.html">\DOMNodeList</a></pre>
+<div class="labels"><span class="label label-info">API</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>since</th>
+<td>1.0.1</td>
+</tr>
+<tr>
+<th>link</th>
+<td><a href="http://symfony.com/doc/current/components/css_selector.html">Symfony > CssSelector</a></td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$Selector</h4>
+<code>string</code><p>A CSS selector</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="DOMNodeList.html">\DOMNodeList</a></code>List of matched nodes.</div>
+</div></div>
+</div>
 </div>
 </div>
 </div>
@@ -184,7 +210,7 @@ extend the <code>\BLW\Element</code> class.
             Template is built using <a>Twitter Bootstrap 2</a> and icons provided by <a>Glyphicons</a>.<br>
             Documentation is powered by <a>phpDocumentor 2.1.0
 </a> and<br>
-            generated on 2013-12-14T13:25:24+03:00.<br></footer></div>
+            generated on 2013-12-18T16:45:56+03:00.<br></footer></div>
 </div>
 </body>
 </html>

@@ -1,7 +1,7 @@
 <?php
 /**
  * ElementTest.php | Dec 15, 2013
- * 
+ *
  * Copyright (c) mAsT3RpEE's Zone
  *
  * This source file is subject to the MIT license that is bundled
@@ -30,14 +30,14 @@ class ElementTest extends \PHPUnit_Framework_TestCase
     const CHILD2 = 2;
     const CHILD3 = 3;
     const CHILD4 = 4;
-    
+
     const GRANDCHILD1 = 1;
     const GRANDCHILD2 = 2;
     const GRANDCHILD3 = 1;
     const GRANDCHILD4 = 2;
     const GRANDCHILD5 = 1;
     const GRANDCHILD6 = 2;
-    
+
     private static $Parent         = NULL;
     private static $Child1         = NULL;
     private static $Child2         = NULL;
@@ -49,22 +49,22 @@ class ElementTest extends \PHPUnit_Framework_TestCase
     private static $GrandChild4    = NULL;
     private static $GrandChild5    = NULL;
     private static $GrandChild6    = NULL;
-    
+
     public function test_init()
     {
         Element::init(array('foo'=>1,'hard_init'=>true));
-    
+
         // Data tests
         $this->assertArrayHasKey('foo', Element::$DefaultOptions);
         $this->assertArrayNotHasKey('hard_init', Element::$DefaultOptions);
-    
+
         // Options tests
         if (isset(Element::$DefaultOptions['foo'])) {
             $this->assertEquals(1, Element::$DefaultOptions['foo']);
             unset(Element::$DefaultOptions['foo']);
         }
     }
-    
+
     /**
      * @depends test_init
      */
@@ -72,29 +72,29 @@ class ElementTest extends \PHPUnit_Framework_TestCase
     {
         // Create Parent
       self::$Parent = Element::create(array('ID'=>'Parent', 'bar'=>1));
-    
+
         $this->assertEquals('Parent', self::$Parent->GetID());
         $this->assertEquals(1, self::$Parent->Options->bar);
         $this->assertNull(self::$Parent->parent());
         $this->assertEquals('<span></span>', self::$Parent->GetHTML());
-        
+
         $Duplicate = Element::create(self::$Parent);
-    
+
         $this->assertNotSame(self::$Parent, $Duplicate);
         $this->assertSame(self::$Parent->GetID(), $Duplicate->GetID());
         $this->assertEquals(self::$Parent->GetHTML(), $Duplicate->GetHTML());
         $this->assertSame(self::$Parent->count(), $Duplicate->count());
-    
+
         // Create Children
         self::$Child1         = Element::create(array('ID'=>'Child1',      'Parent'=>self::$Parent, 'bar'=>1));
         self::$Child2         = Element::create(array('ID'=>'Child2',      'Parent'=>self::$Parent, 'bar'=>1));
         self::$Child3         = Element::create(array('ID'=>'Child3',      'Parent'=>self::$Parent, 'bar'=>1));
         self::$Child4         = Element::create(array('ID'=>'Child4',      'Parent'=>self::$Parent, 'bar'=>1));
-    
+
         foreach (self::$Parent as $Child) if($Child instanceof \BLW\ObjectInterface) {
             $this->assertSame(self::$Parent, $Child->parent());
         }
-    
+
         // Create GrandChildren
         self::$GrandChild1    = Element::create(array('ID'=>'GrandChild1', 'bar'=>1));
         self::$GrandChild2    = Element::create(array('ID'=>'GrandChild2', 'bar'=>1));
@@ -103,7 +103,7 @@ class ElementTest extends \PHPUnit_Framework_TestCase
         self::$GrandChild5    = Element::create(array('ID'=>'GrandChild5', 'bar'=>1));
         self::$GrandChild6    = Element::create(array('ID'=>'GrandChild6', 'bar'=>1));
     }
-    
+
     /**
      * @depends test_create
      */
@@ -113,7 +113,7 @@ class ElementTest extends \PHPUnit_Framework_TestCase
         self::$Parent->tag('div');
         $this->assertEquals('div', self::$Parent[0]->tagName);
     }
-    
+
     /**
      * @depends test_create
      */
@@ -124,7 +124,7 @@ class ElementTest extends \PHPUnit_Framework_TestCase
         self::$Parent->push(self::$Child2);
         self::$Parent->push(self::$Child3);
         self::$Parent->push(self::$Child4);
-    
+
         self::$Parent[self::CHILD1]->push(self::$GrandChild1);
         self::$Parent[self::CHILD1]->push(self::$GrandChild2);
         self::$Parent[self::CHILD2]->push(self::$GrandChild3);
@@ -133,16 +133,16 @@ class ElementTest extends \PHPUnit_Framework_TestCase
         self::$Parent[self::CHILD3]->push(self::$GrandChild6);
         self::$Parent[self::CHILD4]->push(self::$GrandChild1);
         self::$Parent[self::CHILD4]->push(self::$GrandChild2);
-    
+
         $self = $this;
-    
+
         // Assert Bar Property
         self::$Parent->walk(function($o, $i) use(&$self) {
             if ($o instanceof \BLW\ObjectInterface) {
                 $self->assertEquals(1, $o->Options->bar);
             }
         });
-    
+
         // Assert ID's
         $this->assertEquals('Child1', self::$Parent[self::CHILD1]->GetID());
         $this->assertEquals('Child2', self::$Parent[self::CHILD2]->GetID());
@@ -168,21 +168,21 @@ class ElementTest extends \PHPUnit_Framework_TestCase
             }
         }
     }
-    
+
 	/**
 	 * @depends test_push
 	 */
     public function test_filter()
     {
         $Nodes = self::$Parent->filter('span');
-        
-        $this->assertEquals(13, $Nodes->length);
-        
+
+        $this->assertEquals(12, $Nodes->length);
+
         foreach ($Nodes as $Node) {
             $this->assertEquals('<span></span>', $Node-> C14N());
         }
     }
-    
+
     /**
 	 * @depends test_push
 	 */
@@ -193,38 +193,38 @@ class ElementTest extends \PHPUnit_Framework_TestCase
         self::$Child2->foo = 1;
         self::$Child3->foo = 1;
         self::$Child4->foo = 1;
-        
+
         $Serialized = unserialize(serialize(self::$Parent));
-        
+
         $this->assertSame(self::$Parent->foo, $Serialized->foo);
         $this->assertEquals(self::$Parent->GetHTML(), $Serialized->GetHTML());
-        
+
         foreach (self::$Parent as $k => $v) {
             $this->assertEquals($v, $Serialized[$k]);
         }
     }
-	
+
 	/**
 	 * @depends test_serialize
 	 */
 	public function test_Save()
 	{
 		self::$Parent->Save(sys_get_temp_dir() . '/temp-' .date('l') . '.php');
-		
+
 		$this->assertTrue(file_exists(sys_get_temp_dir() . '/temp-' .date('l') . '.php'));
 	}
-	
+
 	/**
 	 * @depends test_Save
 	 */
 	public function test_Load()
 	{
 		$Saved = include(sys_get_temp_dir() . '/temp-' .date('l') . '.php');
-		
+
 		@unlink(sys_get_temp_dir() . '/temp-' .date('l') . '.php');
-		
+
 		$this->assertEquals(self::$Parent, $Saved);
 		$this->assertFalse(file_exists(sys_get_temp_dir() . '/temp-' .date('l') . '.php'));
 	}
-	
+
 }

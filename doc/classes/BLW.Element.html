@@ -64,17 +64,34 @@
 <li class="method public "><a href="#method_AddNode" title="AddNode() :: Adds a DOMNode to the current object."><span class="description">Adds a DOMNode to the current object.</span><pre>AddNode()</pre></a></li>
 <li class="method public "><a href="#method_BuildOptions" title="BuildOptions() :: Builds Options for current object."><span class="description">Builds Options for current object.</span><pre>BuildOptions()</pre></a></li>
 <li class="method public "><a href="#method_Document" title="Document() :: Returns the current elements document or creates one if it doesnt exist."><span class="description">Returns the current elements document or creates one if it doesnt exist.</span><pre>Document()</pre></a></li>
+<li class="method public "><a href="#method_GetHTML" title="GetHTML() :: Returns HTML of current element."><span class="description">Returns HTML of current element.</span><pre>GetHTML()</pre></a></li>
 <li class="method public "><a href="#method_LoadHTML" title="LoadHTML() :: Converts HTML string into DOMNodes and ataches them to the object."><span class="description">Converts HTML string into DOMNodes and ataches them to the object.</span><pre>LoadHTML()</pre></a></li>
+<li class="method public "><a href="#method_PrintHTML" title="PrintHTML() :: Echos element. (Needed for chaining)"><span class="description">Echos element. (Needed for chaining)</span><pre>PrintHTML()</pre></a></li>
 <li class="method public "><a href="#method_ValidateOptions" title="ValidateOptions() :: Overloads parent function"><span class="description">Overloads parent function</span><pre>ValidateOptions()</pre></a></li>
+<li class="method public "><a href="#method_filter" title="filter() :: Filters the list of nodes with a CSS selector."><span class="description">Filters the list of nodes with a CSS selector.</span><pre>filter()</pre></a></li>
+<li class="method public "><a href="#method_initChild" title="initChild() :: Initializes a child class for subsequent use."><span class="description">Initializes a child class for subsequent use.</span><pre>initChild()</pre></a></li>
 <li class="method public "><a href="#method_onCreate" title="onCreate() :: Hook that is called when a new instance is created."><span class="description">Hook that is called when a new instance is created.</span><pre>onCreate()</pre></a></li>
+<li class="method public "><a href="#method_onSerialize" title="onSerialize() :: Hook that is called just before an object is serialized."><span class="description">Hook that is called just before an object is serialized.</span><pre>onSerialize()</pre></a></li>
+<li class="method public "><a href="#method_onUnSerialize" title="onUnSerialize() :: Hook that is called just after an object is unserialized."><span class="description">Hook that is called just after an object is unserialized.</span><pre>onUnSerialize()</pre></a></li>
+<li class="method public "><a href="#method_tag" title="tag() :: Set / Get Current elements tag."><span class="description">Set / Get Current elements tag.</span><pre>tag()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header">
 <i class="icon-custom icon-property"></i> Properties
                     <ul><li class="property public "><a href="#property_DefaultOptions" title="$DefaultOptions() :: "><span class="description">Default options used by class if not set in constructor.</span><pre>$DefaultOptions</pre></a></li></ul>
 </li>
-<li class="nav-header private">» Private
-                    <ul><li class="property private "><a href="#property_Document" title="$Document() :: "><span class="description">Pointer to current element document if created from string.</span><pre>$Document</pre></a></li></ul>
+</ul>
+<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button><button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-custom icon-method"></i> Methods
+                    <ul><li class="method public "><a href="#method_GetHTML" title="GetHTML() :: Overloads GetHTML."><span class="description">Overloads GetHTML.</span><pre>GetHTML()</pre></a></li></ul>
+</li>
+<li class="nav-header">
+<i class="icon-custom icon-property"></i> Properties
+                    <ul><li class="property public "><a href="#property_DefaultOptions" title="$DefaultOptions() :: "><span class="description">Default options used by class if not set in constructor.</span><pre>$DefaultOptions</pre></a></li></ul>
 </li>
 </ul>
 </div>
@@ -211,6 +228,26 @@ or implement it's interface.</p>
 <code><a href="DOMDocument.html">\DOMDocument</a></code>Current Object's <code>DOMDocument</code>.</div>
 </div></div>
 </div>
+<a id="method_GetHTML"></a><div class="element clickable method public method_GetHTML" data-toggle="collapse" data-target=".method_GetHTML .collapse">
+<h2>Returns HTML of current element.</h2>
+<pre>GetHTML() : string</pre>
+<div class="labels"><span class="label label-info">API</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.0.1</td>
+</tr></table>
+<h3>Exceptions</h3>
+<table class="table table-bordered"><tr>
+<th><code><a href="InvalidArgumentException.html">\InvalidArgumentException</a></code></th>
+<td>When current node list is empty.</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>The node html</div>
+</div></div>
+</div>
 <a id="method_LoadHTML"></a><div class="element clickable method public method_LoadHTML" data-toggle="collapse" data-target=".method_LoadHTML .collapse">
 <h2>Converts HTML string into DOMNodes and ataches them to the object.</h2>
 <pre>LoadHTML(string $HTML) : <a href="../classes/BLW.Element.html">\BLW\Element</a></pre>
@@ -225,6 +262,25 @@ or implement it's interface.</p>
 <div class="subelement argument">
 <h4>$HTML</h4>
 <code>string</code><p>HTML string to load.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Element.html">\BLW\Element</a></code>$this</div>
+</div></div>
+</div>
+<a id="method_PrintHTML"></a><div class="element clickable method public method_PrintHTML" data-toggle="collapse" data-target=".method_PrintHTML .collapse">
+<h2>Echos element. (Needed for chaining)</h2>
+<pre>PrintHTML(bool $isDocument) : <a href="../classes/BLW.Element.html">\BLW\Element</a></pre>
+<div class="labels"><span class="label label-info">API</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.0.1</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$isDocument</h4>
+<code>bool</code><p>Whether object is a document element.</p></div>
 <h3>Returns</h3>
 <div class="subelement response">
 <code><a href="../classes/BLW.Element.html">\BLW\Element</a></code>$this</div>
@@ -249,6 +305,44 @@ or implement it's interface.</p>
 <code>bool</code>Return <code>true</code> if options are valid <code>false</code> otherwise.</div>
 </div></div>
 </div>
+<a id="method_filter"></a><div class="element clickable method public method_filter" data-toggle="collapse" data-target=".method_filter .collapse">
+<h2>Filters the list of nodes with a CSS selector.</h2>
+<pre>filter(string $Selector) : <a href="DOMNodeList.html">\DOMNodeList</a></pre>
+<div class="labels"><span class="label label-info">API</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>since</th>
+<td>1.0.1</td>
+</tr>
+<tr>
+<th>link</th>
+<td><a href="http://symfony.com/doc/current/components/css_selector.html">Symfony > CssSelector</a></td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$Selector</h4>
+<code>string</code><p>A CSS selector</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="DOMNodeList.html">\DOMNodeList</a></code>List of matched nodes.</div>
+</div></div>
+</div>
+<a id="method_initChild"></a><div class="element clickable method public method_initChild" data-toggle="collapse" data-target=".method_initChild .collapse">
+<h2>Initializes a child class for subsequent use.</h2>
+<pre>initChild(array $Data) : array</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument"><h4>$Data</h4></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>array</code>Returns Options used / generated during init.</div>
+</div></div>
+</div>
 <a id="method_onCreate"></a><div class="element clickable method public method_onCreate" data-toggle="collapse" data-target=".method_onCreate .collapse">
 <h2>Hook that is called when a new instance is created.</h2>
 <pre>onCreate(\Closure $Function) : <a href="../classes/BLW.Object.html">\BLW\Object</a></pre>
@@ -266,6 +360,64 @@ or implement it's interface.</p>
 <h3>Returns</h3>
 <div class="subelement response">
 <code><a href="../classes/BLW.Object.html">\BLW\Object</a></code>Current object</div>
+</div></div>
+</div>
+<a id="method_onSerialize"></a><div class="element clickable method public method_onSerialize" data-toggle="collapse" data-target=".method_onSerialize .collapse">
+<h2>Hook that is called just before an object is serialized.</h2>
+<pre>onSerialize(\Closure $Function) : <a href="../classes/BLW.Object.html">\BLW\Object</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>note</th>
+<td>Format is <code>mixed function (\BLW\ObjectInterface $o)</code>.</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$Function</h4>
+<code><a href="Closure.html">\Closure</a></code><p>Function to call before object is serialized.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Object.html">\BLW\Object</a></code>$this</div>
+</div></div>
+</div>
+<a id="method_onUnSerialize"></a><div class="element clickable method public method_onUnSerialize" data-toggle="collapse" data-target=".method_onUnSerialize .collapse">
+<h2>Hook that is called just after an object is unserialized.</h2>
+<pre>onUnSerialize(\Closure $Function) : <a href="../classes/BLW.Object.html">\BLW\Object</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>note</th>
+<td>Format is <code>mixed function (\BLW\ObjectInterface $o)</code>.</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$Function</h4>
+<code><a href="Closure.html">\Closure</a></code><p>Function to call after Object has been unserialized.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Object.html">\BLW\Object</a></code>$this</div>
+</div></div>
+</div>
+<a id="method_tag"></a><div class="element clickable method public method_tag" data-toggle="collapse" data-target=".method_tag .collapse">
+<h2>Set / Get Current elements tag.</h2>
+<pre>tag(string $Tag) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>note</th>
+<td>Raises <code>E_USER_ERROR</code> if default node does not exist.</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$Tag</h4>
+<code>string</code><p>New tag name. (<code>[A-Za-z][\w_-]*</code>)</p>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>| \BLW\Element Returns current tagName string or $this</div>
 </div></div>
 </div>
 <h3>
@@ -290,16 +442,107 @@ or implement it's interface.</p>
 </table>
 </div></div>
 </div>
-<a id="property_Document"> </a><div class="element clickable property private property_Document" data-toggle="collapse" data-target=".property_Document .collapse">
-<h2>Pointer to current element document if created from string.</h2>
-<pre>$Document : <a href="DOMDocument.html">\DOMDocument</a></pre>
+</div>
+</div>
+<a id="\BLW\Element"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../namespaces/BLW.html">BLW</a></li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/BLW.Element.html">Element</a>
+</li>
+</ul>
+<div class="element class">
+<h1>Element</h1>
+<p class="short_description">Core BLW Ajax object.</p>
+<div class="details">
+<div class="long_description"><h3>About</h3>
+
+<p>I really thought about how to add ajax to objects. I finally resolved
+it this way:</p>
+
+<p>Most CMS have ajax but my system needs to be compatible with all of
+them while still allowing for ajax in a stand alone fashion.</p>
+
+<p>Therefore you must create an ajax element before any headers are sent
+just like the header() function in php allowing ajax elements to output
+cookies as well as output ajax replies on same url. Simple.</p>
+
+<hr></div>
+<table class="table table-bordered">
+<tr>
+<th>package</th>
+<td><a href="../packages/BLW.Core.html">BLW\Core</a></td>
+</tr>
+<tr>
+<th>version</th>
+<td>1.0.0</td>
+</tr>
+<tr>
+<th>since</th>
+<td>0.1.0</td>
+</tr>
+<tr>
+<th>author</th>
+<td><a href="mailto:wotsyula@mast3rpee.tk">mAsT3RpEE</a></td>
+</tr>
+<tr>
+<th>link</th>
+<td><a href="http://mast3rpee.tk/projects/BLW/">mAsT3RpEE's Zone > Projects > BLW</a></td>
+</tr>
+<tr>
+<th>Extends</th>
+<td>
+<a href="../classes/BLW.Object.html">\BLW\Object</a>
+             
+        </td>
+</tr>
+<tr>
+<th>Implements</th>
+<td>
+<a href="../classes/BLW.ElementInterface.html">\BLW\ElementInterface</a>
+             
+        </td>
+</tr>
+</table>
+<h3>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a id="method_GetHTML"></a><div class="element clickable method public method_GetHTML" data-toggle="collapse" data-target=".method_GetHTML .collapse">
+<h2>Overloads GetHTML.</h2>
+<pre>GetHTML() : string</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
-<th>link</th>
-<td><a href="http://php.net/manual/en/class.domdocument.php">http://php.net/manual/en/class.domdocument.php</a></td>
+<th>see</th>
+<td><a href="BLW.Element.html#method_GetHTML()">\BLW\Element::GetHTML()</a></td>
 </tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>HTML output of Form</div>
+</div></div>
+</div>
+<h3>
+<i class="icon-custom icon-property"></i> Properties</h3>
+<a id="property_DefaultOptions"> </a><div class="element clickable property public property_DefaultOptions" data-toggle="collapse" data-target=".property_DefaultOptions .collapse">
+<h2>Default options used by class if not set in constructor.</h2>
+<pre>$DefaultOptions : array</pre>
+<div class="labels">
+<span class="label label-info">API</span><span class="label">Static</span>
+</div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>since</th>
+<td>0.1.0</td>
+</tr>
+<tr>
+<th>see</th>
+<td><a href="BLW.Object.html#method___construct()">\BLW\Object::__construct()</a></td>
+</tr>
+</table>
 </div></div>
 </div>
 </div>
@@ -310,7 +553,7 @@ or implement it's interface.</p>
             Template is built using <a>Twitter Bootstrap 2</a> and icons provided by <a>Glyphicons</a>.<br>
             Documentation is powered by <a>phpDocumentor 2.1.0
 </a> and<br>
-            generated on 2013-12-14T13:25:24+03:00.<br></footer></div>
+            generated on 2013-12-18T16:45:56+03:00.<br></footer></div>
 </div>
 </body>
 </html>

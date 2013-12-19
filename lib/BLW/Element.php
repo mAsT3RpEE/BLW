@@ -117,9 +117,6 @@ class Element extends \BLW\Object implements \BLW\ElementInterface
                 self::$Initialized    = true;
 
                 unset(self::$DefaultOptions['hard_init']);
-
-                self::$base = self::create();
-                self::$self = &self::$base;
             }
 
             // Return Options

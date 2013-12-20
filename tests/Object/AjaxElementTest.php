@@ -21,13 +21,14 @@ namespace BLW\Tests; if(!defined('BLW')){trigger_error('Unsafe access of custom 
 
 use BLW\Object;
 use BLW\Element;
+use BLW\AjaxElement;
 
 /**
  * Tests BLW Library Element functionality.
  * @package BLW\Core
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  */
-class ElementTest extends \PHPUnit_Framework_TestCase
+class AjaxElementTest extends \PHPUnit_Framework_TestCase
 {
     const CHILD1 = 1;
     const CHILD2 = 2;
@@ -53,33 +54,27 @@ class ElementTest extends \PHPUnit_Framework_TestCase
     private static $GrandChild5    = NULL;
     private static $GrandChild6    = NULL;
 
-    public function test_init()
-    {
-        Element::init(array('foo'=>1,'hard_init'=>true));
+	public function test_init()
+	{
+	    $Data = array('hard_init' => 1);
 
-        // Data tests
-        $this->assertArrayHasKey('foo', Element::$DefaultOptions);
-        $this->assertArrayNotHasKey('hard_init', Element::$DefaultOptions);
+		Object::init($Data);
+		Element::init($Data);
+		AjaxElement::init($Data);
+	}
 
-        // Options tests
-        if (isset(Element::$DefaultOptions['foo'])) {
-            $this->assertEquals(1, Element::$DefaultOptions['foo']);
-            unset(Element::$DefaultOptions['foo']);
-        }
-    }
-
-    /**
-     * @depends test_init
-     */
-    public function test_create()
-    {
+	public function test_create()
+	{
         // Create Parent
-      self::$Parent = Element::create(array('ID'=>'Parent', 'bar'=>1));
+        self::$Parent = AjaxElement::create(array('ID'=>'Parent', 'bar'=>1));
 
         $this->assertEquals('Parent', self::$Parent->GetID());
         $this->assertEquals(1, self::$Parent->Options->bar);
         $this->assertNull(self::$Parent->parent());
-        $this->assertEquals('<span></span>', self::$Parent->GetHTML());
+        $this->assertEquals('<span class="ajax"></span>', self::$Parent->GetHTML());
+
+        self::$Parent->onSetID();
+        $this->assertEquals('<span class="ajax" id="Parent"></span>', self::$Parent->GetHTML());
 
         $Duplicate = Element::create(self::$Parent);
 
@@ -89,40 +84,24 @@ class ElementTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(self::$Parent->count(), $Duplicate->count());
 
         // Create Children
-        self::$Child1         = Element::create(array('ID'=>'Child1',      'Parent'=>self::$Parent, 'bar'=>1));
-        self::$Child2         = Element::create(array('ID'=>'Child2',      'Parent'=>self::$Parent, 'bar'=>1));
-        self::$Child3         = Element::create(array('ID'=>'Child3',      'Parent'=>self::$Parent, 'bar'=>1));
-        self::$Child4         = Element::create(array('ID'=>'Child4',      'Parent'=>self::$Parent, 'bar'=>1));
+        self::$Child1         = AjaxElement::create(array('ID'=>'Child1',      'Parent'=>self::$Parent, 'bar'=>1));
+        self::$Child2         = AjaxElement::create(array('ID'=>'Child2',      'Parent'=>self::$Parent, 'bar'=>1));
+        self::$Child3         = AjaxElement::create(array('ID'=>'Child3',      'Parent'=>self::$Parent, 'bar'=>1));
+        self::$Child4         = AjaxElement::create(array('ID'=>'Child4',      'Parent'=>self::$Parent, 'bar'=>1));
 
         foreach (self::$Parent as $Child) if($Child instanceof \BLW\ObjectInterface) {
             $this->assertSame(self::$Parent, $Child->parent());
         }
 
         // Create GrandChildren
-        self::$GrandChild1    = Element::create(array('ID'=>'GrandChild1', 'bar'=>1));
-        self::$GrandChild2    = Element::create(array('ID'=>'GrandChild2', 'bar'=>1));
-        self::$GrandChild3    = Element::create(array('ID'=>'GrandChild3', 'bar'=>1));
-        self::$GrandChild4    = Element::create(array('ID'=>'GrandChild4', 'bar'=>1));
-        self::$GrandChild5    = Element::create(array('ID'=>'GrandChild5', 'bar'=>1));
-        self::$GrandChild6    = Element::create(array('ID'=>'GrandChild6', 'bar'=>1));
-    }
+        self::$GrandChild1    = AjaxElement::create(array('ID'=>'GrandChild1', 'bar'=>1));
+        self::$GrandChild2    = AjaxElement::create(array('ID'=>'GrandChild2', 'bar'=>1));
+        self::$GrandChild3    = AjaxElement::create(array('ID'=>'GrandChild3', 'bar'=>1));
+        self::$GrandChild4    = AjaxElement::create(array('ID'=>'GrandChild4', 'bar'=>1));
+        self::$GrandChild5    = AjaxElement::create(array('ID'=>'GrandChild5', 'bar'=>1));
+        self::$GrandChild6    = AjaxElement::create(array('ID'=>'GrandChild6', 'bar'=>1));
 
-    /**
-     * @depends test_create
-     */
-    public function test_tag()
-    {
-        $this->assertEquals('span', self::$Parent->tag());
-        self::$Parent->tag('div');
-        $this->assertEquals('div', self::$Parent[0]->tagName);
-    }
-
-    /**
-     * @depends test_create
-     */
-    public function test_push()
-    {
-        // Map all objects
+	        // Map all objects
         self::$Parent->push(self::$Child1);
         self::$Parent->push(self::$Child2);
         self::$Parent->push(self::$Child3);
@@ -170,24 +149,25 @@ class ElementTest extends \PHPUnit_Framework_TestCase
                 $this->assertSame($Child, $GrandChild->GetParent());
             }
         }
-    }
+	}
 
 	/**
-	 * @depends test_push
+	 * @depends test_create
 	 */
-    public function test_filter()
-    {
-        $Nodes = self::$Parent->filter('span');
+	public function test_doAjax()
+	{
+		self::$Parent->SetAction('foo', function() {
+			return array(
+				'status' => 0
+				,'results' => array('foo')
+			);
+		});
 
-        $this->assertEquals(12, $Nodes->length);
+		$this->assertEquals('{"status":0,"results":["foo"]}', self::$Parent->doAJAX('foo'));
+	}
 
-        foreach ($Nodes as $Node) {
-            $this->assertEquals('<span></span>', $Node-> C14N());
-        }
-    }
-
-    /**
-	 * @depends test_push
+     /**
+	 * @depends test_create
 	 */
     public function test_serialize()
     {
@@ -229,5 +209,4 @@ class ElementTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(self::$Parent, $Saved);
 		$this->assertFalse(file_exists(sys_get_temp_dir() . '/temp-' .date('l') . '.php'));
 	}
-
 }

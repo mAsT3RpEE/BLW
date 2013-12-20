@@ -2661,7 +2661,7 @@ or implement it's interface.&lt;/p&gt;
     </class>
     <source>eJyFUu9v2jAQ/Y7E/3CVJpGgKsD4VrqNjkYTUgcSUIGmSsg4F+I1sSP73A51+9/rxPxoq27zB9v3fH5+73yXX8qsbDY67XazAW2YI5GQWxM5FH7DNXLo9c7hY7fXr8+hnkeq3GmxzQgCHkJxZRb9WRnHLQM/lMQ6pZ4WmTBglNUcIRU5QhXazU/kBKSAMoTv4wXkgqM06GJGVcrGyiTHpKZ4FJS5gxMPV4njkfXlmvNmPIon8zg6PTuscJ/uY37U+67W4UGAE1MBnWbjVJFhyfg92yJ8vVnejZTeX3lAbYSS0Iu6UddDzFKmNCxZTqhhSmZncwaXj8rvhgUz1NclYkT3n/fvSFagcS/U9AMQaXCWYCokJkHLIa0wfCKnfIt6jVorHbRupWEpAuMcjQGVAreGVOGKuNFM71rn8fp2Hs/Wy6vZZDz5Fg40ktVy8OelqdVqFf3LHStFhfzVqhHSSe5GvTfej+X9j22eMyf+0GyAvwhlYuCuUjH1/SGKMscCJb2Cx9LVNmXVxz45Lje8pWpUUpkGpjXbwYdrTJnNaVqS025gH4Lax9ZgApsdeCUiBakIDFLVWtwlkLaclI5O3Kea7IHXRTiAiC/1Xlys10e6IIR30cPtjt+UduMaEgwxcstbI5+8wcDnhoNmo/5Z/8sweAY4giNo</source>
   </file>
-  <file path="lib\BLW\AjaxElement.php" generated-path="lib.BLW.AjaxElement.html" hash="6218fb43ffdf7292c2d6000b1ff5bcf5" package="Default">
+  <file path="lib\BLW\AjaxElement.php" generated-path="lib.BLW.AjaxElement.html" hash="168495af0425c6e9050b42147c11e930" package="Default">
     <docblock line="0">
       <description>AjaxElement.php | Dec 10, 2013</description>
       <long-description>Copyright (c) mAsT3RpEE's Zone
@@ -2673,10 +2673,9 @@ with this source code in the file LICENSE.</long-description>
       <tag name="license" line="0" description="MIT" link="http://opensource.org/licenses/MIT"/>
     </docblock>
     <class final="false" abstract="false" namespace="BLW" line="48" package="BLW\Core">
-      <extends>\BLW\Object</extends>
-      <implements>\BLW\ElementInterface</implements>
-      <name>Element</name>
-      <full_name>\BLW\Element</full_name>
+      <extends>\BLW\Element</extends>
+      <name>AjaxElement</name>
+      <full_name>\BLW\AjaxElement</full_name>
       <docblock line="48">
         <description>Core BLW Ajax object.</description>
         <long-description>&lt;h3&gt;About&lt;/h3&gt;
@@ -2699,36 +2698,328 @@ cookies as well as output ajax replies on same url. Simple.&lt;/p&gt;
         <tag name="author" line="48" description="mAsT3RpEE" link="mailto:wotsyula@mast3rpee.tk"/>
         <tag name="link" line="48" description="mAsT3RpEE's Zone &gt; Projects &gt; BLW" link="http://mast3rpee.tk/projects/BLW/"/>
       </docblock>
-      <property static="true" visibility="public" line="56" namespace="BLW" package="BLW\Core">
-        <name>$DefaultOptions</name>
-        <default>array('HTML' =&gt; '&lt;span&gt;&lt;/span&gt;')</default>
-        <docblock line="56">
+      <constant namespace="BLW" line="51" package="BLW\Core">
+        <name>TYPE_GET</name>
+        <full_name>\BLW\AjaxElement::TYPE_GET</full_name>
+        <value>1</value>
+        <docblock line="51">
           <description></description>
           <long-description></long-description>
-          <tag name="var" line="56" description="&lt;p&gt;Default options used by class if not set in constructor.&lt;/p&gt;" type="array" variable="$DefaultOptions">
-            <type>array</type>
+        </docblock>
+      </constant>
+      <constant namespace="BLW" line="52" package="BLW\Core">
+        <name>TYPE_POST</name>
+        <full_name>\BLW\AjaxElement::TYPE_POST</full_name>
+        <value>2</value>
+        <docblock line="52">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </constant>
+      <constant namespace="BLW" line="53" package="BLW\Core">
+        <name>TYPE_COOKIE</name>
+        <full_name>\BLW\AjaxElement::TYPE_COOKIE</full_name>
+        <value>4</value>
+        <docblock line="53">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </constant>
+      <constant namespace="BLW" line="54" package="BLW\Core">
+        <name>TYPE_SESSION</name>
+        <full_name>\BLW\AjaxElement::TYPE_SESSION</full_name>
+        <value>8</value>
+        <docblock line="54">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </constant>
+      <constant namespace="BLW" line="57" package="BLW\Core">
+        <name>FINISHED</name>
+        <full_name>\BLW\AjaxElement::FINISHED</full_name>
+        <value>0</value>
+        <docblock line="57">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </constant>
+      <constant namespace="BLW" line="58" package="BLW\Core">
+        <name>PROCESSING</name>
+        <full_name>\BLW\AjaxElement::PROCESSING</full_name>
+        <value>1</value>
+        <docblock line="58">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </constant>
+      <property static="true" visibility="protected" line="63" namespace="BLW" package="BLW\Core">
+        <name>$Scripts</name>
+        <default>array()</default>
+        <docblock line="63">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="63" description="&lt;p&gt;Array of javascripts relative to asset directory to load.&lt;/p&gt;" type="string[]" variable="$Scripts">
+            <type>string[]</type>
           </tag>
-          <tag name="api" line="56" description="BLW"/>
-          <tag name="since" line="56" description="0.1.0"/>
-          <tag name="see" line="56" description="Object::__construct()" link="\BLW\Object::__construct()"/>
         </docblock>
       </property>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="65" package="BLW\Core">
-        <name>GetHTML</name>
-        <full_name>\BLW\Element::GetHTML()</full_name>
-        <docblock line="65">
-          <description>Overloads GetHTML.</description>
+      <property static="true" visibility="private" line="67" namespace="BLW" package="BLW\Core">
+        <name>$Actions</name>
+        <default>array()</default>
+        <docblock line="67">
+          <description></description>
           <long-description></long-description>
-          <tag name="see" line="65" description="" link="\BLW\Element::GetHTML()"/>
-          <tag name="return" line="65" description="HTML output of Form" type="string">
+          <tag name="var" line="67" description="&lt;p&gt;List of all ajax actions available.&lt;/p&gt;" type="callback[]" variable="$Actions">
+            <type>callback[]</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="true" visibility="public" line="71" namespace="BLW" package="BLW\Core">
+        <name>$Notices</name>
+        <default>array()</default>
+        <docblock line="71">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="71" description="&lt;p&gt;Stores all ajax notices.&lt;/p&gt;" type="string[]" variable="$notices">
+            <type>string[]</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="true" visibility="public" line="75" namespace="BLW" package="BLW\Core">
+        <name>$Errors</name>
+        <default>array()</default>
+        <docblock line="75">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="75" description="&lt;p&gt;Stores all ajax errors.&lt;/p&gt;" type="string[]" variable="$errors">
+            <type>string[]</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="true" visibility="public" line="81" namespace="BLW" package="BLW\Core">
+        <name>$DefaultOptions</name>
+        <default>array('HTML' =&gt; '&lt;span class="ajax"&gt;&lt;/span&gt;', 'AJAX' =&gt; array(), 'Type' =&gt; self::TYPE_COOKIE)</default>
+        <docblock line="81">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="81" description="&lt;p&gt;Default options used by class if not set in constructor.&lt;/p&gt;" type="string[]" variable="$DefaultOptions">
+            <type>string[]</type>
+          </tag>
+          <tag name="see" line="81" description="Object::__construct()" link="\BLW\Object::__construct()"/>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="BLW" line="92" package="BLW\Core">
+        <name>initChild</name>
+        <full_name>\BLW\AjaxElement::initChild()</full_name>
+        <docblock line="92">
+          <description>Initializes a child class for subsequent use.</description>
+          <long-description></long-description>
+          <tag name="param" line="92" description="&lt;p&gt;Initialization options. (Automatically adds blw_cfg())&lt;/p&gt;&#10;" type="array" variable="$Options">
+            <type>array</type>
+          </tag>
+          <tag name="return" line="92" description="Returns Options used / generated during init." type="array">
+            <type>array</type>
+          </tag>
+        </docblock>
+        <argument line="0">
+          <name>$Data</name>
+          <default>array()</default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="BLW" line="161" package="BLW\Core">
+        <name>onCreate</name>
+        <full_name>\BLW\AjaxElement::onCreate()</full_name>
+        <docblock line="161">
+          <description>Hook that is called when a new instance is created.</description>
+          <long-description></long-description>
+          <tag name="note" line="161" description="Format is &lt;code&gt;mixed function (\BLW\ObjectInterface $o)&lt;/code&gt;."/>
+          <tag name="param" line="161" description="&lt;p&gt;Function to call after object has been created.&lt;/p&gt;" type="\Closure" variable="$Function">
+            <type link="Closure.html">\Closure</type>
+          </tag>
+          <tag name="return" line="161" description="Current object" type="\BLW\Object">
+            <type link="Object.html">\BLW\Object</type>
+          </tag>
+        </docblock>
+        <argument line="0">
+          <name>$Function</name>
+          <default>NULL</default>
+          <type>\Closure</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="204" package="BLW\Core">
+        <name>onSetID</name>
+        <full_name>\BLW\AjaxElement::onSetID()</full_name>
+        <docblock line="204">
+          <description>Changes the ID of the current object.</description>
+          <long-description></long-description>
+          <tag name="param" line="204" description="&lt;p&gt;New ID to give Object&lt;/p&gt;" type="string" variable="$ID">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="204" description="$this" type="\BLW\Object">
+            <type link="Object.html">\BLW\Object</type>
+          </tag>
+        </docblock>
+        <argument line="0">
+          <name>$Function</name>
+          <default>NULL</default>
+          <type>\Closure</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="224" package="BLW\Core">
+        <name>onSerialize</name>
+        <full_name>\BLW\AjaxElement::onSerialize()</full_name>
+        <docblock line="224">
+          <description>Hook that is called just before an object is serialized.</description>
+          <long-description></long-description>
+          <tag name="note" line="224" description="Format is &lt;code&gt;mixed function (\BLW\ObjectInterface $o)&lt;/code&gt;."/>
+          <tag name="param" line="224" description="&lt;p&gt;Function to call before object is serialized.&lt;/p&gt;" type="\Closure" variable="$Function">
+            <type link="Closure.html">\Closure</type>
+          </tag>
+          <tag name="return" line="224" description="$this" type="\BLW\AjaxElement">
+            <type link="AjaxElement.html">\BLW\AjaxElement</type>
+          </tag>
+        </docblock>
+        <argument line="0">
+          <name>$Function</name>
+          <default>NULL</default>
+          <type>\Closure</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="245" package="BLW\Core">
+        <name>InlineJS</name>
+        <full_name>\BLW\AjaxElement::InlineJS()</full_name>
+        <docblock line="245">
+          <description>Get inline Javascript used by object.</description>
+          <long-description></long-description>
+          <tag name="api" line="245" description="BLW"/>
+          <tag name="since" line="245" description="1.0.0"/>
+          <tag name="return" line="245" description="" type="string">
             <type>string</type>
           </tag>
         </docblock>
       </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="255" package="BLW\Core">
+        <name>GetHTML</name>
+        <full_name>\BLW\AjaxElement::GetHTML()</full_name>
+        <docblock line="255">
+          <description>Overloads GetHTML.</description>
+          <long-description></long-description>
+          <tag name="see" line="255" description="" link="\BLW\Element::GetHTML()"/>
+          <tag name="return" line="255" description="HTML output of Form" type="string">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="274" package="BLW\Core">
+        <name>SecurityID</name>
+        <full_name>\BLW\AjaxElement::SecurityID()</full_name>
+        <docblock line="274">
+          <description>Creates a security ID to track ajax requests per user.</description>
+          <long-description></long-description>
+          <tag name="api" line="274" description="BLW"/>
+          <tag name="since" line="274" description="1.0.0"/>
+          <tag name="see" line="274" description="" link="\BLW\AjaxElement::ValidateSecurityID()"/>
+          <tag name="return" line="274" description="Generated security ID" type="string">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="295" package="BLW\Core">
+        <name>ValidateSecurityID</name>
+        <full_name>\BLW\AjaxElement::ValidateSecurityID()</full_name>
+        <docblock line="295">
+          <description>Validates security ID.</description>
+          <long-description></long-description>
+          <tag name="api" line="295" description="BLW"/>
+          <tag name="since" line="295" description="1.0.0 @note On fail deletes session. Hope this does not ruin your coding -_-."/>
+          <tag name="see" line="295" description="" link="\BLW\AjaxElement::SecurityID()"/>
+          <tag name="return" line="295" description="Returns true if security ID matches" type="bool">
+            <type>bool</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="318" package="BLW\Core">
+        <name>doAJAX</name>
+        <full_name>\BLW\AjaxElement::doAJAX()</full_name>
+        <docblock line="318">
+          <description>Perform an ajax request then exit.</description>
+          <long-description></long-description>
+          <tag name="api" line="318" description="BLW"/>
+          <tag name="since" line="318" description="1.0.0"/>
+          <tag name="param" line="318" description="&lt;p&gt;Ajax action to perform.&lt;/p&gt;" type="string" variable="$Action">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="318" description="" type="\BLW\string;">
+            <type link="string;.html">\BLW\string;</type>
+          </tag>
+        </docblock>
+        <argument line="0">
+          <name>$Action</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="373" package="BLW\Core">
+        <name>SetAction</name>
+        <full_name>\BLW\AjaxElement::SetAction()</full_name>
+        <docblock line="373">
+          <description>Sets an ajax action to a specific value.</description>
+          <long-description></long-description>
+          <tag name="api" line="373" description="BLW"/>
+          <tag name="since" line="373" description="1.0.0"/>
+          <tag name="param" line="373" description="&lt;p&gt;Action to set&lt;/p&gt;" type="string" variable="$Action">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="373" description="&lt;p&gt;Function to handle ajax action&lt;/p&gt;" type="\Closure" variable="$Func">
+            <type link="Closure.html">\Closure</type>
+          </tag>
+          <tag name="return" line="373" description="Previous action." type="\Closure|null">
+            <type link="Closure.html">\Closure</type>
+            <type>null</type>
+          </tag>
+        </docblock>
+        <argument line="0">
+          <name>$Action</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0">
+          <name>$Func</name>
+          <default></default>
+          <type>\Closure</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="401" package="BLW\Core">
+        <name>LoadAjax</name>
+        <full_name>\BLW\AjaxElement::LoadAjax()</full_name>
+        <docblock line="401">
+          <description>Loads element from session / &lt;code&gt;$_REQUEST&lt;/code&gt;.</description>
+          <long-description></long-description>
+          <tag name="api" line="401" description="BLW"/>
+          <tag name="since" line="401" description="1.0.0"/>
+          <tag name="return" line="401" description="$this" type="\BLW\AjaxElement">
+            <type link="AjaxElement.html">\BLW\AjaxElement</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="412" package="BLW\Core">
+        <name>SaveAjax</name>
+        <full_name>\BLW\AjaxElement::SaveAjax()</full_name>
+        <docblock line="412">
+          <description>Saves element to session / &lt;code&gt;$_REQUEST&lt;/code&gt;.</description>
+          <long-description></long-description>
+          <tag name="api" line="412" description="BLW"/>
+          <tag name="since" line="412" description="1.0.0"/>
+          <tag name="return" line="412" description="$this" type="\BLW\AjaxElement">
+            <type link="AjaxElement.html">\BLW\AjaxElement</type>
+          </tag>
+        </docblock>
+      </method>
     </class>
-    <source>eJx9VG1v4jgQ/s6vmFshBapeAss3YDl6LLeH1JdTYVXpVAmZZELSJnZkO2Wj3v73m3FCDrrdiwS2x+PHM8884+lvRVJ0gouLDlzA1ZP4tswwR2l9MsM/8BlDGA4u4eNgOGIP4L+FKiqd7hMLvbAP+ZXZjO6L5dIz8LeSyB782ySpAaNKHSLEaYbAy3L3hKEFq8AmCDerDWRpiNIgrYVll10powwjRjikNiH7fzChighGurMO8nq1WN6ul/7xzjlba2e3DNtI34tyfryb4qB10DnyMC9E+Cz2CL9fPzwulK69X1CbVEkY+gN/4CyitInS8CAyixrurKnKTMD0oOrZPBfGjnSB6NvnmbtBihwNoTvoCaRx75cI41Ri1PPI4vX7r5YC3qPeotZK97yv0ogYQYQhGgMqhrA0VuXE204LXXmXy+3X9fJ++3B1f7u6/dKfaLSllpPvnU5Jqa2rPFayoizygtKW9nFhzBozqoLSp/NJmz0nzOE5OYByFWOGeW+ajGZXO1XaaUCzo7GYrUCjyLKKSqNK5luwEyTqwLUWUQSCwWhe4xkfVlRC6c5oKln2Utc8tXXFD6IaT4Pi5IobZSwsbtaQiBes4XZ0RV6BqYzFHCRiZPiKHSslL4RNd6QRpyK6h7hjJNJODoeE1WNsSmbaUodU7iGmUjpYUpigTSEp6oxIg1iYhCrvnwe0SVBjzGRVqoScygIhsWApOFkDYd1LFJBzE7KCBEVEOgJBa0N7jPXER7P0GZ2wa49eH+JShpYFR/FwN7aBnmK7hInqonRQoVLPKRI8MYicnGk260Mai4y3CdSQEqHUmQ/rNC8yPEsu0bOf94EoUjb8pCdMKkndA3943iNt//1PezQ9KZ8hsbYYB8GpQ1Bo5ZQT0N3BD/0MM/ircaBpHV7QCTNBTdM8aYDfLEqSyCOnc1e/RC73mkhnbnxXkjo6pj7tvHaAPtca/HHOgnSitaig+xljUWb2ruA6GWiWoJo1NWAEuwrqMNIYpLJUdcsVDcnB6pJbz2+hW2qb9RmZRxviaQbj8XbbYpFq3rU2hwM3FuWOHj4WuKXhbQ6f6tx69RH6vD83N9cevPk+zcCb0ksmZ9PADZ470J+44S1nd6STTAni/gtaxvN/TKdhfjxuXNqoYV4/aRSxZvnz5lHV9B7+oXT+Xn5t+5zjvbaJNaiFxv2WG4Oq3fM+9PyLfm8aeH6X36FfZ1bse33fm/V540NqvEvwusPuqPuRZgW18VnIlzBsKPheE0HPcHPP5F865kod</source>
+    <source>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</source>
   </file>
-  <file path="lib\BLW\Element.php" generated-path="lib.BLW.Element.html" hash="25b8da726ffce9332f153b191dc146f3" package="Default">
+  <file path="lib\BLW\Element.php" generated-path="lib.BLW.Element.html" hash="69c5e22b800235809aa9f48356d6d91b" package="Default">
     <docblock line="0">
       <description>Element.php | Nov 29, 2013</description>
       <long-description>Copyright (c) mAsT3RpEE's Zone
@@ -2832,17 +3123,17 @@ or implement it's interface.&lt;/p&gt;
           <type>array</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="true" visibility="public" namespace="BLW" line="148" package="BLW\Core">
+      <method final="false" abstract="false" static="true" visibility="public" namespace="BLW" line="145" package="BLW\Core">
         <name>onCreate</name>
         <full_name>\BLW\Element::onCreate()</full_name>
-        <docblock line="148">
+        <docblock line="145">
           <description>Hook that is called when a new instance is created.</description>
           <long-description></long-description>
-          <tag name="note" line="148" description="Format is &lt;code&gt;mixed function (\BLW\ObjectInterface $o)&lt;/code&gt;."/>
-          <tag name="param" line="148" description="&lt;p&gt;Function to call after object has been created.&lt;/p&gt;" type="\Closure" variable="$Function">
+          <tag name="note" line="145" description="Format is &lt;code&gt;mixed function (\BLW\ObjectInterface $o)&lt;/code&gt;."/>
+          <tag name="param" line="145" description="&lt;p&gt;Function to call after object has been created.&lt;/p&gt;" type="\Closure" variable="$Function">
             <type link="Closure.html">\Closure</type>
           </tag>
-          <tag name="return" line="148" description="Current object" type="\BLW\Object">
+          <tag name="return" line="145" description="Current object" type="\BLW\Object">
             <type link="Object.html">\BLW\Object</type>
           </tag>
         </docblock>
@@ -2852,17 +3143,17 @@ or implement it's interface.&lt;/p&gt;
           <type>\Closure</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="212" package="BLW\Core">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="209" package="BLW\Core">
         <name>onSerialize</name>
         <full_name>\BLW\Element::onSerialize()</full_name>
-        <docblock line="212">
+        <docblock line="209">
           <description>Hook that is called just before an object is serialized.</description>
           <long-description></long-description>
-          <tag name="note" line="212" description="Format is &lt;code&gt;mixed function (\BLW\ObjectInterface $o)&lt;/code&gt;."/>
-          <tag name="param" line="212" description="&lt;p&gt;Function to call before object is serialized.&lt;/p&gt;" type="\Closure" variable="$Function">
+          <tag name="note" line="209" description="Format is &lt;code&gt;mixed function (\BLW\ObjectInterface $o)&lt;/code&gt;."/>
+          <tag name="param" line="209" description="&lt;p&gt;Function to call before object is serialized.&lt;/p&gt;" type="\Closure" variable="$Function">
             <type link="Closure.html">\Closure</type>
           </tag>
-          <tag name="return" line="212" description="$this" type="\BLW\Object">
+          <tag name="return" line="209" description="$this" type="\BLW\Object">
             <type link="Object.html">\BLW\Object</type>
           </tag>
         </docblock>
@@ -2872,17 +3163,17 @@ or implement it's interface.&lt;/p&gt;
           <type>\Closure</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="240" package="BLW\Core">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="237" package="BLW\Core">
         <name>onUnSerialize</name>
         <full_name>\BLW\Element::onUnSerialize()</full_name>
-        <docblock line="240">
+        <docblock line="237">
           <description>Hook that is called just after an object is unserialized.</description>
           <long-description></long-description>
-          <tag name="note" line="240" description="Format is &lt;code&gt;mixed function (\BLW\ObjectInterface $o)&lt;/code&gt;."/>
-          <tag name="param" line="240" description="&lt;p&gt;Function to call after Object has been unserialized.&lt;/p&gt;" type="\Closure" variable="$Function">
+          <tag name="note" line="237" description="Format is &lt;code&gt;mixed function (\BLW\ObjectInterface $o)&lt;/code&gt;."/>
+          <tag name="param" line="237" description="&lt;p&gt;Function to call after Object has been unserialized.&lt;/p&gt;" type="\Closure" variable="$Function">
             <type link="Closure.html">\Closure</type>
           </tag>
-          <tag name="return" line="240" description="$this" type="\BLW\Object">
+          <tag name="return" line="237" description="$this" type="\BLW\Object">
             <type link="Object.html">\BLW\Object</type>
           </tag>
         </docblock>
@@ -2892,31 +3183,31 @@ or implement it's interface.&lt;/p&gt;
           <type>\Closure</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="267" package="BLW\Core">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="264" package="BLW\Core">
         <name>Document</name>
         <full_name>\BLW\Element::Document()</full_name>
-        <docblock line="267">
+        <docblock line="264">
           <description>Returns the current elements document or creates one if it doesnt exist.</description>
           <long-description></long-description>
-          <tag name="api" line="267" description="BLW"/>
-          <tag name="since" line="267" description="1.0.0"/>
-          <tag name="return" line="267" description="Current Object's &lt;code&gt;DOMDocument&lt;/code&gt;." type="\DOMDocument">
+          <tag name="api" line="264" description="BLW"/>
+          <tag name="since" line="264" description="1.0.0"/>
+          <tag name="return" line="264" description="Current Object's &lt;code&gt;DOMDocument&lt;/code&gt;." type="\DOMDocument">
             <type link="DOMDocument.html">\DOMDocument</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="288" package="BLW\Core">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="285" package="BLW\Core">
         <name>LoadHTML</name>
         <full_name>\BLW\Element::LoadHTML()</full_name>
-        <docblock line="288">
+        <docblock line="285">
           <description>Converts HTML string into DOMNodes and ataches them to the object.</description>
           <long-description></long-description>
-          <tag name="api" line="288" description="BLW"/>
-          <tag name="since" line="288" description="1.0.0"/>
-          <tag name="param" line="288" description="&lt;p&gt;HTML string to load.&lt;/p&gt;" type="string" variable="$HTML">
+          <tag name="api" line="285" description="BLW"/>
+          <tag name="since" line="285" description="1.0.0"/>
+          <tag name="param" line="285" description="&lt;p&gt;HTML string to load.&lt;/p&gt;" type="string" variable="$HTML">
             <type>string</type>
           </tag>
-          <tag name="return" line="288" description="$this" type="\BLW\Element">
+          <tag name="return" line="285" description="$this" type="\BLW\Element">
             <type link="Element.html">\BLW\Element</type>
           </tag>
         </docblock>
@@ -2926,21 +3217,21 @@ or implement it's interface.&lt;/p&gt;
           <type>string</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="342" package="BLW\Core">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="339" package="BLW\Core">
         <name>AddDocument</name>
         <full_name>\BLW\Element::AddDocument()</full_name>
-        <docblock line="342">
+        <docblock line="339">
           <description>Loads Nodes from a DOMDocument.</description>
           <long-description></long-description>
-          <tag name="api" line="342" description="BLW"/>
-          <tag name="since" line="342" description="1.0.0"/>
-          <tag name="param" line="342" description="&lt;p&gt;Document to Add to current Object.&lt;/p&gt;" type="\DOMDocument" variable="$Document">
+          <tag name="api" line="339" description="BLW"/>
+          <tag name="since" line="339" description="1.0.0"/>
+          <tag name="param" line="339" description="&lt;p&gt;Document to Add to current Object.&lt;/p&gt;" type="\DOMDocument" variable="$Document">
             <type link="DOMDocument.html">\DOMDocument</type>
           </tag>
-          <tag name="param" line="342" description="&lt;p&gt;Wheather to load the Entire document or just its body.&lt;/p&gt;" type="string" variable="$isDocument">
+          <tag name="param" line="339" description="&lt;p&gt;Wheather to load the Entire document or just its body.&lt;/p&gt;" type="string" variable="$isDocument">
             <type>string</type>
           </tag>
-          <tag name="return" line="342" description="$this" type="\BLW\Element">
+          <tag name="return" line="339" description="$this" type="\BLW\Element">
             <type link="Element.html">\BLW\Element</type>
           </tag>
         </docblock>
@@ -2955,18 +3246,18 @@ or implement it's interface.&lt;/p&gt;
           <type>string</type>
         </argument>
       </method>
-      <method final="true" abstract="false" static="false" visibility="public" namespace="BLW" line="364" package="BLW\Core">
+      <method final="true" abstract="false" static="false" visibility="public" namespace="BLW" line="361" package="BLW\Core">
         <name>AddNode</name>
         <full_name>\BLW\Element::AddNode()</full_name>
-        <docblock line="364">
+        <docblock line="361">
           <description>Adds a DOMNode to the current object.</description>
           <long-description></long-description>
-          <tag name="api" line="364" description="BLW"/>
-          <tag name="since" line="364" description="1.0.0"/>
-          <tag name="param" line="364" description="&lt;p&gt;Node to Add to Object.&lt;/p&gt;" type="\DOMNode" variable="$Node">
+          <tag name="api" line="361" description="BLW"/>
+          <tag name="since" line="361" description="1.0.0"/>
+          <tag name="param" line="361" description="&lt;p&gt;Node to Add to Object.&lt;/p&gt;" type="\DOMNode" variable="$Node">
             <type link="DOMNode.html">\DOMNode</type>
           </tag>
-          <tag name="return" line="364" description="$this" type="\BLW\Element">
+          <tag name="return" line="361" description="$this" type="\BLW\Element">
             <type link="Element.html">\BLW\Element</type>
           </tag>
         </docblock>
@@ -2976,34 +3267,34 @@ or implement it's interface.&lt;/p&gt;
           <type>\DOMNode</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="391" package="BLW\Core">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="388" package="BLW\Core">
         <name>GetHTML</name>
         <full_name>\BLW\Element::GetHTML()</full_name>
-        <docblock line="391">
+        <docblock line="388">
           <description>Returns HTML of current element.</description>
           <long-description></long-description>
-          <tag name="api" line="391" description="BLW"/>
-          <tag name="since" line="391" description="1.0.1"/>
-          <tag name="throws" line="391" description="When current node list is empty." type="\InvalidArgumentException">
+          <tag name="api" line="388" description="BLW"/>
+          <tag name="since" line="388" description="1.0.1"/>
+          <tag name="throws" line="388" description="When current node list is empty." type="\InvalidArgumentException">
             <type link="InvalidArgumentException.html">\InvalidArgumentException</type>
           </tag>
-          <tag name="return" line="391" description="The node html" type="string">
+          <tag name="return" line="388" description="The node html" type="string">
             <type>string</type>
           </tag>
         </docblock>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="447" package="BLW\Core">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="444" package="BLW\Core">
         <name>PrintHTML</name>
         <full_name>\BLW\Element::PrintHTML()</full_name>
-        <docblock line="447">
+        <docblock line="444">
           <description>Echos element. (Needed for chaining)</description>
           <long-description></long-description>
-          <tag name="api" line="447" description="BLW"/>
-          <tag name="since" line="447" description="1.0.1"/>
-          <tag name="param" line="447" description="&lt;p&gt;Whether object is a document element.&lt;/p&gt;" type="bool" variable="$isDocument">
+          <tag name="api" line="444" description="BLW"/>
+          <tag name="since" line="444" description="1.0.1"/>
+          <tag name="param" line="444" description="&lt;p&gt;Whether object is a document element.&lt;/p&gt;" type="bool" variable="$isDocument">
             <type>bool</type>
           </tag>
-          <tag name="return" line="447" description="$this" type="\BLW\Element">
+          <tag name="return" line="444" description="$this" type="\BLW\Element">
             <type link="Element.html">\BLW\Element</type>
           </tag>
         </docblock>
@@ -3013,17 +3304,17 @@ or implement it's interface.&lt;/p&gt;
           <type>bool</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="462" package="BLW\Core">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="459" package="BLW\Core">
         <name>tag</name>
         <full_name>\BLW\Element::tag()</full_name>
-        <docblock line="462">
+        <docblock line="459">
           <description>Set / Get Current elements tag.</description>
           <long-description></long-description>
-          <tag name="note" line="462" description="Raises &lt;code&gt;E_USER_ERROR&lt;/code&gt; if default node does not exist."/>
-          <tag name="param" line="462" description="&lt;p&gt;New tag name. (&lt;code&gt;[A-Za-z][\w_-]*&lt;/code&gt;)&lt;/p&gt;&#10;" type="string" variable="$Tag">
+          <tag name="note" line="459" description="Raises &lt;code&gt;E_USER_ERROR&lt;/code&gt; if default node does not exist."/>
+          <tag name="param" line="459" description="&lt;p&gt;New tag name. (&lt;code&gt;[A-Za-z][\w_-]*&lt;/code&gt;)&lt;/p&gt;&#10;" type="string" variable="$Tag">
             <type>string</type>
           </tag>
-          <tag name="return" line="462" description="| \BLW\Element Returns current tagName string or $this" type="string">
+          <tag name="return" line="459" description="| \BLW\Element Returns current tagName string or $this" type="string">
             <type>string</type>
           </tag>
         </docblock>
@@ -3033,19 +3324,19 @@ or implement it's interface.&lt;/p&gt;
           <type>string</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="545" package="BLW\Core">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="BLW" line="542" package="BLW\Core">
         <name>filter</name>
         <full_name>\BLW\Element::filter()</full_name>
-        <docblock line="545">
+        <docblock line="542">
           <description>Filters the list of nodes with a CSS selector.</description>
           <long-description></long-description>
-          <tag name="api" line="545" description="BLW"/>
-          <tag name="since" line="545" description="1.0.1"/>
-          <tag name="link" line="545" description="Symfony &gt; CssSelector" link="http://symfony.com/doc/current/components/css_selector.html"/>
-          <tag name="param" line="545" description="&lt;p&gt;A CSS selector&lt;/p&gt;" type="string" variable="$Selector">
+          <tag name="api" line="542" description="BLW"/>
+          <tag name="since" line="542" description="1.0.1"/>
+          <tag name="link" line="542" description="Symfony &gt; CssSelector" link="http://symfony.com/doc/current/components/css_selector.html"/>
+          <tag name="param" line="542" description="&lt;p&gt;A CSS selector&lt;/p&gt;" type="string" variable="$Selector">
             <type>string</type>
           </tag>
-          <tag name="return" line="545" description="List of matched nodes." type="\DOMNodeList">
+          <tag name="return" line="542" description="List of matched nodes." type="\DOMNodeList">
             <type link="DOMNodeList.html">\DOMNodeList</type>
           </tag>
         </docblock>
@@ -3056,7 +3347,7 @@ or implement it's interface.&lt;/p&gt;
         </argument>
       </method>
     </class>
-    <source>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</source>
+    <source>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</source>
   </file>
   <file path="lib\BLW\InvalidClassException.php" generated-path="lib.BLW.InvalidClassException.html" hash="d23596aef8c54fa4b16754ba7321cdf0" package="Default">
     <docblock line="0">

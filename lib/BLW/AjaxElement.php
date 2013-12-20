@@ -98,8 +98,8 @@ class AjaxElement extends \BLW\Element
 
             if(!self::$Initialized || isset($Data['hard_init'])) {
 
-                $ParentOptions        = parent::init();
-                self::$DefaultOptions = array_replace($ParentOptions, self::$DefaultOptions, $Data);
+                $StaticOptions        = parent::init();
+                self::$DefaultOptions = array_replace(parent::$DefaultOptions, $StaticOptions, $Data);
                 self::$Initialized    = true;
 
                 unset(self::$DefaultOptions['hard_init']);
@@ -163,15 +163,15 @@ class AjaxElement extends \BLW\Element
         if(is_null($Function)) {
 
             // Validate Actions
-            foreach($this->Options->AJAX as $Action => $Func) if(!is_callable($Func)) {
+            foreach(Object::$self->Options->AJAX as $Action => $Func) if(!is_callable($Func)) {
 
-                if(!is_callable(array($this, $Func))) {
+                if(!is_callable(array(Object::$self, $Func))) {
                     throw new InvalidArgumentException(0, sprintf('%header% Invalid ajax action `%s` with callback %s', $Action, print_r($Func)));
                     return parent::onCreate();
                 }
 
                 else {
-                    $this->Options->AJAX[$Action] = array($this, $Func);
+                    Object::$self->Options->AJAX[$Action] = array($this, $Func);
                 }
             }
 
@@ -181,7 +181,7 @@ class AjaxElement extends \BLW\Element
                 // $_REQUEST[o] = id
                 if(isset($_REQUEST['a']) && isset($_REQUEST['o'])) {
                     if($_REQUEST['o'] === $this->GetID() && is_string($_REQUEST['a'])) {
-                        $this->doAJAX($_REQUEST['a']);
+                        Object::$self->doAJAX($_REQUEST['a']);
                     }
                 }
             }
@@ -197,19 +197,43 @@ class AjaxElement extends \BLW\Element
     }
 
     /**
-     * Overloards parents SetID.
-     * @see \BLW\Element::SetID()
-     * @return \BLW\AjaxElement $this
+     * Changes the ID of the current object.
+     * @param string $ID New ID to give Object
+     * @return \BLW\Object $this
      */
-    public function SetID($ID)
+    public function onSetID(\Closure $Function = NULL)
     {
-        parent::SetID($ID);
+        if(is_null($Function)) {
 
-        if(($Node = \SplDoublyLinkedList::offsetGet(0)) instanceof \DOMNode) {
-          $Node->setAttribute('id', $this->GetID());
+            if(($Node = \SplDoublyLinkedList::offsetGet(0)) instanceof \DOMNode) {
+                $Node->setAttribute('id', $this->GetID());
+            }
+
+            return parent::onSetID();
         }
 
-        return $this;
+        return parent::onSetID($Function);
+    }
+
+    /**
+     * Hook that is called just before an object is serialized.
+     * @note Format is <code>mixed function (\BLW\ObjectInterface $o)</code>.
+     * @param \Closure $Function Function to call before object is serialized.
+     * @return \BLW\AjaxElement $this
+     */
+    public function onSerialize(\Closure $Function = NULL)
+    {
+        if(is_null($Function)) {
+
+            // Remove Closure's
+            foreach ($this->Options->AJAX as $k => $Action) if ($Action instanceof \Closure) {
+                unset($this->Options->AJAX[$k]);
+            }
+
+            return parent::onSerialize();
+        }
+
+        return parent::onSerialize($Function);
     }
 
     /**
@@ -335,7 +359,7 @@ class AjaxElement extends \BLW\Element
 
         if(!defined('STDOUT')) exit;
 
-        return json_encode($response);
+        return json_encode($Response);
     }
 
     /**

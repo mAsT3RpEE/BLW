@@ -112,8 +112,8 @@ class Element extends \BLW\Object implements \BLW\ElementInterface
 
             if(!self::$Initialized || isset($Data['hard_init'])) {
 
-                $ParentOptions        = parent::init();
-                self::$DefaultOptions = array_replace($ParentOptions, self::$DefaultOptions, $Data);
+                $StaticOptions        = parent::init();
+                self::$DefaultOptions = array_replace(parent::$DefaultOptions, $StaticOptions, $Data);
                 self::$Initialized    = true;
 
                 unset(self::$DefaultOptions['hard_init']);

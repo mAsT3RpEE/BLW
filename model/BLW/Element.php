@@ -152,12 +152,14 @@ class Element extends \BLW\Object implements \BLW\ElementInterface
             }
 
             elseif(isset(Object::$self->Options->DOMNode)) {
+                $this->Document = Object::$self->Options->DOMNode->ownderDocument;
                 Object::$self->AddNode(Object::$self->Options->DOMNode);
                 unset(Object::$self->Options->DOMNode);
             }
 
             elseif(isset(Object::$self->Options->DOMNodeList)) {
                 foreach (Object::$self->Options->DOMNodeList as $Node) {
+                    $this->Document = Object::$self->Options->DOMNode->ownderDocument;
                     Object::$self->AddNode($Node);
                 }
                 unset(Object::$self->Options->DOMNode);
@@ -270,6 +272,7 @@ class Element extends \BLW\Object implements \BLW\ElementInterface
             }
 
             $this->Document = new \DOMDocument($this->Options->DocumentVersion, 'UTF-8');
+            $this->Document->registerNodeClass('DOMElement', '\\BLW\\DOMElement');
         }
 
         return $this->Document;
@@ -284,12 +287,6 @@ class Element extends \BLW\Object implements \BLW\ElementInterface
      */
     public function LoadHTML($HTML)
     {
-        // Validate HTML
-        if(!is_string($HTML) || empty($HTML)) {
-            throw new \BLW\InvalidArgumentException(0);
-            return $this;
-        }
-
         // Empty current Element
         for($i=0,$k=true;$i<count($this);$i++,$k=true) {
 
@@ -304,28 +301,21 @@ class Element extends \BLW\Object implements \BLW\ElementInterface
             if($k) break;
         }
 
-        $this->Document = NULL;
+        unset($this->Document);
 
-        // Disable errors
-        $current         = libxml_use_internal_errors(true);
-        $disableEntities = libxml_disable_entity_loader(true);
+        // Parse HTML
+        $Nodes = \BLW\DOMElement::ParseHTML($HTML);
 
-        // Convert HTML
-        if (function_exists('mb_convert_encoding') && in_array('UTF-8', mb_list_encodings())) {
-            $HTML = mb_convert_encoding($HTML, 'HTML-ENTITIES', 'UTF-8');
+        // Add Nodes
+        if($Nodes->length > 0) {
+            $this->Document = $Nodes->item(0)->ownerDocument;
+
+            foreach($Nodes as $Node) {
+                $this->AddNode($Node);
+            }
         }
 
-        // Load HTML
-        $this->Document()->loadHTML($HTML);
-
-        // Enable errors
-        libxml_use_internal_errors($current);
-        libxml_disable_entity_loader($disableEntities);
-
-        // Add DOMElements
-        $isDocument = preg_match('/<html/i', $HTML) > 0;
-
-        $this->AddDocument($this->Document, $isDocument);
+        return $this;
     }
 
     /**
@@ -395,39 +385,17 @@ class Element extends \BLW\Object implements \BLW\ElementInterface
         $HTML = '';
         $i = 0;
 
-        if (version_compare(PHP_VERSION, '5.3.6', '>=')) {
+        foreach($this as $k => $Node) {
 
-            foreach($this as $k => $Node) {
-
-                if($Node instanceof \DOMNode) {
-                    if($k == 0 || $Node->ownerDocument != $this->Document) {
-                        $HTML .= $Node->ownerDocument->saveHTML($Node);
-                    }
-                }
-
-                elseif($Node instanceof \BLW\ElementInterface) {
-                    if(count($Node) && $Node->Document() !== $this->Document())
-                        $HTML .= $Node->GetHTML();
+            if($Node instanceof \DOMNode) {
+                if($k == 0 || $Node->ownerDocument != $this->Document) {
+                    $HTML .= $Node->outerHTML();
                 }
             }
-        }
 
-        else {
-
-            foreach($this as $Node) {
-
-                if($Node instanceof \DOMNode) {
-
-                    $document = new \DOMDocument('1.0', 'UTF-8');
-                    $document->appendChild($document->importNode($Node, true));
-                    $HTML .= rtrim(preg_replace(array('/^.*<body[^>]*>/i', '/<\/body[^>]*>.*$/i'), '', $document->saveHTML()));
-                    unset($document);
-                }
-
-                elseif($Node instanceof ElementInterface) {
-                    if(count($Node) && $Node->Document() != $this->Document())
-                        $HTML .= $Node->GetHTML();
-                }
+            elseif($Node instanceof \BLW\ElementInterface) {
+                if(count($Node) && $Node->Document() !== $this->Document())
+                    $HTML .= $Node->GetHTML();
             }
         }
 
@@ -458,42 +426,20 @@ class Element extends \BLW\Object implements \BLW\ElementInterface
      */
     public function tag($Tag = NULL)
     {
-        if(is_null($Tag)) {
+        if(($Node = \SplDoublyLinkedList::offsetGet(0)) instanceof \DOMElement) {
 
-            if(($Node = \SplDoublyLinkedList::offsetGet(0)) instanceof \DOMElement) {
+            if(is_null($Tag)) {
                 return $Node->tagName;
             }
 
-            else {
-                trigger_error(sprintf('%s::tag(): Current Element has no default node.', get_class($this)), E_USER_ERROR);
-                return '';
-            }
-        }
-
-        elseif(preg_match('/[A-Za-z][\w_-]*/', @strval($Tag))) {
-
-            if(($Node = \SplDoublyLinkedList::offsetGet(0)) instanceof \DOMElement) {
-                $New = $Node->ownerDocument->createElement($Tag);
-
-                foreach ($Node->attributes as $Attribute) {
-                    $New->setAttribute($Attribute->nodeName, $Attribute->nodeValue);
-                }
-
-                while ($Node->firstChild) {
-                    $New->appendChild($Node->firstChild);
-                }
-
-                $Node->parentNode->replaceChild($New, $Node);
-                \SplDoublyLinkedList::offsetSet(0, $New);
-            }
-
-            else {
-                trigger_error(sprintf('%s::tag(): Current Element has no default node.', get_class($this)));
+            elseif(($Node = $Node->tag($Tag)) instanceof \DOMElement) {
+                \SplDoublyLinkedList::offsetSet(0, $Node);
             }
         }
 
         else {
-            throw new \BLW\InvalidArgumentException(0);
+            trigger_error(sprintf('%s::tag(): Current Element has no default node.', get_class($this)), E_USER_ERROR);
+            return '';
         }
 
         return $this;

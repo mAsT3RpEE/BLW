@@ -35,7 +35,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">56</span></a></li>
+                <span class="label label-info">55</span></a></li>
 <li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -61,7 +61,7 @@
 <i class="icon-custom icon-method"></i> Methods
                     <ul>
 <li class="method public "><a href="#method_Optimize" title="Optimize() :: Optimizes a file and returns the optimized version of the file."><span class="description">Optimizes a file and returns the optimized version of the file.</span><pre>Optimize()</pre></a></li>
-<li class="method public "><a href="#method_init" title="init() :: Initializes a class for subsequent use."><span class="description">Initializes a class for subsequent use.</span><pre>init()</pre></a></li>
+<li class="method public "><a href="#method_initChild" title="initChild() :: Initializes a child class for subsequent use."><span class="description">Initializes a child class for subsequent use.</span><pre>initChild()</pre></a></li>
 <li class="method public "><a href="#method_onCreate" title="onCreate() :: Hook that is called when a new instance is created."><span class="description">Hook that is called when a new instance is created.</span><pre>onCreate()</pre></a></li>
 <li class="method public "><a href="#method_out" title="out() :: Updates the build path."><span class="description">Updates the build path.</span><pre>out()</pre></a></li>
 <li class="method public "><a href="#method_phar" title="phar() :: Updates the name of phar file to output"><span class="description">Updates the name of phar file to output</span><pre>phar()</pre></a></li>
@@ -70,14 +70,14 @@
 </li>
 <li class="nav-header protected">» Protected
                     <ul>
-<li class="method protected "><a href="#method_GetAppFiles" title="GetAppFiles() :: "><span class="description">GetAppFiles()
-        </span><pre>GetAppFiles()</pre></a></li>
 <li class="method protected "><a href="#method_GetApplications" title="GetApplications() :: "><span class="description">GetApplications()
         </span><pre>GetApplications()</pre></a></li>
 <li class="method protected "><a href="#method_GetAssets" title="GetAssets() :: "><span class="description">GetAssets()
         </span><pre>GetAssets()</pre></a></li>
-<li class="method protected "><a href="#method_GetLibFiles" title="GetLibFiles() :: "><span class="description">GetLibFiles()
-        </span><pre>GetLibFiles()</pre></a></li>
+<li class="method protected "><a href="#method_GetCtrlFiles" title="GetCtrlFiles() :: "><span class="description">GetCtrlFiles()
+        </span><pre>GetCtrlFiles()</pre></a></li>
+<li class="method protected "><a href="#method_GetModlFiles" title="GetModlFiles() :: "><span class="description">GetModlFiles()
+        </span><pre>GetModlFiles()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header">
@@ -160,9 +160,9 @@ or implement it's interface.</p>
 <code>string</code>Optimized version of the file</div>
 </div></div>
 </div>
-<a id="method_init"></a><div class="element clickable method public method_init" data-toggle="collapse" data-target=".method_init .collapse">
-<h2>Initializes a class for subsequent use.</h2>
-<pre>init(array $Data) : array</pre>
+<a id="method_initChild"></a><div class="element clickable method public method_initChild" data-toggle="collapse" data-target=".method_initChild .collapse">
+<h2>Initializes a child class for subsequent use.</h2>
+<pre>initChild(array $Data) : array</pre>
 <div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
@@ -235,13 +235,6 @@ or implement it's interface.</p>
 <code><a href="../classes/BLW.Object.html">\BLW\Object</a></code>$this</div>
 </div></div>
 </div>
-<a id="method_GetAppFiles"></a><div class="element clickable method protected method_GetAppFiles" data-toggle="collapse" data-target=".method_GetAppFiles .collapse">
-<h2>GetAppFiles()
-        </h2>
-<pre>GetAppFiles() </pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
-</div>
 <a id="method_GetApplications"></a><div class="element clickable method protected method_GetApplications" data-toggle="collapse" data-target=".method_GetApplications .collapse">
 <h2>GetApplications()
         </h2>
@@ -256,10 +249,17 @@ or implement it's interface.</p>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="method_GetLibFiles"></a><div class="element clickable method protected method_GetLibFiles" data-toggle="collapse" data-target=".method_GetLibFiles .collapse">
-<h2>GetLibFiles()
+<a id="method_GetCtrlFiles"></a><div class="element clickable method protected method_GetCtrlFiles" data-toggle="collapse" data-target=".method_GetCtrlFiles .collapse">
+<h2>GetCtrlFiles()
         </h2>
-<pre>GetLibFiles() </pre>
+<pre>GetCtrlFiles() </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="method_GetModlFiles"></a><div class="element clickable method protected method_GetModlFiles" data-toggle="collapse" data-target=".method_GetModlFiles .collapse">
+<h2>GetModlFiles()
+        </h2>
+<pre>GetModlFiles() </pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
@@ -293,7 +293,7 @@ or implement it's interface.</p>
             Template is built using <a>Twitter Bootstrap 2</a> and icons provided by <a>Glyphicons</a>.<br>
             Documentation is powered by <a>phpDocumentor 2.1.0
 </a> and<br>
-            generated on 2013-12-20T18:33:45+03:00.<br></footer></div>
+            generated on 2013-12-22T03:03:03+03:00.<br></footer></div>
 </div>
 </body>
 </html>

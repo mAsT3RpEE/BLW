@@ -19,21 +19,25 @@
 	},
 	"require" : {
 		"php" : ">=5.3.3",
-		"ext-curl" : "*",
 		"ext-dom" : "*",
 		"ext-json" : "*",
 		"ext-Phar" : "*",
 		"ext-SPL" : "*",
+		"ext-PDO" : "*",
+		"ext-curl" : "*",
+		"symfony/event-dispatcher" : ">=2.4.0",
 		"symfony/css-selector" : ">=2.4.0",
-		"guzzle/http" : ">=3.8.0",
+		"symfony/console" : ">=2.4.0",
 		"heartsentwined/yuicompressor" : "dev-master",
-		"symfony/console" : ">=2.4.0"
+		"php-activerecord/php-activerecord" : ">=1.1.2",
+		"guzzle/http" : ">=3.8.0"
 	},
 	"autoload" : {
 		"psr-0" : {
 			"BLW" : [
-				"app",
-				"lib"
+				"controller",
+				"model",
+				"view"
 			]
 		}
 	},

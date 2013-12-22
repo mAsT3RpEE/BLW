@@ -35,7 +35,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">56</span></a></li>
+                <span class="label label-info">55</span></a></li>
 <li><a href="markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -71,17 +71,24 @@
 <li class="nav-header">Api</li>
 <li class="nav-header">
 <i class="icon-custom icon-class"></i> Public API Classes</li>
+<li><a href="classes/BLW.InvalidClassException.html" title="Makes reporting errors just easy.">InvalidClassException</a></li>
+<li><a href="classes/BLW.Element.html" title="Core BLW DOM Element object.">Element</a></li>
+<li><a href="classes/BLW.InvalidArgumentException.html" title="Makes reporting errors just easy.">InvalidArgumentException</a></li>
+<li><a href="classes/BLW.Settings.html" title="XXX.">Settings</a></li>
+<li><a href="classes/BLW.ElementContainer.html" title="Class for elements that contain others.">ElementContainer</a></li>
 <li><a href="classes/BLW.YUICompressor.html" title="Description.">YUICompressor</a></li>
 <li><a href="classes/BLW.Object.html" title="Core BLW object.">Object</a></li>
-<li><a href="classes/BLW.ElementContainer.html" title="Class for elements that contain others.">ElementContainer</a></li>
-<li><a href="classes/BLW.Compiler.html" title="Builds phar files for blw projects.">Compiler</a></li>
-<li><a href="classes/BLW.Settings.html" title="XXX.">Settings</a></li>
 <li><a href="classes/BLW.AjaxElement.html" title="Core BLW Ajax object.">AjaxElement</a></li>
-<li><a href="classes/BLW.Element.html" title="Core BLW DOM Element object.">Element</a></li>
-<li><a href="classes/BLW.InvalidClassException.html" title="Makes reporting errors just easy.">InvalidClassException</a></li>
-<li><a href="classes/BLW.InvalidArgumentException.html" title="Makes reporting errors just easy.">InvalidArgumentException</a></li>
+<li><a href="classes/BLW.Compiler.html" title="Builds phar files for blw projects.">Compiler</a></li>
 <li class="nav-header">
 <i class="icon-custom icon-method"></i> Public API Methods</li>
+<li><a href="classes/BLW.Element.html#method_Document" title="Returns the current elements document or creates one if it doesnt exist.">Element.Document</a></li>
+<li><a href="classes/BLW.Element.html#method_LoadHTML" title="Converts HTML string into DOMNodes and ataches them to the object.">Element.LoadHTML</a></li>
+<li><a href="classes/BLW.Element.html#method_AddDocument" title="Loads Nodes from a DOMDocument.">Element.AddDocument</a></li>
+<li><a href="classes/BLW.Element.html#method_AddNode" title="Adds a DOMNode to the current object.">Element.AddNode</a></li>
+<li><a href="classes/BLW.Element.html#method_GetHTML" title="Returns HTML of current element.">Element.GetHTML</a></li>
+<li><a href="classes/BLW.Element.html#method_PrintHTML" title="Echos element. (Needed for chaining)">Element.PrintHTML</a></li>
+<li><a href="classes/BLW.Element.html#method_filter" title="Filters the list of nodes with a CSS selector.">Element.filter</a></li>
 <li><a href="classes/BLW.Object.html#method_init" title="Initializes Class for subsequent use.">Object.init</a></li>
 <li><a href="classes/BLW.Object.html#method_initChild" title="Initializes a child class for subsequent use.">Object.initChild</a></li>
 <li><a href="classes/BLW.Object.html#method_create" title="Creates a new instance of the object.">Object.create</a></li>
@@ -97,13 +104,6 @@
 <li><a href="classes/BLW.AjaxElement.html#method_SetAction" title="Sets an ajax action to a specific value.">AjaxElement.SetAction</a></li>
 <li><a href="classes/BLW.AjaxElement.html#method_LoadAjax" title="Loads element from session / &lt;code&gt;$_REQUEST&lt;/code&gt;.">AjaxElement.LoadAjax</a></li>
 <li><a href="classes/BLW.AjaxElement.html#method_SaveAjax" title="Saves element to session / &lt;code&gt;$_REQUEST&lt;/code&gt;.">AjaxElement.SaveAjax</a></li>
-<li><a href="classes/BLW.Element.html#method_Document" title="Returns the current elements document or creates one if it doesnt exist.">Element.Document</a></li>
-<li><a href="classes/BLW.Element.html#method_LoadHTML" title="Converts HTML string into DOMNodes and ataches them to the object.">Element.LoadHTML</a></li>
-<li><a href="classes/BLW.Element.html#method_AddDocument" title="Loads Nodes from a DOMDocument.">Element.AddDocument</a></li>
-<li><a href="classes/BLW.Element.html#method_AddNode" title="Adds a DOMNode to the current object.">Element.AddNode</a></li>
-<li><a href="classes/BLW.Element.html#method_GetHTML" title="Returns HTML of current element.">Element.GetHTML</a></li>
-<li><a href="classes/BLW.Element.html#method_PrintHTML" title="Echos element. (Needed for chaining)">Element.PrintHTML</a></li>
-<li><a href="classes/BLW.Element.html#method_filter" title="Filters the list of nodes with a CSS selector.">Element.filter</a></li>
 </ul></div>
 </div>
 <div class="span5">
@@ -115,7 +115,7 @@
 <div class="well"><ul class="nav nav-list">
 <li class="nav-header">Reports</li>
 <li><a href="errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">56</span></a></li>
+                <span class="label label-info">55</span></a></li>
 <li><a href="markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -127,7 +127,7 @@
             Template is built using <a>Twitter Bootstrap 2</a> and icons provided by <a>Glyphicons</a>.<br>
             Documentation is powered by <a>phpDocumentor 2.1.0
 </a> and<br>
-            generated on 2013-12-20T18:33:45+03:00.<br></footer></div>
+            generated on 2013-12-22T03:03:02+03:00.<br></footer></div>
 </div>
 </body>
 </html>

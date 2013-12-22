@@ -26,8 +26,9 @@
         <template name="responsive" />
     </transformations>
     <files>
-        <directory>lib</directory>
-        <directory>app</directory>
+        <directory>model</directory>
+        <directory>controller</directory>
+        <directory>view</directory>
         <file>vendor/guzzle/http/Guzzle/Http/Client.php</file>
         <ignore>*/test/*</ignore>
         <ignore>*/tests/*</ignore>

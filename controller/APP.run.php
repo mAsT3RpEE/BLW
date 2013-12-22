@@ -255,7 +255,17 @@ class CompileCommand extends \Symfony\Component\Console\Command\Command
             $Dir = getcwd() . '/build';
         }
 
-        $Progress->start($Output, 4);
+        $Progress->start($Output, 5);
+
+        if (OutputInterface::VERBOSITY_VERBOSE <= $Output->getVerbosity()) {
+            $Progress->clear();
+            $Output->writeln(sprintf('%s: Optimizing autoloader.', date("\rc")));
+            $Progress->display();
+        }
+
+        @exec(sprintf('composer dump-autoload -o', $Type), $Result, $Status);
+
+        $Progress->advance();
 
         if (OutputInterface::VERBOSITY_VERBOSE <= $Output->getVerbosity()) {
             $Output->writeln(sprintf('%s: Initializing compiler.', date("\rc")));

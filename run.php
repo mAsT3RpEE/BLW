@@ -14,14 +14,15 @@
  */
 
 // Manual Configuration
-define('BLW_PLUGIN_DIR',    (__DIR__) . '/controller');
-define('BLW_PLUGIN_URL',    'http://localhost/BLW/controller');
-define('BLW_LIB_PHAR',      __DIR__);
+define('BLW_PLUGIN_DIR',  __DIR__ . DIRECTORY_SEPARATOR . 'app');
+define('BLW_LIB_PHAR',    __DIR__);
 
 // Bootstrap
-require_once BLW_LIB_PHAR . '/inc/common.php';
+require_once BLW_LIB_PHAR . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
 // Application
-$APP = require(BLW_LIB_PHAR . '/controller/APP.run.php');
-$APP->run();
+\BLW\Control\Compiler::GetInstance()
+    ->run(60)
+;
+
 exit;

@@ -2,7 +2,7 @@
 	"name" : "mast3rpee/blw",
 	"description" : "Ajax/PHP/JavaScript Framework",
 	"type" : "library",
-	"homepage" : "http://mast3rpee.tk",
+	"homepage" : "http://mast3rpee.tk/projects/BLW",
 	"license" : "MIT",
 	"authors" : [{
 			"name" : "Walter Otsyula",
@@ -34,11 +34,7 @@
 	},
 	"autoload" : {
 		"psr-0" : {
-			"BLW" : [
-				"controller",
-				"model",
-				"view"
-			]
+			"BLW" : "src"
 		}
 	},
 	"keywords" : [

@@ -1,0 +1,306 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>BLW Library » \BLW\Type\Singleton</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">BLW Library</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Namespaces</a></li>
+<li><a href="../namespaces/BLW.html"><i class="icon-th"></i> BLW</a></li>
+<li><a href="../namespaces/Guzzle.html"><i class="icon-th"></i> Guzzle</a></li>
+<li><a href="../namespaces/global.html"><i class="icon-th"></i> global</a></li>
+<li><a>Packages</a></li>
+<li><a href="../packages/BLW.html"><i class="icon-folder-open"></i> BLW</a></li>
+<li><a href="../packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">57</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul></ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">3</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button><button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-custom icon-method"></i> Methods
+                    <ul>
+<li class="method public "><a href="#method_ClearInstance" title="ClearInstance() :: Clears the current signleton instance."><span class="description">Clears the current signleton instance.</span><pre>ClearInstance()</pre></a></li>
+<li class="method public "><a href="#method_GetInstance" title="GetInstance() :: Creates a new instance of the object."><span class="description">Creates a new instance of the object.</span><pre>GetInstance()</pre></a></li>
+<li class="method public "><a href="#method_SetInstance" title="SetInstance() :: Changes the current singleton instance."><span class="description">Changes the current singleton instance.</span><pre>SetInstance()</pre></a></li>
+<li class="method public "><a href="#method_doCreate" title="doCreate() :: Hook that is called when a new instance is created."><span class="description">Hook that is called when a new instance is created.</span><pre>doCreate()</pre></a></li>
+<li class="method public "><a href="#method_doDelete" title="doDelete() :: Hook that is called when instance is deleted."><span class="description">Hook that is called when instance is deleted.</span><pre>doDelete()</pre></a></li>
+<li class="method public "><a href="#method_doUpdate" title="doUpdate() :: Hook that is called when instance is changed."><span class="description">Hook that is called when instance is changed.</span><pre>doUpdate()</pre></a></li>
+<li class="method public "><a href="#method_onDelete" title="onDelete() :: Hook that is called when instance is deleted."><span class="description">Hook that is called when instance is deleted.</span><pre>onDelete()</pre></a></li>
+<li class="method public "><a href="#method_onUpdate" title="onUpdate() :: Hook that is called when instance is changed."><span class="description">Hook that is called when instance is changed.</span><pre>onUpdate()</pre></a></li>
+</ul>
+</li>
+<li class="nav-header">
+<i class="icon-custom icon-property"></i> Properties
+                    <ul></ul>
+</li>
+<li class="nav-header private">» Private
+                    <ul><li class="property private "><a href="#property__Instance" title="$_Instance() :: Array containig class instances."><span class="description"></span><pre>$_Instance</pre></a></li></ul>
+</li>
+</ul>
+</div>
+<div class="span8">
+<a id="\BLW\Type\Singleton"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../namespaces/BLW.html">BLW</a></li>
+<li>
+<span class="divider">\</span><a href="../namespaces/BLW.Type.html">Type</a>
+</li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/BLW.Type.Singleton.html">Singleton</a>
+</li>
+</ul>
+<div class="element class">
+<h1>Singleton</h1>
+<p class="short_description">Core Sigleton pattern class.</p>
+<div class="details">
+<div class="long_description"><h3>About</h3>
+
+<p>All Objects must extend this class or
+implement the <code>\BLW\Interface\Object</code> interface.</p>
+
+<h4>Note:</h4>
+
+<p>Whenever <code>$DefaultOptions</code> is used you must
+also define <code>$_Initialized</code></p>
+
+<p>Object must implement dynamic properties</p>
+<hr></div>
+<table class="table table-bordered">
+<tr>
+<th>package</th>
+<td><a href="../packages/BLW.Core.html">BLW\Core</a></td>
+</tr>
+<tr>
+<th>since</th>
+<td>0.1.0</td>
+</tr>
+<tr>
+<th>version</th>
+<td>1.0.0</td>
+</tr>
+<tr>
+<th>author</th>
+<td><a href="mailto:wotsyula@mast3rpee.tk">mAsT3RpEE</a></td>
+</tr>
+<tr>
+<th>link</th>
+<td><a href="http://mast3rpee.tk/projects/BLW/">mAsT3RpEE's Zone > Projects > BLW</a></td>
+</tr>
+<tr>
+<th>Extends</th>
+<td>
+<a href="../classes/BLW.Type.Object.html">\BLW\Type\Object</a>
+             
+        </td>
+</tr>
+<tr>
+<th>Implements</th>
+<td>
+<a href="../classes/BLW.Interfaces.Singleton.html">\BLW\Interfaces\Singleton</a>
+             
+        </td>
+</tr>
+</table>
+<h3>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a id="method_ClearInstance"></a><div class="element clickable method public method_ClearInstance" data-toggle="collapse" data-target=".method_ClearInstance .collapse">
+<h2>Clears the current signleton instance.</h2>
+<pre>ClearInstance() : void</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="method_GetInstance"></a><div class="element clickable method public method_GetInstance" data-toggle="collapse" data-target=".method_GetInstance .collapse">
+<h2>Creates a new instance of the object.</h2>
+<pre>GetInstance(array $Options) : <a href="../classes/BLW.Interfaces.Singleton.html">\BLW\Interfaces\Singleton</a></pre>
+<div class="labels">
+<span class="label label-info">API</span><span class="label">Static</span>
+</div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.0.0</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$Options</h4>
+<code>array</code><p>Options to use in initializing class.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Interfaces.Singleton.html">\BLW\Interfaces\Singleton</a></code>Returns a new instance of the class.</div>
+</div></div>
+</div>
+<a id="method_SetInstance"></a><div class="element clickable method public method_SetInstance" data-toggle="collapse" data-target=".method_SetInstance .collapse">
+<h2>Changes the current singleton instance.</h2>
+<pre>SetInstance(\BLW\Interfaces\Object $NewObject) : bool</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$NewObject</h4>
+<code><a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></code><p>Object to set singleton value to.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>bool</code>Returns <code>TRUE</code> on success and <code>FALSE</code> on failure.</div>
+</div></div>
+</div>
+<a id="method_doCreate"></a><div class="element clickable method public method_doCreate" data-toggle="collapse" data-target=".method_doCreate .collapse">
+<h2>Hook that is called when a new instance is created.</h2>
+<pre>doCreate() : <a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>see</th>
+<td><a href="BLW.Type.Object.html#method_doCreate()">\BLW\Type\Object::doCreate()</a></td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></code>$this</div>
+</div></div>
+</div>
+<a id="method_doDelete"></a><div class="element clickable method public method_doDelete" data-toggle="collapse" data-target=".method_doDelete .collapse">
+<h2>Hook that is called when instance is deleted.</h2>
+<pre>doDelete() : <a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>see</th>
+<td><a href="BLW.Type.Singleton.html#method_onUpdate()">\BLW\Type\Singleton::onUpdate()</a></td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></code>$this</div>
+</div></div>
+</div>
+<a id="method_doUpdate"></a><div class="element clickable method public method_doUpdate" data-toggle="collapse" data-target=".method_doUpdate .collapse">
+<h2>Hook that is called when instance is changed.</h2>
+<pre>doUpdate() : <a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>see</th>
+<td><a href="BLW.Type.Singleton.html#method_onUpdate()">\BLW\Type\Singleton::onUpdate()</a></td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></code>$this</div>
+</div></div>
+</div>
+<a id="method_onDelete"></a><div class="element clickable method public method_onDelete" data-toggle="collapse" data-target=".method_onDelete .collapse">
+<h2>Hook that is called when instance is deleted.</h2>
+<pre>onDelete(callable $Function) : <a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>note</th>
+<td>Format is <code>mixed function (\BLW\Interfaces\Event $Event)</code>.</td>
+</tr>
+<tr>
+<th>see</th>
+<td><a href="BLW.Type.Singleton.html#method_doUpdate()">\BLW\Type\Singleton::doUpdate()</a></td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$Function</h4>
+<code>callable</code><p>Function to call on change.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></code>$this</div>
+</div></div>
+</div>
+<a id="method_onUpdate"></a><div class="element clickable method public method_onUpdate" data-toggle="collapse" data-target=".method_onUpdate .collapse">
+<h2>Hook that is called when instance is changed.</h2>
+<pre>onUpdate(callable $Function) : <a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered">
+<tr>
+<th>note</th>
+<td>Format is <code>mixed function (\BLW\Interfaces\Event $Event)</code>.</td>
+</tr>
+<tr>
+<th>see</th>
+<td><a href="BLW.Type.Singleton.html#method_doUpdate()">\BLW\Type\Singleton::doUpdate()</a></td>
+</tr>
+</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$Function</h4>
+<code>callable</code><p>Function to call on change.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></code>$this</div>
+</div></div>
+</div>
+<h3>
+<i class="icon-custom icon-property"></i> Properties</h3>
+<a id="property__Instance"> </a><div class="element clickable property private property__Instance" data-toggle="collapse" data-target=".property__Instance .collapse">
+<h2>Array containig class instances.</h2>
+<pre>$_Instance : <a href="../classes/BLW.Interfaces.Singleton.html">\BLW\Interfaces\Singleton</a></pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a>Twitter Bootstrap 2</a> and icons provided by <a>Glyphicons</a>.<br>
+            Documentation is powered by <a>phpDocumentor 2.1.0
+</a> and<br>
+            generated on 2014-01-02T20:20:44+03:00.<br></footer></div>
+</div>
+</body>
+</html>

@@ -22,6 +22,7 @@
 <li><a>Namespaces</a></li>
 <li><a href="namespaces/BLW.html"><i class="icon-th"></i> BLW</a></li>
 <li><a href="namespaces/Guzzle.html"><i class="icon-th"></i> Guzzle</a></li>
+<li><a href="namespaces/global.html"><i class="icon-th"></i> global</a></li>
 <li><a>Packages</a></li>
 <li><a href="packages/BLW.html"><i class="icon-folder-open"></i> BLW</a></li>
 <li><a href="packages/Default.html"><i class="icon-folder-open"></i> Default</a></li>
@@ -35,7 +36,7 @@
 <a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
                                     Reports <b class="caret"></b></a><ul class="dropdown-menu">
 <li><a href="errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">55</span></a></li>
+                <span class="label label-info">57</span></a></li>
 <li><a href="markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -61,6 +62,7 @@
 <li class="nav-header">Namespaces</li>
 <li><a href="namespaces/BLW.html"><i class="icon-th"></i> BLW</a></li>
 <li><a href="namespaces/Guzzle.html"><i class="icon-th"></i> Guzzle</a></li>
+<li><a href="namespaces/global.html"><i class="icon-th"></i> global</a></li>
 </ul></div>
 <div class="well"><ul class="nav nav-list">
 <li class="nav-header">Packages</li>
@@ -71,39 +73,63 @@
 <li class="nav-header">Api</li>
 <li class="nav-header">
 <i class="icon-custom icon-class"></i> Public API Classes</li>
-<li><a href="classes/BLW.InvalidClassException.html" title="Makes reporting errors just easy.">InvalidClassException</a></li>
-<li><a href="classes/BLW.Element.html" title="Core BLW DOM Element object.">Element</a></li>
-<li><a href="classes/BLW.InvalidArgumentException.html" title="Makes reporting errors just easy.">InvalidArgumentException</a></li>
-<li><a href="classes/BLW.Settings.html" title="XXX.">Settings</a></li>
-<li><a href="classes/BLW.ElementContainer.html" title="Class for elements that contain others.">ElementContainer</a></li>
-<li><a href="classes/BLW.YUICompressor.html" title="Description.">YUICompressor</a></li>
-<li><a href="classes/BLW.Object.html" title="Core BLW object.">Object</a></li>
-<li><a href="classes/BLW.AjaxElement.html" title="Core BLW Ajax object.">AjaxElement</a></li>
-<li><a href="classes/BLW.Compiler.html" title="Builds phar files for blw projects.">Compiler</a></li>
+<li><a href="classes/BLW.Type.Object.html" title="Core BLW Object Class.">Object</a></li>
+<li><a href="classes/BLW.Model.Event.General.html" title="Generic event object.">General</a></li>
+<li><a href="classes/BLW.Model.Event.ObjectItem.html" title="Event for passing a set of objects one at a time.">ObjectItem</a></li>
+<li><a href="classes/BLW.Model.ElementContainer.html" title="Class for elements that contain others.">ElementContainer</a></li>
+<li><a href="classes/BLW.Type.LogicException.html" title="Core exception class for Logic Exceptions.">LogicException</a></li>
+<li><a href="classes/BLW.Type.Element.html" title="Core BLW DOM Element object.">Element</a></li>
+<li><a href="classes/BLW.html" title="Main class used to configure, initialize and run blw library.">BLW</a></li>
+<li><a href="classes/BLW.Model.FileException.html" title="Makes reporting errors just easy.">FileException</a></li>
+<li><a href="classes/BLW.Type.Mediator.html" title="Core Mediator pattern Interface.">Mediator</a></li>
+<li><a href="classes/BLW.Model.YUICompressor.html" title="Description.">YUICompressor</a></li>
+<li><a href="classes/BLW.Model.SymfonyMediator.html" title="Mediator class that handles _on and _do commands.">SymfonyMediator</a></li>
+<li><a href="classes/BLW.Type.Iterator.html" title="Core Iterator pattern class.">Iterator</a></li>
+<li><a href="classes/BLW.Type.Adaptor.html" title="Core Adapter pattern class.">Adaptor</a></li>
+<li><a href="classes/BLW.Type.RuntimeException.html" title="Core exception class for Runtime Exceptions.">RuntimeException</a></li>
+<li><a href="classes/BLW.Type.Factory.html" title="Core Factory pattern class.">Factory</a></li>
+<li><a href="classes/BLW.Type.AjaxElement.html" title="Core Ajax enabled Element class.">AjaxElement</a></li>
+<li><a href="classes/BLW.Type.ActiveRecord.html" title="Core ActiveRecord pattern class.">ActiveRecord</a></li>
+<li><a href="classes/BLW.Type.Decorator.html" title="Core event interface.">Decorator</a></li>
+<li><a href="classes/BLW.Model.Compiler.html" title="Builds phar files for blw projects.">Compiler</a></li>
+<li><a href="classes/BLW.Model.Settings.html" title="XXX.">Settings</a></li>
+<li><a href="classes/BLW.Model.InvalidClassException.html" title="Makes reporting errors just easy.">InvalidClassException</a></li>
+<li><a href="classes/BLW.Type.Singleton.html" title="Core Sigleton pattern class.">Singleton</a></li>
+<li><a href="classes/BLW.Model.InvalidArgumentException.html" title="Makes reporting errors just easy.">InvalidArgumentException</a></li>
+<li><a href="classes/BLW.Type.Event.html" title="Core Event class.">Event</a></li>
 <li class="nav-header">
 <i class="icon-custom icon-method"></i> Public API Methods</li>
-<li><a href="classes/BLW.Element.html#method_Document" title="Returns the current elements document or creates one if it doesnt exist.">Element.Document</a></li>
-<li><a href="classes/BLW.Element.html#method_LoadHTML" title="Converts HTML string into DOMNodes and ataches them to the object.">Element.LoadHTML</a></li>
-<li><a href="classes/BLW.Element.html#method_AddDocument" title="Loads Nodes from a DOMDocument.">Element.AddDocument</a></li>
-<li><a href="classes/BLW.Element.html#method_AddNode" title="Adds a DOMNode to the current object.">Element.AddNode</a></li>
-<li><a href="classes/BLW.Element.html#method_GetHTML" title="Returns HTML of current element.">Element.GetHTML</a></li>
-<li><a href="classes/BLW.Element.html#method_PrintHTML" title="Echos element. (Needed for chaining)">Element.PrintHTML</a></li>
-<li><a href="classes/BLW.Element.html#method_filter" title="Filters the list of nodes with a CSS selector.">Element.filter</a></li>
-<li><a href="classes/BLW.Object.html#method_init" title="Initializes Class for subsequent use.">Object.init</a></li>
-<li><a href="classes/BLW.Object.html#method_initChild" title="Initializes a child class for subsequent use.">Object.initChild</a></li>
-<li><a href="classes/BLW.Object.html#method_create" title="Creates a new instance of the object.">Object.create</a></li>
-<li><a href="classes/BLW.Object.html#method_onCreate" title="Hook that is called when a new instance is created.">Object.onCreate</a></li>
-<li><a href="classes/BLW.Object.html#method_on" title="Generic hook handler function.">Object.on</a></li>
-<li><a href="classes/BLW.Object.html#method_GetID" title="Fetches the current ID of the object.">Object.GetID</a></li>
-<li><a href="classes/BLW.Object.html#method_Load" title="Loads and object data from an &lt;code&gt;obj.xxx.min.php&lt;/code&gt; file.">Object.Load</a></li>
-<li><a href="classes/BLW.Object.html#method_Save" title="Saves an element to an obj.xxx.min.php file">Object.Save</a></li>
-<li><a href="classes/BLW.AjaxElement.html#method_InlineJS" title="Get inline Javascript used by object.">AjaxElement.InlineJS</a></li>
-<li><a href="classes/BLW.AjaxElement.html#method_SecurityID" title="Creates a security ID to track ajax requests per user.">AjaxElement.SecurityID</a></li>
-<li><a href="classes/BLW.AjaxElement.html#method_ValidateSecurityID" title="Validates security ID.">AjaxElement.ValidateSecurityID</a></li>
-<li><a href="classes/BLW.AjaxElement.html#method_doAJAX" title="Perform an ajax request then exit.">AjaxElement.doAJAX</a></li>
-<li><a href="classes/BLW.AjaxElement.html#method_SetAction" title="Sets an ajax action to a specific value.">AjaxElement.SetAction</a></li>
-<li><a href="classes/BLW.AjaxElement.html#method_LoadAjax" title="Loads element from session / &lt;code&gt;$_REQUEST&lt;/code&gt;.">AjaxElement.LoadAjax</a></li>
-<li><a href="classes/BLW.AjaxElement.html#method_SaveAjax" title="Saves element to session / &lt;code&gt;$_REQUEST&lt;/code&gt;.">AjaxElement.SaveAjax</a></li>
+<li><a href="classes/BLW.Type.Object.html#method_Initialize" title="Initializes Class for subsequent use.">Object.Initialize</a></li>
+<li><a href="classes/BLW.Type.Object.html#method_GetInstance" title="Creates a new instance of the object.">Object.GetInstance</a></li>
+<li><a href="classes/BLW.Type.Object.html#method_GetID" title="Fetches the current ID of the object.">Object.GetID</a></li>
+<li><a href="classes/BLW.Type.Object.html#method_Load" title="Loads and object data from an &lt;code&gt;obj.xxx.min.php&lt;/code&gt; file.">Object.Load</a></li>
+<li><a href="classes/BLW.Type.Object.html#method_Save" title="Saves an element to an obj.xxx.min.php file.">Object.Save</a></li>
+<li><a href="classes/BLW.Type.Object.html#method_onCreate" title="Hook that is called when a new instance is created.">Object.onCreate</a></li>
+<li><a href="classes/BLW.Type.Object.html#method_onSetID" title="Hook that is called on change of ID.">Object.onSetID</a></li>
+<li><a href="classes/BLW.Type.Object.html#method_onSerialize" title="Hook that is called just before an object is serialized.">Object.onSerialize</a></li>
+<li><a href="classes/BLW.Type.Object.html#method_onUnSerialize" title="Hook that is called just after an object is unserialized.">Object.onUnSerialize</a></li>
+<li><a href="classes/BLW.Type.Element.html#method_Document" title="Returns the current elements document or creates one if it doesnt exist.">Element.Document</a></li>
+<li><a href="classes/BLW.Type.Element.html#method_LoadHTML" title="Converts HTML string into DOMNodes and ataches them to the object.">Element.LoadHTML</a></li>
+<li><a href="classes/BLW.Type.Element.html#method_AddDocument" title="Loads Nodes from a DOMDocument.">Element.AddDocument</a></li>
+<li><a href="classes/BLW.Type.Element.html#method_AddNode" title="Adds a DOMNode to the current object.">Element.AddNode</a></li>
+<li><a href="classes/BLW.Type.Element.html#method_GetHTML" title="Returns HTML of current element.">Element.GetHTML</a></li>
+<li><a href="classes/BLW.Type.Element.html#method_PrintHTML" title="Echos element. (Needed for chaining)">Element.PrintHTML</a></li>
+<li><a href="classes/BLW.Type.Element.html#method_filter" title="Filters the list of nodes with a CSS selector.">Element.filter</a></li>
+<li><a href="classes/BLW.Type.Element.html#method___invoke" title="Filters the list of nodes with a CSS selector.">Element.__invoke</a></li>
+<li><a href="classes/BLW.html#method_Config" title="Wrapper for BLW configuration array.">BLW.Config</a></li>
+<li><a href="classes/BLW.html#method_Configure" title="Configures BLW Libriary.">BLW.Configure</a></li>
+<li><a href="classes/BLW.html#method_Initialize" title="Initializes BlW Library.">BLW.Initialize</a></li>
+<li><a href="classes/BLW.html#method_O" title="Creates a BLW Library Object.">BLW.O</a></li>
+<li><a href="classes/BLW.Type.Factory.html#method_O" title="Creates a BLW Library Object.">Factory.O</a></li>
+<li><a href="classes/BLW.Type.AjaxElement.html#method_SecurityID" title="Creates a security ID to track ajax requests per user.">AjaxElement.SecurityID</a></li>
+<li><a href="classes/BLW.Type.AjaxElement.html#method_ValidateSecurityID" title="Validates security ID.">AjaxElement.ValidateSecurityID</a></li>
+<li><a href="classes/BLW.Type.AjaxElement.html#method_doAJAX" title="Perform an ajax request then exit.">AjaxElement.doAJAX</a></li>
+<li><a href="classes/BLW.Type.AjaxElement.html#method_InlineJS" title="Get inline JavaScript used by object.">AjaxElement.InlineJS</a></li>
+<li><a href="classes/BLW.Type.AjaxElement.html#method_SetAction" title="Sets an ajax action to $Function.">AjaxElement.SetAction</a></li>
+<li><a href="classes/BLW.Type.AjaxElement.html#method_LoadAjax" title="Loads element from session / &lt;code&gt;$_REQUEST&lt;/code&gt;.">AjaxElement.LoadAjax</a></li>
+<li><a href="classes/BLW.Type.AjaxElement.html#method_SaveAjax" title="Saves element to session / &lt;code&gt;$_REQUEST&lt;/code&gt;.">AjaxElement.SaveAjax</a></li>
+<li><a href="classes/BLW.Type.Singleton.html#method_GetInstance" title="Creates a new instance of the object.">Singleton.GetInstance</a></li>
+<li><a href="classes/BLW.Model.AjaxElement.html#method_InlineJS" title="Get inline JavaScript used by object.">AjaxElement.InlineJS</a></li>
 </ul></div>
 </div>
 <div class="span5">
@@ -115,7 +141,7 @@
 <div class="well"><ul class="nav nav-list">
 <li class="nav-header">Reports</li>
 <li><a href="errors.html"><i class="icon-remove-sign"></i> Errors 
-                <span class="label label-info">55</span></a></li>
+                <span class="label label-info">57</span></a></li>
 <li><a href="markers.html"><i class="icon-map-marker"></i> Markers 
                 <ul></ul></a></li>
 <li><a href="deprecated.html"><i class="icon-stop"></i> Deprecated elements 
@@ -127,7 +153,7 @@
             Template is built using <a>Twitter Bootstrap 2</a> and icons provided by <a>Glyphicons</a>.<br>
             Documentation is powered by <a>phpDocumentor 2.1.0
 </a> and<br>
-            generated on 2013-12-22T03:03:02+03:00.<br></footer></div>
+            generated on 2014-01-02T20:20:44+03:00.<br></footer></div>
 </div>
 </body>
 </html>

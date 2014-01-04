@@ -183,7 +183,16 @@ class Compiler extends \BLW\Type\Object
 
         // Copy app files
         foreach ($this->GetApplications() as $File) {
-            $New = str_replace($this->Options->AppRoot, $this->Options->OutRoot, $File);
+            $New = str_replace(
+                array(
+                    $this->Options->AppRoot,
+                    $this->Options->ExtRoot . sprintf('%1$spackagist%1$syuicompressor-bin%1$sbin', DIRECTORY_SEPARATOR)
+                )
+                ,$this->Options->OutRoot
+                ,$File
+            );
+
+            var_dump($File, $New);
             copy ($File, $New);
         }
 
@@ -277,9 +286,8 @@ class Compiler extends \BLW\Type\Object
      */
     protected function GetAppFiles()
     {
-        $Files = array();
-
-        $Iterator = new \RecursiveIteratorIterator (new \RecursiveDirectoryIterator ($this->Options->AppRoot), \RecursiveIteratorIterator::SELF_FIRST);
+        $Files      = array();
+        $Iterator   = new \RecursiveIteratorIterator (new \RecursiveDirectoryIterator ($this->Options->AppRoot), \RecursiveIteratorIterator::SELF_FIRST);
 
         foreach ($Iterator as $File) {
             if (preg_match ('#[\\\\/](?:APP|OBJ|EL)[.].*[.]php$#i', $File)) continue;
@@ -298,7 +306,7 @@ class Compiler extends \BLW\Type\Object
      */
     protected function GetApplications()
     {
-        $Files      = array();
+        $Files      = array(new \SplFileInfo($this->Options->ExtRoot . sprintf('%1$spackagist%1$syuicompressor-bin%1$sbin%1$syuicompressor.jar',  DIRECTORY_SEPARATOR)));
         $Iterator   = new \RecursiveIteratorIterator (new \RecursiveDirectoryIterator ($this->Options->AppRoot), \RecursiveIteratorIterator::SELF_FIRST);
 
         foreach ($Iterator as $File) {

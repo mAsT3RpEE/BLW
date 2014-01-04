@@ -97,7 +97,11 @@ class YUICompressor extends \BLW\Type\Object
         }
 
         if(!@is_file($self->Options->JAR)) {
-            $self->Options->JAR = getcwd() . '/vendor/heartsentwined/yuicompressor/yuicompressor.jar';
+            $self->Options->JAR = getcwd() . '/vendor/packagist/yuicompressor-bin/bin/yuicompressor.jar';
+        }
+
+        if(!@is_file($self->Options->JAR)) {
+            $self->Options->JAR = BLW_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'yuicompressor.jar';
         }
 
         return $self;

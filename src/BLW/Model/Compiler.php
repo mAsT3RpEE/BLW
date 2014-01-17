@@ -178,8 +178,24 @@ class Compiler extends \BLW\Type\Object
      */
     public function run()
     {
-        $File   = $this->Options->OutRoot . '/' . $this->Options->PHAR;
-        $Files  = array_merge($this->GetLiblFiles(), $this->GetAppFiles());
+        $File   = $this->Options->OutRoot . DIRECTORY_SEPARATOR . $this->Options->PHAR;
+        $Files  = array_merge($this->GetLibFiles(), $this->GetAppFiles());
+
+        // Validation
+        if (!is_file($this->Options->Root . DIRECTORY_SEPARATOR . 'LICENSE.txt')) {
+            throw new \RuntimeException('LICENSE.txt Doesnt exist');
+            return $this;
+        }
+
+        elseif (!is_file($this->Options->AppRoot . DIRECTORY_SEPARATOR . 'BLW.ini')) {
+            throw new \RuntimeException('BLW.ini Doesnt exist');
+            return $this;
+        }
+
+        elseif (!is_file($this->Options->AppRoot . DIRECTORY_SEPARATOR . 'readme.php')) {
+            throw new \RuntimeException('readme.php Doesnt exist');
+            return $this;
+        }
 
         // Create PHAR
         @mkdir($this->Options->OutRoot);
@@ -218,8 +234,8 @@ class Compiler extends \BLW\Type\Object
         // Copy app files
         foreach ($this->GetApplications() as $File) {
             $New = str_replace(
-                 $this->Options->AppRoot
-                ,$this->Options->OutRoot
+                 array($this->Options->AppRoot, 'APP.')
+                ,array($this->Options->OutRoot, '')
                 ,$File
             );
 
@@ -291,13 +307,18 @@ class Compiler extends \BLW\Type\Object
      * Gets files from src directory
      * @return string[] Returns all relevant files found.
      */
-    protected function GetLiblFiles()
+    protected function GetLibFiles()
     {
-        $Files = array(
-            $this->Options->Root . DIRECTORY_SEPARATOR . 'LICENSE.txt'
-            ,$this->Options->ExtRoot . DIRECTORY_SEPARATOR . 'guzzle/http/Guzzle/Http/Resources/cacert.pem'
-            ,$this->Options->ExtRoot . DIRECTORY_SEPARATOR . 'guzzle/http/Guzzle/Http/Resources/cacert.pem.md5'
-        );
+        $Files = array();
+
+        if (is_file($this->Options->Root . DIRECTORY_SEPARATOR . 'LICENSE.txt')) {
+            $Files[] = new \SplFileInfo($this->Options->Root . DIRECTORY_SEPARATOR . 'LICENSE.txt');
+        }
+
+        if (is_file($this->Options->ExtRoot . DIRECTORY_SEPARATOR . 'guzzle/http/Guzzle/Http/Resources/cacert.pem')) {
+            $Files[] = new \SplFileInfo($this->Options->ExtRoot . DIRECTORY_SEPARATOR . 'guzzle/http/Guzzle/Http/Resources/cacert.pem');
+            $Files[] = new \SplFileInfo($this->Options->ExtRoot . DIRECTORY_SEPARATOR . 'guzzle/http/Guzzle/Http/Resources/cacert.pem.md5');
+        }
 
         $Dirs = array(
             $this->Options->ExtRoot
@@ -342,7 +363,7 @@ class Compiler extends \BLW\Type\Object
     }
 
     /**
-     * Gets files from app directory starting with (APP, OBJ, FORM, EL).
+     * Gets files from app directory starting with (APP, OBJ, FORM, EL) and .PHAR files.
      * @return string[] Returns all relevant files found.
      */
     protected function GetApplications()
@@ -352,6 +373,10 @@ class Compiler extends \BLW\Type\Object
 
         foreach ($Iterator as $File) {
             if (preg_match ('#[\\\\/](?:APP|OBJ|EL)[.].*[.]php$#i', $File)) {
+                $Files[] = $File;
+            }
+
+            elseif (preg_match ('#([.]phar$)#i', $File)) {
                 $Files[] = $File;
             }
         }

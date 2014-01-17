@@ -77,26 +77,29 @@
 <li><a href="classes/BLW.Model.Event.General.html" title="Generic event object.">General</a></li>
 <li><a href="classes/BLW.Model.Event.ObjectItem.html" title="Event for passing a set of objects one at a time.">ObjectItem</a></li>
 <li><a href="classes/BLW.Model.ElementContainer.html" title="Class for elements that contain others.">ElementContainer</a></li>
+<li><a href="classes/BLW.Model.Cron.Handler.Symfony.html" title="Symfony version of a cron handler.">Symfony</a></li>
 <li><a href="classes/BLW.Type.LogicException.html" title="Core exception class for Logic Exceptions.">LogicException</a></li>
 <li><a href="classes/BLW.Type.Element.html" title="Core BLW DOM Element object.">Element</a></li>
 <li><a href="classes/BLW.html" title="Main class used to configure, initialize and run blw library.">BLW</a></li>
 <li><a href="classes/BLW.Model.FileException.html" title="Makes reporting errors just easy.">FileException</a></li>
 <li><a href="classes/BLW.Type.Mediator.html" title="Core Mediator pattern Interface.">Mediator</a></li>
-<li><a href="classes/BLW.Model.YUICompressor.html" title="Description.">YUICompressor</a></li>
-<li><a href="classes/BLW.Model.SymfonyMediator.html" title="Mediator class that handles _on and _do commands.">SymfonyMediator</a></li>
+<li><a href="classes/BLW.Model.Cron.Job.Symfony.html" title="Symfony version of a cron job.">Symfony</a></li>
+<li><a href="classes/BLW.Model.Mediator.Symfony.html" title="Mediator class that handles _on and _do commands.">Symfony</a></li>
 <li><a href="classes/BLW.Type.Iterator.html" title="Core Iterator pattern class.">Iterator</a></li>
 <li><a href="classes/BLW.Type.Adaptor.html" title="Core Adapter pattern class.">Adaptor</a></li>
 <li><a href="classes/BLW.Type.RuntimeException.html" title="Core exception class for Runtime Exceptions.">RuntimeException</a></li>
+<li><a href="classes/BLW.Model.ApplicationCommand.Symfony.Compile.html" title="Compiles a BLW installation into PHAR files.">Compile</a></li>
 <li><a href="classes/BLW.Type.Factory.html" title="Core Factory pattern class.">Factory</a></li>
 <li><a href="classes/BLW.Type.AjaxElement.html" title="Core Ajax enabled Element class.">AjaxElement</a></li>
 <li><a href="classes/BLW.Type.ActiveRecord.html" title="Core ActiveRecord pattern class.">ActiveRecord</a></li>
+<li><a href="classes/BLW.Type.Event.Symfony.html" title="Core Event class.">Symfony</a></li>
 <li><a href="classes/BLW.Type.Decorator.html" title="Core event interface.">Decorator</a></li>
 <li><a href="classes/BLW.Model.Compiler.html" title="Builds phar files for blw projects.">Compiler</a></li>
+<li><a href="classes/BLW.Model.Cron.WaitCommand.html" title="Wait for another job.">WaitCommand</a></li>
 <li><a href="classes/BLW.Model.Settings.html" title="XXX.">Settings</a></li>
 <li><a href="classes/BLW.Model.InvalidClassException.html" title="Makes reporting errors just easy.">InvalidClassException</a></li>
 <li><a href="classes/BLW.Type.Singleton.html" title="Core Sigleton pattern class.">Singleton</a></li>
 <li><a href="classes/BLW.Model.InvalidArgumentException.html" title="Makes reporting errors just easy.">InvalidArgumentException</a></li>
-<li><a href="classes/BLW.Type.Event.html" title="Core Event class.">Event</a></li>
 <li class="nav-header">
 <i class="icon-custom icon-method"></i> Public API Methods</li>
 <li><a href="classes/BLW.Type.Object.html#method_Initialize" title="Initializes Class for subsequent use.">Object.Initialize</a></li>
@@ -120,6 +123,9 @@
 <li><a href="classes/BLW.html#method_Configure" title="Configures BLW Libriary.">BLW.Configure</a></li>
 <li><a href="classes/BLW.html#method_Initialize" title="Initializes BlW Library.">BLW.Initialize</a></li>
 <li><a href="classes/BLW.html#method_O" title="Creates a BLW Library Object.">BLW.O</a></li>
+<li><a href="classes/BLW.Type.Adaptor.html#method_GetInstance" title="Creates an instance of the adaptor object.">Adaptor.GetInstance</a></li>
+<li><a href="classes/BLW.Type.Adaptor.html#method_GetSubject" title="Getter for subject property.">Adaptor.GetSubject</a></li>
+<li><a href="classes/BLW.Type.Adaptor.html#method_doCreate" title="Hook that is called when a new instance is created.">Adaptor.doCreate</a></li>
 <li><a href="classes/BLW.Type.Factory.html#method_O" title="Creates a BLW Library Object.">Factory.O</a></li>
 <li><a href="classes/BLW.Type.AjaxElement.html#method_SecurityID" title="Creates a security ID to track ajax requests per user.">AjaxElement.SecurityID</a></li>
 <li><a href="classes/BLW.Type.AjaxElement.html#method_ValidateSecurityID" title="Validates security ID.">AjaxElement.ValidateSecurityID</a></li>
@@ -129,7 +135,6 @@
 <li><a href="classes/BLW.Type.AjaxElement.html#method_LoadAjax" title="Loads element from session / &lt;code&gt;$_REQUEST&lt;/code&gt;.">AjaxElement.LoadAjax</a></li>
 <li><a href="classes/BLW.Type.AjaxElement.html#method_SaveAjax" title="Saves element to session / &lt;code&gt;$_REQUEST&lt;/code&gt;.">AjaxElement.SaveAjax</a></li>
 <li><a href="classes/BLW.Type.Singleton.html#method_GetInstance" title="Creates a new instance of the object.">Singleton.GetInstance</a></li>
-<li><a href="classes/BLW.Model.AjaxElement.html#method_InlineJS" title="Get inline JavaScript used by object.">AjaxElement.InlineJS</a></li>
 </ul></div>
 </div>
 <div class="span5">
@@ -153,7 +158,7 @@
             Template is built using <a>Twitter Bootstrap 2</a> and icons provided by <a>Glyphicons</a>.<br>
             Documentation is powered by <a>phpDocumentor 2.1.0
 </a> and<br>
-            generated on 2014-01-02T20:20:44+03:00.<br></footer></div>
+            generated on 2014-01-17T12:48:13+03:00.<br></footer></div>
 </div>
 </body>
 </html>

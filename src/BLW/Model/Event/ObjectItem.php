@@ -26,7 +26,7 @@ namespace BLW\Model\Event; if(!defined('BLW')){trigger_error('Unsafe access of c
  * @since 1.0.0
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  */
-class ObjectItem extends \BLW\Type\Event
+class ObjectItem extends \BLW\Type\Event\Symfony
 {
     /**
      * Constructor.
@@ -36,8 +36,6 @@ class ObjectItem extends \BLW\Type\Event
      */
     public function __construct($Subject, $Index = -1)
     {
-        parent::__construct($Subject);
-
-        $this->Index = $Index;
+        parent::__construct($Subject, array('Index' => $Index));
     }
 }

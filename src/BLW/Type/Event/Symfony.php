@@ -1,6 +1,6 @@
 <?php
 /**
- * Event.php | Dec 27, 2013
+ * Symfony.php | Dec 27, 2013
  *
  * Copyright (c) 2013-2018 mAsT3RpEE's Zone
  *
@@ -17,7 +17,7 @@
  *	@version 1.0.0
  *	@author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Type; if(!defined('BLW')){trigger_error('Unsafe access of custom library',E_USER_WARNING);return;}
+namespace BLW\Type\Event; if(!defined('BLW')){trigger_error('Unsafe access of custom library',E_USER_WARNING);return;}
 
 /**
  * Core Event class.
@@ -34,7 +34,7 @@ namespace BLW\Type; if(!defined('BLW')){trigger_error('Unsafe access of custom l
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  * @link http://mast3rpee.tk/projects/BLW/ BLW Library
  */
-abstract class Event extends \Symfony\Component\EventDispatcher\Event implements \BLW\Interfaces\Event
+abstract class Symfony extends \Symfony\Component\EventDispatcher\Event implements \BLW\Interfaces\Event
 {
     /**
      * @var mixed $Subject Subject of the current event.
@@ -103,7 +103,7 @@ abstract class Event extends \Symfony\Component\EventDispatcher\Event implements
      */
     public function __get($name)
     {
-        return $this->_Properties->{$name};
+        return $this->_Properties[$name];
     }
 
     /**
@@ -114,7 +114,7 @@ abstract class Event extends \Symfony\Component\EventDispatcher\Event implements
      */
     public function __set($name, $value)
     {
-        $this->_Properties->{$name} = $value;
+        $this->_Properties[$name] = $value;
     }
 
     /**
@@ -124,7 +124,7 @@ abstract class Event extends \Symfony\Component\EventDispatcher\Event implements
      */
     public function __isset($name)
     {
-        return isset($this->_Properties->{$name});
+        return isset($this->_Properties[$name]);
     }
 
     /**
@@ -134,7 +134,7 @@ abstract class Event extends \Symfony\Component\EventDispatcher\Event implements
      */
     public function __unset($name)
     {
-        unset($this->_Properties->{$name});
+        unset($this->_Properties[$name]);
     }
 
     /**

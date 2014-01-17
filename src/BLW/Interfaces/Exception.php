@@ -17,7 +17,7 @@
  *	@version 1.0.0
  *	@author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Interfaces; if(!defined('BLW')){trigger_error('Unsafe access of custom library',E_USER_WARNING);return;}
+namespace BLW\Interfaces;
 
 /**
  * Core Exception interface.

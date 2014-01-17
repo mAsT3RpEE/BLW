@@ -17,7 +17,7 @@
  *	@version 1.0.0
  *	@author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Interfaces; if(!defined('BLW')){trigger_error('Unsafe access of custom library',E_USER_WARNING);return;}
+namespace BLW\Interfaces;
 
 /**
  * Core Adapter pattern class.
@@ -49,6 +49,34 @@ interface Adaptor extends \ArrayAccess, \Serializable
      * @return mixed $subject The adaptor subject.
      */
     public function GetSubject();
+
+    /**
+     * Retrieves the current parent of the object.
+     * @return \BLW\Interfaces\Object Returns <code>NULL</code> if no parent is set.
+     */
+    public function GetParent();
+
+    /**
+     * Sets parent of the current object if NULL.
+     * @internal For internal use only.
+     * @internal This is a one shot function (Only works once).
+     * @param \BLW\Interfaces\Object $Parent Parent of current object.
+     * @return \BLW\Interfaces\Adaptor $this
+     */
+    public function SetParent(\BLW\Interfaces\Object $Parent);
+
+    /**
+     * Clears parent of the current object.
+     * @return \BLW\Interfaces\Adaptor $this
+     */
+    public function ClearParent();
+
+    /**
+     * Returns the parent of the current object.
+     * @note Changes the current context to the parent.
+     * @return \BLW\Interfaces\Object Returns <code>NULL</code> if parent does not exits.
+     */
+    public function& parent();
 
     /**
      * Import child methods.

@@ -62,17 +62,27 @@
 <i class="icon-custom icon-method"></i> Methods
                     <ul>
 <li class="method public "><a href="#method_AddAction" title="AddAction() :: Adds an action."><span class="description">Adds an action.</span><pre>AddAction()</pre></a></li>
+<li class="method public "><a href="#method_CRON" title="CRON() :: Main BLW Cron handler"><span class="description">Main BLW Cron handler</span><pre>CRON()</pre></a></li>
 <li class="method public "><a href="#method_Config" title="Config() :: Wrapper for BLW configuration array."><span class="description">Wrapper for BLW configuration array.</span><pre>Config()</pre></a></li>
 <li class="method public "><a href="#method_Configure" title="Configure() :: Configures BLW Libriary."><span class="description">Configures BLW Libriary.</span><pre>Configure()</pre></a></li>
 <li class="method public "><a href="#method_Error" title="Error() :: Overloards PHP's die() method."><span class="description">Overloards PHP's die() method.</span><pre>Error()</pre></a></li>
+<li class="method public "><a href="#method_GetControl" title="GetControl() :: Gets the current control."><span class="description">Gets the current control.</span><pre>GetControl()</pre></a></li>
+<li class="method public "><a href="#method_GetModel" title="GetModel() :: Returns the full model class."><span class="description">Returns the full model class.</span><pre>GetModel()</pre></a></li>
+<li class="method public "><a href="#method_GetView" title="GetView() :: Gets the current view or a default view."><span class="description">Gets the current view or a default view.</span><pre>GetView()</pre></a></li>
 <li class="method public "><a href="#method_Initialize" title="Initialize() :: Initializes BlW Library."><span class="description">Initializes BlW Library.</span><pre>Initialize()</pre></a></li>
+<li class="method public "><a href="#method_LoadControl" title="LoadControl() :: Sets the current controller to a specified BLW control."><span class="description">Sets the current controller to a specified BLW control.</span><pre>LoadControl()</pre></a></li>
 <li class="method public "><a href="#method_LoadInterfaces" title="LoadInterfaces() :: Loads core BLW Library Interfaces for performance."><span class="description">Loads core BLW Library Interfaces for performance.</span><pre>LoadInterfaces()</pre></a></li>
 <li class="method public "><a href="#method_LoadLibraries" title="LoadLibraries() :: Loads core BLW Library classes performance."><span class="description">Loads core BLW Library classes performance.</span><pre>LoadLibraries()</pre></a></li>
+<li class="method public "><a href="#method_LoadModel" title="LoadModel() :: Loads a model for subsequent use."><span class="description">Loads a model for subsequent use.</span><pre>LoadModel()</pre></a></li>
 <li class="method public "><a href="#method_LoadModels" title="LoadModels() :: Loads core BLW Library Models for performance."><span class="description">Loads core BLW Library Models for performance.</span><pre>LoadModels()</pre></a></li>
 <li class="method public "><a href="#method_LoadTypes" title="LoadTypes() :: Loads core BLW Library Types for performance."><span class="description">Loads core BLW Library Types for performance.</span><pre>LoadTypes()</pre></a></li>
+<li class="method public "><a href="#method_LoadView" title="LoadView() :: Sets the current view to a specified BLW view."><span class="description">Sets the current view to a specified BLW view.</span><pre>LoadView()</pre></a></li>
+<li class="method public "><a href="#method_Logger" title="Logger() :: Main BLW Logger handler."><span class="description">Main BLW Logger handler.</span><pre>Logger()</pre></a></li>
 <li class="method public "><a href="#method_O" title="O() :: Creates a BLW Library Object."><span class="description">Creates a BLW Library Object.</span><pre>O()</pre></a></li>
 <li class="method public "><a href="#method_RemAction" title="RemAction() :: Removes an action."><span class="description">Removes an action.</span><pre>RemAction()</pre></a></li>
+<li class="method public "><a href="#method_Settings" title="Settings() :: Main BLW Settings handler."><span class="description">Main BLW Settings handler.</span><pre>Settings()</pre></a></li>
 <li class="method public "><a href="#method_doAction" title="doAction() :: Handles converting Events into actions."><span class="description">Handles converting Events into actions.</span><pre>doAction()</pre></a></li>
+<li class="method public "><a href="#method_isModel" title="isModel() :: Checks wheather a given model exists."><span class="description">Checks wheather a given model exists.</span><pre>isModel()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header private">» Private
@@ -163,6 +173,17 @@ ajax requests.</p>
 <code>string</code><p>Event to turn into an action.</p></div>
 </div></div>
 </div>
+<a id="method_CRON"></a><div class="element clickable method public method_CRON" data-toggle="collapse" data-target=".method_CRON .collapse">
+<h2>Main BLW Cron handler</h2>
+<pre>CRON() : <a href="Handler.html">\BLW\Module\Cron\Handler</a></pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="Handler.html">\BLW\Module\Cron\Handler</a></code>Current cron handler</div>
+</div></div>
+</div>
 <a id="method_Config"></a><div class="element clickable method public method_Config" data-toggle="collapse" data-target=".method_Config .collapse">
 <h2>Wrapper for BLW configuration array.</h2>
 <pre>Config(bool $Reset) : array</pre>
@@ -217,6 +238,47 @@ ajax requests.</p>
 <code>string</code><p>Body of error messege.</p></div>
 </div></div>
 </div>
+<a id="method_GetControl"></a><div class="element clickable method public method_GetControl" data-toggle="collapse" data-target=".method_GetControl .collapse">
+<h2>Gets the current control.</h2>
+<pre>GetControl() : <a href="../classes/BLW.Interfaces.Control.html">\BLW\Interfaces\Control</a></pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Interfaces.Control.html">\BLW\Interfaces\Control</a></code>Returns the current / default view.</div>
+</div></div>
+</div>
+<a id="method_GetModel"></a><div class="element clickable method public method_GetModel" data-toggle="collapse" data-target=".method_GetModel .collapse">
+<h2>Returns the full model class.</h2>
+<pre>GetModel(string $Model, string $isExtention) : bool</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$Model</h4>
+<code>string</code><p>Model to load. (ie Cron.Handler)</p>
+</div>
+<div class="subelement argument">
+<h4>$isExtention</h4>
+<code>string</code><p>whether the model is a platform extention.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>bool</code>Returns <code>TRUE</code> if model exists <code>FALSE</code> otherwise.</div>
+</div></div>
+</div>
+<a id="method_GetView"></a><div class="element clickable method public method_GetView" data-toggle="collapse" data-target=".method_GetView .collapse">
+<h2>Gets the current view or a default view.</h2>
+<pre>GetView() : <a href="../classes/BLW.Interfaces.View.html">\BLW\Interfaces\View</a></pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Interfaces.View.html">\BLW\Interfaces\View</a></code>Returns the current / default view.</div>
+</div></div>
+</div>
 <a id="method_Initialize"></a><div class="element clickable method public method_Initialize" data-toggle="collapse" data-target=".method_Initialize .collapse">
 <h2>Initializes BlW Library.</h2>
 <pre>Initialize(array $Data) : void</pre>
@@ -233,6 +295,25 @@ ajax requests.</p>
 <div class="subelement argument"><h4>$Data</h4></div>
 </div></div>
 </div>
+<a id="method_LoadControl"></a><div class="element clickable method public method_LoadControl" data-toggle="collapse" data-target=".method_LoadControl .collapse">
+<h2>Sets the current controller to a specified BLW control.</h2>
+<pre>LoadControl(string $Control, bool $isExtention) : <a href="../classes/BLW.Interfaces.Control.html">\BLW\Interfaces\Control</a></pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$Control</h4>
+<code>string</code><p>Control to load. (ie Folder.Class)</p>
+</div>
+<div class="subelement argument">
+<h4>$isExtention</h4>
+<code>bool</code><p>Whether the control is a platform extention.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Interfaces.Control.html">\BLW\Interfaces\Control</a></code>Returns the loaded control</div>
+</div></div>
+</div>
 <a id="method_LoadInterfaces"></a><div class="element clickable method public method_LoadInterfaces" data-toggle="collapse" data-target=".method_LoadInterfaces .collapse">
 <h2>Loads core BLW Library Interfaces for performance.</h2>
 <pre>LoadInterfaces() : void</pre>
@@ -245,6 +326,28 @@ ajax requests.</p>
 <div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
+<a id="method_LoadModel"></a><div class="element clickable method public method_LoadModel" data-toggle="collapse" data-target=".method_LoadModel .collapse">
+<h2>Loads a model for subsequent use.</h2>
+<pre>LoadModel(string $Model, string $isExtention, string $isPersistent) : <a href="Model.html">\BLW\Interfaces\Model</a></pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$Model</h4>
+<code>string</code><p>Model to load. (ie Cron.Handler)</p>
+</div>
+<div class="subelement argument">
+<h4>$isExtention</h4>
+<code>string</code><p>whether the model is a platform extention.</p></div>
+<div class="subelement argument">
+<h4>$isPersistent</h4>
+<code>string</code><p>whether the model should persist accross browser requests.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="Model.html">\BLW\Interfaces\Model</a></code>Returns the loaded model.</div>
+</div></div>
+</div>
 <a id="method_LoadModels"></a><div class="element clickable method public method_LoadModels" data-toggle="collapse" data-target=".method_LoadModels .collapse">
 <h2>Loads core BLW Library Models for performance.</h2>
 <pre>LoadModels() : void</pre>
@@ -256,6 +359,43 @@ ajax requests.</p>
 <pre>LoadTypes() : void</pre>
 <div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="method_LoadView"></a><div class="element clickable method public method_LoadView" data-toggle="collapse" data-target=".method_LoadView .collapse">
+<h2>Sets the current view to a specified BLW view.</h2>
+<pre>LoadView(string $View, bool $isExtention, bool $isAdmin) : <a href="../classes/BLW.Interfaces.View.html">\BLW\Interfaces\View</a></pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$View</h4>
+<code>string</code><p>View to load. (ie Form.Login)</p>
+</div>
+<div class="subelement argument">
+<h4>$isExtention</h4>
+<code>bool</code><p>Whether the view is a platform extention.</p></div>
+<div class="subelement argument">
+<h4>$isAdmin</h4>
+<code>bool</code><p>Whether the view is an administration version.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Interfaces.View.html">\BLW\Interfaces\View</a></code>Returns the loaded view.</div>
+</div></div>
+</div>
+<a id="method_Logger"></a><div class="element clickable method public method_Logger" data-toggle="collapse" data-target=".method_Logger .collapse">
+<h2>Main BLW Logger handler.</h2>
+<pre>Logger(string $Instance) : <a href="../classes/BLW.Interfaces.Logger.html">\BLW\Interfaces\Logger</a></pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$Instance</h4>
+<code>string</code><p>Logger Instance.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Interfaces.Logger.html">\BLW\Interfaces\Logger</a></code>Returns a logger instance.</div>
+</div></div>
 </div>
 <a id="method_O"></a><div class="element clickable method public method_O" data-toggle="collapse" data-target=".method_O .collapse">
 <h2>Creates a BLW Library Object.</h2>
@@ -297,6 +437,17 @@ ajax requests.</p>
 </div>
 </div></div>
 </div>
+<a id="method_Settings"></a><div class="element clickable method public method_Settings" data-toggle="collapse" data-target=".method_Settings .collapse">
+<h2>Main BLW Settings handler.</h2>
+<pre>Settings() : <a href="../classes/BLW.Model.Settings.html">\BLW\Model\Settings</a></pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Model.Settings.html">\BLW\Model\Settings</a></code>Settings object.</div>
+</div></div>
+</div>
 <a id="method_doAction"></a><div class="element clickable method public method_doAction" data-toggle="collapse" data-target=".method_doAction .collapse">
 <h2>Handles converting Events into actions.</h2>
 <pre>doAction(\BLW\Interfaces\Event $Event) : void</pre>
@@ -307,6 +458,25 @@ ajax requests.</p>
 <div class="subelement argument">
 <h4>$Event</h4>
 <code><a href="../classes/BLW.Interfaces.Event.html">\BLW\Interfaces\Event</a></code><p>Event to test and convert.</p></div>
+</div></div>
+</div>
+<a id="method_isModel"></a><div class="element clickable method public method_isModel" data-toggle="collapse" data-target=".method_isModel .collapse">
+<h2>Checks wheather a given model exists.</h2>
+<pre>isModel(string $Model, string $isExtention) : bool</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$Model</h4>
+<code>string</code><p>Model to load. (ie Cron.Handler)</p>
+</div>
+<div class="subelement argument">
+<h4>$isExtention</h4>
+<code>string</code><p>whether the model is a platform extention.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>bool</code>Returns <code>TRUE</code> if model exists <code>FALSE</code> otherwise.</div>
 </div></div>
 </div>
 <a id="method_LoadConfigINI"></a><div class="element clickable method private method_LoadConfigINI" data-toggle="collapse" data-target=".method_LoadConfigINI .collapse">
@@ -350,7 +520,7 @@ ajax requests.</p>
             Template is built using <a>Twitter Bootstrap 2</a> and icons provided by <a>Glyphicons</a>.<br>
             Documentation is powered by <a>phpDocumentor 2.1.0
 </a> and<br>
-            generated on 2014-01-02T20:20:44+03:00.<br></footer></div>
+            generated on 2014-01-17T12:48:13+03:00.<br></footer></div>
 </div>
 </body>
 </html>

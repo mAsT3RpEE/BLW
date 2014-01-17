@@ -65,6 +65,8 @@
 <li class="method public "><a href="#method_DecorateToString" title="DecorateToString() :: Decorators get access to string versions of objects before they are returned."><span class="description">Decorators get access to string versions of objects before they are returned.</span><pre>DecorateToString()</pre></a></li>
 <li class="method public "><a href="#method___construct" title="__construct() :: Constructor."><span class="description">Constructor.</span><pre>__construct()</pre></a></li>
 <li class="method public "><a href="#method___destruct" title="__destruct() :: Destructor"><span class="description">Destructor</span><pre>__destruct()</pre></a></li>
+<li class="method public "><a href="#method_doSerialize" title="doSerialize() :: Hook that is called just before an object is serialized."><span class="description">Hook that is called just before an object is serialized.</span><pre>doSerialize()</pre></a></li>
+<li class="method public "><a href="#method_doUnSerialize" title="doUnSerialize() :: Hook that is called just after an object is unserialized."><span class="description">Hook that is called just after an object is unserialized.</span><pre>doUnSerialize()</pre></a></li>
 </ul>
 </li></ul>
 </div>
@@ -215,6 +217,28 @@ extend the <code>\BLW\Type\Event</code> class.
 <div class="subelement response"><code><a href="void..html">\BLW\Type\void.</a></code></div>
 </div></div>
 </div>
+<a id="method_doSerialize"></a><div class="element clickable method public method_doSerialize" data-toggle="collapse" data-target=".method_doSerialize .collapse">
+<h2>Hook that is called just before an object is serialized.</h2>
+<pre>doSerialize() : <a href="../classes/BLW.Interfaces.Adaptor.html">\BLW\Interfaces\Adaptor</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Interfaces.Adaptor.html">\BLW\Interfaces\Adaptor</a></code>$this</div>
+</div></div>
+</div>
+<a id="method_doUnSerialize"></a><div class="element clickable method public method_doUnSerialize" data-toggle="collapse" data-target=".method_doUnSerialize .collapse">
+<h2>Hook that is called just after an object is unserialized.</h2>
+<pre>doUnSerialize() : <a href="../classes/BLW.Interfaces.Adaptor.html">\BLW\Interfaces\Adaptor</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Interfaces.Adaptor.html">\BLW\Interfaces\Adaptor</a></code>$this</div>
+</div></div>
+</div>
 </div>
 </div>
 </div>
@@ -223,7 +247,7 @@ extend the <code>\BLW\Type\Event</code> class.
             Template is built using <a>Twitter Bootstrap 2</a> and icons provided by <a>Glyphicons</a>.<br>
             Documentation is powered by <a>phpDocumentor 2.1.0
 </a> and<br>
-            generated on 2014-01-02T20:20:44+03:00.<br></footer></div>
+            generated on 2014-01-17T12:48:13+03:00.<br></footer></div>
 </div>
 </body>
 </html>

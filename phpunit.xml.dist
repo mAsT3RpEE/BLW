@@ -24,14 +24,35 @@
         strict="false"
         verbose="false">
     <php>
-        <ini name="memory_limit" value="64M" />
+        <ini name="memory_limit" value="256M" />
     </php>
     <testsuites>
         <testsuite name="All Tests">
             <directory>./tests/</directory>
         </testsuite>
-        <testsuite name="Object Tests">
-            <directory>./tests/Object/</directory>
+        <testsuite name="Core">
+            <file>./tests/1.Type/ObjectTest.php</file>
+            <file>./tests/1.Type/AdaptorTest.php</file>
+            <file>./tests/1.Type/ActiveRecordTest.php</file>
+            <file>./tests/1.Type/SingletonTest.php</file>
+            <file>./tests/1.Type/IteratorTest.php</file>
+            <file>./tests/1.Type/FactoryTest.php</file>
+            <file>./tests/1.Type/ElementTest.php</file>
+        </testsuite>
+        <testsuite name="Types">
+            <directory suffix=".php">./tests/1.Type/</directory>
+            <exclude>
+	            <file>./tests/1.Type/ObjectTest.php</file>
+	            <file>./tests/1.Type/AdaptorTest.php</file>
+	            <file>./tests/1.Type/ActiveRecordTest.php</file>
+	            <file>./tests/1.Type/SingletonTest.php</file>
+	            <file>./tests/1.Type/IteratorTest.php</file>
+	            <file>./tests/1.Type/FactoryTest.php</file>
+	            <file>./tests/1.Type/ElementTest.php</file>
+            </exclude>
+        </testsuite>
+        <testsuite name="Models">
+            <directory suffix=".php">./tests/2.Model/</directory>
         </testsuite>
     </testsuites>
 </phpunit>

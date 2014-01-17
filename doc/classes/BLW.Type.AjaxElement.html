@@ -73,6 +73,7 @@
 <li class="method public "><a href="#method_doCreate" title="doCreate() :: Hook that is called when a new instance is created."><span class="description">Hook that is called when a new instance is created.</span><pre>doCreate()</pre></a></li>
 <li class="method public "><a href="#method_doSerialize" title="doSerialize() :: Hook that is called just before an object is serialized."><span class="description">Hook that is called just before an object is serialized.</span><pre>doSerialize()</pre></a></li>
 <li class="method public "><a href="#method_doSetID" title="doSetID() :: Changes the ID of the current object."><span class="description">Changes the ID of the current object.</span><pre>doSetID()</pre></a></li>
+<li class="method public "><a href="#method_doUnSerialize" title="doUnSerialize() :: Hook that is called just after an object is unserialized."><span class="description">Hook that is called just after an object is unserialized.</span><pre>doUnSerialize()</pre></a></li>
 </ul>
 </li>
 <li class="nav-header">
@@ -83,9 +84,6 @@
 <li class="property public "><a href="#property_Notices" title="$Notices() :: "><span class="description">Stores all ajax notices.</span><pre>$Notices</pre></a></li>
 <li class="property public "><a href="#property_Scripts" title="$Scripts() :: "><span class="description">Array of javascripts relative to asset directory to load.</span><pre>$Scripts</pre></a></li>
 </ul>
-</li>
-<li class="nav-header protected">» Protected
-                    <ul><li class="property protected "><a href="#property__Initialized" title="$_Initialized() :: "><span class="description">Used to store class information status.</span><pre>$_Initialized</pre></a></li></ul>
 </li>
 <li class="nav-header">
 <i class="icon-custom icon-constant"></i> Constants
@@ -338,10 +336,6 @@ cookies as well as output ajax replies on same url. Simple.</p>
 <div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered"><tr>
-<th>note</th>
-<td>Format is <code>mixed function (\BLW\Interfaces\Object $o)</code>.</td>
-</tr></table>
 <h3>Returns</h3>
 <div class="subelement response">
 <code><a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></code>$this</div>
@@ -367,6 +361,17 @@ cookies as well as output ajax replies on same url. Simple.</p>
 <h3>Returns</h3>
 <div class="subelement response">
 <code><a href="Object.html">\BLW\Object</a></code>$this</div>
+</div></div>
+</div>
+<a id="method_doUnSerialize"></a><div class="element clickable method public method_doUnSerialize" data-toggle="collapse" data-target=".method_doUnSerialize .collapse">
+<h2>Hook that is called just after an object is unserialized.</h2>
+<pre>doUnSerialize() : <a href="Object.html">\BLW\Interface\Object</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="Object.html">\BLW\Interface\Object</a></code>$this</div>
 </div></div>
 </div>
 <h3>
@@ -398,12 +403,6 @@ cookies as well as output ajax replies on same url. Simple.</p>
 <a id="property_Scripts"> </a><div class="element clickable property public property_Scripts" data-toggle="collapse" data-target=".property_Scripts .collapse">
 <h2>Array of javascripts relative to asset directory to load.</h2>
 <pre>$Scripts : string[]</pre>
-<div class="labels"><span class="label">Static</span></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
-</div>
-<a id="property__Initialized"> </a><div class="element clickable property protected property__Initialized" data-toggle="collapse" data-target=".property__Initialized .collapse">
-<h2>Used to store class information status.</h2>
-<pre>$_Initialized : bool</pre>
 <div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
@@ -453,7 +452,7 @@ cookies as well as output ajax replies on same url. Simple.</p>
             Template is built using <a>Twitter Bootstrap 2</a> and icons provided by <a>Glyphicons</a>.<br>
             Documentation is powered by <a>phpDocumentor 2.1.0
 </a> and<br>
-            generated on 2014-01-02T20:20:44+03:00.<br></footer></div>
+            generated on 2014-01-17T12:48:13+03:00.<br></footer></div>
 </div>
 </body>
 </html>

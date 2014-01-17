@@ -77,7 +77,7 @@ class ActionParser extends \BLW\Type\Singleton
             elseif (is_scalar($_GET[self::ACTION]) && is_array($_GET[self::OBJECT])) {
                 $Action->Name    = 'Action.' . $_GET[self::ACTION];
                 $Action->Type    = self::TYPE_POST;
-                $Action->Objects = \ArrayIterator($_GET[self::OBJECT]);
+                $Action->Objects = new \ArrayIterator($_GET[self::OBJECT]);
                 $Action->Object  = $Action->Objects->valid()
                     ? $Action->Objects->current()
                     : NULL
@@ -111,8 +111,8 @@ class ActionParser extends \BLW\Type\Singleton
             }
 
             elseif (is_scalar($_POST[self::ACTION]) && is_array($_POST[self::OBJECT])) {
-                $Action->Name    = 'Action' . $_POST[self::ACTION];
-                $Action->Objects = \ArrayIterator($_POST[self::OBJECT]);
+                $Action->Name    = 'Action.' . $_POST[self::ACTION];
+                $Action->Objects = new \ArrayIterator($_POST[self::OBJECT]);
                 $Action->Object  = $Action->Objects->valid()
                     ? $Action->Objects->current()
                     : NULL
@@ -134,6 +134,10 @@ class ActionParser extends \BLW\Type\Singleton
      */
     public function ParseActions()
     {
+        while(count($this)) {
+            unset($this[0]);
+        }
+
         $this->ParseGet();
         $this->ParsePost();
 

@@ -19,6 +19,9 @@
  */
 namespace BLW\Type; if(!defined('BLW')){trigger_error('Unsafe access of custom library',E_USER_WARNING);return;}
 
+use BLW;
+use BLW\Interfaces\Logger;
+
 /**
  * Core Adapter pattern class.
  *
@@ -42,9 +45,14 @@ abstract class Adaptor implements \BLW\Interfaces\Adaptor
     protected static $_Class = '\\BLW\\Model\\Object';
 
     /**
+     * @var \BLW\Interfaces\Object $Parent Pointer to current object Parent.
+     */
+    private $_Parent = NULL;
+
+    /**
      * @var mixed $Subject Subject of the current event.
      */
-    private $_Subject = NULL;
+    protected $_Subject = NULL;
 
     /**
      * Constructor.
@@ -61,28 +69,93 @@ abstract class Adaptor implements \BLW\Interfaces\Adaptor
         else {
             throw new \BLW\Model\InvalidArgumentException(1);
         }
+
+        BLW::$Self = &$this;
+
+        $this->doCreate();
     }
 
     /**
      * Creates an instance of the adaptor object.
-     * @note Default creates
+     * @api BLW
+     * @since 1.0.0
      * @param ...
-     * @return \BLW\Interface\Adaptor
+     * @return \BLW\Interface\Adaptor New adaptor instance.
      */
     final public static function GetInstance(/* ... */)
     {
         $Generator = new \ReflectionClass(static::$_Class);
         $Subject   = $Generator->newInstanceArgs(func_get_args());
+
         return new static($Subject);
     }
 
     /**
      * Getter for subject property.
+     * @api BLW
+     * @since 1.0.0
      * @return mixed $subject The adaptor subject.
      */
     final public function GetSubject()
     {
         return $this->_Subject;
+    }
+
+    /**
+     * Retrieves the current parent of the object.
+     * @return \BLW\Interfaces\Object Returns <code>NULL</code> if no parent is set.
+     */
+    final public function GetParent()
+    {
+        return $this->_Parent;
+    }
+
+    /**
+     * Sets parent of the current object if NULL.
+     * @internal For internal use only.
+     * @internal This is a one shot function (Only works once).
+     * @param \BLW\Interfaces\Object $Parent Parent of current object.
+     * @return \BLW\Interfaces\Adaptor $this
+     */
+    final public function SetParent(\BLW\Interfaces\Object $Parent)
+    {
+        if(!$this->_Parent instanceof \BLW\Interfaces\Object || $this->_Parent === BLW::$Base) {
+            $this->_Parent = $Parent;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears parent of the current object.
+     * @return \BLW\Interfaces\Adaptor $this
+     */
+    final public function ClearParent()
+    {
+        $this->_Parent = NULL;
+        return $this;
+    }
+
+    /**
+     * Returns the parent of the current object.
+     * @note Changes the current context to the parent.
+     * @return \BLW\Interfaces\Object Returns <code>NULL</code> if parent does not exits.
+     */
+    final public function& parent()
+    {
+        BLW::$Self = $this->_Parent;
+        return BLW::$Self;
+    }
+
+    /**
+     * Hook that is called when a new instance is created.
+     * @api BLW
+     * @since 1.0.0
+     * @return \BLW\Interfaces\Adaptor $this
+     */
+    public static function doCreate()
+    {
+        return BLW::$Self;
     }
 
     /**
@@ -237,12 +310,28 @@ abstract class Adaptor implements \BLW\Interfaces\Adaptor
     }
 
     /**
+     * @ignore
+     */
+    public function __clone()
+    {
+        $this->_Subject = clone $this->_Subject;
+    }
+
+    /**
      * Serializable Interface.
      * @return string Serialized data
      */
-    public function serialize()
+    final public function serialize(\BLW\Type\Adaptor $Parent = NULL)
     {
-        return serialize(get_object_vars($this));
+        if($Parent instanceof static) {
+            $this->doSerialize();
+
+            return serialize(get_object_vars($this));
+        }
+
+        $New = clone $this;
+
+        return $New->serialize($this);
     }
 
     /**
@@ -250,12 +339,26 @@ abstract class Adaptor implements \BLW\Interfaces\Adaptor
      * @param string $serialized Serialized object.
      * @return void
      */
-    public function unserialize($serialized)
+    final public function unserialize($serialized)
     {
         foreach(unserialize($serialized) as $k => $v) {
             $this->{$k} = $v;
         }
+
+        $this->doUnserialize();
     }
+
+    /**
+     * Hook that is called just before an object is serialized.
+     * @return \BLW\Interfaces\Adaptor $this
+     */
+    abstract public function doSerialize();
+
+    /**
+     * Hook that is called just after an object is unserialized.
+     * @return \BLW\Interfaces\Adaptor $this
+     */
+    abstract public function doUnSerialize();
 }
 
 return true;

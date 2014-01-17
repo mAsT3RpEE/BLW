@@ -19,6 +19,8 @@
  */
 namespace BLW\Type; if(!defined('BLW')){trigger_error('Unsafe access of custom library',E_USER_WARNING);return;}
 
+use BLW;
+
 /**
  * Core BLW Object Class.
  *
@@ -172,7 +174,7 @@ abstract class Object extends \SplDoublyLinkedList implements \BLW\Interfaces\Ob
         $this->_MediatorID = $this->_MediatorID ?: spl_object_hash($this);
 
         // Change global blw_self to this
-        \BLW::$Self = $this;
+        BLW::$Self = &$this;
 
         // OnCreate Hook
         static::doCreate();
@@ -270,7 +272,7 @@ abstract class Object extends \SplDoublyLinkedList implements \BLW\Interfaces\Ob
             if(!self::$_Initialized || isset($Data['hard_init'])) {
                 self::$DefaultOptions   = array_replace(self::$DefaultOptions, $Data);
                 self::$_Initialized     = true;
-                self::$_Mediator        = \BLW\Model\SymfonyMediator::GetInstance();
+                self::$_Mediator        = BLW::LoadModel(BLW_EVENT_HANDLER, false, false);
 
                 unset(self::$DefaultOptions['hard_init']);
             }
@@ -373,7 +375,7 @@ abstract class Object extends \SplDoublyLinkedList implements \BLW\Interfaces\Ob
      */
     final public function SetParent(\BLW\Interfaces\Object $Parent)
     {
-        if(!$this->_Parent instanceof \BLW\Interfaces\Object || $this->_Parent === \BLW::$Base) {
+        if(!$this->_Parent instanceof \BLW\Interfaces\Object || $this->_Parent === BLW::$Base) {
             $this->_Parent = $Parent;
         }
 
@@ -416,8 +418,8 @@ abstract class Object extends \SplDoublyLinkedList implements \BLW\Interfaces\Ob
      */
     final public function& parent()
     {
-        \BLW::$Self = $this->_Parent;
-        return \BLW::$Self;
+        BLW::$Self = &$this->_Parent;
+        return BLW::$Self;
     }
 
     /**
@@ -571,9 +573,9 @@ abstract class Object extends \SplDoublyLinkedList implements \BLW\Interfaces\Ob
      */
     public static function doCreate()
     {
-        static::GetMediator()->Trigger(get_called_class() . '.Create', new \BLW\Model\Event\General(\BLW::$Self));
+        static::GetMediator()->Trigger(get_called_class() . '.Create', new \BLW\Model\Event\General(BLW::$Self));
 
-        return \BLW::$Self;
+        return BLW::$Self;
     }
 
     /**
@@ -595,7 +597,7 @@ abstract class Object extends \SplDoublyLinkedList implements \BLW\Interfaces\Ob
             throw new \BLW\Model\InvalidClassException($this->_Status);
         }
 
-        return \BLW::$Self;
+        return BLW::$Self;
     }
 
     /**

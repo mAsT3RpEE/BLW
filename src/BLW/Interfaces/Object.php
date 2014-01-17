@@ -129,6 +129,8 @@ interface Object extends \Serializable
 
     /**
      * Changes the ID of the current object.
+     * @api BLW
+     * @since 0.1.0
      * @param string $ID New ID to give Object
      * @return \BLW\Interfaces\Object $this
      */

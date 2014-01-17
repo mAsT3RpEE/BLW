@@ -7,4 +7,6 @@ before_script:
   - composer install -n --no-dev
   - php run.php -vv compile
 script:
-  - phpunit
+  - phpunit --testsuite Core
+  - phpunit --testsuite Types
+  - phpunit --testsuite Models

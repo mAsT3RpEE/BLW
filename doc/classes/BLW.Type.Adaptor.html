@@ -61,7 +61,9 @@
 <li class="nav-header">
 <i class="icon-custom icon-method"></i> Methods
                     <ul>
+<li class="method public "><a href="#method_ClearParent" title="ClearParent() :: Clears parent of the current object."><span class="description">Clears parent of the current object.</span><pre>ClearParent()</pre></a></li>
 <li class="method public "><a href="#method_GetInstance" title="GetInstance() :: Creates an instance of the adaptor object."><span class="description">Creates an instance of the adaptor object.</span><pre>GetInstance()</pre></a></li>
+<li class="method public "><a href="#method_GetParent" title="GetParent() :: Retrieves the current parent of the object."><span class="description">Retrieves the current parent of the object.</span><pre>GetParent()</pre></a></li>
 <li class="method public "><a href="#method_GetSubject" title="GetSubject() :: Getter for subject property."><span class="description">Getter for subject property.</span><pre>GetSubject()</pre></a></li>
 <li class="method public "><a href="#method___call" title="__call() :: Import child methods."><span class="description">Import child methods.</span><pre>__call()</pre></a></li>
 <li class="method public "><a href="#method___construct" title="__construct() :: Constructor."><span class="description">Constructor.</span><pre>__construct()</pre></a></li>
@@ -70,10 +72,14 @@
 <li class="method public "><a href="#method___set" title="__set() :: Import child properties."><span class="description">Import child properties.</span><pre>__set()</pre></a></li>
 <li class="method public "><a href="#method___toString" title="__toString() :: All objects must have a string representation."><span class="description">All objects must have a string representation.</span><pre>__toString()</pre></a></li>
 <li class="method public "><a href="#method___unset" title="__unset() :: Dynamic properties."><span class="description">Dynamic properties.</span><pre>__unset()</pre></a></li>
+<li class="method public "><a href="#method_doCreate" title="doCreate() :: Hook that is called when a new instance is created."><span class="description">Hook that is called when a new instance is created.</span><pre>doCreate()</pre></a></li>
+<li class="method public "><a href="#method_doSerialize" title="doSerialize() :: Hook that is called just before an object is serialized."><span class="description">Hook that is called just before an object is serialized.</span><pre>doSerialize()</pre></a></li>
+<li class="method public "><a href="#method_doUnSerialize" title="doUnSerialize() :: Hook that is called just after an object is unserialized."><span class="description">Hook that is called just after an object is unserialized.</span><pre>doUnSerialize()</pre></a></li>
 <li class="method public "><a href="#method_offsetExists" title="offsetExists() :: ArrayAccesss Interface."><span class="description">ArrayAccesss Interface.</span><pre>offsetExists()</pre></a></li>
 <li class="method public "><a href="#method_offsetGet" title="offsetGet() :: ArrayAccesss Interface."><span class="description">ArrayAccesss Interface.</span><pre>offsetGet()</pre></a></li>
 <li class="method public "><a href="#method_offsetSet" title="offsetSet() :: ArrayAccesss Interface."><span class="description">ArrayAccesss Interface.</span><pre>offsetSet()</pre></a></li>
 <li class="method public "><a href="#method_offsetUnset" title="offsetUnset() :: ArrayAccesss Interface."><span class="description">ArrayAccesss Interface.</span><pre>offsetUnset()</pre></a></li>
+<li class="method public "><a href="#method_parent" title="parent() :: Returns the parent of the current object."><span class="description">Returns the parent of the current object.</span><pre>parent()</pre></a></li>
 <li class="method public "><a href="#method_serialize" title="serialize() :: Serializable Interface."><span class="description">Serializable Interface.</span><pre>serialize()</pre></a></li>
 <li class="method public "><a href="#method_unserialize" title="unserialize() :: Serializable Interface."><span class="description">Serializable Interface.</span><pre>unserialize()</pre></a></li>
 </ul>
@@ -83,10 +89,13 @@
                     <ul></ul>
 </li>
 <li class="nav-header protected">» Protected
-                    <ul><li class="property protected "><a href="#property__Class" title="$_Class() :: "><span class="description">TARGET_CLASS Used by GetInstance to generate instance of class</span><pre>$_Class</pre></a></li></ul>
+                    <ul>
+<li class="property protected "><a href="#property__Class" title="$_Class() :: "><span class="description">TARGET_CLASS Used by GetInstance to generate instance of class</span><pre>$_Class</pre></a></li>
+<li class="property protected "><a href="#property__Subject" title="$_Subject() :: "><span class="description">Subject of the current event.</span><pre>$_Subject</pre></a></li>
+</ul>
 </li>
 <li class="nav-header private">» Private
-                    <ul><li class="property private "><a href="#property__Subject" title="$_Subject() :: "><span class="description">Subject of the current event.</span><pre>$_Subject</pre></a></li></ul>
+                    <ul><li class="property private "><a href="#property__Parent" title="$_Parent() :: "><span class="description">Pointer to current object Parent.</span><pre>$_Parent</pre></a></li></ul>
 </li>
 </ul>
 </div>
@@ -147,26 +156,55 @@ implement the <code>\BLW\Interfaces\Adaptor</code> interface.
 </table>
 <h3>
 <i class="icon-custom icon-method"></i> Methods</h3>
+<a id="method_ClearParent"></a><div class="element clickable method public method_ClearParent" data-toggle="collapse" data-target=".method_ClearParent .collapse">
+<h2>Clears parent of the current object.</h2>
+<pre>ClearParent() : <a href="../classes/BLW.Interfaces.Adaptor.html">\BLW\Interfaces\Adaptor</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Interfaces.Adaptor.html">\BLW\Interfaces\Adaptor</a></code>$this</div>
+</div></div>
+</div>
 <a id="method_GetInstance"></a><div class="element clickable method public method_GetInstance" data-toggle="collapse" data-target=".method_GetInstance .collapse">
 <h2>Creates an instance of the adaptor object.</h2>
 <pre>GetInstance() : <a href="Adaptor.html">\BLW\Interface\Adaptor</a></pre>
-<div class="labels"><span class="label">Static</span></div>
+<div class="labels">
+<span class="label label-info">API</span><span class="label">Static</span>
+</div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
-<th>note</th>
-<td>Default creates</td>
+<th>since</th>
+<td>1.0.0</td>
 </tr></table>
 <h3>Returns</h3>
-<div class="subelement response"><code><a href="Adaptor.html">\BLW\Interface\Adaptor</a></code></div>
+<div class="subelement response">
+<code><a href="Adaptor.html">\BLW\Interface\Adaptor</a></code>New adaptor instance.</div>
+</div></div>
+</div>
+<a id="method_GetParent"></a><div class="element clickable method public method_GetParent" data-toggle="collapse" data-target=".method_GetParent .collapse">
+<h2>Retrieves the current parent of the object.</h2>
+<pre>GetParent() : <a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></code>Returns <code>NULL</code> if no parent is set.</div>
 </div></div>
 </div>
 <a id="method_GetSubject"></a><div class="element clickable method public method_GetSubject" data-toggle="collapse" data-target=".method_GetSubject .collapse">
 <h2>Getter for subject property.</h2>
 <pre>GetSubject() : mixed</pre>
-<div class="labels"></div>
+<div class="labels"><span class="label label-info">API</span></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.0.0</td>
+</tr></table>
 <h3>Returns</h3>
 <div class="subelement response">
 <code>mixed</code>$subject The adaptor subject.</div>
@@ -285,6 +323,45 @@ implement the <code>\BLW\Interfaces\Adaptor</code> interface.
 <code>mixed</code>Overloaded propery</div>
 </div></div>
 </div>
+<a id="method_doCreate"></a><div class="element clickable method public method_doCreate" data-toggle="collapse" data-target=".method_doCreate .collapse">
+<h2>Hook that is called when a new instance is created.</h2>
+<pre>doCreate() : <a href="../classes/BLW.Interfaces.Adaptor.html">\BLW\Interfaces\Adaptor</a></pre>
+<div class="labels">
+<span class="label label-info">API</span><span class="label">Static</span>
+</div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>since</th>
+<td>1.0.0</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Interfaces.Adaptor.html">\BLW\Interfaces\Adaptor</a></code>$this</div>
+</div></div>
+</div>
+<a id="method_doSerialize"></a><div class="element clickable method public method_doSerialize" data-toggle="collapse" data-target=".method_doSerialize .collapse">
+<h2>Hook that is called just before an object is serialized.</h2>
+<pre>doSerialize() : <a href="../classes/BLW.Interfaces.Adaptor.html">\BLW\Interfaces\Adaptor</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Interfaces.Adaptor.html">\BLW\Interfaces\Adaptor</a></code>$this</div>
+</div></div>
+</div>
+<a id="method_doUnSerialize"></a><div class="element clickable method public method_doUnSerialize" data-toggle="collapse" data-target=".method_doUnSerialize .collapse">
+<h2>Hook that is called just after an object is unserialized.</h2>
+<pre>doUnSerialize() : <a href="../classes/BLW.Interfaces.Adaptor.html">\BLW\Interfaces\Adaptor</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Interfaces.Adaptor.html">\BLW\Interfaces\Adaptor</a></code>$this</div>
+</div></div>
+</div>
 <a id="method_offsetExists"></a><div class="element clickable method public method_offsetExists" data-toggle="collapse" data-target=".method_offsetExists .collapse">
 <h2>ArrayAccesss Interface.</h2>
 <pre>offsetExists(mixed $offset) : bool</pre>
@@ -342,12 +419,29 @@ implement the <code>\BLW\Interfaces\Adaptor</code> interface.
 <code>mixed</code><p>Offset to unset.</p></div>
 </div></div>
 </div>
-<a id="method_serialize"></a><div class="element clickable method public method_serialize" data-toggle="collapse" data-target=".method_serialize .collapse">
-<h2>Serializable Interface.</h2>
-<pre>serialize() : string</pre>
+<a id="method_parent"></a><div class="element clickable method public method_parent" data-toggle="collapse" data-target=".method_parent .collapse">
+<h2>Returns the parent of the current object.</h2>
+<pre>parent() : <a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
+<table class="table table-bordered"><tr>
+<th>note</th>
+<td>Changes the current context to the parent.</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></code>Returns <code>NULL</code> if parent does not exits.</div>
+</div></div>
+</div>
+<a id="method_serialize"></a><div class="element clickable method public method_serialize" data-toggle="collapse" data-target=".method_serialize .collapse">
+<h2>Serializable Interface.</h2>
+<pre>serialize(\BLW\Type\Adaptor $Parent) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument"><h4>$Parent</h4></div>
 <h3>Returns</h3>
 <div class="subelement response">
 <code>string</code>Serialized data</div>
@@ -373,9 +467,15 @@ implement the <code>\BLW\Interfaces\Adaptor</code> interface.
 <div class="labels"><span class="label">Static</span></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
-<a id="property__Subject"> </a><div class="element clickable property private property__Subject" data-toggle="collapse" data-target=".property__Subject .collapse">
+<a id="property__Subject"> </a><div class="element clickable property protected property__Subject" data-toggle="collapse" data-target=".property__Subject .collapse">
 <h2>Subject of the current event.</h2>
 <pre>$_Subject : mixed</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
+</div>
+<a id="property__Parent"> </a><div class="element clickable property private property__Parent" data-toggle="collapse" data-target=".property__Parent .collapse">
+<h2>Pointer to current object Parent.</h2>
+<pre>$_Parent : <a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
@@ -387,7 +487,7 @@ implement the <code>\BLW\Interfaces\Adaptor</code> interface.
             Template is built using <a>Twitter Bootstrap 2</a> and icons provided by <a>Glyphicons</a>.<br>
             Documentation is powered by <a>phpDocumentor 2.1.0
 </a> and<br>
-            generated on 2014-01-02T20:20:44+03:00.<br></footer></div>
+            generated on 2014-01-17T12:48:13+03:00.<br></footer></div>
 </div>
 </body>
 </html>

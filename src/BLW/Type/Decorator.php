@@ -99,15 +99,18 @@ abstract Class Decorator extends \BLW\Type\Adaptor implements \BLW\Interfaces\De
         return $String;
     }
 
+    /**
+     * Hook that is called just before an object is serialized.
+     * @return \BLW\Interfaces\Adaptor $this
+     */
+    public function doSerialize() {return $this;}
 
     /**
-     * Serializable Interface.
-     * @param string $serialized Serialized object.
-     * @return void
-     */
-    public function unserialize($serialized)
+     * Hook that is called just after an object is unserialized.
+     * @return \BLW\Interfaces\Adaptor $this
+    */
+    public function doUnSerialize()
     {
-        parent::unserialize($serialized);
         $this->GetSubject()->AddDecorator($this);
     }
 

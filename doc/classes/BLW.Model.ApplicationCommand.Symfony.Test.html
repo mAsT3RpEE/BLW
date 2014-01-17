@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
 <meta charset="utf-8">
-<title>BLW Library » \BLW\Model\SymfonyMediator</title>
+<title>BLW Library » \BLW\Model\ApplicationCommand\Symfony\Test</title>
 <meta name="author" content="Mike van Riel">
 <meta name="description" content="">
 <link href="../css/template.css" rel="stylesheet" media="all">
@@ -60,23 +60,15 @@
 <ul class="side-nav nav nav-list">
 <li class="nav-header">
 <i class="icon-custom icon-method"></i> Methods
-                    <ul>
-<li class="method public "><a href="#method_Deregister" title="Deregister() :: Deregister a function from handling an event."><span class="description">Deregister a function from handling an event.</span><pre>Deregister()</pre></a></li>
-<li class="method public "><a href="#method_Register" title="Register() :: Registers a function to handle an event."><span class="description">Registers a function to handle an event.</span><pre>Register()</pre></a></li>
-<li class="method public "><a href="#method_Trigger" title="Trigger() :: Triggers an event."><span class="description">Triggers an event.</span><pre>Trigger()</pre></a></li>
-</ul>
-</li>
-<li class="nav-header">
-<i class="icon-custom icon-property"></i> Properties
-                    <ul></ul>
+                    <ul><li class="method public "><a href="#method_configure" title="configure() :: Configure the command."><span class="description">Configure the command.</span><pre>configure()</pre></a></li></ul>
 </li>
 <li class="nav-header protected">» Protected
-                    <ul><li class="property protected "><a href="#property__Class" title="$_Class() :: "><span class="description">Used by GetInstance to generate instance of class</span><pre>$_Class</pre></a></li></ul>
+                    <ul><li class="method protected "><a href="#method_execute" title="execute() :: Executes the current command."><span class="description">Executes the current command.</span><pre>execute()</pre></a></li></ul>
 </li>
 </ul>
 </div>
 <div class="span8">
-<a id="\BLW\Model\SymfonyMediator"></a><ul class="breadcrumb">
+<a id="\BLW\Model\ApplicationCommand\Symfony\Test"></a><ul class="breadcrumb">
 <li>
 <a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
 </li>
@@ -84,28 +76,25 @@
 <li>
 <span class="divider">\</span><a href="../namespaces/BLW.Model.html">Model</a>
 </li>
+<li>
+<span class="divider">\</span><a href="../namespaces/BLW.Model.ApplicationCommand.html">ApplicationCommand</a>
+</li>
+<li>
+<span class="divider">\</span><a href="../namespaces/BLW.Model.ApplicationCommand.Symfony.html">Symfony</a>
+</li>
 <li class="active">
-<span class="divider">\</span><a href="../classes/BLW.Model.SymfonyMediator.html">SymfonyMediator</a>
+<span class="divider">\</span><a href="../classes/BLW.Model.ApplicationCommand.Symfony.Test.html">Test</a>
 </li>
 </ul>
 <div class="element class">
-<h1>SymfonyMediator</h1>
-<p class="short_description">Mediator class that handles _on and _do commands.</p>
+<h1>Test</h1>
+<p class="short_description">Tests a BLW installation.</p>
 <div class="details">
-<div class="long_description"><h4>Notice:</h4>
-
-<p>All Mediator must either extend this class or
-implement the <code>\BLW\Interfaces\Mediator</code> interface.
-
-<hr></div>
+<div class="long_description"></div>
 <table class="table table-bordered">
 <tr>
 <th>package</th>
 <td><a href="../packages/BLW.Core.html">BLW\Core</a></td>
-</tr>
-<tr>
-<th>since</th>
-<td>1.0.0</td>
 </tr>
 <tr>
 <th>author</th>
@@ -114,82 +103,43 @@ implement the <code>\BLW\Interfaces\Mediator</code> interface.
 <tr>
 <th>Extends</th>
 <td>
-<a href="../classes/BLW.Type.Mediator.html">\BLW\Type\Mediator</a>
+<a href="../classes/BLW.Type.ApplicationCommand.Symfony.html">\BLW\Type\ApplicationCommand\Symfony</a>
              
         </td>
 </tr>
 </table>
 <h3>
 <i class="icon-custom icon-method"></i> Methods</h3>
-<a id="method_Deregister"></a><div class="element clickable method public method_Deregister" data-toggle="collapse" data-target=".method_Deregister .collapse">
-<h2>Deregister a function from handling an event.</h2>
-<pre>Deregister(string $Action, callable $Function) : <a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></pre>
+<a id="method_configure"></a><div class="element clickable method public method_configure" data-toggle="collapse" data-target=".method_configure .collapse">
+<h2>Configure the command.</h2>
+<pre>configure(array $Options) : void</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <h3>Parameters</h3>
 <div class="subelement argument">
-<h4>$Action</h4>
-<code>string</code><p>Action to register.</p></div>
-<div class="subelement argument">
-<h4>$Function</h4>
-<code>callable</code><p>Function to call when event is triggered.</p></div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code><a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></code>$this</div>
-</div></div>
-</div>
-<a id="method_Register"></a><div class="element clickable method public method_Register" data-toggle="collapse" data-target=".method_Register .collapse">
-<h2>Registers a function to handle an event.</h2>
-<pre>Register(string $Action, callable $Function, int $Priority) : <a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></pre>
-<div class="labels"></div>
-<div class="row collapse"><div class="detail-description">
-<div class="long_description"></div>
+<h4>$Options</h4>
+<code>array</code><p>Configuration options</p></div>
+<h3>Exceptions</h3>
 <table class="table table-bordered"><tr>
-<th>note</th>
-<td>Format is <code>function (\BLW\Interface\Event $Event)</code>.</td>
+<th><code><a href="../classes/BLW.Model.InvalidClassException.html">\BLW\Model\InvalidClassException</a></code></th>
+<td>If Logger option is invalid</td>
 </tr></table>
-<h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$Action</h4>
-<code>string</code><p>Action to register.</p></div>
-<div class="subelement argument">
-<h4>$Function</h4>
-<code>callable</code><p>Function to call when event is triggered.</p></div>
-<div class="subelement argument">
-<h4>$Priority</h4>
-<code>int</code><p>Priority of the function. (Higher value = Higher priority)</p>
-</div>
-<h3>Returns</h3>
-<div class="subelement response">
-<code><a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></code>$this</div>
 </div></div>
 </div>
-<a id="method_Trigger"></a><div class="element clickable method public method_Trigger" data-toggle="collapse" data-target=".method_Trigger .collapse">
-<h2>Triggers an event.</h2>
-<pre>Trigger(string $Action, \BLW\Interfaces\Event $Event) : <a href="../classes/BLW.Interfaces.Event.html">\BLW\Interfaces\Event</a></pre>
+<a id="method_execute"></a><div class="element clickable method protected method_execute" data-toggle="collapse" data-target=".method_execute .collapse">
+<h2>Executes the current command.</h2>
+<pre>execute(\Symfony\Component\Console\Input\InputInterface $Input, \Symfony\Component\Console\Output\OutputInterface $Output) : null | integer</pre>
 <div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <h3>Parameters</h3>
-<div class="subelement argument">
-<h4>$Action</h4>
-<code>string</code><p>Action to trigger.</p></div>
-<div class="subelement argument">
-<h4>$Event</h4>
-<code><a href="../classes/BLW.Interfaces.Event.html">\BLW\Interfaces\Event</a></code><p>Event object associated with the event.</p></div>
+<div class="subelement argument"><h4>$Input</h4></div>
+<div class="subelement argument"><h4>$Output</h4></div>
 <h3>Returns</h3>
 <div class="subelement response">
-<code><a href="../classes/BLW.Interfaces.Event.html">\BLW\Interfaces\Event</a></code>Event used by trigger.</div>
+<code>null</code><code>integer</code>null or 0 if everything went fine, or an error code</div>
 </div></div>
-</div>
-<h3>
-<i class="icon-custom icon-property"></i> Properties</h3>
-<a id="property__Class"> </a><div class="element clickable property protected property__Class" data-toggle="collapse" data-target=".property__Class .collapse">
-<h2>Used by GetInstance to generate instance of class</h2>
-<pre>$_Class : string</pre>
-<div class="labels"><span class="label">Static</span></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
 </div>
 </div>
@@ -199,7 +149,7 @@ implement the <code>\BLW\Interfaces\Mediator</code> interface.
             Template is built using <a>Twitter Bootstrap 2</a> and icons provided by <a>Glyphicons</a>.<br>
             Documentation is powered by <a>phpDocumentor 2.1.0
 </a> and<br>
-            generated on 2014-01-02T20:20:44+03:00.<br></footer></div>
+            generated on 2014-01-17T12:48:13+03:00.<br></footer></div>
 </div>
 </body>
 </html>

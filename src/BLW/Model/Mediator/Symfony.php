@@ -1,6 +1,6 @@
 <?php
 /**
- * SymfonyMediator.php | Dec 28, 2013
+ * Symfony.php | Dec 28, 2013
  *
  * Copyright (c) 2013-2018 mAsT3RpEE's Zone
  *
@@ -17,7 +17,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Model; if(!defined('BLW')){trigger_error('Unsafe access of custom library',E_USER_WARNING);return;}
+namespace BLW\Model\Mediator; if(!defined('BLW')){trigger_error('Unsafe access of custom library',E_USER_WARNING);return;}
 
 /**
  * Mediator class that handles _on and _do commands.
@@ -26,7 +26,7 @@ namespace BLW\Model; if(!defined('BLW')){trigger_error('Unsafe access of custom 
  * @since 1.0.0
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  */
-final class SymfonyMediator extends \BLW\Type\Mediator
+final class Symfony extends \BLW\Type\Mediator
 {
     /**
      * @var string $_Class Used by GetInstance to generate instance of class
@@ -83,6 +83,25 @@ final class SymfonyMediator extends \BLW\Type\Mediator
 
         return $this;
     }
+
+    /**
+     * Initializes Class for subsequent use.
+     * @param array $Data Optional initialization data.
+     * @return array Returns the options generated. Used by child classes.
+     */
+    public static function Initialize(array $Data = array()) {return array();}
+
+    /**
+     * Hook that is called just before an object is serialized.
+     * @return \BLW\Interfaces\Adaptor $this
+     */
+    public function doSerialize() {return $this;}
+
+    /**
+     * Hook that is called just after an object is unserialized.
+     * @return \BLW\Interfaces\Adaptor $this
+     */
+    public function doUnSerialize() {return $this;}
 }
 
 return true;

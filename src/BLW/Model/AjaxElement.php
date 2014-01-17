@@ -50,8 +50,6 @@ class AjaxElement extends \BLW\Type\AjaxElement
      *
      * <p>Should return <code>NULL</code> if no inline JavaScript is set.</p>
      * <hr>
-     * @api BLW
-     * @since 1.0.0
      * @return string
      */
     public function InlineJS()

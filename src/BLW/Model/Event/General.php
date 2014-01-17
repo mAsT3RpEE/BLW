@@ -26,6 +26,6 @@ namespace BLW\Model\Event; if(!defined('BLW')){trigger_error('Unsafe access of c
  * @since 1.0.0
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  */
-class General extends \BLW\Type\Event
+class General extends \BLW\Type\Event\Symfony
 {
 }

@@ -17,17 +17,25 @@
  * @license MIT
  */
 
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 use BLW\Model\Object;
 use BLW\Model\Element;
 use BLW\Model\Settings;
+//use BLW\Model\Database;
 use BLW\Model\ActionParser;
+use BLW\Interfaces\Control;
 
 if (!defined('BLW'))
 {
+    /**
+     * BLW BLW Library version
+     */
     define('BLW', '1.0.0');
 
-    require_once  __DIR__ . '/Interfaces/Object.php';
-    require_once  __DIR__ . '/Type/Object.php';
+    require_once __DIR__ . '/Interfaces/Object.php';
+    require_once __DIR__ . '/Type/Object.php';
 
     /**
      * Main class used to configure, initialize and run blw library.
@@ -61,6 +69,7 @@ if (!defined('BLW'))
         public static function LoadInterfaces()
         {
             require_once __DIR__ . '/Interfaces/Exception.php';
+            require_once __DIR__ . '/Interfaces/Iterable.php';
 
             require_once __DIR__ . '/Interfaces/ActiveRecord.php';
             require_once __DIR__ . '/Interfaces/Adaptor.php';
@@ -86,7 +95,7 @@ if (!defined('BLW'))
 
             require_once __DIR__ . '/Type/ActiveRecord.php';
             require_once __DIR__ . '/Type/Adaptor.php';
-            require_once __DIR__ . '/Type/Event.php';
+            require_once __DIR__ . '/Type/Event/Symfony.php';
 
             require_once __DIR__ . '/Type/Decorator.php';
             require_once __DIR__ . '/Type/Iterator.php';
@@ -105,7 +114,7 @@ if (!defined('BLW'))
          */
         public static function LoadModels()
         {
-            require_once __DIR__ . '/Model/SymfonyMediator.php';
+            require_once __DIR__ . '/Model/Mediator/Symfony.php';
             require_once __DIR__ . '/Model/Event/General.php';
             require_once __DIR__ . '/Model/Event/ObjectItem.php';
 
@@ -139,13 +148,15 @@ if (!defined('BLW'))
              * Use static variable in order to have same config var across
             * all object instances
             */
-            static $Configuration = array();
+            static $Configuration = NULL;
 
-            if(!!$Reset) $Configuration = array(
+            if (!!$Reset) {
+                $Configuration = new ArrayIterator(array(
                     'func_die' => function ($Title, $Messege) {
                         die(sprintf('<b>%s</b>: %s', $Title, $Message));
                     }
-            );
+                ));
+            }
 
             return $Configuration;
         }
@@ -168,8 +179,8 @@ if (!defined('BLW'))
             }
 
             else {
-                $cfg = self::Config();
-                call_user_func($cfg['func_die'], $Title, $Message);
+                $Config = self::Config();
+                call_user_func($Config['func_die'], $Title, $Message);
             }
         }
 
@@ -186,20 +197,34 @@ if (!defined('BLW'))
 
                 if (file_exists(BLW_PLUGIN_DIR . DIRECTORY_SEPARATOR . $File)) {
 
-                    $cfg = parse_ini_file(BLW_PLUGIN_DIR . DIRECTORY_SEPARATOR . $File, true);
+                    foreach (parse_ini_file(BLW_PLUGIN_DIR . DIRECTORY_SEPARATOR . $File, true) as $k => $v) {
+                        $cfg[$k] = $v;
+                    }
 
                     foreach ($cfg['CORE'] as $k => $v) {
-                        if (!defined('BLW_' . $k)) define('BLW_' . $k, $v);
+                        if (!defined('BLW_' . $k)) {
+                            /**
+                             * @ignore
+                             */
+                            define('BLW_' . $k, $v);
+                        }
                     }
                 }
             }
 
             elseif(file_exists($File)) {
 
-                $cfg = parse_ini_file($File);
+                foreach (parse_ini_file(BLW_PLUGIN_DIR . DIRECTORY_SEPARATOR . $File, true) as $k => $v) {
+                    $cfg[$k] = $v;
+                }
 
                 foreach ($cfg['CORE'] as $k => $v) {
-                    if (!defined('BLW_' . $k)) define('BLW_' . $k, $v);
+                    if (!defined('BLW_' . $k)) {
+                        /**
+                         * @ignore
+                         */
+                        define('BLW_' . $k, $v);
+                    }
                 }
             }
 
@@ -219,7 +244,7 @@ if (!defined('BLW'))
          */
         private static function LoadConfigDefault()
         {
-            if(!defined('BLW_LIB_PHAR'))        { define('BLW_LIB_PHAR',        dirname(__DIR__));                                                              }
+            if(!defined('BLW_LIB_PHAR'))        { define('BLW_LIB_PHAR',        dirname(dirname(__DIR__)));                                                     }
             if(!defined('BLW_APP_PHAR'))        { define('BLW_APP_PHAR',        BLW_LIB_PHAR);                                                                  }
 
             if(!defined('BLW_ASSETS_DIR'))      { define('BLW_ASSETS_DIR',      BLW_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'assets');                               }
@@ -271,25 +296,196 @@ if (!defined('BLW'))
             self::LoadLibraries();
             self::Configure();
 
+            $Config = self::Config();
+
             // Object initialization
-            Object::Initialize();
-            Element::Initialize();
-            Settings::Initialize();
+            Object::Initialize(array('hard_init' => 1));
+            Element::Initialize(array('hard_init' => 1));
+            Settings::Initialize(array('hard_init' => 1));
             ActionParser::ClearInstance();
 
             // Globals
             self::$Base     = self::GetInstance();
             self::$_Actions = ActionParser::GetInstance();
 
-            // Settings support
-            if(defined('BLW_SETTINGS')) {
-                self::Settings(true);
+            // Logger
+            $LOGGER = self::GetModel($Config['LOGGER']['MODULE']);
+            $LOGGER::Initialize(array(
+            	 'DataSource' => $Config['LOGGER']['DATA']
+                ,'Level'      => @intval($Config['LOGGER']['LEVEL'])
+            ));
+
+            //\Monolog\ErrorHandler::register(self::Logger('error'), array(), false, null);
+            //\Monolog\ErrorHandler::register(self::Logger('exception'), false, null, false);
+        }
+
+        /**
+         * Main BLW Settings handler.
+         * @return \BLW\Model\Settings Settings object.
+         */
+        public static function& Settings()
+        {
+            static $Settings = NULL;
+
+            if (!$Settings instanceof \BLW\Model\Settings) {
+                $Settings = self::LoadModel('Settings', true, false);
             }
 
-            // Database support
-            if(defined('BLW_DB')) {
-                self::DB(true);
+            return $Settings;
+        }
+
+        /**
+         * Main BLW Logger handler.
+         * @param string $Instance Logger Instance.
+         * @return \BLW\Interfaces\Logger Returns a logger instance.
+         */
+        public static function& Logger($Instance = 'default')
+        {
+            static $Loggers = array();
+
+            if (!isset($Loggers[$Instance])) {
+                $Config             = self::Config();
+                $Loggers[$Instance] = self::LoadModel($Config['LOGGER']['MODULE'], false, false, $Instance);
             }
+
+            return $Loggers[$Instance];
+        }
+
+        /**
+         * Main BLW Cron handler
+         * @return \BLW\Module\Cron\Handler Current cron handler
+         */
+        public static function& CRON()
+        {
+            static $CronHandler = NULL;
+
+            if (!$CronHandler instanceof \BLW\Model\Cron\Handler) {
+                $CronHandler = self::LoadModel('Cron.Handler', true, true);
+            }
+
+            return $CronHandler;
+        }
+
+        /**
+         * Checks wheather a given model exists.
+         * @param string $Model Model to load. (ie Cron.Handler)
+         * @param string $isExtention whether the model is a platform extention.
+         * @return bool Returns <code>TRUE</code> if model exists <code>FALSE</code> otherwise.
+         */
+        public static function isModel($Model, $isExtention = false)
+        {
+            return class_exists(self::GetModel($Model, $isExtention));
+        }
+
+        /**
+         * Returns the full model class.
+         * @param string $Model Model to load. (ie Cron.Handler)
+         * @param string $isExtention whether the model is a platform extention.
+         * @return bool Returns <code>TRUE</code> if model exists <code>FALSE</code> otherwise.
+         */
+        public static function GetModel($Model, $isExtention = false)
+        {
+            return '\\BLW\\Model\\' . str_replace('.', '\\', $Model) . ($isExtention? BLW_EXTENTION : '');
+        }
+
+        /**
+         * Loads a model for subsequent use.
+         * @param string $Model Model to load. (ie Cron.Handler)
+         * @param string $isExtention whether the model is a platform extention.
+         * @param string $isPersistent whether the model should persist accross browser requests.
+         * @param ...
+         * @return \BLW\Interfaces\Model Returns the loaded model.
+         */
+        public static function& LoadModel($Model, $isExtention = false, $isPersistent = false)
+        {
+            static $Models = array();
+
+            $Class     = self::GetModel($Model, $isExtention);
+            $Arguments = array_slice(func_get_args(), 3);
+
+            if ($isPersistent) {
+
+                $Object = self::Settings()->Get($Model);
+
+                if (!$Object instanceof $Class) {
+                    $Class::Initialize();
+
+                    $Getinstance = new ReflectionMethod($Class, 'GetInstance');
+                    $Object      = $Getinstance->invokeArgs(NULL, $Arguments);
+
+                    self::Settings()->Set($Model, $Object);
+                }
+            }
+
+            else {
+
+                if (!isset($Models[$Model])) {
+                    $Class::Initialize();
+                    $Models[$Model] = true;
+                }
+
+                $Getinstance = new ReflectionMethod($Class, 'GetInstance');
+                $Object      = $Getinstance->invokeArgs(NULL, $Arguments);
+            }
+
+            return $Object;
+        }
+
+        /**
+         * Gets the current control.
+         * @return \BLW\Interfaces\Control Returns the current / default view.
+         */
+        public static function GetControl()
+        {
+            return self::Settings()->Get('Control');
+        }
+
+        /**
+         * Sets the current controller to a specified BLW control.
+         * @param string $Control Control to load. (ie Folder.Class)
+         * @param bool $isExtention Whether the control is a platform extention.
+         * @return \BLW\Interfaces\Control Returns the loaded control
+         */
+        public static function& LoadControl ($Control, $isExtention = false)
+        {
+            $Class = '\\BLW\\Control\\' . str_replace('.', '\\', $Control) . ($isExtention? BLW_EXTENTION : '');
+
+            $Class::Initialize();
+
+            $Object = $Class::GetInstance();
+
+            self::Settings()->Set('Control', $Object);
+
+            return $Object;
+        }
+
+        /**
+         * Sets the current view to a specified BLW view.
+         * @param string $View View to load. (ie Form.Login)
+         * @param bool $isExtention Whether the view is a platform extention.
+         * @param bool $isAdmin Whether the view is an administration version.
+         * @return \BLW\Interfaces\View Returns the loaded view.
+         */
+        public static function& LoadView ($View, $isExtention = false, $isAdmin = false)
+        {
+            $Class = '\\BLW\\'. ($isAdmin? 'Backend\\' : 'Frontend\\') . str_replace('.', '\\', $View) . ($isExtention? BLW_EXTENTION : '');
+
+            $Class::Initialize();
+
+            $Object = $Class::GetInstance();
+
+            self::Settings()->Set('View', $Object);
+
+            return $Object;
+        }
+
+        /**
+         * Gets the current view or a default view.
+         * @return \BLW\Interfaces\View Returns the current / default view.
+         */
+        public static function GetView()
+        {
+            return self::Settings()->Get('View');
         }
 
         /**

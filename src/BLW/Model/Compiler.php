@@ -19,8 +19,6 @@
  */
 namespace BLW\Model; if(!defined('BLW')){trigger_error('Unsafe access of custom library',E_USER_WARNING);return;}
 
-use \BLW\Model\YUICompressor;
-
 /**
  * Builds phar files for blw projects.
  * @package BLW\Core
@@ -50,7 +48,7 @@ class Compiler extends \BLW\Type\Object
     public static function Initialize(array $Data = array())
     {
         parent::Initialize();
-        YUICompressor::Initialize();
+
         return static::$DefaultOptions;
     }
 
@@ -73,6 +71,38 @@ class Compiler extends \BLW\Type\Object
         $self->Options->OutRoot  = $self->Options->Root . DIRECTORY_SEPARATOR . 'build';
 
         return $self;
+    }
+
+    /**
+     * Hook that is called after a compile process has completed.
+     * @param int $Steps Steps completed.
+     * @return \BLW\Interfaces\Object $this
+     */
+    public function doAdvance($Steps = 1)
+    {
+        $this->_do('Advance', new \BLW\Model\Event\General($this, array('Steps' => $Steps)));
+
+        return $this;
+    }
+
+    /**
+     * Hook that is called after a compile process has completed.
+     * @note Format is <code>mixed function (\BLW\Interfaces\Event $Event)</code>.
+     * @param callable $Function Function to call before object is serialized.
+     * @return \BLW\Interfaces\Object $this
+     */
+    public function onAdvance($Function)
+    {
+        if(is_callable($Function)) {
+            $this->_on('Advance', $Function);
+        }
+
+        else {
+            $this->_Status &= static::INVALID_CALLBACK;
+            throw new \BLW\Model\InvalidClassException($this->_Status);
+        }
+
+        return $this;
     }
 
     /**
@@ -128,15 +158,15 @@ class Compiler extends \BLW\Type\Object
     public function Optimize($File)
     {
         if(!is_file($File)) {
-            throw new \BLW\Model\InvalidArgumentException(0);
+            throw new \BLW\Model\FileException($File);
             return '';
         }
 
         switch (true)
         {
         	case preg_match('/.php$/i', $File):    return php_strip_whitespace($File);
-        	case preg_match('/.css$/i', $File):    return YUICompressor::GetInstance(array('Type'=>'css'))->AddFile($File)->Compress();
-        	case preg_match('/.js$/i' , $File):    return YUICompressor::GetInstance(array('Type'=>'js' ))->AddFile($File)->Compress();
+        	case preg_match('/.css$/i', $File):    return \CSSmin::minify(file_get_contents($File));
+        	case preg_match('/.js$/i' , $File):    return \JSMin::minify(file_get_contents($File));
 //        	case preg_match('/.jpg$/i', $File):    return JPegCompressor::GetInstance()->SetFile($File)->Compress();
         	default:                               return file_get_contents($File);
         }
@@ -170,6 +200,8 @@ class Compiler extends \BLW\Type\Object
             $Path = str_replace('\\', '/', $Path);
 
             $PHAR->addFromString($Path, $this->Optimize($File));
+
+            $this->doAdvance();
         }
 
         // Stub
@@ -181,19 +213,19 @@ class Compiler extends \BLW\Type\Object
 
         unset($PHAR);
 
+        $this->doAdvance(10);
+
         // Copy app files
         foreach ($this->GetApplications() as $File) {
             $New = str_replace(
-                array(
-                    $this->Options->AppRoot,
-                    $this->Options->ExtRoot . sprintf('%1$spackagist%1$syuicompressor-bin%1$sbin', DIRECTORY_SEPARATOR)
-                )
+                 $this->Options->AppRoot
                 ,$this->Options->OutRoot
                 ,$File
             );
 
-            var_dump($File, $New);
             copy ($File, $New);
+
+            $this->doAdvance();
         }
 
         // Copy assets
@@ -207,11 +239,15 @@ class Compiler extends \BLW\Type\Object
             $New = str_replace(DIRECTORY_SEPARATOR, '.', $New);
 
             file_put_contents($Assets . $New, $this->Optimize($File));
+
+            $this->doAdvance();
         }
 
         // Copy Config and Licence
         copy($this->Options->Root . DIRECTORY_SEPARATOR .'LICENSE.txt', $this->Options->OutRoot . DIRECTORY_SEPARATOR . 'LICENCE.txt');
         copy($this->Options->AppRoot . DIRECTORY_SEPARATOR . 'BLW.ini',  $this->Options->OutRoot . DIRECTORY_SEPARATOR . 'BLW.ini');
+
+        $this->doAdvance(10);
 
         // Create Archive
         $TAR  = str_replace('.phar', '.tar', $this->Options->PHAR);
@@ -230,10 +266,15 @@ class Compiler extends \BLW\Type\Object
         $Iterator = new \RecursiveIteratorIterator (new \RecursiveDirectoryIterator ($this->Options->OutRoot), \RecursiveIteratorIterator::SELF_FIRST);
 
         foreach ($Iterator as $File) {
+
+            if (preg_match ('#([.]log$)#i', $File)) continue;
+
             if(is_file($File)) {
                 $Path = str_replace($this->Options->OutRoot . DIRECTORY_SEPARATOR, '', $File);
                 $PHAR->addFile($File, $Path);
             }
+
+            $this->doAdvance();
         }
 
         $PHAR->stopBuffering();
@@ -269,9 +310,9 @@ class Compiler extends \BLW\Type\Object
 
             foreach ($Iterator as $File) {
 
-                if (preg_match('#/(?:test|example)[s]?[/]?#i', $File)) continue;
+                if (preg_match('#/.*(?:test|example|extra)[s]?/#i', $File)) continue;
 
-                if (preg_match ('#(.php$|.htm$|.html$)#i', $File)) {
+                if (preg_match ('#([.]php$|[.]htm$|[.]html$)#i', $File)) {
                     $Files[] = $File;
                 }
             }
@@ -306,7 +347,7 @@ class Compiler extends \BLW\Type\Object
      */
     protected function GetApplications()
     {
-        $Files      = array(new \SplFileInfo($this->Options->ExtRoot . sprintf('%1$spackagist%1$syuicompressor-bin%1$sbin%1$syuicompressor.jar',  DIRECTORY_SEPARATOR)));
+        $Files      = array();
         $Iterator   = new \RecursiveIteratorIterator (new \RecursiveDirectoryIterator ($this->Options->AppRoot), \RecursiveIteratorIterator::SELF_FIRST);
 
         foreach ($Iterator as $File) {

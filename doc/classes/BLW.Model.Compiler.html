@@ -63,7 +63,9 @@
                     <ul>
 <li class="method public "><a href="#method_Initialize" title="Initialize() :: Initializes a child class for subsequent use."><span class="description">Initializes a child class for subsequent use.</span><pre>Initialize()</pre></a></li>
 <li class="method public "><a href="#method_Optimize" title="Optimize() :: Optimizes a file and returns the optimized version of the file."><span class="description">Optimizes a file and returns the optimized version of the file.</span><pre>Optimize()</pre></a></li>
-<li class="method public "><a href="#method_onCreate" title="onCreate() :: Hook that is called when a new instance is created."><span class="description">Hook that is called when a new instance is created.</span><pre>onCreate()</pre></a></li>
+<li class="method public "><a href="#method_doAdvance" title="doAdvance() :: Hook that is called after a compile process has completed."><span class="description">Hook that is called after a compile process has completed.</span><pre>doAdvance()</pre></a></li>
+<li class="method public "><a href="#method_doCreate" title="doCreate() :: Hook that is called when a new instance is created."><span class="description">Hook that is called when a new instance is created.</span><pre>doCreate()</pre></a></li>
+<li class="method public "><a href="#method_onAdvance" title="onAdvance() :: Hook that is called after a compile process has completed."><span class="description">Hook that is called after a compile process has completed.</span><pre>onAdvance()</pre></a></li>
 <li class="method public "><a href="#method_out" title="out() :: Updates the build path."><span class="description">Updates the build path.</span><pre>out()</pre></a></li>
 <li class="method public "><a href="#method_phar" title="phar() :: Updates the name of phar file to output"><span class="description">Updates the name of phar file to output</span><pre>phar()</pre></a></li>
 <li class="method public "><a href="#method_run" title="run() :: Creates a PHAR archives in the build path."><span class="description">Creates a PHAR archives in the build path.</span><pre>run()</pre></a></li>
@@ -80,9 +82,6 @@
 <li class="nav-header">
 <i class="icon-custom icon-property"></i> Properties
                     <ul><li class="property public "><a href="#property_DefaultOptions" title="$DefaultOptions() :: "><span class="description">Default options used by class if not set in constructor.</span><pre>$DefaultOptions</pre></a></li></ul>
-</li>
-<li class="nav-header protected">» Protected
-                    <ul><li class="property protected "><a href="#property__Initialized" title="$_Initialized() :: "><span class="description">Used to store class information status.</span><pre>$_Initialized</pre></a></li></ul>
 </li>
 </ul>
 </div>
@@ -175,23 +174,49 @@ also define <code>$_Initialized</code></p>
 <code>string</code>Optimized version of the file</div>
 </div></div>
 </div>
-<a id="method_onCreate"></a><div class="element clickable method public method_onCreate" data-toggle="collapse" data-target=".method_onCreate .collapse">
+<a id="method_doAdvance"></a><div class="element clickable method public method_doAdvance" data-toggle="collapse" data-target=".method_doAdvance .collapse">
+<h2>Hook that is called after a compile process has completed.</h2>
+<pre>doAdvance(int $Steps) : <a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$Steps</h4>
+<code>int</code><p>Steps completed.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></code>$this</div>
+</div></div>
+</div>
+<a id="method_doCreate"></a><div class="element clickable method public method_doCreate" data-toggle="collapse" data-target=".method_doCreate .collapse">
 <h2>Hook that is called when a new instance is created.</h2>
-<pre>onCreate(\Closure $Function) : <a href="../classes/BLW.Model.Object.html">\BLW\Model\Object</a></pre>
+<pre>doCreate() : <a href="../classes/BLW.Model.Object.html">\BLW\Model\Object</a></pre>
 <div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Model.Object.html">\BLW\Model\Object</a></code>$this</div>
+</div></div>
+</div>
+<a id="method_onAdvance"></a><div class="element clickable method public method_onAdvance" data-toggle="collapse" data-target=".method_onAdvance .collapse">
+<h2>Hook that is called after a compile process has completed.</h2>
+<pre>onAdvance(callable $Function) : <a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></pre>
+<div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
 <table class="table table-bordered"><tr>
 <th>note</th>
-<td>Format is <code>mixed function (\BLW\Model\ObjectInterface $o)</code>.</td>
+<td>Format is <code>mixed function (\BLW\Interfaces\Event $Event)</code>.</td>
 </tr></table>
 <h3>Parameters</h3>
 <div class="subelement argument">
 <h4>$Function</h4>
-<code><a href="Closure.html">\Closure</a></code><p>Function to call after object has been created.</p></div>
+<code>callable</code><p>Function to call before object is serialized.</p></div>
 <h3>Returns</h3>
 <div class="subelement response">
-<code><a href="../classes/BLW.Model.Object.html">\BLW\Model\Object</a></code>$this</div>
+<code><a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></code>$this</div>
 </div></div>
 </div>
 <a id="method_out"></a><div class="element clickable method public method_out" data-toggle="collapse" data-target=".method_out .collapse">
@@ -298,16 +323,10 @@ also define <code>$_Initialized</code></p>
 </tr>
 <tr>
 <th>see</th>
-<td><a href="BLW.Model.Object.html#method___construct()">\BLW\Model\Object::__construct()</a></td>
+<td><a href="BLW.Type.Object.html#method___construct()">\BLW\Type\Object::__construct()</a></td>
 </tr>
 </table>
 </div></div>
-</div>
-<a id="property__Initialized"> </a><div class="element clickable property protected property__Initialized" data-toggle="collapse" data-target=".property__Initialized .collapse">
-<h2>Used to store class information status.</h2>
-<pre>$_Initialized : bool</pre>
-<div class="labels"><span class="label">Static</span></div>
-<div class="row collapse"><div class="detail-description"><div class="long_description"></div></div></div>
 </div>
 </div>
 </div>
@@ -317,7 +336,7 @@ also define <code>$_Initialized</code></p>
             Template is built using <a>Twitter Bootstrap 2</a> and icons provided by <a>Glyphicons</a>.<br>
             Documentation is powered by <a>phpDocumentor 2.1.0
 </a> and<br>
-            generated on 2014-01-02T20:20:44+03:00.<br></footer></div>
+            generated on 2014-01-17T12:48:13+03:00.<br></footer></div>
 </div>
 </body>
 </html>

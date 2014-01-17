@@ -58,8 +58,13 @@
 <button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button><button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button>
 </div>
 <ul class="side-nav nav nav-list"><li class="nav-header">
-<i class="icon-custom icon-property"></i> Properties
-                    <ul><li class="property public "><a href="#property_DefaultOptions" title="$DefaultOptions() :: "><span class="description">Default options used by class if not set in constructor.</span><pre>$DefaultOptions</pre></a></li></ul>
+<i class="icon-custom icon-method"></i> Methods
+                    <ul>
+<li class="method public "><a href="#method_Get" title="Get() :: Get a certain settings value."><span class="description">Get a certain settings value.</span><pre>Get()</pre></a></li>
+<li class="method public "><a href="#method_Initialize" title="Initialize() :: Initializes a child class for subsequent use."><span class="description">Initializes a child class for subsequent use.</span><pre>Initialize()</pre></a></li>
+<li class="method public "><a href="#method_Set" title="Set() :: Set a certain settings value."><span class="description">Set a certain settings value.</span><pre>Set()</pre></a></li>
+<li class="method public "><a href="#method_doCreate" title="doCreate() :: Hook that is called when a new instance is created."><span class="description">Hook that is called when a new instance is created.</span><pre>doCreate()</pre></a></li>
+</ul>
 </li></ul>
 </div>
 <div class="span8">
@@ -79,11 +84,17 @@
 <h1>Settings</h1>
 <p class="short_description">XXX.</p>
 <div class="details">
-<div class="long_description"><h4>Notice:</h4>
+<div class="long_description"><h3>About</h3>
 
-<p>All Iterators must either implement this class or
-implement the <code>\BLW\Interfaces\Iterator</code> interface.
+<p>All Objects must extend this class or
+implement the <code>\BLW\Interface\Object</code> interface.</p>
 
+<h4>Note:</h4>
+
+<p>Whenever <code>$DefaultOptions</code> is used you must
+also define <code>$_Initialized</code></p>
+
+<p>Object must implement dynamic properties</p>
 <hr></div>
 <table class="table table-bordered">
 <tr>
@@ -105,31 +116,65 @@ implement the <code>\BLW\Interfaces\Iterator</code> interface.
 <tr>
 <th>Extends</th>
 <td>
-<a href="../classes/BLW.Type.Iterator.html">\BLW\Type\Iterator</a>
+<a href="../classes/BLW.Type.Singleton.html">\BLW\Type\Singleton</a>
              
         </td>
 </tr>
 </table>
 <h3>
-<i class="icon-custom icon-property"></i> Properties</h3>
-<a id="property_DefaultOptions"> </a><div class="element clickable property public property_DefaultOptions" data-toggle="collapse" data-target=".property_DefaultOptions .collapse">
-<h2>Default options used by class if not set in constructor.</h2>
-<pre>$DefaultOptions : array</pre>
-<div class="labels">
-<span class="label label-info">API</span><span class="label">Static</span>
-</div>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a id="method_Get"></a><div class="element clickable method public method_Get" data-toggle="collapse" data-target=".method_Get .collapse">
+<h2>Get a certain settings value.</h2>
+<pre>Get(string $Name) : mixed | NULL</pre>
+<div class="labels"></div>
 <div class="row collapse"><div class="detail-description">
 <div class="long_description"></div>
-<table class="table table-bordered">
-<tr>
-<th>since</th>
-<td>0.1.0</td>
-</tr>
-<tr>
-<th>see</th>
-<td><a href="BLW.Object.html#method___construct()">\BLW\Object::__construct()</a></td>
-</tr>
-</table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$Name</h4>
+<code>string</code><p>Id of value to get</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>mixed</code><code>NULL</code>Returns <code>NULL</code> if not already set.</div>
+</div></div>
+</div>
+<a id="method_Initialize"></a><div class="element clickable method public method_Initialize" data-toggle="collapse" data-target=".method_Initialize .collapse">
+<h2>Initializes a child class for subsequent use.</h2>
+<pre>Initialize(array $Data) : array</pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument"><h4>$Data</h4></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>array</code>Returns Options used / generated during init.</div>
+</div></div>
+</div>
+<a id="method_Set"></a><div class="element clickable method public method_Set" data-toggle="collapse" data-target=".method_Set .collapse">
+<h2>Set a certain settings value.</h2>
+<pre>Set(string $Name, mixed $Value) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$Name</h4>
+<code>string</code><p>Id of value to set.</p></div>
+<div class="subelement argument">
+<h4>$Value</h4>
+<code>mixed</code><p>New value.</p></div>
+</div></div>
+</div>
+<a id="method_doCreate"></a><div class="element clickable method public method_doCreate" data-toggle="collapse" data-target=".method_doCreate .collapse">
+<h2>Hook that is called when a new instance is created.</h2>
+<pre>doCreate() : <a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></pre>
+<div class="labels"><span class="label">Static</span></div>
+<div class="row collapse"><div class="detail-description">
+<div class="long_description"></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/BLW.Interfaces.Object.html">\BLW\Interfaces\Object</a></code>$this</div>
 </div></div>
 </div>
 </div>
@@ -140,7 +185,7 @@ implement the <code>\BLW\Interfaces\Iterator</code> interface.
             Template is built using <a>Twitter Bootstrap 2</a> and icons provided by <a>Glyphicons</a>.<br>
             Documentation is powered by <a>phpDocumentor 2.1.0
 </a> and<br>
-            generated on 2014-01-02T20:20:44+03:00.<br></footer></div>
+            generated on 2014-01-17T12:48:13+03:00.<br></footer></div>
 </div>
 </body>
 </html>

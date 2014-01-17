@@ -19,6 +19,8 @@
  */
 namespace BLW\Type; if(!defined('BLW')){trigger_error('Unsafe access of custom library',E_USER_WARNING);return;}
 
+use BLW;
+
 /**
  * Core Iterator pattern class.
  *
@@ -68,14 +70,13 @@ abstract class Iterator extends \BLW\Type\Object implements \BLW\Interfaces\Iter
      */
     final public function& child($ID)
     {
-        foreach ($this as $k => $o) if($o instanceof \BLW\Interfaces\Object) {
+        foreach ($this as $k => $o) if($this->ValidateValue($o)) {
             if($o->GetID() == $ID) {
-                return \BLW::$Self = \SplDoublyLinkedList::offsetGet($k);
+                return BLW::$Self = \SplDoublyLinkedList::offsetGet($k);
             }
         }
 
-        self::InvalidIndex($ID);
-        return \BLW::$Self = NULL;
+        return BLW::$Self = NULL;
     }
 
     /**
@@ -243,6 +244,18 @@ abstract class Iterator extends \BLW\Type\Object implements \BLW\Interfaces\Iter
     }
 
     /**
+     * Determines if value is a valid value for the iterator.
+     * @param mixed $value Value to test.
+     * @return bool Returns <code>TRUE</code> if valid <code>FALSE</code> otherwise.
+     */
+    public function ValidateValue($value) {
+        return $value instanceof \BLW\Interfaces\Object
+            || $value instanceof \BLW\Interfaces\Adaptor
+            || $value instanceof \BLW\Interfaces\ActiveRecord
+        ;
+    }
+
+    /**
      * Push a node at the end of the list.
      * @see \SplDoublyLinkedList::push()
      * @param mixed $value Value to push.
@@ -250,7 +263,7 @@ abstract class Iterator extends \BLW\Type\Object implements \BLW\Interfaces\Iter
      */
     final public function push($value)
     {
-        if($value instanceof \BLW\Interfaces\Object) {
+        if($this->ValidateValue($value)) {
             \SplDoublyLinkedList::push($value);
             $this->_Current = $this->count() - 1;
             $this->doAdd();
@@ -295,7 +308,7 @@ abstract class Iterator extends \BLW\Type\Object implements \BLW\Interfaces\Iter
      */
     final public function unshift($value)
     {
-        if($value instanceof \BLW\Interfaces\Object) {
+        if($this->ValidateValue($value)) {
             \SplDoublyLinkedList::unshift($value);
             $this->_Current = 0;
             $this->doAdd();
@@ -317,11 +330,18 @@ abstract class Iterator extends \BLW\Type\Object implements \BLW\Interfaces\Iter
      */
     final public function offsetSet($index, $newval)
     {
-        if($newval instanceof \BLW\Interfaces\Object || $newval instanceof \BLW\Interfaces\Adaptor) {
-
+        if($this->ValidateValue($newval)) {
             \SplDoublyLinkedList::offsetSet($index, $newval);
-            $this->Current = $index;
-            $this->doUpdate();
+
+            if (is_null($index)) {
+                $this->_Current = $this->count() - 1;
+                $this->doAdd();
+            }
+
+            else {
+                $this->Current = $index;
+                $this->doUpdate();
+            }
         }
 
         else {

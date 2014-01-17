@@ -20,9 +20,12 @@ define('BLW_LIB_PHAR',    __DIR__);
 // Bootstrap
 require_once BLW_LIB_PHAR . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
-// Application
-\BLW\Control\Compiler::GetInstance()
-    ->run(60)
-;
+use \BLW\Control\Console\Symfony as Control;
+use \BLW\Frontend\Console\Symfony as View;
 
+// Application
+BLW::LoadView('Console.Symfony');
+BLW::LoadControl('Console.Symfony');
+BLW::GetControl()->doAction(Control::DEFAULT_ACTION);
+BLW::GetView()->Render();
 exit;

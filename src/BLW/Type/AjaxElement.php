@@ -114,10 +114,10 @@ abstract class AjaxElement extends \BLW\Type\Element
 	{
 		/* Set uniqueid */
 		if(!isset($_SESSION['blwid'])) {
-			$_SESSION['blwid'] = md5(session_id() . isset($_SERVER['HTTP_USER_AGENT'])
+			$_SESSION['blwid'] = md5(session_id() . (isset($_SERVER['HTTP_USER_AGENT'])
 				? $_SERVER['HTTP_USER_AGENT']
 				: ''
-			);
+			));
 		}
 
 		return $_SESSION['blwid'];
@@ -192,8 +192,6 @@ abstract class AjaxElement extends \BLW\Type\Element
 
     /**
      * Hook that is called when a new instance is created.
-     * @note Format is <code>mixed function (\BLW\Interfaces\Object $o)</code>.
-     * @param \Closure $Function Function to call after object has been created.
      * @return \BLW\Interfaces\Object $this
      */
     public static function doCreate()

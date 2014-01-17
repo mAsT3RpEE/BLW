@@ -1,6 +1,6 @@
 <?php
 /**
- * EventTest.php | Dec 30, 2013
+ * SymfonyTest.php | Jan 30, 2013
  *
  * Copyright (c) 2013-2018 mAsT3RpEE's Zone
  *
@@ -17,19 +17,22 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Type;
+namespace BLW\Tests\Type\Event;
+
+use Event;
+use ArrayIterator;
 
 use BLW\Interfaces\Object as ObjectInterface;
 use BLW\Model\Object;
 
-require_once __DIR__ . '/../Config/Event.php';
+require_once __DIR__ . '/../../Config/Event/Symfony.php';
 
 /**
- * Tests BLW Library Event type.
+ * Tests Symfony Event type.
  * @package BLW\Core
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  */
-class EventTest extends \PHPUnit_Framework_TestCase
+class SymfonyTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \BLW\Type\Event
@@ -38,11 +41,11 @@ class EventTest extends \PHPUnit_Framework_TestCase
 
     public function test_create()
     {
-        new \Event(NULL);
+        new Event(NULL);
 
         $Data        = array('foo' => 1, 'bar' => 2);
-        self::$Event = new \Event(new \ArrayIterator($Data), $Data);
-        $Test        = new \ArrayIterator($Data);
+        self::$Event = new Event(new ArrayIterator($Data), $Data);
+        $Test        = new ArrayIterator($Data);
 
         $this->assertEquals($Test, self::$Event->GetSubject());
     }
@@ -52,7 +55,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
      */
     public function test_createException1()
     {
-        new \Event(NULL, NULL);
+        new Event(NULL, NULL);
     }
 
     /**
@@ -69,7 +72,8 @@ class EventTest extends \PHPUnit_Framework_TestCase
     public function test_serialize()
     {
         self::$Event->foo = 1;
-        $Serialized = unserialize(serialize(self::$Event));
+        $Serialized       = unserialize(serialize(self::$Event));
+
         $this->assertEquals(self::$Event, $Serialized);
     }
 }

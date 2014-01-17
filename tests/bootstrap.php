@@ -1,4 +1,5 @@
 <?php
+
 // Try PHAR file
 if(is_file(dirname(__DIR__) . '/build/BLW.phar')) {
     define('BLW_PLUGIN_DIR', dirname(__DIR__) . '/build');
@@ -80,4 +81,4 @@ require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor/php-activerecord/p
     });
 });
 
-error_reporting(E_ALL | E_STRICT);
+error_reporting(E_ALL ^ E_STRICT);

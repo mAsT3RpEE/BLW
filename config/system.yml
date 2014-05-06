@@ -1,0 +1,14 @@
+Core:
+    Application: BLW
+    Platform: standalone
+    PluginURL: http:://localhost/BLW/build
+    EventHandler: Mediator.Symfony
+
+Logger:
+    Data: C:\xampp\htdocs\BLW\build\BLW.log"
+    Module: Monolog.Logger
+    Level: 100
+
+DB: []
+
+Assets: []

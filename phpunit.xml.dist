@@ -1,6 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE config[
+<!ENTITY nbsp "&#xA0;"> 
+<!ENTITY author "Walter Otsyula <wotsyula@mast3rpee.tk>"> 
+<!ENTITY copywrite "Copyright (c) 2013-2018, mAsT3RpEE's Zone"> 
+]>
 <phpunit
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/3.8/phpunit.xsd"
+        xsi:noSchemaLocation="http://schema.phpunit.de/3.8/phpunit.xsd"
         backupGlobals="true"
         backupStaticAttributes="false"
         bootstrap="./tests/bootstrap.php"
@@ -24,35 +30,17 @@
         strict="false"
         verbose="false">
     <php>
-        <ini name="memory_limit" value="256M" />
+        <ini name="memory_limit" value="190M" />
     </php>
     <testsuites>
         <testsuite name="All Tests">
             <directory>./tests/</directory>
         </testsuite>
-        <testsuite name="Core">
-            <file>./tests/1.Type/ObjectTest.php</file>
-            <file>./tests/1.Type/AdaptorTest.php</file>
-            <file>./tests/1.Type/ActiveRecordTest.php</file>
-            <file>./tests/1.Type/SingletonTest.php</file>
-            <file>./tests/1.Type/IteratorTest.php</file>
-            <file>./tests/1.Type/FactoryTest.php</file>
-            <file>./tests/1.Type/ElementTest.php</file>
-        </testsuite>
         <testsuite name="Types">
-            <directory suffix=".php">./tests/1.Type/</directory>
-            <exclude>
-	            <file>./tests/1.Type/ObjectTest.php</file>
-	            <file>./tests/1.Type/AdaptorTest.php</file>
-	            <file>./tests/1.Type/ActiveRecordTest.php</file>
-	            <file>./tests/1.Type/SingletonTest.php</file>
-	            <file>./tests/1.Type/IteratorTest.php</file>
-	            <file>./tests/1.Type/FactoryTest.php</file>
-	            <file>./tests/1.Type/ElementTest.php</file>
-            </exclude>
+            <directory suffix=".php">./tests/Type/</directory>
         </testsuite>
         <testsuite name="Models">
-            <directory suffix=".php">./tests/2.Model/</directory>
+            <directory suffix=".php">./tests/Model/</directory>
         </testsuite>
     </testsuites>
 </phpunit>

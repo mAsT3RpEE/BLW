@@ -2,412 +2,496 @@
 /**
  *	Compiler.php | Dec 11, 2013
  *
- *	Copyright (c) mAsT3RpEE's Zone
+ * @filesource
+ * @license MIT
+ * @copyright Copyright (c) 2013-2018, mAsT3RpEE's Zone
  *
- *	This source file is subject to the MIT license that is bundled
- *	with this source code in the file LICENSE.
- *
- *	@filesource
- *	@copyright mAsT3RpEE's Zone
- *	@license MIT
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
 /**
+ *
  * @package BLW\Core
- * @version 1.0.0
+ * @version GIT 0.2.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Model; if(!defined('BLW')){trigger_error('Unsafe access of custom library',E_USER_WARNING);return;}
+namespace BLW\Model;
+
+use ArrayObject;
+use Phar;
+use CSSmin;
+use JSMin;
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+
+use BLW\Type\IFile;
+
+use BLW\Model\Event\Generic as Event;
+use BLW\Type\AMediatableObject;
+use BLW\Type\IMediator;
+
+
+if (! defined('BLW')) {
+
+    if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
+        header("$_SERVER[SERVER_PROTOCOL] 404 Not Found");
+        header('Status: 404 Not Found');
+
+        $_SERVER['REDIRECT_STATUS'] = 404;
+
+        echo "<html>\r\n<head><title>404 Not Found</title></head><body bgcolor=\"white\">\r\n<center><h1>404 Not Found</h1></center>\r\n<hr>\r\n<center>nginx/1.5.9</center>\r\n</body>\r\n</html>\r\n";
+        exit();
+    }
+
+    return false;
+}
 
 /**
- * Builds phar files for blw projects.
+ * Compiler for BLW Library and BLW applications.
+ *
  * @package BLW\Core
  * @api BLW
- * @version 1.0.0
+ * @version GIT 0.2.0
  * @since 1.0.0
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  */
-class Compiler extends \BLW\Type\Object
+class Compiler extends \BLW\Type\AMediatableObject
 {
     /**
-     * @var array $DefaultOptions Default options used by class if not set in constructor.
-     * @api BLW
-     * @since 0.1.0
-     * @see \BLW\Type\Object::__construct() Object::__construct()
+     * Directory to place compiled files.
+     *
+     * @var \BLW\Type\IFile $_Build
      */
-    public static $DefaultOptions = array(
-        'PHAR'          => 'APP.phar'
-        ,'Root'         => NULL
-    );
+    protected $_Build = NULL;
 
     /**
-     * Initializes a child class for subsequent use.
-     * @param array $Options Initialization options. (Automatically adds blw_cfg())
-     * @return array Returns Options used / generated during init.
+     * Base directory for compiler.
+     *
+     * @var \BLW\Type\IFile $_Root
      */
-    public static function Initialize(array $Data = array())
-    {
-        parent::Initialize();
-
-        return static::$DefaultOptions;
-    }
+    protected $_Root = NULL;
 
     /**
-     * Hook that is called when a new instance is created.
-     * @return \BLW\Model\Object $this
+     * Temporary storage directory.
+     *
+     * @var \BLW\Type\IFile $_Temp
      */
-    public static function doCreate()
-    {
-        $self = parent::doCreate();
+    protected $_Temp = NULL;
 
-        // Build Paths
-        if(!is_dir($self->Options->Root)) {
-            $self->Options->Root = getcwd();
+    /**
+     * Contains all files needed in compilation.
+     *
+     * @var array $_Files
+     */
+    protected $_Files = array();
+
+    /**
+     * Constructor
+     *
+     * @throws \BLW\Model\InvalidArgumentException
+     *            If:
+	 *
+     * <ul>
+     * <li><code>$BuildPath</code> Is not a writable directory.</li>
+     * <li><code>$RootPath</code> Is not a readable directory.</li>
+     * <li><code>$TempPath</code> Is not a writable directory.</li>
+     * </ul>
+     *
+     * @param \BLW\Type\IFile $BuildPath
+     *            Directory to store compiled resouces.
+     * @param \BLW\Type\IFile $RootPath
+     *            [optional] Base path of compiler. <code>NULL</code> for current directory.
+     * @param \BLW\Type\IFile $TempPath
+     *            [optional] Directory to store temporary files. <code>NULL</code> for sys_get_temp_dir().
+     * @param \BLW\Type\IMediator $Mediator
+     *            [optional] Mediator for compiler.
+     */
+    public function __construct(IFile $BuildPath, IFile $RootPath = null, IFile $TempPath = null, IMediator $Mediator = null)
+    {
+        // Check arguments
+
+        // Is $BuildPath a writable?
+        if (! $BuildPath->isWritable()) {
+            throw new InvalidArgumentException(0, '%header% $BuildPath is not writable');
+            return null;
         }
 
-        $self->Options->AppRoot  = $self->Options->Root . DIRECTORY_SEPARATOR . 'app';
-        $self->Options->ExtRoot  = $self->Options->Root . DIRECTORY_SEPARATOR . 'vendor';
-        $self->Options->LiblRoot = $self->Options->Root . DIRECTORY_SEPARATOR . 'src';
-        $self->Options->OutRoot  = $self->Options->Root . DIRECTORY_SEPARATOR . 'build';
+        /// Is $BuildPath a directory
+        elseif (! $BuildPath->isDir()) {
+            throw new InvalidArgumentException(0, '%header% $BuildPath is not a directory');
+            return null;
+        }
 
-        return $self;
+        // Is $RootPath null?
+        if (! $RootPath) {
+            $RootPath = new GenericFile(getcwd());
+        }
+
+        // Is $RootPath a readable?
+        elseif (! $BuildPath->isReadable()) {
+            throw new InvalidArgumentException(1, '%header% $RootPath is not writable');
+            return null;
+        }
+
+        /// Is $RootPath a directory
+        elseif (! $RootPath->isDir()) {
+            throw new InvalidArgumentException(1, '%header% $RootPath is not a directory');
+            return null;
+        }
+
+        // Is $TempPath null?
+        if (! $TempPath) {
+            $TempPath = new GenericFile(sys_get_temp_dir());
+        }
+
+        // Is $TempPath writable
+        elseif (! $TempPath->isWritable()) {
+            throw new InvalidArgumentException(2, '%header% $TempPath is not writable');
+            return null;
+        }
+
+        // Is $TempPath a directory
+        elseif (! $TempPath->isDir()) {
+            throw new InvalidArgumentException(2, '%header% $TempPath is not a directory');
+            return null;
+        }
+
+        // Properties
+        $this->_DataMapper = new ArrayObject();
+        $this->_ID         = 'Compiler';
+        $this->_Temp       = $TempPath;
+        $this->_Build      = $BuildPath;
+        $this->_Root       = $RootPath;
+        $this->_Files      = array();
+
+        // Mediator
+        if ($Mediator) $this->setMediator($Mediator);
     }
 
     /**
      * Hook that is called after a compile process has completed.
-     * @param int $Steps Steps completed.
-     * @return \BLW\Interfaces\Object $this
+     *
+     * @throws \BLW\Model\InvalidArgumentException If <code>$Steps</code> is not numeric.
+     *
+     * @param int $Steps
+     *            Steps completed.
+     * @return bool <code>TRUE</code> on success. <code>False</code> otherwise.
      */
     public function doAdvance($Steps = 1)
     {
-        $this->_do('Advance', new \BLW\Model\Event\General($this, array('Steps' => $Steps)));
+        // Is $Steps an integer?
+        if (is_numeric($Steps)) {
 
-        return $this;
+            // Does command have a mediator?
+            if ($this->_Mediator instanceof IMediator) {
+                // Trigger hook
+                $this->_do('Advance', new Event($this, array(
+                    'Steps' => $Steps
+                )));
+
+                // Done
+                return true;
+            }
+        }
+
+        // Invalid $Callback
+        else
+            throw new InvalidArgumentException(0);
+
+        // Error
+        return false;
     }
 
     /**
      * Hook that is called after a compile process has completed.
-     * @note Format is <code>mixed function (\BLW\Interfaces\Event $Event)</code>.
-     * @param callable $Function Function to call before object is serialized.
-     * @return \BLW\Interfaces\Object $this
+     *
+     * @throws \BLW\Model\InvalidArgumentException If <code>$Callback</code> is not callable.
+     *
+     * @param callable $Callback
+     *            Callback to invoke.
+     * @return bool <code>TRUE</code> on success. <code>False</code> otherwise.
      */
-    public function onAdvance($Function)
+    public function onAdvance($Callback)
     {
-        if(is_callable($Function)) {
-            $this->_on('Advance', $Function);
+        // Is $Callback callable?
+        if (is_callable($Callback)) {
+
+            // Does command have a mediator?
+            if ($this->_Mediator instanceof IMediator) {
+                // Register hook
+                $this->_on('Advance', $Callback);
+
+                // Done
+                return true;
+            }
         }
 
-        else {
-            $this->_Status &= static::INVALID_CALLBACK;
-            throw new \BLW\Model\InvalidClassException($this->_Status);
-        }
+        // Invalid $Callback
+        else
+            throw new InvalidArgumentException(0);
 
-        return $this;
-    }
-
-    /**
-     * Updates the name of phar file to output
-     * @param string $File
-     * @return \BLW\Model\Object $this
-     */
-    public function phar($File = NULL)
-    {
-        if(is_null($File)) {
-            return $this->Options->PHAR;
-        }
-
-        elseif(preg_match('/.phar$/', @strval($File)))  {
-            $this->Options->PHAR = $File;
-        }
-
-        else {
-            throw \BLW\Model\InvalidArgumentException(0);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Updates the build path.
-     * @param string $Dir
-     * @return \BLW\Model\Object $this
-     */
-    public function out($Dir = NULL)
-    {
-        if(is_null($Dir)) {
-            return $this->Options->Root;
-        }
-
-        elseif(!is_file(@strval($Dir))) {
-            $this->Options->OutRoot = $Dir;
-        }
-
-        else {
-            throw new \BLW\Model\InvalidArgumentException(0);
-        }
-
-        return $this;
+        // Error
+        return false;
     }
 
     /**
      * Optimizes a file and returns the optimized version of the file.
-     * @param string $File File to optimize
-     * @throws \BLW\Model\InvalidArgumentException If file is not recognized as a file.
-     * @return string Optimized version of the file
+     *
+     * @throws \BLW\Model\FileException If <code>$File</code> is not recognized as a file.
+     *
+     * @param string $File
+     *            File to optimize
+     * @return string Optimized version of the file.
      */
-    public function Optimize($File)
+    public static function optimize($File)
     {
-        if(!is_file($File)) {
-            throw new \BLW\Model\FileException($File);
+        if (! is_file($File) ?: ! is_readable($File)) {
+            throw new FileException($File);
             return '';
         }
 
-        switch (true)
-        {
-        	case preg_match('/.php$/i', $File):    return php_strip_whitespace($File);
-        	case preg_match('/.css$/i', $File):    return \CSSmin::minify(file_get_contents($File));
-        	case preg_match('/.js$/i' , $File):    return \JSMin::minify(file_get_contents($File));
-//        	case preg_match('/.jpg$/i', $File):    return JPegCompressor::GetInstance()->SetFile($File)->Compress();
-        	default:                               return file_get_contents($File);
+        switch (true) {
+            case preg_match('!\x2ephp$!i', $File):
+                return php_strip_whitespace($File);
+            case preg_match('!\x2ecss$!i', $File):
+                $Compressor = new CSSmin;
+                return $Compressor->run(file_get_contents($File));
+            case preg_match('!\x2ejs$!i', $File):
+                return JSMin::minify(file_get_contents($File));
+            default:
+                return file_get_contents($File);
         }
     }
 
     /**
-     * Creates a PHAR archives in the build path.
-     * @return \BLW\Model\Object $this
+     * Adds a file for compilation.
+     *
+     * @throws \BLW\Model\FileException If there is an error with the file.
+     *
+     * @param \BLW\Type\IFile $File
+     *            File to add to compiler.
+     * @return bool <code>TRUE</code> on success. <code>FALSE</code> otherwise.
      */
-    public function run()
+    public function addFile(IFile $File)
     {
-        $File   = $this->Options->OutRoot . DIRECTORY_SEPARATOR . $this->Options->PHAR;
-        $Files  = array_merge($this->GetLibFiles(), $this->GetAppFiles());
+        // Is $File invalid?
+        if (! $File->isFile() || ! $File->isReadable()) {
 
-        // Validation
-        if (!is_file($this->Options->Root . DIRECTORY_SEPARATOR . 'LICENSE.txt')) {
-            throw new \RuntimeException('LICENSE.txt Doesnt exist');
-            return $this;
+            // Exception
+            throw new FileException($File);
+
+            // Error
+            return false;
         }
 
-        elseif (!is_file($this->Options->AppRoot . DIRECTORY_SEPARATOR . 'BLW.ini')) {
-            throw new \RuntimeException('BLW.ini Doesnt exist');
-            return $this;
-        }
+        // Add file
+        $this->_Files[] = $File;
 
-        elseif (!is_file($this->Options->AppRoot . DIRECTORY_SEPARATOR . 'readme.php')) {
-            throw new \RuntimeException('readme.php Doesnt exist');
-            return $this;
-        }
+        // Success
+        return true;
+    }
 
-        // Create PHAR
-        @mkdir($this->Options->OutRoot);
-        @unlink($File);
+    /**
+     * Adds files in a directory for compilation.
+     *
+     * @throws \BLW\Model\FileException If <code>$Dir</code> is not a readable directory.
+     *
+     * @param \BLW\Type\IFile $File
+     *            File to add to compiler.
+     * @param string $Extention
+     *            [optional] Extention of files to add.
+     * @param ...
+     * @return bool <code>TRUE</code> on success. <code>FALSE</code> otherwise.
+     */
+    public function addDir(IFile $Dir, $Extention = 'php')
+    {
+        static $Extract = NULL;
 
-        $PHAR = new \Phar(
-            $File,
-            \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_FILENAME,
-            $this->Options->PHAR
-        );
+        // Extracts extentions from arguments and compiles them into a regex
+        $Extract = $Extract ?: function ($r, $v)
+        {
+            static $i;
 
-        $PHAR->setSignatureAlgorithm(\Phar::SHA1);
-        $PHAR->startBuffering();
+            if (empty($r)) $i = 1;
 
-        // Add files to phar
-        foreach ($Files as $File) {
-            $Path = str_replace($this->Options->Root . DIRECTORY_SEPARATOR, '', $File);
-            $Path = str_replace('\\', '/', $Path);
+            // Is extention supported?
+            if (preg_match('!^[\x2a\x2e0-9A-Z\x5fa-z]+$!', substr($v, 0, 16), $m)) {
 
-            $PHAR->addFromString($Path, $this->Optimize($File));
+                // Sanitize extention
+                $m[0] = str_replace(array('.', '*'), array('\x2e', '.*'), $m[0]);
 
-            $this->doAdvance();
-        }
+                // Add extention
+                if (empty($r))
+                    $r = "\\x2e$m[0]";
 
-        // Stub
-        $PHAR['_stub.php'] = file_get_contents($this->Options->AppRoot . DIRECTORY_SEPARATOR . 'readme.php');
-        $PHAR->setStub($PHAR->createDefaultStub('_stub.php'));
-
-        $PHAR->stopBuffering();
-        // $PHAR->compressFiles(\Phar::GZ);
-
-        unset($PHAR);
-
-        $this->doAdvance(10);
-
-        // Copy app files
-        foreach ($this->GetApplications() as $File) {
-            $New = str_replace(
-                 array($this->Options->AppRoot, 'APP.')
-                ,array($this->Options->OutRoot, '')
-                ,$File
-            );
-
-            copy ($File, $New);
-
-            $this->doAdvance();
-        }
-
-        // Copy assets
-        $Assets = $this->Options->OutRoot . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR;
-
-        @mkdir($Assets);
-
-        foreach ($this->GetAssets() as $File) {
-
-            $New = str_replace($this->Options->Root . DIRECTORY_SEPARATOR, '', $File);
-            $New = str_replace(DIRECTORY_SEPARATOR, '.', $New);
-
-            file_put_contents($Assets . $New, $this->Optimize($File));
-
-            $this->doAdvance();
-        }
-
-        // Copy Config and Licence
-        copy($this->Options->Root . DIRECTORY_SEPARATOR .'LICENSE.txt', $this->Options->OutRoot . DIRECTORY_SEPARATOR . 'LICENCE.txt');
-        copy($this->Options->AppRoot . DIRECTORY_SEPARATOR . 'BLW.ini',  $this->Options->OutRoot . DIRECTORY_SEPARATOR . 'BLW.ini');
-
-        $this->doAdvance(10);
-
-        // Create Archive
-        $TAR  = str_replace('.phar', '.tar', $this->Options->PHAR);
-
-        @unlink($this->Options->OutRoot . DIRECTORY_SEPARATOR . $TAR);
-        @unlink($this->Options->OutRoot . DIRECTORY_SEPARATOR . $TAR . '.gz');
-
-        $PHAR = new \PharData(
-           $this->Options->OutRoot . DIRECTORY_SEPARATOR . $TAR,
-            \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::KEY_AS_FILENAME,
-            $TAR
-        );
-
-        $PHAR->startBuffering();
-
-        $Iterator = new \RecursiveIteratorIterator (new \RecursiveDirectoryIterator ($this->Options->OutRoot), \RecursiveIteratorIterator::SELF_FIRST);
-
-        foreach ($Iterator as $File) {
-
-            if (preg_match ('#([.]log$)#i', $File)) continue;
-
-            if(is_file($File)) {
-                $Path = str_replace($this->Options->OutRoot . DIRECTORY_SEPARATOR, '', $File);
-                $PHAR->addFile($File, $Path);
+                else
+                    $r .= "|\\x2e$m[0]";
             }
 
-            $this->doAdvance();
+            // Invalid extention
+            else
+                throw new InvalidArgumentException($i, NULL, $i);
+
+            // Update arg count
+            $i ++;
+
+            // Done
+            return $r;
+
+        };
+
+        // Is $Dir invalid?
+        if (! $Dir->isDir() || ! $Dir->isReadable()) {
+
+            // Exception
+            throw new FileException($Dir);
+
+            // Error
+            return false;
         }
 
-        $PHAR->stopBuffering();
-        $PHAR->compress(\Phar::GZ);
+        // Exclude regex
+        $Excluded = '![\x2f\x5c](?:[^\x2f\x5c]*tests?|[^\x2f\x5c]*examples?|demos?|docs?)[\x2f\x5c]!i';
 
-        unset($PHAR);
-
-        @unlink($this->Options->OutRoot . DIRECTORY_SEPARATOR . $TAR);
-
-        return $this;
-    }
-
-    /**
-     * Gets files from src directory
-     * @return string[] Returns all relevant files found.
-     */
-    protected function GetLibFiles()
-    {
-        $Files = array();
-
-        if (is_file($this->Options->Root . DIRECTORY_SEPARATOR . 'LICENSE.txt')) {
-            $Files[] = new \SplFileInfo($this->Options->Root . DIRECTORY_SEPARATOR . 'LICENSE.txt');
+        // Include regex
+        try {
+            $Included = array_reduce(array_slice(func_get_args(), 1), $Extract, '');
+            $Included = "!(?:$Included)$!i";
         }
 
-        if (is_file($this->Options->ExtRoot . DIRECTORY_SEPARATOR . 'guzzle/http/Guzzle/Http/Resources/cacert.pem')) {
-            $Files[] = new \SplFileInfo($this->Options->ExtRoot . DIRECTORY_SEPARATOR . 'guzzle/http/Guzzle/Http/Resources/cacert.pem');
-            $Files[] = new \SplFileInfo($this->Options->ExtRoot . DIRECTORY_SEPARATOR . 'guzzle/http/Guzzle/Http/Resources/cacert.pem.md5');
+        // Error
+        catch(InvalidArgumentException $e) {
+
+            // Forward exception
+            throw new InvalidArgumentException($e->getCode(), null, 0, $e);
+
+            // Error
+            return false;
         }
 
-        $Dirs = array(
-            $this->Options->ExtRoot
-            ,$this->Options->LiblRoot
-        );
+        // Add files
+        $added = 0;
 
-        foreach ($Dirs as $Dir) {
+        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($Dir, FilesystemIterator::SKIP_DOTS | FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO), RecursiveIteratorIterator::SELF_FIRST) as $File) {
 
-            $Iterator = new \RecursiveIteratorIterator (new \RecursiveDirectoryIterator ($Dir), \RecursiveIteratorIterator::SELF_FIRST);
+            // $File is a directory?
+            if (is_dir($File))
+                continue;
 
-            foreach ($Iterator as $File) {
+            // Is $File excluded?
+            elseif (preg_match($Excluded, $File, $m))
+                continue;
 
-                if (preg_match('#/.*(?:test|example|extra)[s]?/#i', $File)) continue;
+            // Is $File included
+            elseif (preg_match($Included, $File)) {
 
-                if (preg_match ('#([.]php$|[.]htm$|[.]html$)#i', $File)) {
-                    $Files[] = $File;
+                // Is file readable?
+                if (is_readable($File) && is_file($File)) {
+                    // Add file
+                    $this->_Files[] = $File;
+
+                    // Increase counter
+                    $added++;
                 }
             }
         }
 
-        return $Files;
+        // Done
+        return $added > 1;
     }
 
     /**
-     * Gets files from app directory
-     * @return string[] Returns all relevant files found.
+     * Creates a PHAR archives in the build path.
+     *
+     * <h4>Note</h4>
+     *
+     * <p>Raises an <b>E_USER_WARNING</b> if a file cannot be accessed / read.</p>
+     *
+     * <hr>
+     *
+     * @throws \BLW\Model\InvalidArgumentException If <code>$Project</code> contains: <code> " * / : < > ? \ | NL CR TAB </code>.
+     * @throws \RuntimeException
+     *
+     * @param string $Project
+     *            Name of the project.
+     * @return bool <code>TRUE</code> on success. <code>FALSE</code> otherwise.
      */
-    protected function GetAppFiles()
+    public function compile($Project = 'APP')
     {
-        $Files      = array();
-        $Iterator   = new \RecursiveIteratorIterator (new \RecursiveDirectoryIterator ($this->Options->AppRoot), \RecursiveIteratorIterator::SELF_FIRST);
+        // Is $Project invalid
+        $Project = trim(@substr($Project, 0, 64));
+        $Regex   = '!^([^\x00-\x1f\x22\x2a\x2f\x3a\x3c\x3e\x3f\x5c\x7c]{1,32})(?:\x2e[Pp][Hh][Aa][Rr])?$!';
 
-        foreach ($Iterator as $File) {
-            if (preg_match ('#[\\\\/](?:APP|OBJ|EL)[.].*[.]php$#i', $File)) continue;
+        if (! preg_match($Regex, $Project, $m)) {
 
-            if (preg_match ('#([.]php$|[.]htm$|[.]html$)#i', $File)) {
-                    $Files[] = $File;
-            }
+            // Exception
+            throw new InvalidArgumentException(0);
+
+            // Error
+            return false;
         }
 
-        return $Files;
-    }
+        // Create PHAR
+        $PHAR = sprintf('%s%s%s.phar', $this->_Build, DIRECTORY_SEPARATOR, $Project);
+        $PHAR = new Phar($PHAR, FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::KEY_AS_FILENAME, "$Project.phar");
 
-    /**
-     * Gets files from app directory starting with (APP, OBJ, FORM, EL) and .PHAR files.
-     * @return string[] Returns all relevant files found.
-     */
-    protected function GetApplications()
-    {
-        $Files      = array();
-        $Iterator   = new \RecursiveIteratorIterator (new \RecursiveDirectoryIterator ($this->Options->AppRoot), \RecursiveIteratorIterator::SELF_FIRST);
+        $PHAR->setSignatureAlgorithm(Phar::SHA1);
+        $PHAR->startBuffering();
 
-        foreach ($Iterator as $File) {
-            if (preg_match ('#[\\\\/](?:APP|OBJ|EL)[.].*[.]php$#i', $File)) {
-                $Files[] = $File;
+        $this->doAdvance(10);
+
+        // Add files to phar
+        foreach ($this->_Files as $File) {
+
+            // Is file readable?
+            if (is_readable($File)) {
+
+                // Generate path
+                $Path = str_replace($this->_Root . '/', '', $File);
+                $Path = str_replace($this->_Root . '\\', '', $File);
+                $Path = str_replace(DIRECTORY_SEPARATOR, '/', $Path);
+
+                // Optimize and add
+                $PHAR->addFromString($Path, $this->optimize($File));
+
+                // Advance Event
+                $this->doAdvance();
             }
 
-            elseif (preg_match ('#([.]phar$)#i', $File)) {
-                $Files[] = $File;
-            }
+            // @codeCoverageIgnoreStart
+
+            // $File is not readable
+            else
+                // Warning
+                trigger_error(sprintf('Unable to read file (%s) with mode (%o)', $File, @fileperms($File)), E_USER_WARNING);
+
+            // @codeCoverageIgnoreEnd
         }
 
-        return $Files;
-    }
+        // Stub
+        $ReadmePath = $this->_Root . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'readme.php';
 
-    /**
-     * Gets stylesheets, images and javascripts from src and app directory
-     * @return string[] Returns all relevant files found.
-     */
-    protected function GetAssets()
-    {
-        $Files      = array();
-        $Iterator   = new \RecursiveIteratorIterator (new \RecursiveDirectoryIterator ($this->Options->AppRoot), \RecursiveIteratorIterator::SELF_FIRST);
+        // Does $ReadmePath exist?
+        if (is_readable($ReadmePath)) {
 
-        foreach ($Iterator as $File) {
-            if (preg_match ('#([.]js$|[.]css$|[.]jpg$|[.]png$)#i', $File)) {
-                $Files[] = $File;
-            }
+            // Add Stub
+            $PHAR['_stub.php'] = file_get_contents($ReadmePath);
+
+            $PHAR->setStub($PHAR->createDefaultStub('_stub.php'));
         }
 
-        $Iterator   = new \RecursiveIteratorIterator (new \RecursiveDirectoryIterator ($this->Options->LiblRoot), \RecursiveIteratorIterator::SELF_FIRST);
+        // Done
+        $PHAR->stopBuffering();
 
-        foreach ($Iterator as $File) {
-            if (preg_match ('#([.]js$|[.]css$|[.]jpg$|[.]png$)#i', $File)) {
-                $Files[] = $File;
-            }
-        }
+        unset($PHAR);
 
-        return $Files;
+        // Advance Event
+        $this->doAdvance(10);
+
+        // Success
+        return true;
     }
 }
 

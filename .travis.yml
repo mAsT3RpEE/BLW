@@ -4,9 +4,10 @@ php:
   - "5.4"
   - "5.3"
 before_script:
-  - composer install -n --no-dev
-  - php run.php -vv compile
+  - composer install --no-dev
+  - php app/install.php
 script:
-  - phpunit --testsuite Core
-  - phpunit --testsuite Types
-  - phpunit --testsuite Models
+  - phpunit --coverage-clover="temp/coverage.clover"
+after_script:
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover "temp/coverage.clover"

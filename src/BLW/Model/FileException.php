@@ -2,67 +2,90 @@
 /**
  * FileException.php | Dec 28, 2013
  *
- * Copyright (c) 2013-2018 mAsT3RpEE's Zone
+ * @filesource
+ * @license MIT
+ * @copyright Copyright (c) 2013-2018, mAsT3RpEE's Zone
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
- *
- * @filesource
- * @copyright mAsT3RpEE's Zone
- * @license MIT
  */
 
 /**
- * @package BLW
- * @version 1.0.0
+ *
+ * @package BLW\Core
+ * @version GIT 0.2.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Model; if(!defined('BLW')){trigger_error('Unsafe access of custom library',E_USER_WARNING);return;}
+namespace BLW\Model;
+
+use Exception;
+
+if (! defined('BLW')) {
+
+    if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
+        header("$_SERVER[SERVER_PROTOCOL] 404 Not Found");
+        header('Status: 404 Not Found');
+
+        $_SERVER['REDIRECT_STATUS'] = 404;
+
+        echo "<html>\r\n<head><title>404 Not Found</title></head><body bgcolor=\"white\">\r\n<center><h1>404 Not Found</h1></center>\r\n<hr>\r\n<center>nginx/1.5.9</center>\r\n</body>\r\n</html>\r\n";
+        exit();
+    }
+
+    return false;
+}
 
 /**
  * Makes reporting errors just easy.
+ *
  * @package BLW\Core
  * @api BLW
- * @version 1.0.0
+ * @version GIT 0.2.0
  * @since 1.0.0
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
- * @link http://php.net/InvalidArgumentException Language Reference
+ * @link http://www.php.net/manual/en/class.runtimeexception.php RuntimeException
  */
-final class FileException extends \BLW\Type\RuntimeException
+final class FileException extends \BLW\Type\ARuntimeException
 {
+
     /**
-     * Overloads parent constructor
+     * Constructor
      *
-     * @param int $File File exception is associated with.
+     * @param string $File
+     *            File exception is associated with.
      * @param string $message
+	 *            Fomratted exception message.
+	 *
      * <ul>
      * <li><b>%header%</b>: <code>class::function(arguments):</code>.</li>
-     * <li><b>%argno%</b>: Invalid argument position.</li>
+     * <li><b>%file%</b>: File with error.</li>
+     * <li><b>%access%</b>: File access code in octal format or invalid if file doesnt exist.</li>
      * <li><b>%args%</b>: All arguments as a string.</li>
      * <li><b>%class%</b>: Class of of function.</li>
      * <li><b>%func%</b>: Function with invalid argument.</li>
      * </ul>
-     * @param int $code Exception code.
-     * @param \Exception $previous Previous Exception.
-     * @return void
+	 *
+     * @param int $code
+     *            Exception code.
+     * @param \Exception $previous
+     *            Previous Exception.
      */
-    public function __construct($File, $message = NULL, $code = 0, \Exception $previous = NULL)
+    public function __construct($File, $message = null, $code = 0, Exception $previous = null)
     {
         if (is_null($message)) {
-        	$message = '%header% File error: (%file%) with access (%access%).';
+            $message = '%header% File error: (%file%) with access (%access%).';
         }
 
         $Replacements             = $this->GetFields();
         $Replacements['%file%']   = @strval($File);
-        $Replacements['%access%'] = is_file($File)
+        $Replacements['%access%'] = (is_file($File) || is_dir($File))
             ? sprintf('%o', @fileperms($File))
-            : 'invalid'
-        ;
+            : 'invalid';
 
         $message  = str_replace(array_keys($Replacements), array_values($Replacements), $message);
         $message .= $Replacements['%caused%'];
 
-        \RuntimeException::__construct($message, $code, $previous);
+        parent::__construct($message, $code, $previous);
     }
 }
 

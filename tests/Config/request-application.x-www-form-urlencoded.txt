@@ -1,0 +1,9 @@
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0
+Accept: text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8
+Accept-Language: en-us, en;q=0.5
+Accept-Encoding: gzip, deflate
+Test: foo
+Content-Type: application/x-www-form-urlencoded
+
+int=1&float=1.1&string=foo&object2=C%3A%5CUsers%5CZEN%5CAppData%5CLocal%5CTemp&field=foo
+

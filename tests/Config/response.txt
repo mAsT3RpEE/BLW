@@ -1,0 +1,200 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Thu, 10 Apr 2014 18:08:23 GMT
+Content-Type: text/html; charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Vary: Accept-Encoding, Cookie
+X-Frame-Options: SAMEORIGIN
+Set-Cookie: wordpress_homepage=existing; expires=Fri, 25-Apr-2014 18:08:23 GMT
+Content-Encoding: gzip
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta http-equiv="x-ua-compatible" content="IE=Edge">
+
+<title>WordPress.com - Get a Free Blog Here</title>
+
+<!-- Core Meta -->
+<meta charset="UTF-8">
+<meta name="viewport" content="initial-scale=1.0,width=device-width,user-scalable=no">
+<meta name="generator" content="WordPress.com">
+<meta name="application-name" content="WordPress.com">
+<meta name="description" content="Start a WordPress blog or create a free website in seconds. Choose from over 200 free, customizable themes. Free support from awesome humans.">
+<meta name="apple-itunes-app" content="app-id=335703880">
+
+<link rel="shortlink" href="http://wp.me/1">
+
+<!-- Stylesheets -->
+<link rel="stylesheet" href="/home.logged-out/css/home.css" type="text/css">
+<link rel="stylesheet" href="/i/noticons/noticons.css?20130416">
+<link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,400,300,600|Merriweather:300' rel='stylesheet' type='text/css'>
+
+    	<!-- RSS -->
+    	<link rel="alternate" type="application/rss+xml" title="WordPress.com News" href="http://blog.wordpress.com/feed/">
+<link rel="alternate" type="application/rss+xml" title="WordPress.com Freshly Pressed" href="http://freshlypressed.wordpress.com/feed/">
+
+    	<!-- International -->
+    	<link rel="alternate" hreflang="en" href="http://wordpress.com/" />
+    	        <link rel="alternate" hreflang="es" href="http://es.wordpress.com/" />
+    	                <link rel="alternate" hreflang="de" href="http://de.wordpress.com/" />
+    	                        <link rel="alternate" hreflang="pt-BR" href="http://br.wordpress.com/" />
+    	                                <link rel="alternate" hreflang="id" href="http://id.wordpress.com/" />
+    	                                        <link rel="alternate" hreflang="fr" href="http://fr.wordpress.com/" />
+    	                                                <link rel="alternate" hreflang="it" href="http://it.wordpress.com/" />
+    	                                                        <link rel="alternate" hreflang="tr" href="http://tr.wordpress.com/" />
+    	                                                                <link rel="alternate" hreflang="pt" href="http://pt.wordpress.com/" />
+    	                                                                        <link rel="alternate" hreflang="nl" href="http://nl.wordpress.com/" />
+
+    	                                                                        <!-- XML-RPC -->
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://wordpress.com/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://wordpress.com/wp-includes/wlwmanifest.xml">
+
+    	<!-- Facebook -->
+<meta xmlns:fb="//www.facebook.com/2008/fbml" property="fb:page_id" content="134098913979">
+    	        <meta xmlns:fb="//www.facebook.com/2008/fbml" property="fb:app_id" content="249643311490">
+<meta property="article:publisher" content="https://www.facebook.com/WordPresscom" />
+
+    	<!-- Jetpack Open Graph Tags -->
+    	<meta property="og:type" content="blog">
+<meta property="og:title" content="WordPress.com">
+<meta property="og:description" content="Start a WordPress blog or create a free website in seconds. Choose from over 200 free, customizable themes. Free support from awesome humans.">
+    	<meta property="og:url" content="http://wordpress.com/">
+<meta property="og:site_name" content="WordPress.com">
+<meta property="og:image" content="http://0.gravatar.com/blavatar/653166773dc88127bd3afe0b6dfe5ea7?s=200">
+
+    	<!-- Twitter -->
+    	        <meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@wordpressdotcom" />
+<meta name="twitter:creator" content="@wordpressdotcom" />
+<meta name="twitter:app:name:iphone" content="WordPress" />
+<meta name="twitter:app:id:iphone" content="335703880" />
+<meta name="twitter:app:name:ipad" content="WordPress" />
+<meta name="twitter:app:id:ipad" content="335703880" />
+<meta name="twitter:app:name:googleplay" content="WordPress" />
+    	<meta name="twitter:app:id:googleplay" content="org.wordpress.android" />
+
+<!-- Open Search -->
+<link rel="search" type="application/opensearchdescription+xml" href="http://wordpress.com/osd.xml" title="WordPress.com">
+<link rel="search" type="application/opensearchdescription+xml" href="http://wordpress.com/opensearch.xml" title="WordPress.com">
+
+<!-- Mobile & Fav Icons -->
+<link rel="shortcut icon" type="image/vnd.microsoft.icon" href="//s1.wp.com/i/favicon-stacked.ico?m=1311976025g" sizes="16x16 32x32 48x48">
+<link rel="shortcut icon" type="image/x-icon" href="//s2.wp.com/i/favicon.ico?m=1311976025g" sizes="16x16">
+<link rel="icon" type="image/x-icon" href="//s2.wp.com/i/favicon.ico?m=1311976025g" sizes="16x16">
+<link rel="apple-touch-icon-precomposed" type="image/png" href="//0.gravatar.com/blavatar/653166773dc88127bd3afe0b6dfe5ea7?s=114&amp;d=http%3A%2F%2Fs0.wp.com%2Fi%2Fwebclip.png" sizes="114x114">
+    	<meta name="apple-mobile-web-app-title" content="WP.com">
+
+<!-- Windows 8 -->
+    	        <meta name="msapplication-window" content="width=device-width;height=device-height">
+<meta name="msapplication-task" content="name=Subscribe;action-uri=http://wordpress.com/feed/;icon-uri=http://0.gravatar.com/blavatar/4e21d703d81809d215ceaabbf07efbc6?s=16">
+<meta name="msapplication-task" content="name=Sign up for a free blog;action-uri=http://wordpress.com/signup/;icon-uri=http://s2.wp.com/i/favicon.ico">
+<meta name="msapplication-task" content="name=WordPress.com Support;action-uri=http://support.wordpress.com/;icon-uri=http://s2.wp.com/i/favicon.ico">
+<meta name="msapplication-task" content="name=WordPress.com Forums;action-uri=http://forums.wordpress.com/;icon-uri=http://s2.wp.com/i/favicon.ico">
+<meta name="msapplication-TileImage" content="http://wordpress.com/wp-content/themes/h4/tabs/images/wpcom-logo-144.png">
+<meta name="msapplication-TileColor" content="#0074a2">
+<meta name="msApplication-PackageFamilyName" content="AutomatticInc.WordPress.com_9ejavqh8rasr8">
+<meta name="msApplication-ID" content="App">
+
+<!-- Fluid App -->
+<link rel="fluid-icon" href="//wordpress.com/wp-content/themes/h4/i/fluidicon.png?m=1326346415g" title="WordPress.com">
+
+</head>
+
+<body id="wpcom-home" class="background-pic en">
+
+<header class="wpcom-header" role="banner">
+	<div>
+	<h1 class="wpcom-title"><a href="//en.wordpress.com/">WordPress.com</a></h1>
+
+	<nav id="wpcom-navigation" class="main-navigation" role="navigation">
+			<h3 class="menu-toggle">Menu</h3>
+			<div class="menu-main-container">
+			        <ul id="menu-main" class="nav-menu">
+			        <li id="nav-signin"><a class="nav-highlight" href="#home-signin">Sign In</a></li>
+			        </ul>
+			        </div>
+	</nav>
+			</div>
+			        </header>
+
+			                <div class="page-root">
+
+			                <div class="home-grid">
+
+			                <section id="home-intro" class="home-box">
+			                <a href="#video" id="vid-text">
+			<strong><span>Watch a video</span></strong>
+					<h2>Share with the world, your community, or your closest friends.</h2>
+		</a>
+					</section>
+
+	<section id="home-signup" class="home-box">
+			<div>
+			<h3>Sign up and start publishing now.</h3>
+			<a href="//signup.wordpress.com/signup/" class="button button-highlighted">
+			<h4>Get Started</h4>
+			</a>
+			        <p>Find interesting topics, connect to your friends, and start a blog in seconds.</p>
+		</div>
+	</section>
+
+	<section id="home-signin" class="home-box">
+			<div>
+			<h3>Already blogging? Sign in.</h3>
+
+			<form action="https://en.wordpress.com/wp-login.php" method="post" novalidate="novalidate" id="signin-form">
+					<input type="email" name="log" placeholder="Email or Username" autocorrect="off" autocapitalize="off" spellcheck="false">
+					<input type="password" name="pwd" placeholder="Password">
+				<input type="checkbox" name="rememberme" value="forever" id="signin-rememberme" checked="true">
+						<label for="signin-rememberme" title="Select this option to stay signed in on this device.">Stay signed in</label>
+						<input type="submit" value="Sign In">
+				<a class="password-help" href="http://en.wordpress.com/wp-login.php?action=lostpassword">Help</a>
+
+						<input type="hidden" name="redirect_to" value="//en.wordpress.com/">
+						</form>
+						</div>
+						</section>
+
+	<section id="home-discover" class="home-box">
+			<div>
+			<h3>Discover what our top WordPress.com bloggers have been writing about</h3>
+			        <a href="//wordpress.com/fresh/" class="button button-primary">Discover WordPress</a>
+			        </div>
+	</section>
+
+			<footer id="home-colophon" role="contentinfo">
+			<nav id="footer-navigation" class="sub-navigation" role="navigation">
+			<ul>
+				<li id="footer-themes"><a href="//theme.wordpress.com/">Themes</a></li>
+						<li id="footer-themes"><a href="//store.wordpress.com/">Store</a></li>
+						<li id="footer-support"><a href="//en.wordpress.com/features/">Features</a></li>
+				<li id="footer-news"><a href="//blog.wordpress.com">News</a></li>
+						        <li id="footer-stats"><a href="//en.wordpress.com/stats/">Stats</a></li>
+						        <li id="footer-vip"><a href="//vip.wordpress.com/">VIP</a></li>
+						        <li id="footer-tos"><a href="//en.wordpress.com/tos/">Terms of Service</a></li>
+						        <li id="footer-privacy"><a href="//automattic.com/privacy/">Privacy Policy</a></li>
+						        </ul>
+			<p><a id="footer-automattic" href="//automattic.com/">An <span>Automattic</span> App</a></p>
+					</nav>
+					    </footer>
+					    </div>
+					    </div>
+
+					    <!-- Core JS -->
+					    <script src="/home.logged-out/js/wp.js?20131107"></script>
+
+					    <script type="text/javascript">
+					    if ( window.top !== window.self ) {
+	        if ( window.top.location.hostname !== window.self.location.hostname || window.top.location.protocol !== window.top.location.protocol ) {
+	                window.top.location.href = window.self.location.href;
+	        }
+	}
+	</script>
+
+	<!-- Stats -->
+
+</body>
+</html>

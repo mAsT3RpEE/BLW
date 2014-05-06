@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<phpdoc xmlns="http://www.phpdoc.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="www.w3.org/2001/XMLSchema.xsd‎">
+<!DOCTYPE config[
+<!ENTITY nbsp "&#xA0;"> 
+<!ENTITY author "Walter Otsyula <wotsyula@mast3rpee.tk>"> 
+<!ENTITY copywrite "Copyright (c) 2013-2018, mAsT3RpEE's Zone"> 
+]>
+<phpdoc
+    xmlns="http://www.phpdoc.org"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="www.w3.org www.w3.org/2001/XMLSchema.xsd‎">
     <title>BLW Library</title>
     <parser>
         <target>temp</target>
@@ -12,23 +20,19 @@
         </extensions>
         <visibility></visibility>
     </parser>
+    <transformer>
+        <target>doc</target>
+    </transformer>
     <plugins>
         <plugin path="Core" />
     </plugins>
-	<transformer>
-        <target>doc</target>
-		<external-class-documentation>
-			<prefix>Guzzle</prefix>
-			<uri>http://api.guzzlephp.org/class-{CLASS}.html</uri>
-		</external-class-documentation>
-    </transformer>
     <transformations>
-        <template name="responsive" />
+        <template name="clean" />
     </transformations>
     <files>
-        <directory>app</directory>
         <directory>src</directory>
-        <file>vendor/guzzle/http/Guzzle/Http/Client.php</file>
+        <directory>vendor/psr</directory>
+        <directory>vendor/zendframework</directory>
         <ignore>*/test/*</ignore>
         <ignore>*/tests/*</ignore>
 

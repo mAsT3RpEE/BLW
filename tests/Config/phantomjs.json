@@ -1,0 +1,10 @@
+{
+  /* Same as: --ignore-ssl-errors=true */
+  "ignoreSslErrors": true,
+
+  /* Same as: --max-disk-cache-size=1024 */
+  "maxDiskCacheSize": 1024,
+
+  /* Same as: --output-encoding=utf8 */
+  "outputEncoding": "utf8"
+}

@@ -20,19 +20,20 @@
 	"require" : {
 		"php" : ">=5.3.3",
 		"ext-dom" : "*",
+		"ext-hash" : "*",
 		"ext-json" : "*",
+		"ext-mysqli" : "*",
 		"ext-Phar" : "*",
 		"ext-SPL" : "*",
 		"ext-PDO" : "*",
 		"ext-curl" : "*",
-		"symfony/event-dispatcher" : ">=2.4.0",
-		"symfony/css-selector" : ">=2.4.0",
-		"symfony/process" : ">=2.4.1",
-		"symfony/console" : ">=2.4.0",
-		"php-activerecord/php-activerecord" : ">=1.1.2",
-		"guzzle/http" : ">=3.8.0",
-		"monolog/monolog" : ">=1.7.0",
-		"mrclay/minify" : ">=2.1.7"
+		"symfony/css-selector" : ">=2.4.2",
+		"monolog/monolog" : "dev-master@dev",
+		"mrclay/minify" : "dev-master@dev",
+		"jeremeamia/SuperClosure" : "2.0.0-alpha2@alpha",
+		"zendframework/zend-db" : "dev-master@dev",
+		"psr/log" : "1.0.0",
+		"symfony/yaml" : ">=2.4.3"
 	},
 	"autoload" : {
 		"psr-0" : {

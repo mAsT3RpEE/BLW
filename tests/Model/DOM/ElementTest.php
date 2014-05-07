@@ -30,7 +30,7 @@ use BLW\Model\InvalidArgumentException;
  * @package BLW\Core
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Model\DOMDocument
+ * @coversDefaultClass \BLW\Model\DOM\Element
  */
 class ElementTest  extends \PHPUnit_Framework_TestCase
 {
@@ -214,7 +214,7 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
         $Node     = $Document->createTextNode('foo');
 
         $this->assertEquals($this->Element, $this->Element->append($Node), 'IDOMElement::append() Returned an invalid result');
-        $this->assertEquals($Node, $this->Element[2], 'IDOMElement::append() Failed to add node to element');
+        $this->assertSame('foo', $this->Element[2]->C14N(), 'IDOMElement::append() Failed to add node to element');
     }
 
     /**
@@ -226,7 +226,7 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
         $Node     = $Document->createTextNode('foo');
 
         $this->assertEquals($this->Element, $this->Element->prepend($Node), 'IDOMElement::prepend() Returned an invalid result');
-        $this->assertEquals($Node, $this->Element[0], 'IDOMElement::prepend() Failed to add node to element');
+        $this->assertEquals('foo', $this->Element[0]->C14N(), 'IDOMElement::prepend() Failed to add node to element');
     }
 
     /**

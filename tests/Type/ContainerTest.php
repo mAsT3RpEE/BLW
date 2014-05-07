@@ -28,7 +28,7 @@ use BLW\Type\IIterable;
  * @package BLW\Core
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Type\IContainer
+ * @coversDefaultClass \BLW\Type\AContainer
  */
 class ContainerTest extends \PHPUnit_Framework_TestCase
 {
@@ -80,7 +80,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     {
         # Test valid
         $this->Container['test'] = $Valid;
-        $this->assertEquals($Valid, $this->Container['test'], 'IContainer[test] should equal $Valid');
+        $this->assertSame($Valid, $this->Container['test'], 'IContainer[test] should equal $Valid');
 
         # Test invalid
         try {
@@ -101,7 +101,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     {
         # Test valid
         $this->Container->append($Valid);
-        $this->assertEquals($Valid, $this->Container[0], 'IContainer[0] should equal $Valid');
+        $this->assertSame($Valid, $this->Container[0], 'IContainer[0] should equal $Valid');
 
         # Test invalid
         try {
@@ -122,13 +122,14 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
         $Test1 = function($v) {return $v instanceof \DOMNode;};
         $Test2 = function($v) {return is_int($v);};
 
+        $Node                       = new \DOMElement('span', 'test');
         $this->Container['foo']     = 1;
         $this->Container['bar']     = 1;
         $this->Container['test']    = 'test';
-        $this->Container['element'] = new \DOMElement('span', 'test');
+        $this->Container['element'] = $Node;
 
-        $this->assertEquals(array(new \DOMElement('span', 'test')), @$this->Container->filter($Test1), 'IContainer::filter() should return 1 item (DOMNode)');
-        $this->assertEquals(array(1,1), @$this->Container->filter($Test2), 'IContainer::filter() should return 1 item (int)');
+        $this->assertSame(array($Node), @$this->Container->filter($Test1), 'IContainer::filter() should return 1 item (DOMNode)');
+        $this->assertSame(array(1,1), @$this->Container->filter($Test2), 'IContainer::filter() should return 1 item (int)');
     }
 
     /**

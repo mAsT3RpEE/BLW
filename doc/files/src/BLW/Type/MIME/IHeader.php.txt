@@ -21,6 +21,7 @@ namespace BLW\Type\MIME;
 use BLW\Type\IContainer;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -35,6 +36,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Standard interface for MIME headers.

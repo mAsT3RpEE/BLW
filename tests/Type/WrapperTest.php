@@ -17,19 +17,20 @@
  */
 namespace BLW\Tests\Type;
 
-use BLW\Type\IDataMapper;
 use DOMDocument;
 use ReflectionMethod;
 use ReflectionProperty;
 use PHPUnit_Framework_Error_Notice;
 use BadMethodCallException;
 
+use BLW\Type\IDataMapper;
+
 /**
  * Tests BLW Library Adaptor type.
  * @package BLW\Core
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Type\IWrapper
+ *  @coversDefaultClass \BLW\Type\AWrapper
  */
 class WrapperTest extends \PHPUnit_Framework_TestCase
 {
@@ -64,19 +65,19 @@ class WrapperTest extends \PHPUnit_Framework_TestCase
         $this->Wrapper     = NULL;
     }
 
-
     /**
      * @covers ::getInstance
      */
-    public function test__getInstance()
+    public function test_getInstance()
     {
-        $Copy = $this->Wrapper->getInstance($this->Component);
-
+        $Copy   = $this->Wrapper->getInstance($this->Component);
         $Status = new ReflectionProperty($Copy, '_Status');
+
         $Status->setAccessible(true);
         $Status->setValue($Copy, -1);
 
-        $this->assertEquals($Copy, $this->Wrapper, 'IWrapper::getInstance() returned invalid value');
+        // PHPUnit has changed for the worse with their DOMNode tests. yuk!!
+        @$this->assertEquals($Copy, $this->Wrapper, 'IWrapper::getInstance() returned invalid value');
     }
 
     /**

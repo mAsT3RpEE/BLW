@@ -24,6 +24,7 @@ use BLW\Type\Command\IInput;
 use BLW\Type\Command\IOutput;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -38,6 +39,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Interface for all commands / stored instructions.
@@ -298,4 +301,6 @@ interface ICommand extends \BLW\Type\IObject, \BLW\Type\IMediatable, \ArrayAcces
     public function __toString();
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

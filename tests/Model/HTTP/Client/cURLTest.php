@@ -52,7 +52,7 @@ class cURLTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->Client       = new Client(IClient::COOKIE_DEFAULT, NULL, '', 2, 4, 5);
+        $this->Client       = new Client(IClient::COOKIE_DEFAULT, NULL, '', 4, 16, 60);
         $this->Request      = new Request;
         $this->Request->URI = new GenericURI('http://example.com:80/');
 

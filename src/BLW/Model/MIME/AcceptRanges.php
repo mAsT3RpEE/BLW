@@ -21,6 +21,7 @@ namespace BLW\Model\MIME;
 use BLW\Type\IDataMapper;
 use BLW\Model\InvalidArgumentException;
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -35,6 +36,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Header class for Accept-Ranges.
@@ -96,7 +99,7 @@ final class AcceptRanges extends \BLW\Type\MIME\AHeader
                 $this->_Value = array_reduce($Ranges, function ($v, $i)
                 {
 
-                    $Range = $this->parseRange($i);
+                    $Range = AcceptRanges::parseRange($i);
 
                     if ($v && $Range)
                         return "$v $Range";
@@ -143,4 +146,6 @@ final class AcceptRanges extends \BLW\Type\MIME\AHeader
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

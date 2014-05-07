@@ -21,6 +21,7 @@ namespace BLW\Type;
 use ArrayObject;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -35,6 +36,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Core container interface.
@@ -240,4 +243,6 @@ Interface IConfig extends \BLW\Type\ISerializable, \IteratorAggregate, \ArrayAcc
     public function __toString();
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

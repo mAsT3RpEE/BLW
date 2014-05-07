@@ -25,6 +25,7 @@ use BLW\Type\IFile;
 use BLW\Type\MIME\IHead;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -39,6 +40,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Class for HTML File Pages
@@ -82,4 +85,6 @@ class File extends \BLW\Type\HTTP\Browser\APage
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

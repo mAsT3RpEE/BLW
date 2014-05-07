@@ -22,6 +22,7 @@ use BLW\Type\IEvent;
 use BLW\Type\HTTP\Browser\IPage;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -36,6 +37,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Interface for HTTP Browser objects.
@@ -310,5 +313,7 @@ interface IBrowser extends \BLW\Type\IWrapper, \BLW\Type\IFactory, \Psr\Log\Logg
     public function doForward(IEvent $Event);
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd
 

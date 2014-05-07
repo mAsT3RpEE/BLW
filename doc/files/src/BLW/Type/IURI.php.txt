@@ -18,6 +18,7 @@
  */
 namespace BLW\Type;
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -32,6 +33,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Interface for all URL's and URI's
@@ -353,5 +356,7 @@ interface IURI extends \BLW\Type\ISerializable, \BLW\Type\IIterable, \BLW\Type\I
     public function __toString();
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd
 

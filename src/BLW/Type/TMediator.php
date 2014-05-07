@@ -18,6 +18,7 @@
  */
 namespace BLW\Type;
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -32,6 +33,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Core Mediator pattern trait.
@@ -185,4 +188,6 @@ trait TMediator
     abstract public function remSubscriber(IEventSubscriber $Subscriber);
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

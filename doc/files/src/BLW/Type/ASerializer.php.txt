@@ -23,6 +23,7 @@ use ReflectionObject;
 use ReflectionProperty;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -37,6 +38,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Abstract class for all object serializers.
@@ -439,5 +442,7 @@ abstract class ASerializer extends \BLW\Type\ASerializable implements \BLW\Type\
 
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd
 

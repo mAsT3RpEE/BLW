@@ -77,4 +77,6 @@ final class Expires extends \BLW\Type\MIME\AHeader
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

@@ -86,7 +86,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
      */
     public function test_toString()
     {
-        $this->assertSame('--test "test option"', strval($this->Option), '(strval) IOption returned an invalid value');
+        $this->assertRegExp('!--test ["\']test option["\']!', strval($this->Option), '(strval) IOption returned an invalid value');
     }
 
     /**

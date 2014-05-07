@@ -24,6 +24,7 @@ use BLW\Model\InvalidArgumentException;
 use BLW\Type\MIME\ISection;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -38,6 +39,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Class which helps create and organize mime parts / mime boundaries.
@@ -236,4 +239,6 @@ class Section extends \BLW\Type\AContainer implements \BLW\Type\MIME\ISection
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

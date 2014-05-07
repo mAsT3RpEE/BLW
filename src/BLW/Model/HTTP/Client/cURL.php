@@ -37,6 +37,7 @@ use BLW\Model\HTTP\Response\Generic as Response;
 use BLW\Model\HTTP\Request\Generic as Request;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -51,6 +52,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * cURL based HTTP client
@@ -708,4 +711,6 @@ class cURL extends \BLW\Type\HTTP\AClient
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

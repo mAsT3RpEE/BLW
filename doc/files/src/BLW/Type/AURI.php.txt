@@ -23,6 +23,7 @@ use ReflectionMethod;
 use BLW\Model\InvalidArgumentException;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -37,6 +38,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Abstract class for all URL's and URI's
@@ -1519,5 +1522,7 @@ abstract class AURI extends \BLW\Type\ASerializable /*, \BLW\Type\AIterable */ i
 
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd
 

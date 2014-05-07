@@ -27,7 +27,7 @@ use BLW\Model\GenericFile;
  * @package BLW\MIME
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Model\Mime\InlineAttachment
+ * @coversDefaultClass \BLW\Model\MIME\Part\InlineAttachment
  */
 class InlineAttachmentTest extends \PHPUnit_Framework_TestCase
 {
@@ -80,17 +80,7 @@ class InlineAttachmentTest extends \PHPUnit_Framework_TestCase
     public function test_toString()
     {
         $Expected = <<<EOT
-Content-Type: image/png-test; name=Test.png
-Content-Transfer-Encoding: base64
-Content-Disposition: inline; filename=Test.png
-Content-ID: .*
-Content-Location: .*
-Content-Base: .*
-
-iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0A
-AAAASUVORK5CYII=
-
-
+Content-Type: image/png-test; name=Test.png\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: inline; filename=Test.png\r\nContent-ID: .*\r\nContent-Location: .*\r\nContent-Base: .*\r\n\r\niVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0A\r\nAAAASUVORK5CYII=\r\n\r\n
 EOT;
 
         $this->assertRegExp("!^$Expected$!", @strval($this->InlineAttachment), 'InlineAttachment::__toSting() returned an invalid format');

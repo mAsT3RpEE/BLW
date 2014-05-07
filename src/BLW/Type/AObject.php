@@ -21,8 +21,10 @@ namespace BLW\Type;
 use ArrayObject;
 
 use BLW\Model\InvalidArgumentException;
+use ApiGen\ReflectionProperty;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -37,6 +39,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Core BLW object abstract class.
@@ -138,10 +142,6 @@ abstract class AObject extends \BLW\Type\ASerializable /*\BLW\Type\ADataMapable,
 
 
 
-
-#############################################################################################
-# DataMapable Trait
-#############################################################################################
 
 #############################################################################################
 # Iterable Trait
@@ -526,4 +526,6 @@ abstract class AObject extends \BLW\Type\ASerializable /*\BLW\Type\ADataMapable,
 
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

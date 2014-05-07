@@ -20,6 +20,7 @@ namespace BLW\Model\Command;
 
 use BLW\Type\Command\ICommand;
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -34,6 +35,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Generic command event.
@@ -79,4 +82,6 @@ class Event extends \BLW\Type\AEvent
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

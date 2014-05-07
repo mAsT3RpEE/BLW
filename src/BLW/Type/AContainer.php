@@ -18,6 +18,7 @@
  */
 namespace BLW\Type;
 
+use ReflectionProperty;
 use Traversable;
 use ArrayObject;
 use UnexpectedValueException;
@@ -25,6 +26,7 @@ use UnexpectedValueException;
 use BLW\Model\InvalidArgumentException;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -39,6 +41,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Core container interface.
@@ -512,4 +516,6 @@ abstract class AContainer extends \ArrayObject implements \BLW\Type\IContainer
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

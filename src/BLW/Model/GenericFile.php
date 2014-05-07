@@ -43,4 +43,6 @@ class GenericFile extends \BLW\Type\AFile
 {
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

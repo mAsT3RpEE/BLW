@@ -28,8 +28,10 @@ use BLW\Type\Command\IOutput;
 
 use BLW\Model\InvalidArgumentException;
 
-use SuperClosure\SerializableClosure;
+use Jeremeamia\SuperClosure\SerializableClosure;
 
+
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -44,6 +46,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Command for handling Callback commands
@@ -70,7 +74,7 @@ class Callback extends \BLW\Type\Command\ACommand
      * <li><b>Before</b>: <i>callable</i> Callback to call after run has completed. (Not supported by most commands).</li>
      * <li><b>Description</b>: <i>string</i> Description of command.</li>
      * </ul>
-	 * 
+	 *
      * @param IMediator $Mediator
      *            Mediator for command.
      * @param string $ID
@@ -126,4 +130,6 @@ class Callback extends \BLW\Type\Command\ACommand
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

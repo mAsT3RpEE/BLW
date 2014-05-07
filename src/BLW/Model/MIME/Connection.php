@@ -111,4 +111,6 @@ final class Connection extends \BLW\Type\MIME\AHeader
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

@@ -152,4 +152,6 @@ final class Generic extends \BLW\Type\MIME\AHeader
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

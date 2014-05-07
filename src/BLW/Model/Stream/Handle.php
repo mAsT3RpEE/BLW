@@ -21,6 +21,7 @@ namespace BLW\Model\Stream;
 use BLW\Model\InvalidArgumentException;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -35,6 +36,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Base class for resource streams.
@@ -68,4 +71,6 @@ class Handle extends \BLW\Type\AStream
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

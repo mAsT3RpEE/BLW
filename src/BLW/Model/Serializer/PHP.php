@@ -18,6 +18,7 @@
  */
 namespace BLW\Model\Serializer;
 
+use SplObjectStorage;
 use ReflectionObject;
 use ReflectionProperty;
 
@@ -25,6 +26,7 @@ use BLW\Type\ISerializer;
 use BLW\Type\ISerializable;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -39,6 +41,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * PHP object serializer.
@@ -62,11 +66,46 @@ class PHP extends \BLW\Type\ASerializer
      */
     public function encode(ISerializable $Object, $flags = ISerializer::SERIALIZER_FLAGS)
     {
+        static $cache = NULL;
+
+        $cache = $cache ?: new SplObjectStorage();
+
+        // @codeCoverageIgnoreStart
+
+        // PHP < 5.4 Check cache
+        if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+
+            if($cache->contains($Object)) {
+
+                list($count, $cached, $time) = $cache[$Object];
+
+                // Expire cache after 2 second
+                if (time() < $time)
+                    return $cached;
+            }
+
+            else
+                $cache[$Object] = array(1, '', time() + 1);
+        }
+        // @codeCoverageIgnoreEnd
+
         // Export porperties of object
         $this->export($Object, $Properties);
 
         // Serialize properties
-        return serialize($Properties);
+        $serialized = serialize($Properties);
+
+        // @codeCoverageIgnoreStart
+
+        // PHP < 5.4 Check cache
+        if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+            // Update cache
+            $cache[$Object] = array(0, $cached, time() + 1);
+        }
+        // @codeCoverageIgnoreEnd
+
+        // Done
+        return $serialized;
     }
 
     /**
@@ -101,4 +140,6 @@ class PHP extends \BLW\Type\ASerializer
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

@@ -20,6 +20,7 @@ namespace BLW\Model\Mail\Transport;
 
 use BLW\Type\Mail\IMessage;
 use BLW\Type\Mail\ITransport;
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -34,6 +35,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Mock transport.
@@ -124,4 +127,6 @@ class Mock extends \BLW\Type\Mail\ATransport
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

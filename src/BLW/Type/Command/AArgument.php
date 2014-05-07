@@ -26,6 +26,7 @@ use BLW\Model\InvalidArgumentException;
 use BLW\Model\GenericContainer;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -40,6 +41,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Interface for Command\Input arguments.
@@ -458,4 +461,6 @@ abstract class AArgument implements \BLW\Type\Command\IArgument
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

@@ -31,6 +31,7 @@ use BLW\Type\Command\ICommand;
 use BLW\Model\InvalidArgumentException;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -45,6 +46,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Interface for cron jobs.
@@ -460,5 +463,7 @@ abstract class AJob extends \BLW\Type\AWrapper implements \BLW\Type\Cron\IJob
 
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd
 

@@ -50,6 +50,7 @@ use BLW\Model\MIME\Part\Attachment;
 use BLW\Model\Mail\MIME\Message as MIMEMessage;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -64,6 +65,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Standard interface for objects that handle email Addresses.
@@ -1121,4 +1124,6 @@ class GenericMessage extends \BLW\Type\AObject implements \BLW\Type\Mail\IMessag
 #############################################################################################
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

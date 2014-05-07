@@ -36,6 +36,7 @@ use BLW\Model\Event\Generic as Event;
 use BLW\Model\HTTP\Response\Generic as Response;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -50,6 +51,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Base class for HTTP client objects
@@ -821,5 +824,7 @@ abstract class AClient extends \BLW\Type\AObjectStorage implements \BLW\Type\HTT
     abstract public function translate(IRequest $Request);
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd
 

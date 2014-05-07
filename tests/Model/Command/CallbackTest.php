@@ -119,7 +119,7 @@ class CallbackTest extends \PHPUnit_Framework_TestCase
 
         $Property->setAccessible(true);
 
-        $this->assertInstanceof('\\SuperClosure\\SerializableClosure', $Property->getValue($this->Command), 'ICommand::__construct() Failed to set $_Command');
+        $this->assertInstanceof('\\Jeremeamia\\SuperClosure\\SerializableClosure', $Property->getValue($this->Command), 'ICommand::__construct() Failed to set $_Command');
 
         $Property = new ReflectionProperty($this->Command, '_Config');
 

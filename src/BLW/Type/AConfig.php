@@ -25,6 +25,7 @@ use UnexpectedValueException;
 use \BLW\Model\InvalidArgumentException;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -39,6 +40,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Base container class.
@@ -240,4 +243,6 @@ abstract class AConfig extends \ArrayObject implements \BLW\Type\IConfig
 
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

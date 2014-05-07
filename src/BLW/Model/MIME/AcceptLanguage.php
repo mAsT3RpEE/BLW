@@ -23,6 +23,7 @@ use BLW\Type\IDataMapper;
 use BLW\Model\InvalidArgumentException;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -37,6 +38,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Header class for Accept-Language.
@@ -98,7 +101,7 @@ final class AcceptLanguage extends \BLW\Type\MIME\AHeader
                 $this->_Value = array_reduce($Languages, function ($v, $i)
                 {
 
-                    $Language = $this->parseLanguage($i);
+                    $Language = AcceptLanguage::parseLanguage($i);
 
                     if ($v && $Language)
                         return "$v, $Language";
@@ -145,4 +148,6 @@ final class AcceptLanguage extends \BLW\Type\MIME\AHeader
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

@@ -36,7 +36,7 @@ use BLW\Model\MIME\Part\QuotedPrintable;
  * @package BLW\MIME
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Model\Mime\Body
+ * @coversDefaultClass \BLW\Model\Mime\Body\RFC822
  */
 class RFC822Test extends \PHPUnit_Framework_TestCase
 {
@@ -75,7 +75,7 @@ class RFC822Test extends \PHPUnit_Framework_TestCase
             ->method('__toString')
             ->will($this->returnValue("Mock Header: foo\r\n"));
 
-        $this->Attachment       = new Attachment(new GenericFile(self::FILE));
+        $this->Attachment       = new Attachment(new GenericFile(self::FILE), 'test.png', 'image/png');
         $this->Part             = new QuotedPrintable('text/plain', 'Test content', 'utf-8');
         $this->Section          = new Section('multipart/mixed', 'mixed-boundary');
         $this->Body             = new Body($this->Section);
@@ -180,38 +180,7 @@ class RFC822Test extends \PHPUnit_Framework_TestCase
     public function test_toString()
     {
         $Expected = <<<EOT
-Mock Header: foo
-Direct String
-Mock Header: foo
---mixed-boundary
-Content-Type: multipart/alternative; boundary="alternative-boundary"
-
---alternative-boundary
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-Test content
-
---alternative-boundary--
-
---mixed-boundary
-Content-Type: application/octet-stream; name="png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="
-
-iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0A
-AAAASUVORK5CYII=
-
---mixed-boundary
-Content-Type: application/octet-stream; name="png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="
-
-iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0A
-AAAASUVORK5CYII=
-
---mixed-boundary--
-
+Mock Header: foo\r\nDirect String\r\nMock Header: foo\r\n--mixed-boundary\r\nContent-Type: multipart/alternative; boundary="alternative-boundary"\r\n\r\n--alternative-boundary\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nTest content\r\n\r\n--alternative-boundary--\r\n\r\n--mixed-boundary\r\nContent-Type: image/png; name=test.png\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=test.png\r\n\r\niVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0A\r\nAAAASUVORK5CYII=\r\n\r\n--mixed-boundary\r\nContent-Type: image/png; name=test.png\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=test.png\r\n\r\niVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0A\r\nAAAASUVORK5CYII=\r\n\r\n--mixed-boundary--\r\n
 EOT;
 
         $this->Body[]           = $this->Header;

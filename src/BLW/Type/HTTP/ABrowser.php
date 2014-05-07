@@ -1191,4 +1191,6 @@ abstract class ABrowser extends \BLW\Type\AWrapper implements \BLW\Type\HTTP\IBr
 
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

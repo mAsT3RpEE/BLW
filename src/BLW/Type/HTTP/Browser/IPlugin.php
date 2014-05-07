@@ -18,6 +18,7 @@
  */
 namespace BLW\Type\HTTP\Browser;
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -32,6 +33,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Interface for HTTP Browser Plugin objects
@@ -60,4 +63,6 @@ interface IPlugin extends \BLW\Type\IObject, \BLW\Type\IEventSubscriber
 {
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

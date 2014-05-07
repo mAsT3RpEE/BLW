@@ -26,7 +26,7 @@ use BLW\Model\MIME\Part\QuotedPrintable;
  * @package BLW\MIME
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Model\Mime\Part
+ * @coversDefaultClass \BLW\Model\MIME\Part\QuotedPrintable
  */
 class QuotedPrintableTest extends \PHPUnit_Framework_TestCase
 {
@@ -80,49 +80,15 @@ class QuotedPrintableTest extends \PHPUnit_Framework_TestCase
      */
     public function test_toString()
     {
-        $Expected = <<<EOT
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-<div id=3D"lipsum">=0A<p>=0ALorem=20ipsum=20dolor=20sit=20amet,=20consectet=
-ur=20adipiscing=20elit.=20Vestibulum=20erat=20nibh,=20mattis=20eget=20preti=
-um=20sit=20amet,=20cursus=20vel=20nibh.=20Mauris=20semper=20hendrerit=20ali=
-quam.=20Nullam=20aliquam=20consequat=20arcu=20quis=20scelerisque.=20Curabit=
-ur=20eu=20odio=20enim.=20Morbi=20porta=20neque=20eget=20rhoncus=20cursus.=
-=20Aliquam=20adipiscing,=20massa=20nec=20lobortis=20dignissim,=20felis=20ma=
-gna=20faucibus=20odio,=20eget=20interdum=20tellus=20eros=20lacinia=20tortor=
-.=20Pellentesque=20molestie,=20eros=20vel=20fringilla=20dapibus,=20dolor=20=
-nulla=20tempus=20quam,=20a=20malesuada=20nisl=20augue=20imperdiet=20nibh.=
-=20Quisque=20nibh=20ipsum,=20molestie=20et=20felis=20ut,=20vulputate=20vive=
-rra=20tellus.=20Nam=20vel=20malesuada=20neque,=20in=20vulputate=20lacus.=20=
-Quisque=20a=20tortor=20tellus.=20Cras=20et=20eros=20magna.=20Nullam=20bland=
-it=20quam=20sit=20amet=20est=20dignissim=20vehicula.=20Donec=20nec=20augue=
-=20congue,=20commodo=20urna=20vel,=20cursus=20purus.=20Phasellus=20condimen=
-tum=20tincidunt=20sodales.=20Donec=20placerat=20dapibus=20nisl,=20a=20biben=
-dum=20mi=20consequat=20vehicula.=0A</p>=0A<p>=0ADuis=20dignissim=20purus=20=
-leo,=20quis=20pellentesque=20dolor=20placerat=20vel.=20Donec=20non=20nisi=
-=20volutpat,=20varius=20quam=20at,=20aliquam=20magna.=20Sed=20a=20felis=20a=
-c=20metus=20placerat=20ornare=20in=20vitae=20nulla.=20Aliquam=20tincidunt=
-=20nisl=20eget=20turpis=20cursus=20rutrum.=20Curabitur=20a=20nisl=20id=20tu=
-rpis=20hendrerit=20ultricies.=20Curabitur=20sit=20amet=20volutpat=20mi,=20e=
-get=20eleifend=20nunc.=20Sed=20nec=20orci=20gravida,=20ornare=20est=20sed,=
-=20rutrum=20est.=20Praesent=20quis=20porttitor=20dui.=20Quisque=20mattis=20=
-nisi=20a=20pellentesque=20adipiscing.=20Morbi=20et=20lorem=20erat.=20Phasel=
-lus=20a=20lobortis=20neque.=0A</p>=0A<p>=0AMaecenas=20vel=20pharetra=20magn=
-a.=20Pellentesque=20sit=20amet=20velit=20tempor,=20lobortis=20risus=20sit=
-=20amet, ultricies lectus. Donec convallis sodales arcu, vestibulum consequ=
-at lectus vehicula eget. Morbi congue tortor sed molestie sagittis. Aliquam=
- rutrum, turpis nec sodales semper, eros metus bibendum risus, ac porta met=
-us tellus et mi. Nunc euismod dapibus dui sit amet ornare. In blandit magna=
- eu eros ornare, in convallis enim posuere. In hac habitasse platea dictums=
-t. Nulla facilisi. Aenean lectus velit, commodo quis felis in, varius solli=
-citudin nulla. Duis mollis erat leo, in accumsan massa auctor ac.=0A</p></d=
-iv>
-
-
+        $Start = <<<EOT
+Content-Type: text/html; charset=utf-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n<div id=3D"lipsum">=0A<p>
+EOT;
+        $End = <<<EOT
+>\r\n\r\n
 EOT;
 
-        $this->assertEquals($Expected, @strval($this->QuotedPrintable), 'QuotedPrintable::__toSting() returned an invalid format');
+        $this->assertStringStartsWith($Start, @strval($this->QuotedPrintable), 'QuotedPrintable::__toSting() returned an invalid format');
+        $this->assertStringEndsWith($End, @strval($this->QuotedPrintable), 'QuotedPrintable::__toSting() returned an invalid format');
     }
 
     /**

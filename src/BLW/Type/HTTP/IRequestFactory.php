@@ -22,6 +22,7 @@ use BLW\Type\IURI;
 use BLW\Type\IContainer;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -36,6 +37,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Interface for HTTP Request factory objects.
@@ -130,4 +133,6 @@ interface IRequestFactory extends \BLW\Type\IFactory
     public function createPOST(IURI $URI, IURI $BaseURI, $Data = null, $Headers = array());
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

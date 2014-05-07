@@ -21,6 +21,7 @@ namespace BLW\Type;
 use stdClass;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -35,6 +36,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Interface for all object serializers.
@@ -160,4 +163,6 @@ interface ISerializer extends \BLW\Type\ISerializable, \BLW\Type\IIterable
     public function __toString();
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

@@ -32,6 +32,7 @@ use BLW\Model\Command\Callback as CallbackCommand;
 use Psr\Log\LoggerInterface;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -46,6 +47,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Generic cron handler
@@ -204,5 +207,7 @@ class Generic extends \BLW\Type\Cron\AHandler
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd
 

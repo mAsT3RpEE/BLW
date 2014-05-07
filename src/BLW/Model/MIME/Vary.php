@@ -21,17 +21,17 @@ namespace BLW\Model\MIME;
 use BLW\Model\InvalidArgumentException;
 use BLW\Type\IDataMapper;
 if (! defined('BLW')) {
-    
+
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
         header("$_SERVER[SERVER_PROTOCOL] 404 Not Found");
         header('Status: 404 Not Found');
-        
+
         $_SERVER['REDIRECT_STATUS'] = 404;
-        
+
         echo "<html>\r\n<head><title>404 Not Found</title></head><body bgcolor=\"white\">\r\n<center><h1>404 Not Found</h1></center>\r\n<hr>\r\n<center>nginx/1.5.9</center>\r\n</body>\r\n</html>\r\n";
         exit();
     }
-    
+
     return false;
 }
 
@@ -61,7 +61,7 @@ final class Vary extends \BLW\Type\MIME\AHeader
      * Constructor
      *
      * @throws \BLW\Model\InvalidArgumentException If <code>$FieldName[x]</code> is not a string.
-     *        
+     *
      * @param string $FieldNames
      *            Accept types separated by a comma (,).
      * @return void
@@ -70,18 +70,18 @@ final class Vary extends \BLW\Type\MIME\AHeader
     {
         // 1. Header type
         $this->_Type = 'Vary';
-        
+
         // 2. Header value
-        
+
         // Validate $FieldNames
         if (is_string($FieldNames) ?  : is_callable(array(
             $FieldNames,
             '__toString'
         ))) {
-            
+
             // Split into array
             $FieldNames = explode(',', $FieldNames);
-            
+
             // Validate again
             if (! empty($FieldNames) && array_reduce($FieldNames, function ($v, $i)
             {
@@ -90,13 +90,13 @@ final class Vary extends \BLW\Type\MIME\AHeader
                     '__toString'
                 )));
             }, true)) {
-                
+
                 // Vary
                 $this->_Value = array_reduce($FieldNames, function ($v, $i)
                 {
-                    
-                    $FieldName = $this->parseFieldName($i);
-                    
+
+                    $FieldName = Vary::parseFieldName($i);
+
                     if ($v && $FieldName)
                         return "$v, $FieldName";
                     elseif ($FieldName)
@@ -106,12 +106,12 @@ final class Vary extends \BLW\Type\MIME\AHeader
                     else
                         return '';
                 }, '');
-            }             
+            }
 
             // Invalid $FieldNames
             else
                 throw new InvalidArgumentException(0);
-        }         
+        }
 
         // Invalid $FieldNames
         else
@@ -122,9 +122,9 @@ final class Vary extends \BLW\Type\MIME\AHeader
      * Parse a string for field-name.
      *
      * @api BLW
-     * 
+     *
      * @since 1.0.0
-     *       
+     *
      * @param string $Test
      *            String to search.
      * @return string Returns `*` in case of error.
@@ -133,14 +133,16 @@ final class Vary extends \BLW\Type\MIME\AHeader
     {
         // FieldName Regex
         $FieldName = sprintf('(?:%s|\x2a)', self::TOKEN);
-        
+
         // Match Regex `field-name`
         if (preg_match("!$FieldName!", @substr($Test, 0, 1024), $m))
             return $m[0];
-            
+
             // Default
         return '*';
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

@@ -23,6 +23,7 @@ use BLW\Type\IDataMapper;
 use BLW\Model\InvalidArgumentException;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -37,6 +38,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Header class for Accept-Charset.
@@ -100,7 +103,7 @@ final class AcceptCharset extends \BLW\Type\MIME\AHeader
                 $this->_Value = array_reduce($Charsets, function ($v, $i)
                 {
 
-                    $Charset = $this->parseCharset($i);
+                    $Charset = AcceptCharset::parseCharset($i);
 
                     if ($v && $Charset)
                         return "$v, $Charset";
@@ -147,4 +150,6 @@ final class AcceptCharset extends \BLW\Type\MIME\AHeader
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

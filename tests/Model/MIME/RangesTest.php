@@ -81,9 +81,9 @@ class RangeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::parseRange
+     * @covers ::parseRanges
      */
-    public function test_parseRange()
+    public function test_parseRanges()
     {
         # Valid type
         foreach($this->generateValidTypes() as $Parameters) {
@@ -101,7 +101,7 @@ class RangeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @depends test_parseRange
+     * @depends test_parseRanges
      * @covers ::__construct
      */
     public function test_construct()

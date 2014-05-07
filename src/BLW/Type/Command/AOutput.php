@@ -27,6 +27,7 @@ use BLW\Model\Event\Generic as GenericEvent;
 use BLW\Model\InvalidArgumentException;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -41,6 +42,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Base class for command output objects passed to ICommand::run()
@@ -391,4 +394,6 @@ abstract class AOutput extends \BLW\Type\AMediatable implements \BLW\Type\Comman
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

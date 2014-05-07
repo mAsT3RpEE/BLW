@@ -41,6 +41,7 @@ Application::run(function (BLW\Type\Command\IInput $Input, BLW\Type\Command\IOut
     // Run framework tests
     $ShellInput            = new Input(new Handle(fopen('data:text/plain,', 'r')));
     $ShellInput->Options[] = new Option('testsuite', 'Types');
+    $ShellInput->Options[] = new Option('coverage-php', 'temp/coverage-types.serialized');
     $PHPUnit               = new ShellCommand('phpunit', new Config(array(
     	'Timeout'       => 60,
         'CWD'           => dirname(__DIR__),
@@ -55,8 +56,12 @@ Application::run(function (BLW\Type\Command\IInput $Input, BLW\Type\Command\IOut
     // Run library tests
     $ShellInput            = new Input(new Handle(fopen('data:text/plain,', 'r')));
     $ShellInput->Options[] = new Option('testsuite', 'Models');
+    $ShellInput->Options[] = new Option('coverage-php', 'temp/coverage-models.serialized');
 
     $PHPUnit->run($ShellInput, $Output);
+
+    // Merge coverage files
+    // ...
 
     $Print('Finished testing.');
 
@@ -64,4 +69,6 @@ Application::run(function (BLW\Type\Command\IInput $Input, BLW\Type\Command\IOut
     return 0;
 });
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

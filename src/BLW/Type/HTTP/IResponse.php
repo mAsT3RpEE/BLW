@@ -19,6 +19,7 @@
 namespace BLW\Type\HTTP;
 
 use BLW\Type\MIME\IMessage;
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -33,6 +34,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Interface for HTTP Reqponse objects.
@@ -263,4 +266,6 @@ interface IResponse extends \BLW\Type\MIME\IMessage, \ArrayAccess
     public function clearStorage();
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

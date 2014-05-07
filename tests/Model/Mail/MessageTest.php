@@ -41,6 +41,8 @@ use BLW\Model\Mail\Transport\Mock as Transport;
  * Tests Message Module type.
  * @package BLW\Mail
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ *
+ * @coversDefaultClass \BLW\Model\Mail\GenericMessage
  */
 class MessageTest extends \PHPUnit_Framework_TestCase
 {
@@ -616,7 +618,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers getFactoryMethods
+     * @covers ::getFactoryMethods
      */
     public function test_getFactoryMethods()
     {

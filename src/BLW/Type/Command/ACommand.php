@@ -33,6 +33,7 @@ use BLW\Model\Config\Generic as Config;
 use BLW\Model\Command\Event as CommandEvent;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -47,6 +48,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Interface for all commands / stored instructions.
@@ -680,4 +683,6 @@ abstract class ACommand extends \BLW\Type\AObject implements \BLW\Type\Command\I
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

@@ -27,7 +27,7 @@ use BLW\Model\GenericFile;
  * @package BLW\MIME
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Model\Mime\Attachment
+ * @coversDefaultClass \BLW\Model\MIME\Part\Attachment
  */
 class AttachmentTest extends \PHPUnit_Framework_TestCase
 {
@@ -74,14 +74,7 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
     public function test_toString()
     {
         $Expected = <<<EOT
-Content-Type: image/png-test; name=Test.png
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename=Test.png
-
-iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0A
-AAAASUVORK5CYII=
-
-
+Content-Type: image/png-test; name=Test.png\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=Test.png\r\n\r\niVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0A\r\nAAAASUVORK5CYII=\r\n\r\n
 EOT;
 
         $this->assertEquals($Expected, @strval($this->Attachment), 'Attachment::__toSting() returned an invalid format');

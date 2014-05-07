@@ -26,6 +26,7 @@ use BLW\Model\InvalidArgumentException;
 use BLW\Model\GenericContainer;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -40,6 +41,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Interface for Command\Input options.
@@ -414,10 +417,11 @@ abstract class AOption implements \BLW\Type\Command\IOption
         }
 
         // Explode string and filter empty items
-        $Arguments = array_filter(explode($split, $Arguments), function ($v)
+        $nowsctrl  = self::$_NOWS_CTRL;
+        $Arguments = array_filter(explode($split, $Arguments), function ($v) use($nowsctrl)
         {
             return ! empty($v)
-                ? ! in_array($v, self::$_NOWS_CTRL)
+                ? ! in_array($v, $nowsctrl)
                 : false;
         });
 
@@ -642,4 +646,6 @@ abstract class AOption implements \BLW\Type\Command\IOption
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

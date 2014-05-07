@@ -24,6 +24,7 @@ use ArrayObject;
 use BLW\Type\IContainer;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -38,6 +39,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Improvement over PHP's DOMNodeList.
@@ -65,4 +68,6 @@ class NodeList extends \BLW\Type\AContainer
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

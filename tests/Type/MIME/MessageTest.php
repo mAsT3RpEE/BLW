@@ -27,6 +27,8 @@ use BLW\Model\InvalidArgumentException;
  * Tests Message Module type.
  * @package BLW\MIME
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ *
+ * @coversDefaultClass \BLW\Type\MIME\AMessage
  */
 class MessageTest extends \PHPUnit_Framework_TestCase
 {

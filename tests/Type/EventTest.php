@@ -25,7 +25,7 @@ use ReflectionProperty;
  * @package BLW\Core
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Type\IEvent
+ *  @coversDefaultClass \BLW\Type\AEvent
  */
 class EventTest extends \PHPUnit_Framework_TestCase
 {
@@ -89,12 +89,12 @@ class EventTest extends \PHPUnit_Framework_TestCase
     public function test_get()
     {
         # Test
-        $Subject = new \DOMElement('span', 'test');
+        $Subject = (object) array('foo' => 1, 'bar' => 1);
         $this->Subject->setValue($this->Event, $Subject);
         $this->Context->setValue($this->Event, array('foo' => 'test'));
 
         # Subject
-        $this->assertEquals($Subject, $this->Event->Subject, 'IEvent::__get(Subject) returned an invalid value');
+        $this->assertSame($Subject, $this->Event->Subject, 'IEvent::__get(Subject) returned an invalid value');
 
         # Context
         $this->assertEquals('test', $this->Event->foo, 'IEvent::__get(foo) returned an invalid value');

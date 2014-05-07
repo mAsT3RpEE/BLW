@@ -26,7 +26,7 @@ use BLW\Model\InvalidArgumentException;
  * @package BLW\Core
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Type\IURI
+ *  @coversDefaultClass \BLW\Type\AURI
  */
 class URITest extends \PHPUnit_Framework_TestCase
 {
@@ -352,7 +352,7 @@ class URITest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends test_construct
-     * @covers ::toString
+     * @covers ::__toString
      */
     public function test_toString()
     {

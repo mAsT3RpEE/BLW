@@ -30,10 +30,10 @@ use BLW\Model\MIME\ContentDisposition;
 use BLW\Model\MIME\ContentID;
 use BLW\Model\MIME\ContentLocation;
 use BLW\Model\MIME\ContentBase;
-use TokenReflection\Stream\StringStream;
 use BLW\Model\InvalidArgumentException;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -48,6 +48,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * File InlineAttachment class.
@@ -214,5 +216,7 @@ final class InlineAttachment extends \BLW\Type\AContainer implements \BLW\Type\M
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd
 

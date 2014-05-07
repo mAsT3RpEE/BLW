@@ -25,6 +25,7 @@ use BLW\Type\ISerializer;
 use BLW\Type\ISerializable;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -39,6 +40,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * PHP object serializer.
@@ -101,5 +104,7 @@ class PHP extends \BLW\Type\ASerializer
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd
 

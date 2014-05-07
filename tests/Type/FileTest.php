@@ -18,6 +18,7 @@
 namespace BLW\Tests\Type;
 
 use BLW\Type\IFile;
+use BLW\Model\InvalidArgumentException;
 
 
 /**
@@ -25,7 +26,7 @@ use BLW\Type\IFile;
  * @package BLW\Core
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Type\IFile
+ *  @coversDefaultClass \BLW\Type\AFile
  */
 class FileTest extends \PHPUnit_Framework_TestCase
 {
@@ -50,7 +51,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
      */
     public function test_getMimeType()
     {
-        $this->assertEquals('text/html', $this->File->getMimeType());
+        $this->assertRegExp('!text/html|text/x-php; charset=us-ascii!', $this->File->getMimeType());
     }
 
     /**
@@ -73,6 +74,14 @@ class FileTest extends \PHPUnit_Framework_TestCase
         $File->putContents($Test);
 
         $this->assertEquals($Test, file_get_contents($Path), 'IFile::putContents() created a currupt file');
+
+        // Invalid Arguments
+        try {
+            $this->File->putContents(NULL);
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch(InvalidArgumentException $e) {}
     }
 
     /**

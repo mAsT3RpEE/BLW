@@ -27,7 +27,7 @@ use BLW\Model\GenericFile;
  * @package BLW\MIME
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Model\Mime\FormFile
+ * @coversDefaultClass \BLW\Model\MIME\Part\FormFile
  */
 class FormFileTest extends \PHPUnit_Framework_TestCase
 {
@@ -75,13 +75,7 @@ class FormFileTest extends \PHPUnit_Framework_TestCase
     public function test_toString()
     {
         $Expected = <<<EOT
-Content-Disposition: form-data; name=fieldname; filename=Test.png
-Content-Type: image/png-test
-Content-Transfer-Encoding: binary
-
-%s
-
-
+Content-Disposition: form-data; name=fieldname; filename=Test.png\r\nContent-Type: image/png-test\r\nContent-Transfer-Encoding: binary\r\n\r\n%s\r\n\r\n
 EOT;
 
         $this->assertEquals(sprintf($Expected, file_get_contents(self::FILE)), @strval($this->FormFile), 'FormFile::__toSting() returned an invalid format');

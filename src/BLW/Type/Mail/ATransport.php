@@ -25,6 +25,7 @@ use BLW\Model\GenericContainer;
 use BLW\Model\Event\Generic as GenericEvent;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -39,6 +40,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Standard interface for objects that handle email Addresses.
@@ -165,4 +168,6 @@ abstract class ATransport extends \BLW\Type\AMediatable implements \BLW\Type\Mai
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

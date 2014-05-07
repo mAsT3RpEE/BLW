@@ -20,6 +20,7 @@ namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
 use BLW\Type\IDataMapper;
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -34,6 +35,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Header class for Range.
@@ -116,4 +119,6 @@ final class Range extends \BLW\Type\MIME\AHeader
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

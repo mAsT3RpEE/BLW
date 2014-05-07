@@ -24,6 +24,7 @@ use BLW\Type\IStream;
 use BLW\Type\IMediatable;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -38,6 +39,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Interface for HTTP client objects
@@ -349,5 +352,7 @@ interface IClient extends \BLW\Type\IObjectStorage, \BLW\Type\IMediatable, \BLW\
     public function download(IRequest $Request, IStream $Stream);
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd
 

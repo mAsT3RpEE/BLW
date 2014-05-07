@@ -26,6 +26,7 @@ use ReflectionClass;
 use BadMethodCallException;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -40,6 +41,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Wrapper pattern abstract class.
@@ -421,4 +424,6 @@ abstract class AWrapper extends \BLW\Type\ASerializable implements \BLW\Type\IWr
 
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

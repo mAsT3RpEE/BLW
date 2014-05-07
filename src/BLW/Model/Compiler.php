@@ -33,6 +33,7 @@ use BLW\Type\AMediatableObject;
 use BLW\Type\IMediator;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -47,6 +48,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Compiler for BLW Library and BLW applications.
@@ -495,4 +498,6 @@ class Compiler extends \BLW\Type\AMediatableObject
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

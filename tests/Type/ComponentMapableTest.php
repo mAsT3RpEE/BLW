@@ -28,7 +28,7 @@ use BadMethodCallException;
  * @package BLW\Core
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Type\IComponentMapable
+ * @coversDefaultClass \BLW\Type\AComponentMapable
  */
 class ComponentMapableTest extends \PHPUnit_Framework_TestCase
 {

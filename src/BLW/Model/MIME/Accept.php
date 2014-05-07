@@ -23,6 +23,7 @@ use BLW\Type\IDataMapper;
 use BLW\Model\InvalidArgumentException;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -37,6 +38,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Header class for Accept.
@@ -119,7 +122,7 @@ final class Accept extends \BLW\Type\MIME\AHeader
                 $this->_Value = array_reduce($Types, function ($v, $i)
                 {
 
-                    $Type = $this->parseType($i);
+                    $Type = Accept::parseType($i);
 
                     if ($v && $Type)
                         return "$v, $Type";
@@ -185,4 +188,6 @@ final class Accept extends \BLW\Type\MIME\AHeader
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

@@ -18,6 +18,7 @@
  */
 namespace BLW\Type\MIME;
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -32,6 +33,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Interface for Section class which helps create and organize mime parts / mime boundaries.
@@ -121,4 +124,6 @@ interface ISection extends \BLW\Type\IContainer, \BLW\Type\IFactory
     public function getBoundary();
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

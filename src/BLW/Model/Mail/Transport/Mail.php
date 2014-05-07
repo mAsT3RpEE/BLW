@@ -87,4 +87,6 @@ class Mail extends \BLW\Type\Mail\ATransport
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

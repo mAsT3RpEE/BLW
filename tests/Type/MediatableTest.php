@@ -19,7 +19,9 @@ namespace BLW\Tests\Type;
 
 use BLW\Type\IDataMapper;
 use BLW\Type\IEvent;
+
 use BLW\Model\InvalidArgumentException;
+
 use PHPUnit_Framework_Error_Notice;
 
 
@@ -28,7 +30,7 @@ use PHPUnit_Framework_Error_Notice;
  * @package BLW\Core
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Type\IMediator
+ *  @coversDefaultClass \BLW\Type\AMediatable
  */
 class MediatableTest extends \PHPUnit_Framework_TestCase
 {

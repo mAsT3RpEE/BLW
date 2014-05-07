@@ -22,6 +22,7 @@ use BLW\Type\IMediatable;
 use BLW\Type\IFactory;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -36,6 +37,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Interface for Command\Input Options.
@@ -165,4 +168,6 @@ Interface IOption extends \BLW\Type\IFactory
     public function __toString();
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

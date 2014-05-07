@@ -50,4 +50,6 @@ interface IDataBase extends \Zend\Db\Adapter\AdapterInterface, \Zend\Db\Adapter\
 
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

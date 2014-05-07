@@ -81,7 +81,7 @@ class ShellTest extends \PHPUnit_Framework_TestCase
         $this->Output   = new GenericOutput(new HandleStream(fopen(self::OUTPUT, 'w')), new HandleStream(fopen(self::OUTPUT, 'w')));
         $this->Mediator = new SymfonyMediator;
         $this->Config   = new GenericConfig(array(
-        	 'Timeout'     => 10
+        	 'Timeout'     => 60
             ,'Callback'    => array($this, 'mock_Callback')
             ,'CWD'         => NULL
             ,'Environment' => NULL
@@ -90,7 +90,7 @@ class ShellTest extends \PHPUnit_Framework_TestCase
 
         $this->Command = new Command('php', $this->Config, $this->Mediator, 'ShellCommand');
 
-        $this->Input->Options[] = new GenericOption('l', true);
+        $this->Input->Options[] = new GenericOption('r', "sleep(10); print 'foo';");
     }
 
     protected function tearDown()
@@ -116,8 +116,9 @@ class ShellTest extends \PHPUnit_Framework_TestCase
      */
     public function test_createCommandLine()
     {
-        $Expected = 'php -l foo.php';
+        $Expected = 'php -x foo foo.php';
 
+        $this->Input->Options[0]  = new GenericOption('x', 'foo');
         $this->Input->Arguments[] = new GenericArgument('foo.php');
 
         $this->assertEquals($Expected, $this->Command->createCommandLine('php', $this->Input), 'ShellCommand::createCommandLine() returned an invalid result');
@@ -171,7 +172,7 @@ class ShellTest extends \PHPUnit_Framework_TestCase
      */
     public function test_isSystemCallInterupt()
     {
-        $this->assertTrue($this->Command->isSystemCallInterupt(array('message' => 'interrupted system call')), 'ShellCommand::isSystemCallInterupt() returned an invalid value');
+        $this->assertTrue($this->Command->isSystemCallInterupt(array('message' => ' Interrupted system call')), 'ShellCommand::isSystemCallInterupt() returned an invalid value');
         $this->assertFalse($this->Command->isSystemCallInterupt(array('message' => 'okay system call')), 'ShellCommand::isSystemCallInterupt() returned an invalid value');
     }
 
@@ -193,11 +194,14 @@ class ShellTest extends \PHPUnit_Framework_TestCase
         $Property->setAccessible(true);
         $Property->setValue($this->Command, $Pipes);
 
-        $this->Command->transferStreams($this->Input, $this->Output, 1, $Pipes);
+        $this->Command->transferStreams($this->Input, $this->Output, 10);
 
         $this->assertEquals('test output', $this->Output->stdOut->getContents(), 'ShellCommand::_transferStreams() Failed to transfer STDOUT');
         $this->assertEquals('test error', $this->Output->stdErr->getContents(), 'ShellCommand::_transferStreams() Failed to transfer STDERR');
         $this->assertEquals($this->Input->stdIn->getContents(), file_get_contents($Input), 'ShellCommand::_transferStreams() Failed to trasfer STDIN');
+
+        foreach($Pipes as $fp)
+            fclose($fp);
 
         sleep(1); @unlink($Input);
     }
@@ -210,7 +214,7 @@ class ShellTest extends \PHPUnit_Framework_TestCase
      */
     public function test_doRun()
     {
-        $Expected = "No syntax errors detected in -\n";
+        $Expected = 'foo';
 
         $this->assertEquals(0, $this->Command->doRun($this->Input, $this->Output), 'ShellCommand::doRun() returned an invalid result');
         $this->assertEquals($Expected, $this->Output->stdOut->getContents(), 'ShellCommand::doRun() Failed to process command output');

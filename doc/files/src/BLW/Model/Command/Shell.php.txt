@@ -32,6 +32,7 @@ use BLW\Model\Command\Exception as CommandException;
 use BLW\Model\Command\Event as CommandEvent;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -46,6 +47,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Command for handling shell commands.
@@ -658,5 +661,7 @@ class Shell extends \BLW\Type\Command\ACommand implements \BLW\Type\IFactory
 
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd
 

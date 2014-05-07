@@ -32,6 +32,7 @@ use BLW\Model\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -46,6 +47,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Interface for Cron Handlers
@@ -448,4 +451,6 @@ abstract class AHandler extends \BLW\Type\AObjectStorage implements \BLW\Type\Cr
 
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

@@ -77,7 +77,7 @@ class ArgumentTest extends \PHPUnit_Framework_TestCase
      */
     public function test_toString()
     {
-        $this->assertSame('"test argument"', strval($this->Argument), '(strval) IArgument returned an invalid value');
+        $this->assertRegExp('!["\']test argument["\']!', strval($this->Argument), '(strval) IArgument returned an invalid value');
     }
 
     public function generateArgV()

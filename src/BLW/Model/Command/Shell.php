@@ -32,6 +32,7 @@ use BLW\Model\Command\Exception as CommandException;
 use BLW\Model\Command\Event as CommandEvent;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -46,6 +47,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Command for handling shell commands.
@@ -323,9 +326,16 @@ class Shell extends \BLW\Type\Command\ACommand implements \BLW\Type\IFactory
         if ($this->open($Input)) {
 
             // Transfer both input and output
-            $Timeout = intval($this->_Config['Timeout']);
+            try {
+                $Timeout = intval($this->_Config['Timeout']);
 
-            $this->transferStreams($Input, $Output, $Timeout);
+                $this->transferStreams($Input, $Output, $Timeout);
+            }
+
+            // Forward exceptions
+            catch(CommandException $e) {
+                throw new CommandException('%header% ' . $e->getMessage(), $e->getCode(), $e);
+            }
 
             // Close process
             $this->close();
@@ -336,7 +346,7 @@ class Shell extends \BLW\Type\Command\ACommand implements \BLW\Type\IFactory
 
         // Unable to open process
         else
-            throw new CommandException(sprintf('Unable to run command (%s)', $CommandLine));
+            throw new CommandException(sprintf('%s Unable to run command (%s)', '%header%', $CommandLine));
 
         // Error
         return -1;
@@ -402,12 +412,30 @@ class Shell extends \BLW\Type\Command\ACommand implements \BLW\Type\IFactory
                 if (is_resource($Pipe))
                     fclose($Pipe);
 
-            // Close process
+            // $Terminate flag?
             if (! $Terminate)
+                // Close process
                 $this->_ExitCode = proc_close($this->_fp);
 
-            else
+            // No terminate flag
+            else {
+                // Try command line
+                $pid   = $this->getStatus('pid');
+                $descr = array(
+                     0 => array('pipe', 'r'),
+                     1 => array('pipe', 'w'),
+                     2 => array('pipe', 'w')
+                );
+                $fp    = proc_open(DIRECTORY_SEPARATOR ==  '\\'? "taskkill /PID $pid" : "kill $pid", $descr, $pipes);
+
+                foreach ($pipes as $pipe)
+                    fclose($pipe);
+
+                proc_close($fp);
+
+                // Try to terminate
                 proc_terminate($this->_fp);
+            }
 
             // Done
             return $this->_ExitCode;
@@ -448,6 +476,7 @@ class Shell extends \BLW\Type\Command\ACommand implements \BLW\Type\IFactory
         stream_set_blocking($this->_Pipes[Shell::STDERR], 0);
 
         // Run loop
+        $Timeout    = max(5, intval($Timeout));
         $isStopped  = false;
         $WritePipes = array(
             $this->_Pipes[Shell::STDIN]
@@ -477,7 +506,7 @@ class Shell extends \BLW\Type\Command\ACommand implements \BLW\Type\IFactory
                 );
 
             // If process has stopped or wait for input / output
-            if ($RunStatus ? @stream_select($read, $write, $except, $Timeout) > 0 : true) {
+            if ($RunStatus ? @stream_select($read, $write, $except, $Timeout, 100000) > 0 : true) {
 
                 // STDIN ready?
                 if (in_array($this->_Pipes[Shell::STDIN], $write)) {
@@ -563,7 +592,7 @@ class Shell extends \BLW\Type\Command\ACommand implements \BLW\Type\IFactory
             }
 
             // If system call has not been interupted and process is still running
-            elseif (! $this->isSystemCallInterupt()) {
+            elseif ($RunStatus ? $this->isSystemCallInterupt() : false) {
 
                 // Stop process
                 $isStopped = true;
@@ -651,11 +680,15 @@ class Shell extends \BLW\Type\Command\ACommand implements \BLW\Type\IFactory
     {
         $Error = $Error ?: error_get_last();
 
-        return isset($Error['message']) && stripos($Error['message'], 'interrupted system call') !== false;
+        return isset($Error['message'])
+            ? stripos($Error['message'], 'interrupted system call') > 0
+            : false;
     }
 
 ###########################################################################################
 
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

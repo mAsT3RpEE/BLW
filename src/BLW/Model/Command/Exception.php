@@ -18,7 +18,7 @@
  */
 namespace BLW\Model\Command;
 
-use Exception;
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -33,6 +33,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Makes reporting errors just easy.
@@ -64,7 +66,7 @@ final class Exception extends \BLW\Type\ARuntimeException
      * @param \Exception $previous
      *            Previous Exception.
      */
-    public function __construct($message = null, $code = 0, Exception $previous = null)
+    public function __construct($message = null, $code = 0, \Exception $previous = null)
     {
         if (is_null($message)) {
             $message = '%header% Command error.';
@@ -79,4 +81,6 @@ final class Exception extends \BLW\Type\ARuntimeException
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

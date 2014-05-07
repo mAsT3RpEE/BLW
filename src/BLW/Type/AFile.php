@@ -26,6 +26,7 @@ use BLW\Model\InvalidArgumentException;
 use BLW\Model\FileException;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -40,6 +41,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Abstract class for all file objects.
@@ -648,14 +651,14 @@ abstract class AFile extends \BLW\Type\AWrapper implements \BLW\Type\IFile
         $this->_Component = new SplFileInfo($this->_FileName);
 
         // Restore properties
-        array_walk($Propterties, function ($v, $k)
-        {
+        foreach ($Propterties as $k => $v) {
+
             try {
                 $this->_Component->{$k} = $v;
             }
 
             catch (\Exception $e) {}
-        });
+        };
 
         // Reopen file
         if (!empty($this->_Flags))
@@ -666,4 +669,6 @@ abstract class AFile extends \BLW\Type\AWrapper implements \BLW\Type\IFile
 
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

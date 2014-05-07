@@ -21,6 +21,7 @@ namespace BLW\Model;
 use Exception;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -35,6 +36,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Makes reporting errors just easy.
@@ -87,4 +90,6 @@ final class ErrorException extends \BLW\Type\ARuntimeException
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

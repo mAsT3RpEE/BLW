@@ -26,7 +26,7 @@ use BLW\Model\InvalidArgumentException;
  * @package BLW\Core
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Type\IEmailAddress
+ *  @coversDefaultClass \BLW\Type\AEmailAddress
  */
 class EmailAddressTest extends \PHPUnit_Framework_TestCase
 {
@@ -207,7 +207,7 @@ class EmailAddressTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends test_construct
-     * @covers ::toString
+     * @covers ::__toString
      */
     public function test_toString()
     {

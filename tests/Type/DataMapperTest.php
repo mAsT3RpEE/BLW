@@ -30,7 +30,7 @@ use BLW\Model\InvalidArgumentException;
  * @package BLW\Core
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Type\IDataMapper
+ *  @coversDefaultClass \BLW\Type\ADataMapper
  */
 class DataMapperTest extends \PHPUnit_Framework_TestCase
 {

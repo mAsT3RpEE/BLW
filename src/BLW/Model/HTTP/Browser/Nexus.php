@@ -202,4 +202,6 @@ class Nexus extends \BLW\Type\HTTP\ABrowser implements \BLW\Type\IEventSubscribe
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

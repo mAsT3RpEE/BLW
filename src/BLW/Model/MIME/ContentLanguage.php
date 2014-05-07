@@ -21,17 +21,17 @@ namespace BLW\Model\MIME;
 use BLW\Model\InvalidArgumentException;
 use BLW\Type\IDataMapper;
 if (! defined('BLW')) {
-    
+
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
         header("$_SERVER[SERVER_PROTOCOL] 404 Not Found");
         header('Status: 404 Not Found');
-        
+
         $_SERVER['REDIRECT_STATUS'] = 404;
-        
+
         echo "<html>\r\n<head><title>404 Not Found</title></head><body bgcolor=\"white\">\r\n<center><h1>404 Not Found</h1></center>\r\n<hr>\r\n<center>nginx/1.5.9</center>\r\n</body>\r\n</html>\r\n";
         exit();
     }
-    
+
     return false;
 }
 
@@ -61,7 +61,7 @@ final class ContentLanguage extends \BLW\Type\MIME\AHeader
      * Constructor
      *
      * @throws \BLW\Model\InvalidArgumentException If <code>$Language[x]</code> is not a string.
-     *        
+     *
      * @param string $Languages
      *            Content types separated by a comma (,).
      * @return void
@@ -70,18 +70,18 @@ final class ContentLanguage extends \BLW\Type\MIME\AHeader
     {
         // 1. Header type
         $this->_Type = 'Content-Language';
-        
+
         // 2. Header value
-        
+
         // Validate $Languages
         if (is_string($Languages) ?  : is_callable(array(
             $Languages,
             '__toString'
         ))) {
-            
+
             // Split into array
             $Languages = explode(',', $Languages);
-            
+
             // Validate again
             if (! empty($Languages) && array_reduce($Languages, function ($v, $i)
             {
@@ -90,13 +90,13 @@ final class ContentLanguage extends \BLW\Type\MIME\AHeader
                     '__toString'
                 )));
             }, true)) {
-                
+
                 // Type
                 $this->_Value = array_reduce($Languages, function ($v, $i)
                 {
-                    
-                    $Language = $this->parseLanguage($i);
-                    
+
+                    $Language = ContentLanguage::parseLanguage($i);
+
                     if ($v && $Language)
                         return "$v, $Language";
                     elseif ($Language)
@@ -106,12 +106,12 @@ final class ContentLanguage extends \BLW\Type\MIME\AHeader
                     else
                         return '';
                 }, '');
-            }             
+            }
 
             // Invalid $Languages
             else
                 throw new InvalidArgumentException(0);
-        }         
+        }
 
         // Invalid $Languages
         else
@@ -122,9 +122,9 @@ final class ContentLanguage extends \BLW\Type\MIME\AHeader
      * Parse a string for charset.
      *
      * @api BLW
-     * 
+     *
      * @since 1.0.0
-     *       
+     *
      * @param string $Test
      *            String to search.
      * @return string Returns `en` in case of error.
@@ -133,14 +133,16 @@ final class ContentLanguage extends \BLW\Type\MIME\AHeader
     {
         // Language Regex
         $Language = self::LANGUAGE_RANGE;
-        
+
         // Match Regex `charset`
         if (preg_match("!$Language!", @strtolower($Test), $m))
             return $m[0];
-            
+
             // Default
         return 'en';
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

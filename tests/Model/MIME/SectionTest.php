@@ -184,13 +184,7 @@ class SectionTest extends \PHPUnit_Framework_TestCase
     public function test_toString()
     {
         $Expected = <<<EOT
-Content-Type: multipart/mixed; boundary="0-00000:=00000"
-
---0-00000:=00000
-Test Part
-
---0-00000:=00000--
-
+Content-Type: multipart/mixed; boundary="0-00000:=00000"\r\n\r\n--0-00000:=00000\r\nTest Part\r\n\r\n--0-00000:=00000--\r\n
 EOT;
 
         $this->assertEquals($Expected, @strval($this->Section), 'Section::__toSting() returned an invalid format');

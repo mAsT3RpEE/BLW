@@ -43,4 +43,6 @@ class GenericContainer extends \BLW\Type\AContainer
 {
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

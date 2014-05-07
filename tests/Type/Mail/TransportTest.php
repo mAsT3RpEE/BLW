@@ -35,6 +35,8 @@ use BLW\Model\Mail\GenericMessage;
  * Tests Transport Module type.
  * @package BLW\MIME
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ *
+ * @coversDefaultClass \BLW\Type\Mail\ATransport
  */
 class TransportTest extends \PHPUnit_Framework_TestCase
 {

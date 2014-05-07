@@ -22,12 +22,13 @@ use ReflectionObject;
 use PHPUnit_Framework_Error_Notice;
 use PHPUnit_Framework_Error;
 
+
 /**
  * Tests BLW Library Adaptor type.
  * @package BLW\Core
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Type\IDataMapable
+ * @coversDefaultClass \BLW\Type\ADataMapable
  */
 class DataMapableTest extends \PHPUnit_Framework_TestCase
 {

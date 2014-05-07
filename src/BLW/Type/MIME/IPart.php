@@ -18,6 +18,7 @@
  */
 namespace BLW\Type\MIME;
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -32,6 +33,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Interface for MIME body part.
@@ -85,4 +88,6 @@ interface IPart extends \BLW\Type\IContainer
     public static function format($Content, $Chunklen);
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

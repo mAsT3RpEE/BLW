@@ -26,6 +26,7 @@ use BLW\Type\IConfig;
 use BLW\Model\FileException;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -40,6 +41,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * `.php` file configuration.
@@ -99,4 +102,6 @@ class PHP extends \BLW\Type\AConfig
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

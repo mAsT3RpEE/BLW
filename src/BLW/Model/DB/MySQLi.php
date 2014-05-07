@@ -98,4 +98,6 @@ class MySQLi extends \Zend\Db\Adapter\Adapter implements \BLW\Type\DB\IDataBase
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

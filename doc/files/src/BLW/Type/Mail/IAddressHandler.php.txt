@@ -21,6 +21,7 @@ namespace BLW\Type\Mail;
 use BLW\Type\IEmailAddress;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -35,6 +36,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Standard interface for objects that handle email Addresses.
@@ -197,5 +200,7 @@ interface IAddressHandler
     public function addBCC(IEmailAddress $EmailAddress);
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd
 

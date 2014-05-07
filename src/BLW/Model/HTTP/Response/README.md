@@ -25,65 +25,69 @@ Make Request classes compatible with the following libraries
 
 ##### Example: Manual 200 #####
 
-	<?php
-		
-	use BLW\Model\HTTP\Response\Generic as Response;
+```php
+<?php
 	
-	// Create response
-	$Response = new Response('HTTP','1.1',200);
-	
-	// Current URL of response
-	$Response->URI = new URI('http://example.com');
-	
-	// Original request URI
-	$ResponseRequestURI = new URI('http://example.com/redirect.php');
-	
-	// Custom Headers
-	$Response->Header['Server'] = new $Response->createHeader('Server', 'PHP');
-	$Response->Header['Date'] = new $Response->createHeader('Date', 'Thu, 10 Apr 2014 18:08:23 GMT');
-	$Response->Header['Content-Type'] = new $Response->createHeader('Content-Type', 'text/html');
-	
-	// Body
-	$Response->Body['Content'] = '<doctype html><html><head>....';
-	
-	// Custom values
-	$Response['Custom'] = 'custom value';
-	
-	echo $Response;
+use BLW\Model\HTTP\Response\Generic as Response;
+
+// Create response
+$Response = new Response('HTTP','1.1',200);
+
+// Current URL of response
+$Response->URI = new URI('http://example.com');
+
+// Original request URI
+$ResponseRequestURI = new URI('http://example.com/redirect.php');
+
+// Custom Headers
+$Response->Header['Server'] = new $Response->createHeader('Server', 'PHP');
+$Response->Header['Date'] = new $Response->createHeader('Date', 'Thu, 10 Apr 2014 18:08:23 GMT');
+$Response->Header['Content-Type'] = new $Response->createHeader('Content-Type', 'text/html');
+
+// Body
+$Response->Body['Content'] = '<doctype html><html><head>....';
+
+// Custom values
+$Response['Custom'] = 'custom value';
+
+echo $Response;
+```
 	
 ##### Example: RAW Response #####
 
-	<?php
-	
-	use BLW\Model\HTTP\Response\Generic as Response;
-	
-	// ...
-	// Some code to open a socket an make a http request
-	// ...
-	
-	$RAW		= stream_get_contents($stream);
-	$Response	= Response::createFromString($RAW);
-	
-	var_dump($Response->Version);		// string 'HTTP'
-	var_dump($Response->Protocol);		// string '1.1'
-	var_dump($Response->Status);		// int 200, 404, 503, etc
-	var_dump(strval($Response->URI));	// string 'http://domain.com/path/file?query#fragment'
-	var_dump(strval($Response->RequestURI));// string 'http://domain.com/redirect.php'
-	
-	var_dump($Response->Headers['Content-Type']->Type);
-	var_dump($Response->Headers['Content-Type']->Value);
-	
-	// string 'Content-Type'
-	// string 'text/html; charset=ISO-1344-1'
-	
-	print $Response->Body;
-	
-	//<doctype html>
-	//<html>
-	//<head>
-	//......
-	
-	?>
+```php
+<?php
+
+use BLW\Model\HTTP\Response\Generic as Response;
+
+// ...
+// Some code to open a socket an make a http request
+// ...
+
+$RAW		= stream_get_contents($stream);
+$Response	= Response::createFromString($RAW);
+
+var_dump($Response->Version);		// string 'HTTP'
+var_dump($Response->Protocol);		// string '1.1'
+var_dump($Response->Status);		// int 200, 404, 503, etc
+var_dump(strval($Response->URI));	// string 'http://domain.com/path/file?query#fragment'
+var_dump(strval($Response->RequestURI));// string 'http://domain.com/redirect.php'
+
+var_dump($Response->Headers['Content-Type']->Type);
+var_dump($Response->Headers['Content-Type']->Value);
+
+// string 'Content-Type'
+// string 'text/html; charset=ISO-1344-1'
+
+print $Response->Body;
+
+//<doctype html>
+//<html>
+//<head>
+//......
+
+?>
+```
 	
 [RFC 2616]: <https://tools.ietf.org/html/rfc2616> "RFC 2616"
 [RFC 2617]: <https://tools.ietf.org/html/rfc2617> "RFC 2617"

@@ -21,6 +21,7 @@ namespace BLW\Type;
 use ReflectionClass;
 use BadMethodCallException;
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -35,6 +36,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Wrapper pattern Trait.
@@ -280,4 +283,6 @@ trait TWrapper
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

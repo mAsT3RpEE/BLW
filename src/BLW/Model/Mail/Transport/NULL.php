@@ -21,6 +21,7 @@ namespace BLW\Model\Mail\Transport;
 use BLW\Type\Mail\IMessage;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -35,6 +36,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * NULL transport.
@@ -56,4 +59,6 @@ class NULL extends \BLW\Type\Mail\ATransport
     {}
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

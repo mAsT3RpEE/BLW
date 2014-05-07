@@ -27,7 +27,7 @@ use BLW\Model\Serializer\Mock;
  * @package BLW\Core
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Type\ISerializable
+ *  @coversDefaultClass \BLW\Type\ASerializable
  */
 class SerializableTest extends \PHPUnit_Framework_TestCase
 {

@@ -34,7 +34,7 @@ use BLW\Model\MIME\Generic as GenericHeader;
  * @package BLW\MIME
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Model\Mime\Head
+ * @coversDefaultClass \BLW\Model\Mime\Head\RFC2616
  */
 class RFC2616Test extends \PHPUnit_Framework_TestCase
 {
@@ -98,11 +98,7 @@ class RFC2616Test extends \PHPUnit_Framework_TestCase
     public function test_toString()
     {
         $Expected = <<<EOT
-Mock Header: foo
-Mock Header: foo
-Mock Header: foo
-
-
+Mock Header: foo\r\nMock Header: foo\r\nMock Header: foo\r\n\r\n
 EOT;
 
         $this->assertEquals($Expected, @strval($this->Head), '(string) Head returned an invalid format');

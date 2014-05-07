@@ -43,4 +43,6 @@ class GenericEmailAddress extends \BLW\Type\AEmailAddress
 {
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

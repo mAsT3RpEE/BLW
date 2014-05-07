@@ -34,9 +34,10 @@ use BLW\Type\AMediator;
 
 use BLW\Model\Event\Generic as GenericEvent;
 
-use SuperClosure\SerializableClosure;
+use Jeremeamia\SuperClosure\SerializableClosure;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -51,6 +52,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Mediator based on Symfony Event dispatcher.
@@ -396,5 +399,7 @@ class Symfony extends \BLW\Type\AMediator
 #############################################################################################
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd
 

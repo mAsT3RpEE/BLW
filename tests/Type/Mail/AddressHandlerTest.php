@@ -27,7 +27,7 @@ use BLW\Model\GenericEmailAddress;
  * @package BLW\Core
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Type\IAddressHandler
+ *  @coversDefaultClass \BLW\Type\Mail\AAddressHandler
  */
 class AddressHandlerTest extends \PHPUnit_Framework_TestCase
 {

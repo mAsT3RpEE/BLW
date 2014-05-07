@@ -43,4 +43,6 @@ class Generic extends \BLW\Type\AConfig
 {
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

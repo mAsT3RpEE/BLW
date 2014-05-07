@@ -132,13 +132,7 @@ class RequestFactoryTest  extends \PHPUnit_Framework_TestCase
     public function test_createGet()
     {
         $Expected = <<<EOT
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0
-Accept: text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8
-Accept-Language: en-us, en;q=0.5
-Accept-Encoding: gzip, deflate
-Test: foo
-
-
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0\r\nAccept: text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8\r\nAccept-Language: en-us, en;q=0.5\r\nAccept-Encoding: gzip, deflate\r\nTest: foo\r\n\r\n
 EOT;
 
         # Valid Arguments
@@ -167,13 +161,7 @@ EOT;
     public function test_createHEAD()
     {
         $Expected = <<<EOT
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0
-Accept: text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8
-Accept-Language: en-us, en;q=0.5
-Accept-Encoding: gzip, deflate
-Test: foo
-
-
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0\r\nAccept: text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8\r\nAccept-Language: en-us, en;q=0.5\r\nAccept-Encoding: gzip, deflate\r\nTest: foo\r\n\r\n
 EOT;
 
         # Valid Arguments
@@ -201,8 +189,8 @@ EOT;
         return array(
         	 array(new GenericURI('http://foo.com'), new GenericURI('about:nothing'), array(), NULL)   // Invalid Headers
         	,array(new GenericURI(''), new GenericURI('about:nothing'), array(), $this->Headers)       // Invalid URI
-//        	,array(new GenericURI('about:foo'), new GenericURI('about:nothing'), $this->Headers)     // Relative URI
-        	,array(new GenericURI(''), new GenericURI('about:nothing'), NULL,  $this->Headers)       // Invalid Data
+//        	,array(new GenericURI('about:foo'), new GenericURI('about:nothing'), $this->Headers)       // Relative URI
+        	,array(new GenericURI(''), new GenericURI('about:nothing'), NULL,  $this->Headers)         // Invalid Data
         );
     }
 
@@ -212,29 +200,28 @@ EOT;
     public function test_createPOST()
     {
         # Valid arguments
-        $URI  = new GenericURI('http://example.com');
-        $File = new GenericFile(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'Config' . DIRECTORY_SEPARATOR . '1x1.png');
-        $Data = array(
+        $URI   = new GenericURI('http://example.com');
+        $Image = new GenericFile(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'Config' . DIRECTORY_SEPARATOR . '1x1.png');
+        $Data  = array(
              'int'      => 1
             ,'float'    => 1.1
             ,'string'   => 'foo'
             ,'array'    => array(1,2)
             ,'object1'  => new \stdClass
             ,'object2'  => new \SplFileInfo(sys_get_temp_dir())
-            ,'file'     => $File
+            ,'file'     => $Image
             ,'Field'    => new FormField('field', 'text/plain', 'foo')
         );
 
         # File multipart/form-data
         $Request     = $this->Factory->createPOST($URI, $URI, $Data, $this->Headers);
-        $File        = dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'Config' . DIRECTORY_SEPARATOR . 'request-multipart.form-data.txt';
-        $Boundary    = preg_match('!boundary\s*=\s*"(.*)"!', $Request->Header['Content-Type'], $m)
+        $File = dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'Config' . DIRECTORY_SEPARATOR . 'request-multipart.form-data.txt';
+        $Boundary = preg_match('!boundary\s*=\s*"(.*)"!', $Request->Header['Content-Type'], $m)
             ? $m[1]
             : '';
-        $Expected    = sprintf(file_get_contents($File), $Boundary);
+        $Expected    = sprintf(preg_replace('!\r*\n!', "\r\n", file_get_contents($File)), $Boundary, sys_get_temp_dir(), file_get_contents($Image));
 
-//      file_put_contents($File, str_replace($Boundary, '%1$s', strval($Request)));
-
+        // file_put_contents($File, str_replace(array(sys_get_temp_dir(), file_get_contents($Image), $Boundary), array('%2$s', '%3$s', '%1$s'), strval($Request)));
 
         $this->assertEquals($URI, $Request->URI, 'IFactory::createPOST() Failed to set request URI');
         $this->assertEquals(IRequest::POST, $Request->Type, 'IFactory::createPOST() Failed to set request Type');
@@ -245,14 +232,13 @@ EOT;
         unset($Data['file']);
 
         $Request     = $this->Factory->createPOST($URI, $URI, $Data, $this->Headers);
-
         $File        = dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'Config' . DIRECTORY_SEPARATOR . 'request-application.x-www-form-urlencoded.txt';
         $Boundary    = preg_match('!boundary\s*=\s*"(.*)"!', $Request->Header['Content-Type'], $m)
             ? $m[1]
             : '';
         $Expected    = file_get_contents($File);
 
-//      file_put_contents($File, str_replace($Boundary, '%1$s', strval($Request)));
+        // file_put_contents($File, str_replace($Boundary, '%1$s', strval($Request)));
 
         # Invalid Arguments
         for($args=$this->generateInvalidPOST(); list($k,list($URI,$BaseURI,$Data, $Headers)) = each($args);) {

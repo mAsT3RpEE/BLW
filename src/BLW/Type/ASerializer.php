@@ -18,11 +18,12 @@
  */
 namespace BLW\Type;
 
-use stdClass;
+use SplObjectStorage;
 use ReflectionObject;
 use ReflectionProperty;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -37,6 +38,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Abstract class for all object serializers.
@@ -216,7 +219,7 @@ abstract class ASerializer extends \BLW\Type\ASerializable implements \BLW\Type\
         $Exported = $Exported ?: array();
 
         // Gets properties of Object to export to $Exportded.
-        $Properties = function (ISerializable $o)
+        $Properties = function ($o)
         {
             // Do pre Serialization.
             $o->doSerialize();
@@ -241,8 +244,8 @@ abstract class ASerializer extends \BLW\Type\ASerializable implements \BLW\Type\
         };
 
         // Export properties
-        $count = 0;
-        $Clone = clone $Object;
+        $Clone  = clone $Object;
+        $count  = 0;
 
         foreach ($Properties($Clone) as $Property) {
             $Exported[$Property->getName()] = $Property->getValue($Clone);
@@ -250,6 +253,7 @@ abstract class ASerializer extends \BLW\Type\ASerializable implements \BLW\Type\
             $count += 1;
         }
 
+        // Done
         return $count;
     }
 
@@ -439,4 +443,6 @@ abstract class ASerializer extends \BLW\Type\ASerializable implements \BLW\Type\
 
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

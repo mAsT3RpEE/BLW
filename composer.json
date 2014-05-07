@@ -27,13 +27,13 @@
 		"ext-SPL" : "*",
 		"ext-PDO" : "*",
 		"ext-curl" : "*",
-		"symfony/css-selector" : ">=2.4.2",
-		"monolog/monolog" : "dev-master@dev",
+		"symfony/css-selector" : ">=2.4.4",
+		"symfony/yaml" : ">=2.4.4",
+		"psr/log" : ">=1.0.0",
+		"monolog/monolog" : ">=1.9.1",
 		"mrclay/minify" : "dev-master@dev",
-		"jeremeamia/SuperClosure" : "2.0.0-alpha2@alpha",
 		"zendframework/zend-db" : "dev-master@dev",
-		"psr/log" : "1.0.0",
-		"symfony/yaml" : ">=2.4.3"
+		"jeremeamia/SuperClosure" : "dev-master@dev"
 	},
 	"autoload" : {
 		"psr-0" : {
@@ -43,5 +43,8 @@
 	"keywords" : [
 		"BLW",
 		"Framework"
-	]
+	],
+	"require-dev" : {
+		"phpunit/phpunit" : ">=4.1.0"
+	}
 }

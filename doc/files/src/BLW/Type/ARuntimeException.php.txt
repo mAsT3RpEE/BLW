@@ -18,6 +18,7 @@
  */
 namespace BLW\Type;
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -32,6 +33,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Abstract class for runtime exceptions.
@@ -91,5 +94,7 @@ abstract class ARuntimeException extends \RuntimeException implements \BLW\Type\
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd
 

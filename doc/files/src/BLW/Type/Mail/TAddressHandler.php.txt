@@ -22,6 +22,7 @@ use BLW\Type\IDataMapper;
 use BLW\Type\IEmailAddress;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -36,6 +37,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Standard trait for objects that handle email Addresses.
@@ -318,5 +321,7 @@ trait TAddressHandler
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd
 

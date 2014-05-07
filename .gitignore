@@ -5,8 +5,7 @@
 /.metadata
 /composer.lock
 /vendor
-/build/*
-!/build/*.gz
-!/build/*.phar
+/phpunit.phar
+/build/*.gz
 /temp/*
 !/temp/.keep

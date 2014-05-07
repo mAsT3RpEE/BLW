@@ -194,7 +194,7 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
 
     public function generateOptimizations()
     {
-        $Config = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR;
+        $Config = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Config' . DIRECTORY_SEPARATOR;
 
         return array(
         	array(__FILE__, 0.7),
@@ -214,7 +214,7 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
 
             list ($Input, $Expected) = $Arguments;
 
-            $Actual    = filesize($Input);
+            $Actual    = strlen(file_get_contents($Input));
             $Optimized = $this->Compiler->optimize($Input);
 
             $this->assertNotEmpty($Optimized, 'Compiler::optimize() Returned an emtpy string');

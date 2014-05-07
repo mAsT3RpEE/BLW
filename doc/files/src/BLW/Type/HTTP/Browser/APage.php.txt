@@ -30,6 +30,7 @@ use BLW\Model\InvalidArgumentException;
 use BLW\Model\Event\Generic as Event;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -44,6 +45,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Base class for all HTTP Browser pages
@@ -673,5 +676,7 @@ abstract class APage extends \BLW\Type\AWrapper implements \BLW\Type\HTTP\Browse
 
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd
 

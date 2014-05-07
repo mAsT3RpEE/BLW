@@ -29,6 +29,7 @@ use BLW\Model\Command\Argument\Generic as Argument;
 use BLW\Model\Command\Option\Generic as Option;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -43,6 +44,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Command input from argv and stdin.
@@ -73,4 +76,6 @@ class stdInput extends \BLW\Type\Command\AInput
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

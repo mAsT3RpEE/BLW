@@ -132,4 +132,6 @@ abstract class Application
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

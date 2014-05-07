@@ -28,7 +28,7 @@ use BLW\Model\DOM\Document;
  * @package BLW\Core
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Model\DOMDocument
+ * @coversDefaultClass \BLW\Model\DOM\Document
  */
 class DOMDocumentTest  extends \PHPUnit_Framework_TestCase
 {

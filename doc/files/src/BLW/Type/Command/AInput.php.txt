@@ -28,6 +28,7 @@ use BLW\Model\Event\Generic as GenericEvent;
 use BLW\Model\GenericContainer;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -42,6 +43,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Interface for command input objects passed to ICommand::run()
@@ -489,5 +492,7 @@ abstract class AInput extends \BLW\Type\AMediatable implements \BLW\Type\Command
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd
 

@@ -43,4 +43,6 @@ class GenericURI extends \BLW\Type\AURI
 {
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

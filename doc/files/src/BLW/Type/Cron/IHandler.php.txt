@@ -28,6 +28,7 @@ use BLW\Type\Command\ICommand;
 use Psr\Log\LoggerAwareInterface;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -42,6 +43,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Interface for Cron Handlers
@@ -150,5 +153,7 @@ interface IHandler extends \BLW\Type\IObjectStorage, \BLW\Type\IMediatable, \Psr
     public function run(IInput $Input, IOutput $Output, DateTime $Now = null, $flags = ICommand::RUN_FLAGS);
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd
 

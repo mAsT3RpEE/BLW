@@ -37,6 +37,7 @@ use BLW\Model\MIME\Part\FormData;
 use BLW\Model\MIME\Part\FormFile;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -51,6 +52,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Interface for HTTP Request factory objects.
@@ -392,4 +395,6 @@ class RequestFactory implements \BLW\Type\HTTP\IRequestFactory
 #############################################################################################
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

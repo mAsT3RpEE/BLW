@@ -15,11 +15,11 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Type;
+namespace BLW\Tests\Model\Serializer;
 
 use BLW\Type\ISerializer;
 use BLW\Model\Serializer\PHP as Serializer;
-
+use BLW\Type\ASerializable;
 
 /**
  * Tests BLW Library object serializer.

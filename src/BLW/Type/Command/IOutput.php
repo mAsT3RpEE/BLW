@@ -21,6 +21,7 @@ namespace BLW\Type\Command;
 use BLW\Type\IMediatable;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -35,6 +36,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Interface for command output objects passed to ICommand::run()
@@ -150,4 +153,6 @@ interface IOutput extends \BLW\Type\IMediatable
     public function __toString();
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

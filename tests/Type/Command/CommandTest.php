@@ -28,13 +28,14 @@ use BLW\Model\Command\Input\Generic as GenericInput;
 use BLW\Model\Command\Output\Generic as GenericOutput;
 use BLW\Model\Stream\Handle as HandleStream;
 use BLW\Model\Mediator\Symfony as SymfonyMediator;
+use BLW\Model\InvalidArgumentException;
 
 /**
  * Test for base Command class
  * @package BLW\Command
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Type\ACommand
+ * @coversDefaultClass \BLW\Type\Command\ACommand
  */
 class CommandTest extends \PHPUnit_Framework_TestCase
 {
@@ -180,6 +181,14 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(1, $Called, 'ICommand::onNotify() Failed to register callback');
         $this->assertEquals(-1, $Type, 'ICommand::onNotify() Failed to register callback');
+
+        # Invalid arguments
+        try {
+            $this->Command->onNotify(NULL);
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch(InvalidArgumentException $e) {}
     }
 
     /**
@@ -203,6 +212,14 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $this->Command->run($this->Input, $this->Output);
 
         $this->assertEquals(1, $Called, 'ICommand::onInput() Failed to register callback');
+
+        # Invalid arguments
+        try {
+            $this->Command->onInput(NULL);
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch(InvalidArgumentException $e) {}
     }
 
 
@@ -218,6 +235,14 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $this->Command->run($this->Input, $this->Output);
 
         $this->assertEquals(1, $Called, 'ICommand::onInput() Failed to register callback');
+
+        # Invalid arguments
+        try {
+            $this->Command->onOutput(NULL);
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch(InvalidArgumentException $e) {}
     }
 
     /**
@@ -232,6 +257,14 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $this->Command->run($this->Input, $this->Output);
 
         $this->assertEquals(1, $Called, 'ICommand::onInput() Failed to register callback');
+
+        # Invalid arguments
+        try {
+            $this->Command->onError(NULL);
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch(InvalidArgumentException $e) {}
     }
 
     /**

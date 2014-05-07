@@ -25,6 +25,7 @@ use BLW\Type\Command\IOption;
 
 use BLW\Model\GenericContainer;
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -39,6 +40,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Generic command input.
@@ -70,5 +73,7 @@ class Generic extends \BLW\Type\Command\AInput
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd
 

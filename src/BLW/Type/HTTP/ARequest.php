@@ -30,6 +30,7 @@ use BLW\Model\MIME\Body\RFC2616 as Body;
 use BLW\Model\MIME\Head\RFC2616 as Head;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -44,6 +45,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Base class for HTTP Request
@@ -530,4 +533,6 @@ abstract class ARequest extends \BLW\Type\MIME\AMessage implements \BLW\Type\HTT
 
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

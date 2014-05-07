@@ -867,7 +867,7 @@ EOT;
      *            Timeout for reads / writes to process.
      * @return string Output of command. <code>FALSE</code> on error.
      */
-    private function _sendJSON(array $Command, $Timeout = 1)
+    private function _sendJSON(array $Command, $Timeout = 10)
     {
         static $onOutput, $Mediator;
 
@@ -963,7 +963,7 @@ EOT;
      *            Time in seconds to wait for execution of command.
      * @return \stdClass JSON decoded response. <code>FALSE</code> in case of error.
      */
-    public function phantom($Command, $Timeout = 0.1)
+    public function phantom($Command, $Timeout = 10)
     {
         // Is $Command a string?
         if (is_string($Command) ?: is_callable(array(
@@ -1040,11 +1040,11 @@ EOT;
 
                 // Blank page
                 return array(
-                    'action' => 'send',
-                    'type' => 'get',
+                    'action'  => 'send',
+                    'type'    => 'get',
                     'address' => 'about:blank',
                     'headers' => array(),
-                    'data' => null
+                    'data'    => null
                 );
         }
 
@@ -1146,7 +1146,7 @@ EOT;
     public function send(IRequest $Request)
     {
         // Send request
-        $Result = $this->_sendJSON($this->translate($Request), $Request->Config['Timeout']);
+        $Result = $this->_sendJSON($this->translate($Request), max(floor(2*$Request->Config['Timeout']), $Request->Config['Timeout']));
         $Result = $Result
             ? json_decode($Result)
             : false;
@@ -1188,7 +1188,7 @@ EOT;
         // Send request
         $Result = $this->_sendJSON(array(
             'action' => 'wait'
-        ));
+        ), 600);
 
         $Result = $Result ? json_decode($Result) : false;
 
@@ -1544,4 +1544,6 @@ EOT;
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

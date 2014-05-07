@@ -18,6 +18,7 @@
  */
 namespace BLW\Type\DOM;
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -32,6 +33,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Replacement / Improvement of PHP DOMDocument class.
@@ -127,4 +130,6 @@ interface IDocument extends \BLW\Type\ISerializable, \BLW\Type\IIterable
     public function __toString();
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

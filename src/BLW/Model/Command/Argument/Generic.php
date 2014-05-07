@@ -20,6 +20,7 @@ namespace BLW\Model\Command\Argument;
 
 use BLW\Type\Command\AArgument;
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -34,6 +35,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Basic command argument.
@@ -45,4 +48,6 @@ class Generic extends \BLW\Type\Command\AArgument
 {
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

@@ -23,17 +23,17 @@ use BLW\Type\IDataMapper;
 use BLW\Type\AEmailAddress;
 use BLW\Type\AURI;
 if (! defined('BLW')) {
-    
+
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
         header("$_SERVER[SERVER_PROTOCOL] 404 Not Found");
         header('Status: 404 Not Found');
-        
+
         $_SERVER['REDIRECT_STATUS'] = 404;
-        
+
         echo "<html>\r\n<head><title>404 Not Found</title></head><body bgcolor=\"white\">\r\n<center><h1>404 Not Found</h1></center>\r\n<hr>\r\n<center>nginx/1.5.9</center>\r\n</body>\r\n</html>\r\n";
         exit();
     }
-    
+
     return false;
 }
 
@@ -67,7 +67,7 @@ final class Via extends \BLW\Type\MIME\AHeader
      * Constructor
      *
      * @throws \BLW\Model\InvalidArgumentException If <code>$Via[x]</code> is not a string.
-     *        
+     *
      * @param string $Via
      *            Accept types separated by a comma (,).
      * @return void
@@ -76,18 +76,18 @@ final class Via extends \BLW\Type\MIME\AHeader
     {
         // 1. Header type
         $this->_Type = 'Via';
-        
+
         // 2. Header value
-        
+
         // Validate $Via
         if (is_string($Via) ?  : is_callable(array(
             $Via,
             '__toString'
         ))) {
-            
+
             // Split into array
             $Via = preg_split('!\s*\x2c\s*!', $Via);
-            
+
             // Validate again
             if (! empty($Via) && array_reduce($Via, function ($v, $i)
             {
@@ -96,13 +96,13 @@ final class Via extends \BLW\Type\MIME\AHeader
                     '__toString'
                 )));
             }, true)) {
-                
+
                 // Type
                 $this->_Value = array_reduce($Via, function ($v, $i)
                 {
-                    
-                    $Via = $this->parseVia($i);
-                    
+
+                    $Via = Via::parseVia($i);
+
                     if ($v && $Via)
                         return "$v, $Via";
                     elseif ($Via)
@@ -112,12 +112,12 @@ final class Via extends \BLW\Type\MIME\AHeader
                     else
                         return '';
                 }, '');
-            }             
+            }
 
             // Invalid $Via
             else
                 throw new InvalidArgumentException(0);
-        }         
+        }
 
         // Invalid $Via
         else
@@ -128,10 +128,10 @@ final class Via extends \BLW\Type\MIME\AHeader
      * Parse a string for via.
      *
      * @api BLW
-     * 
+     *
      * @since 1.0.0
      * @uses \BLW\Type\AEmailAddress::getRegex() AEmailAdress::getRegex()
-     *      
+     *
      * @param string $Test
      *            String to search.
      * @return string Returns empty string in case of error.
@@ -140,14 +140,16 @@ final class Via extends \BLW\Type\MIME\AHeader
     {
         // Via Regex
         $Via = sprintf('(?:%s\s*\x2f\s*)?%s(?:%s|%s)%s?', self::TOKEN, self::TOKEN, AEmailAddress::getRegex('domain'), self::TOKEN, AEmailAddress::getRegex('comment'));
-        
+
         // Match Regex `via`
         if (preg_match("!$Via!", @substr($Test, 0, 1024), $m))
             return $m[0];
-            
+
             // Default
         return '';
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

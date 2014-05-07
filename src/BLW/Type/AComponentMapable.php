@@ -21,6 +21,7 @@ namespace BLW\Type;
 use BadMethodCallException;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -35,6 +36,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Abstract class for all objects that immport component methods / properties.
@@ -220,4 +223,6 @@ abstract class AComponentMapable implements \BLW\Type\IComponentMapable
 
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

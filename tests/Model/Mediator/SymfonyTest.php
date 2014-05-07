@@ -127,9 +127,9 @@ class Symfony extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::__create
+     * @coversNothing
      */
-    public function test_create()
+    public function test_construct()
     {
         $this->assertEquals(array(), $this->Mediator->getCallbacks('test'), 'Action `foo` should have no Callbacks');
         $this->assertFalse($this->Mediator->isRegistered('pre.Foo'));

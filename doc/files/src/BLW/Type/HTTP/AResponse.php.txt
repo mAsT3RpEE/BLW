@@ -29,6 +29,7 @@ use BLW\Model\InvalidArgumentException;
 use BLW\Model\MIME\Body\RFC2616 as Body;
 use BLW\Model\MIME\Head\RFC2616 as Head;
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -43,6 +44,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Base class for HTTP Reqponse objects.
@@ -841,5 +844,7 @@ abstract class AResponse extends \BLW\Type\MIME\AMessage implements \BLW\Type\HT
 
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd
 

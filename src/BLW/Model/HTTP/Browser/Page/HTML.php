@@ -25,6 +25,7 @@ use BLW\Type\DOM\IDocument;
 use BLW\Type\MIME\IHead;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -39,6 +40,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Class for HTML DOM Pages
@@ -82,4 +85,6 @@ class HTML extends \BLW\Type\HTTP\Browser\APage
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

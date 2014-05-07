@@ -21,6 +21,7 @@ namespace BLW\Type\DOM;
 use DOMNode;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -35,6 +36,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Improvement over PHP's DOMElement class.
@@ -392,4 +395,6 @@ interface IElement extends \BLW\Type\IIterable, \BLW\Type\IFactory, \IteratorAgg
     public function __toString();
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

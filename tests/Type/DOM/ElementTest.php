@@ -28,7 +28,7 @@ use BLW\Type\IDataMapper;
  * @package BLW\Core
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Model\DOMDocument
+ * @coversDefaultClass \BLW\Type\DOM\AElement
  */
 class ElementTest  extends \PHPUnit_Framework_TestCase
 {

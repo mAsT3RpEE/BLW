@@ -30,6 +30,7 @@ use BLW\Model\MIME\ContentTransferEncoding;
 use BLW\Model\MIME\ContentDisposition;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -44,6 +45,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Form File field.
@@ -204,5 +207,7 @@ class FormFile extends \BLW\Type\AContainer implements \BLW\Type\MIME\IPart
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd
 

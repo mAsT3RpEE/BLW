@@ -26,6 +26,7 @@ use BLW\Model\InvalidArgumentException;
 use BLW\Model\FileException;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -40,6 +41,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Abstract class for all file objects.
@@ -666,5 +669,7 @@ abstract class AFile extends \BLW\Type\AWrapper implements \BLW\Type\IFile
 
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd
 

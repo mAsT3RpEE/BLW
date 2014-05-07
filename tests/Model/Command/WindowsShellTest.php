@@ -129,6 +129,9 @@ class WindowsShellTest extends \PHPUnit_Framework_TestCase
      */
     public function test_doRun()
     {
+        // Only Windows
+        if (DIRECTORY_SEPARATOR != '\\') return;
+
         $Expected = "No syntax errors detected in -\n";
 
         $this->assertEquals(0, $this->Command->run($this->Input, $this->Output), 'ShellCommand::run() returned an invalid result');

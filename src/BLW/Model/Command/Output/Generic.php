@@ -20,6 +20,7 @@ namespace BLW\Model\Command\Output;
 
 use BLW\Type\IStream;
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -34,6 +35,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Generic command output.
@@ -62,4 +65,6 @@ class Generic extends \BLW\Type\Command\AOutput
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

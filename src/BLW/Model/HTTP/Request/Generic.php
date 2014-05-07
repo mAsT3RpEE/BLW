@@ -45,4 +45,6 @@ class Generic extends \BLW\Type\HTTP\ARequest
 {
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

@@ -21,17 +21,17 @@ namespace BLW\Model\MIME;
 use BLW\Model\InvalidArgumentException;
 use BLW\Type\IDataMapper;
 if (! defined('BLW')) {
-    
+
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
         header("$_SERVER[SERVER_PROTOCOL] 404 Not Found");
         header('Status: 404 Not Found');
-        
+
         $_SERVER['REDIRECT_STATUS'] = 404;
-        
+
         echo "<html>\r\n<head><title>404 Not Found</title></head><body bgcolor=\"white\">\r\n<center><h1>404 Not Found</h1></center>\r\n<hr>\r\n<center>nginx/1.5.9</center>\r\n</body>\r\n</html>\r\n";
         exit();
     }
-    
+
     return false;
 }
 
@@ -62,7 +62,7 @@ final class ContentEncoding extends \BLW\Type\MIME\AHeader
      * Constructor
      *
      * @throws \BLW\Model\InvalidArgumentException If <code>$Encoding[x]</code> is not a string.
-     *        
+     *
      * @param string $Encodings
      *            Content types separated by a comma (,).
      * @return void
@@ -71,18 +71,18 @@ final class ContentEncoding extends \BLW\Type\MIME\AHeader
     {
         // 1. Header type
         $this->_Type = 'Content-Encoding';
-        
+
         // 2. Header value
-        
+
         // Validate $Encodings
         if (is_string($Encodings) ?  : is_callable(array(
             $Encodings,
             '__toString'
         ))) {
-            
+
             // Split into array
             $Encodings = explode(',', $Encodings);
-            
+
             // Validate again
             if (! empty($Encodings) && array_reduce($Encodings, function ($v, $i)
             {
@@ -91,13 +91,13 @@ final class ContentEncoding extends \BLW\Type\MIME\AHeader
                     '__toString'
                 )));
             }, true)) {
-                
+
                 // Type
                 $this->_Value = array_reduce($Encodings, function ($v, $i)
                 {
-                    
-                    $Encoding = $this->parseEncoding($i);
-                    
+
+                    $Encoding = ContentEncoding::parseEncoding($i);
+
                     if ($v && $Encoding)
                         return "$v, $Encoding";
                     elseif ($Encoding)
@@ -107,12 +107,12 @@ final class ContentEncoding extends \BLW\Type\MIME\AHeader
                     else
                         return '';
                 }, '');
-            }             
+            }
 
             // Invalid $Encodings
             else
                 throw new InvalidArgumentException(0);
-        }         
+        }
 
         // Invalid $Encodings
         else
@@ -123,9 +123,9 @@ final class ContentEncoding extends \BLW\Type\MIME\AHeader
      * Parse a string for encoding.
      *
      * @api BLW
-     * 
+     *
      * @since 1.0.0
-     *       
+     *
      * @param string $Test
      *            String to search.
      * @return string Returns empty string in case of error.
@@ -134,14 +134,16 @@ final class ContentEncoding extends \BLW\Type\MIME\AHeader
     {
         // Encoding Regex
         $Encoding = self::TOKEN;
-        
+
         // Match Regex `encoding`
         if (preg_match("!$Encoding!", @strtolower($Test), $m))
             return $m[0];
-            
+
             // Default
         return '';
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

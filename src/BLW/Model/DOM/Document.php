@@ -32,6 +32,7 @@ use BLW\Model\InvalidArgumentException;
 use Symfony\Component\CssSelector\CssSelector;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -46,6 +47,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Replacement / Improvement of PHP Document class.
@@ -400,4 +403,6 @@ class Document extends \DOMDocument implements \BLW\Type\DOM\IDocument
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

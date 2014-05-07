@@ -23,6 +23,7 @@ use BLW\Type\MIME\ISection;
 use BLW\Model\InvalidArgumentException;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -37,6 +38,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * <h3>Summary</h3>
@@ -146,4 +149,6 @@ class RFC2616 extends \BLW\Type\AContainer implements \BLW\Type\MIME\IHead
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

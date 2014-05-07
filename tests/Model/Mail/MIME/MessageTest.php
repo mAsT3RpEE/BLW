@@ -30,6 +30,8 @@ use BLW\Model\Mail\MIME\Message;
  * Tests MimeMessage Module type.
  * @package BLW\Mail
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ *
+ * @coversDefaultClass \BLW\Model\Mail\MIME\Message
  */
 class MessageTest extends \PHPUnit_Framework_TestCase
 {
@@ -151,6 +153,8 @@ class MessageTest extends \PHPUnit_Framework_TestCase
      */
     public function test_createFromString()
     {
+        if (!is_callable('imap_rfc822_parse_headers')) return;
+
         # Unimplemented
         try {
             $this->assertEquals($this->MimeMessage, $this->MimeMessage->createFromString(strval($this->MimeMessage)), 'MimeMessage::createFromString((string) MimeMessage should equal MimeMessage');

@@ -28,7 +28,7 @@ use BLW\Model\InvalidArgumentException;
  * @package BLW\Core
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Type\IObject
+ *  @coversDefaultClass \BLW\Type\AObject
  */
 class ObjectTest extends \PHPUnit_Framework_TestCase
 {

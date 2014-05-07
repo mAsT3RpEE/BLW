@@ -24,6 +24,7 @@ use BLW\Type\IDataMapper;
 use BLW\Type\AEmailAddress;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -38,6 +39,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Header class for Pragma.
@@ -111,7 +114,7 @@ final class Pragma extends \BLW\Type\MIME\AHeader
      *            String to search.
      * @return string Returns `no-cache` in case of error.
      */
-    public function parseDirective($Test)
+    public static function parseDirective($Test)
     {
         $Directive = sprintf('%s(?:\s*\x3d%s)?', self::TOKEN, AEmailAddress::getRegex('word'));
 
@@ -124,4 +127,6 @@ final class Pragma extends \BLW\Type\MIME\AHeader
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

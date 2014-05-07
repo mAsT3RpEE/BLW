@@ -23,6 +23,7 @@ use BLW\Type\MIME\ISection;
 use BLW\Type\MIME\IPart;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -37,6 +38,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * <h3>Summary</h3>
@@ -230,4 +233,6 @@ class RFC822 extends \BLW\Type\AContainer implements \BLW\Type\MIME\IBody
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

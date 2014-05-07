@@ -18,6 +18,7 @@
  */
 namespace BLW\Type\Mail;
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -32,6 +33,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Standard interface for objects that handle email Addresses.
@@ -91,5 +94,7 @@ interface IMailable extends \BLW\Type\IFactory
     public function createMimeMessage();
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd
 

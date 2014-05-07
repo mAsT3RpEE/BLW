@@ -80,7 +80,7 @@ class GenericTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::__construct
+     * @covers \BLW\Type\Cron\AJob::__construct
      */
     public function test_construct()
     {

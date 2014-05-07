@@ -26,7 +26,7 @@ use BLW\Model\MIME\MIMEVersion;
  * @package BLW\MIME
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Model\Mime\Version
+ * @coversDefaultClass \BLW\Model\Mime\MIMEVersion
  */
 class MIMEVersionTest extends \PHPUnit_Framework_TestCase
 {

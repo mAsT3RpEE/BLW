@@ -25,9 +25,10 @@ use ReflectionMethod;
 
 use BLW\Model\InvalidArgumentException;
 
-use SuperClosure\SerializableClosure;
+use Jeremeamia\SuperClosure\SerializableClosure;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -42,6 +43,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Abstract class for all dynamic property / method mapper objects.
@@ -320,5 +323,7 @@ abstract class ADataMapper extends \ArrayObject implements \BLW\Type\IDataMapper
 
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd
 

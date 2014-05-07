@@ -27,7 +27,7 @@ use BLW\Type\ISerializable;
  * @package BLW\Core
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Type\ISerializer
+ *  @coversDefaultClass \BLW\Type\ASerializer
  */
 class SerializerTest extends \PHPUnit_Framework_TestCase
 {

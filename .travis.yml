@@ -5,9 +5,9 @@ php:
   - "5.3"
 before_script:
   - composer install --no-dev
-  - php app/install.php
+  - composer dumpautoload -o
 script:
-  - phpunit --coverage-clover="temp/coverage.clover"
+  - phpunit -vv
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover "temp/coverage.clover"

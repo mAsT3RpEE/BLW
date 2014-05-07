@@ -20,6 +20,7 @@ namespace BLW\Model\Command\Option;
 
 use BLW\Type\Command\AOption;
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -34,6 +35,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Basic command option.
@@ -45,4 +48,6 @@ class Generic extends \BLW\Type\Command\AOption
 {
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

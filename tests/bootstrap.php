@@ -13,8 +13,6 @@
 define('BLW', 'test');
 define('BLW_DIR', dirname(dirname(__FILE__)));
 
-file_exists($f = 'phar://' . BLW_DIR . str_replace('/', DIRECTORY_SEPARATOR, '/build/BLW.phar/vendor/autoload.php'))
-    ? require_once $f
-    : require_once BLW_DIR . str_replace('/', DIRECTORY_SEPARATOR, '/vendor/autoload.php');
+require_once BLW_DIR . str_replace('/', DIRECTORY_SEPARATOR, '/vendor/autoload.php');
 
 error_reporting(E_ALL);

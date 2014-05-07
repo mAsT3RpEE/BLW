@@ -163,7 +163,7 @@ class InputTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \BLW\Type\AMediato::setMediator
+     * @covers \BLW\Type\AMediatable::setMediator
      */
     public function test_setMediator ()
     {

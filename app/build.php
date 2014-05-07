@@ -265,4 +265,6 @@ Application::run(function (BLW\Type\Command\IInput $Input, BLW\Type\Command\IOut
     return 0;
 });
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

@@ -18,9 +18,11 @@
  */
 namespace BLW\Type;
 
+use ReflectionProperty;
 use BLW\Model\InvalidArgumentException;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -35,6 +37,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Abstract class for all objects that can be serialized.
@@ -228,4 +232,6 @@ abstract class ASerializable implements \BLW\Type\ISerializable
 #############################################################################################
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

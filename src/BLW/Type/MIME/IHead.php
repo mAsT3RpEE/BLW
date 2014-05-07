@@ -21,6 +21,7 @@ namespace BLW\Type\MIME;
 use BLW\Type\MIME\IHeader;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -35,6 +36,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * <h3>Summary</h3>
@@ -80,4 +83,6 @@ interface IHead extends \BLW\Type\IContainer
     public function getHeader($Type);
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

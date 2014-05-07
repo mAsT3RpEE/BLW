@@ -22,6 +22,7 @@ use BLW\Type\IDataMapper;
 use BLW\Model\InvalidArgumentException;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -36,6 +37,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Header class for Accept-Encoding.
@@ -98,7 +101,7 @@ final class AcceptEncoding extends \BLW\Type\MIME\AHeader
                 $this->_Value = array_reduce($Encodings, function ($v, $i)
                 {
 
-                    $Encoding = $this->parseEncoding($i);
+                    $Encoding = AcceptEncoding::parseEncoding($i);
 
                     if ($v && $Encoding)
                         return "$v, $Encoding";
@@ -145,4 +148,6 @@ final class AcceptEncoding extends \BLW\Type\MIME\AHeader
     }
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

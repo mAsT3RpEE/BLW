@@ -70,4 +70,6 @@ if (! defined('BLW_DIR')) {
  */
 require_once BLW_PHAR . '/vendor/autoload.php';
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

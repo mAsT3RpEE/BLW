@@ -21,6 +21,7 @@ namespace BLW\Type\HTTP;
 use BLW\Type\IURI;
 
 
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
@@ -35,6 +36,8 @@ if (! defined('BLW')) {
 
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Interface for HTTP Request objects
@@ -235,4 +238,6 @@ interface IRequest extends \BLW\Type\MIME\IMessage
     public function setReferer($Referer);
 }
 
+// @codeCoverageIgnoreStart
 return true;
+// @codeCoverageIgnoreEnd

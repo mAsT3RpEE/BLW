@@ -51,7 +51,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
      */
     public function test_getMimeType()
     {
-        $this->assertRegExp('!text/html|text/x-php; charset=us-ascii!', $this->File->getMimeType());
+        $this->assertRegExp('!text/html|text/[\w\x2b\x2d]+; charset=us-ascii!', $this->File->getMimeType());
     }
 
     /**

@@ -84,8 +84,7 @@ class PHP extends \BLW\Type\ASerializer
                     return $cached;
             }
 
-            else
-                $cache[$Object] = array(1, '', time() + 1);
+            $cache[$Object] = array(1, '', time() + 1);
         }
         // @codeCoverageIgnoreEnd
 
@@ -100,7 +99,7 @@ class PHP extends \BLW\Type\ASerializer
         // PHP < 5.4 Check cache
         if (version_compare(PHP_VERSION, '5.4.0', '<')) {
             // Update cache
-            $cache[$Object] = array(0, $cached, time() + 1);
+            $cache[$Object] = array(0, $serialized, time() + 1);
         }
         // @codeCoverageIgnoreEnd
 

@@ -105,6 +105,10 @@ class SectionTest extends \PHPUnit_Framework_TestCase
         foreach($this->generateInvalidArguments() as $Arguments) {
             list ($InputType, $InputBoundary) = $Arguments;
 
+            // No warning prior to 5.4
+            if (version_compare(PHP_VERSION, '5.4.0', '<') && ($InputType === array() || $InputBoundary === array()))
+                continue;
+
             try {
                 new Section($InputType, $InputBoundary);
                 $this->fail(sprintf('Failed to generate exception with invalid arguments: %s', print_r($Arguments, true)));

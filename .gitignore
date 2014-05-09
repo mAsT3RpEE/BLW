@@ -4,8 +4,5 @@
 /.classpath
 /.metadata
 /composer.lock
-/vendor
 /phpunit.phar
-/build/*.gz
-/temp/*
-!/temp/.keep
+/vendor/*

@@ -177,7 +177,7 @@ class Section extends \BLW\Type\AContainer implements \BLW\Type\MIME\ISection
         // IContainer constructor
         parent::__construct('object', 'string');
 
-        $this->_Type = strval($Type) ?  : $this->_Type;
+        $this->_Type = strval($Type) ?: $this->_Type;
         $this->_Boundary = strval($Boundary) ?  : $this->buildBoundary();
 
         // Check boundary / type

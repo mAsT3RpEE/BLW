@@ -236,7 +236,7 @@ class Document extends \DOMDocument implements \BLW\Type\DOM\IDocument
     public function doSerialize()
     {
         // Store HTML
-        $this->_HTML = $this->saveHTML();
+        $this->_HTML = $this->saveHTML() ?: '';
     }
 
     /**

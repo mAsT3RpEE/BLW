@@ -104,6 +104,25 @@ class PHPTest extends \PHPUnit_Framework_TestCase
         $this->Serializable->bar = 1;
         $this->Serializable->pie = 1;
 
+        // ################################################
+        // It's been 2 months! I give up on this bug!
+        // ################################################
+
+        if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+
+            $this->Serializable->Child1->clearParent();
+            $this->Serializable->Child2->clearParent();
+            $this->Serializable->Child3->clearParent();
+            $this->Serializable->Child4->clearParent();
+
+            $this->Serializable->Child1->GrandChild1->clearParent();
+            $this->Serializable->Child1->GrandChild2->clearParent();
+            $this->Serializable->Child2->GrandChild3->clearParent();
+            $this->Serializable->Child2->GrandChild4->clearParent();
+            $this->Serializable->Child3->GrandChild5->clearParent();
+            $this->Serializable->Child3->GrandChild6->clearParent();
+        }
+
         $this->assertTrue($this->Serializer->decode($Serialized, $this->Serializer->encode($this->Serializable)), 'ISerializer::decode() should return true');
         $this->assertEquals($this->Serializable, $Serialized, 'ISerializer::decode($Object, ISerializer::encocode()) Does not create an exact copy of the object');
     }

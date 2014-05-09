@@ -18,8 +18,6 @@
  */
 namespace BLW\Model\MIME;
 
-use BLW\Type\IDataMapper;
-
 use BLW\Model\InvalidArgumentException;
 
 
@@ -101,7 +99,7 @@ final class AcceptLanguage extends \BLW\Type\MIME\AHeader
                 $this->_Value = array_reduce($Languages, function ($v, $i)
                 {
 
-                    $Language = $this->parseLanguage($i);
+                    $Language = AcceptLanguage::parseLanguage($i);
 
                     if ($v && $Language)
                         return "$v, $Language";

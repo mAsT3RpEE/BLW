@@ -98,7 +98,7 @@ interface ITransport extends \BLW\Type\IMediatable
      * @api BLW
      * @since 1.0.0
      *
-     * @param \BLW\Model\Mail\IMessage $Message
+     * @param \BLW\Type\Mail\IMessage $Message
      *            Message to parse.
      * @return \BLW\Type\IContainer Parsed receipients.
      */
@@ -109,9 +109,9 @@ interface ITransport extends \BLW\Type\IMediatable
      *
      * @api BLW
      * @since 1.0.0
-     * @uses \BLW\Model\Mail\Transport\ITransport::doSend()
+     * @uses \BLW\Type\Mail\ITransport::doSend() ITransport::doSend()
      *
-     * @param \BLW\Model\MIME\Message $Message
+     * @param \BLW\Type\Mail\IMessage $Message
      *            Message to send.
      * @param int $flags
      *            ITransport::MAIL_FLAGS
@@ -125,7 +125,7 @@ interface ITransport extends \BLW\Type\IMediatable
      * @api BLW
      * @since 1.0.0
      *
-     * @param \BLW\Model\MIME\Message $Message
+     * @param \BLW\Type\Mail\IMessage $Message
      *            Message to send.
      * @return int ITransport::RESULT_FLAGS
      */

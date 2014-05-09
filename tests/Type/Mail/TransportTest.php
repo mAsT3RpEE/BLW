@@ -18,8 +18,6 @@
 namespace BLW\Test\Type\Mail;
 
 
-use ReflectionProperty;
-
 use BLW\Type\IDataMapper;
 
 use BLW\Type\Mail\ITransport;
@@ -34,7 +32,7 @@ use BLW\Model\Mail\GenericMessage;
 /**
  * Tests Transport Module type.
  * @package BLW\MIME
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Type\Mail\ATransport
  */
@@ -88,10 +86,7 @@ class TransportTest extends \PHPUnit_Framework_TestCase
      */
     public function test_construct()
     {
-        $Mediator = new ReflectionProperty($this->Transport, '_Mediator');
-        $Mediator->setAccessible(true);
-
-        $this->assertSame($this->Mediator, $Mediator->getValue($this->Transport), 'Itransport::__costruct() failed to set Mediator');
+        $this->assertAttributeSame($this->Mediator, '_Mediator', $this->Transport, 'Itransport::__costruct() failed to set Mediator');
     }
 
     /**

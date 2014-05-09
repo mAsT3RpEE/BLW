@@ -15,9 +15,8 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Type\Command;
+namespace BLW\Type\Command;
 
-use ReflectionProperty;
 use ReflectionMethod;
 use BLW\Model\GenericContainer;
 use BLW\Type\Command\IOption;
@@ -26,13 +25,13 @@ use BLW\Model\InvalidArgumentException;
 /**
  * Tests Command\Option data type
  * @package BLW\Command
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Type\Command\AOption
  */
 class OptionTest extends \PHPUnit_Framework_TestCase
 {
-    const COMMANDLINE = "command file.txt -a \"value for a\" -b 'value for b' -c\"value for c\" -d'value for d' -e1 foo -f\t--g gvalue --h=\"value for h\" --i=1 --j jvalue -k \"\n\n\r\n\" -x arg1 arg2 http://example.com \"\n\n\r\n\"";
+    const COMMANDLINE = "command file.txt\t-a\r\"value for a\" -b 'value \\' for b' -c\"value \\\" for c\" -d'value for d' -e1 foo -f\t--g gvalue --h=\"value for h\" --i=1 --j jvalue -k \"\n\n\r\n\" -x arg1 arg2 http://example.com \"\n\n\r\n\"";
 
     /**
      * @var \BLW\Type\Command\AOption
@@ -50,19 +49,29 @@ class OptionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::getFactoryMethods
+     */
+    public function test_getFactoryMethods()
+    {
+        $this->assertGreaterThanOrEqual(2, count($this->Option->getFactoryMethods()), 'IOption::getFactoryMethods() Returned an invalid value');
+        $this->assertContainsOnlyInstancesOf('ReflectionMethod', $this->Option->getFactoryMethods(), 'IOption::getFactoryMethods() Returned an invalid value');
+    }
+
+    /**
      * @covers ::__construct
      */
     public function test_construct ()
     {
+        $this->Option = $this->getMockForAbstractClass('\BLW\Type\Command\AOption', array('test', 'test option'));
+
         # Check properties
-        $Name  = new ReflectionProperty($this->Option, '_Name');
-        $Value = new ReflectionProperty($this->Option, '_Value');
+        $this->assertAttributeSame('test', '_Name', $this->Option,  'IOption::__construct() failed to set $_Name');
+        $this->assertAttributeSame('test option',  '_Value', $this->Option, 'IOption::__construct() failed to set $_Value');
 
-        $Name->setAccessible(true);
-        $Value->setAccessible(true);
+        # true value
+        $this->Option = $this->getMockForAbstractClass('\BLW\Type\Command\AOption', array('test', true));
 
-        $this->assertSame('test', $Name->getValue($this->Option),  'IOption::__construct() failed to set $_Name');
-        $this->assertSame('test option',  $Value->getValue($this->Option), 'IOption::__construct() failed to set $_Value');
+        $this->assertAttributeSame('',  '_Value', $this->Option, 'IOption::__construct() failed to set $_Value');
 
         # Invalid arguments
         try {
@@ -86,7 +95,11 @@ class OptionTest extends \PHPUnit_Framework_TestCase
      */
     public function test_toString()
     {
-        $this->assertRegExp('!--test ["\']test option["\']!', strval($this->Option), '(strval) IOption returned an invalid value');
+        $this->assertRegExp('!--test=["\']test option["\']!', strval($this->Option), '(strval) IOption returned an invalid value');
+
+        $this->Option = $this->getMockForAbstractClass('\BLW\Type\Command\AOption', array('t', true));
+
+        $this->assertEquals('-t', strval($this->Option), '(strval) IOption returned an invalid value');
     }
 
     /**
@@ -95,7 +108,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
     public function test_splitCommandLine()
     {
         $Expected  = array(
-            'command','file.txt','-a','value for a','-b','value for b','-c', 'value for c', '-d','value for d','-e1','foo','-f'
+            'command','file.txt','-a','value for a','-b',"value \\' for b",'-c', 'value \\" for c', '-d','value for d','-e1','foo','-f'
             ,'--g','gvalue','--h=', 'value for h','--i=1', '--j','jvalue','-k',"\n\n\r\n",'-x','arg1','arg2','http://example.com',"\n\n\r\n"
         );
 
@@ -108,6 +121,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
         $Expected2      = new GenericContainer(IOption::CLASSNAME);
         $Expected1['x'] = $this->getMockForAbstractClass('\\BLW\\Type\\Command\\AOption', array('x', true));
         $Expected2['a'] = $this->getMockForAbstractClass('\\BLW\\Type\\Command\\AOption', array('a', 'foo'));
+        $Tricky         = new GenericContainer(IOption::CLASSNAME);
 
         return array(
              array(array('command', 'file', '-x',           'argument'), array('x'), $Expected1)
@@ -116,6 +130,8 @@ class OptionTest extends \PHPUnit_Framework_TestCase
             ,array(array('command', 'file', '--a',  'foo',  'argument'), array('x'), $Expected2)
             ,array(array('command', 'file', '--a=', 'foo',  'argument'), array('x'), $Expected2)
             ,array(array('command', 'file', '--a=foo',      'argument'), array('x'), $Expected2)
+            ,array(new \ArrayObject(array('command', 'file', '--a=foo', 'argument')), array('x'), $Expected2)
+            ,array(array( '', null, array(), false, 0, 0.0), array('x'), $Tricky)
         );
     }
 
@@ -150,8 +166,8 @@ class OptionTest extends \PHPUnit_Framework_TestCase
     {
         $Expected      = new GenericContainer(IOption::CLASSNAME);
         $Expected['a'] = $this->getMockForAbstractClass('\\BLW\\Type\\Command\\AOption', array('a', 'value for a'));
-        $Expected['b'] = $this->getMockForAbstractClass('\\BLW\\Type\\Command\\AOption', array('b', 'value for b'));
-        $Expected['c'] = $this->getMockForAbstractClass('\\BLW\\Type\\Command\\AOption', array('c', 'value for c'));
+        $Expected['b'] = $this->getMockForAbstractClass('\\BLW\\Type\\Command\\AOption', array('b', 'value \\\' for b'));
+        $Expected['c'] = $this->getMockForAbstractClass('\\BLW\\Type\\Command\\AOption', array('c', 'value \\" for c'));
         $Expected['d'] = $this->getMockForAbstractClass('\\BLW\\Type\\Command\\AOption', array('d', 'value for d'));
         $Expected['e'] = $this->getMockForAbstractClass('\\BLW\\Type\\Command\\AOption', array('e', '1'));
         $Expected['f'] = $this->getMockForAbstractClass('\\BLW\\Type\\Command\\AOption', array('f', true));
@@ -180,18 +196,21 @@ class OptionTest extends \PHPUnit_Framework_TestCase
      */
     public function test_get()
     {
-        #Name
+        # Name
         $this->assertSame('test', $this->Option->Name, 'IOption::$Name should be `test`');
 
-        #Value
+        # Value
         $this->assertSame('test option', $this->Option->Value, 'IOption::$Value should be `foo`');
 
+        # Undefined
         try {
         	$this->Option->undefined;
         	$this->fail('Failed to generate notice with undefined property');
         }
 
         catch (\PHPUnit_Framework_Error_Notice $e) {}
+
+        $this->assertNull(@$this->Option->undefined, 'IOption::$undefined should be NULL');
     }
 
 
@@ -227,6 +246,8 @@ class OptionTest extends \PHPUnit_Framework_TestCase
         	$this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
+        @$this->Option->Name = '';
+
         # Value
         try {
             $this->Option->Value = '';
@@ -237,6 +258,8 @@ class OptionTest extends \PHPUnit_Framework_TestCase
         	$this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
+        @$this->Option->Value = '';
+
         # Undefined
         try {
             $this->Option->undefined = '';
@@ -246,6 +269,8 @@ class OptionTest extends \PHPUnit_Framework_TestCase
         catch (\PHPUnit_Framework_Error $e) {
             $this->assertContains('non-existant property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
+
+        @$this->Option->undefined = '';
     }
 
     /**
@@ -260,9 +285,11 @@ class OptionTest extends \PHPUnit_Framework_TestCase
             $this->fail('Failed to generate notice with readonly property');
         }
 
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+          catch (\PHPUnit_Framework_Error_Notice $e) {
         	$this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
+
+        @$this->Option->__unset('Name');
 
         # Value
         try {
@@ -273,6 +300,8 @@ class OptionTest extends \PHPUnit_Framework_TestCase
         catch (\PHPUnit_Framework_Error_Notice $e) {
         	$this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
+
+        @$this->Option->__unset('Value');
 
         # Undefined
         unset($this->Option->undefined);

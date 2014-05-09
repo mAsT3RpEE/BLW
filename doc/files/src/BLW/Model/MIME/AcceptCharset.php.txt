@@ -18,8 +18,6 @@
  */
 namespace BLW\Model\MIME;
 
-use BLW\Type\IDataMapper;
-
 use BLW\Model\InvalidArgumentException;
 
 
@@ -103,7 +101,7 @@ final class AcceptCharset extends \BLW\Type\MIME\AHeader
                 $this->_Value = array_reduce($Charsets, function ($v, $i)
                 {
 
-                    $Charset = $this->parseCharset($i);
+                    $Charset = AcceptCharset::parseCharset($i);
 
                     if ($v && $Charset)
                         return "$v, $Charset";

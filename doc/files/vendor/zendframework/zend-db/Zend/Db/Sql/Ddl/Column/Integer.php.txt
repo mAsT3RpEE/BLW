@@ -18,7 +18,7 @@ class Integer extends Column
 
     /**
      * @param null|string     $name
-     * @param bool            $nullable
+     * @param boolean            $nullable
      * @param null|string|int $default
      * @param array           $options
      */

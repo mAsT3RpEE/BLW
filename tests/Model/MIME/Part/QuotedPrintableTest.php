@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\MIME\Part;
+namespace BLW\Model\MIME\Part;
 
 use BLW\Model\InvalidArgumentException;
 use BLW\Model\MIME\Part\QuotedPrintable;
@@ -24,7 +24,7 @@ use BLW\Model\MIME\Part\QuotedPrintable;
 /**
  * Tests BLW Library MIME Part header.
  * @package BLW\MIME
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\MIME\Part\QuotedPrintable
  */
@@ -54,6 +54,14 @@ class QuotedPrintableTest extends \PHPUnit_Framework_TestCase
     public function test_format()
     {
         $this->assertSame(self::TEXT, quoted_printable_decode($this->QuotedPrintable->format(self::TEXT, 76)), 'QuotedPrintable::fomrat() did not create valid quoted-printable string');
+
+        # Invalid value
+        try {
+            $this->QuotedPrintable->format(null, 50);
+            $this->fail('Failed to generate Exception with invalid arguments');
+        }
+
+        catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -72,6 +80,12 @@ class QuotedPrintableTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(self::HTML . "\r\n", quoted_printable_decode($this->QuotedPrintable['Content']), 'QuotedPrintable::__construct() set invalid Content');
 
         # Invalid arguments
+        try {
+            new QuotedPrintable('text/plain', null);
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -92,6 +106,7 @@ EOT;
     }
 
     /**
+     * @depends test_construct
      * @covers ::offsetSet
      */
     public function test_offsetSet()
@@ -106,6 +121,8 @@ EOT;
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
+        @$this->QuotedPrintable['Content-Type'] = 'foo';
+
         # Content-Transfer-Encoding
         try {
             $this->QuotedPrintable['Content-Transfer-Encoding'] = 'foo';
@@ -116,6 +133,8 @@ EOT;
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
+        @$this->QuotedPrintable['Content-Transfer-Encoding'] = 'foo';
+
         # Content
         try {
             $this->QuotedPrintable['Content'] = 'foo';
@@ -125,5 +144,10 @@ EOT;
         catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
+
+        @$this->QuotedPrintable['Content'] = 'foo';
+
+        # Undefined
+        $this->QuotedPrintable['undefined'] = 'foo';
     }
 }

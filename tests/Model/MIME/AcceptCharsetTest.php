@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\MIME;
+namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
 use BLW\Model\MIME\AcceptCharset;
@@ -24,7 +24,7 @@ use BLW\Model\MIME\AcceptCharset;
 /**
  * Tests BLW Library MIME Accept-Charset header.
  * @package BLW\MIME
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Mime\AcceptCharset
  */
@@ -99,14 +99,15 @@ class AcceptCharsetTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends test_parseCharset
      * @covers ::__construct
+     * @covers ::_combine
      */
     public function test_construct()
     {
-        $this->Header = new AcceptCharset('unicode-1-1; q=1');
+        $this->Header = new AcceptCharset('unicode-1-1; q=1, utf-8; q=0.7');
 
         # Check params
         $this->assertEquals('Accept-Charset', $this->Properties['Type']->getValue($this->Header), 'AcceptCharset::__construct() failed to set $_Type');
-        $this->assertEquals('unicode-1-1; q=1', $this->Properties['Value']->getValue($this->Header), 'AcceptCharset::__construct() failed to set $_Value');
+        $this->assertEquals('unicode-1-1; q=1, utf-8; q=0.7', $this->Properties['Value']->getValue($this->Header), 'AcceptCharset::__construct() failed to set $_Value');
 
         # Invalid arguments
         try {

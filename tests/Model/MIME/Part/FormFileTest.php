@@ -15,17 +15,18 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\MIME\Part;
+namespace BLW\Model\MIME\Part;
 
 use BLW\Model\InvalidArgumentException;
 use BLW\Model\MIME\Part\FormFile;
 use BLW\Model\GenericFile;
+use BLW\Model\FileException;
 
 
 /**
  * Tests BLW Library MIME FormFile header.
  * @package BLW\MIME
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\MIME\Part\FormFile
  */
@@ -49,6 +50,23 @@ class FormFileTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::format
+     */
+    public function test_format()
+    {
+        $this->assertSame("foooo\xf", $this->FormFile->format("foooo\xf", 50), 'FormFile::format() should return ethe original string');
+
+        # Invalid arguments
+        try {
+            $this->FormFile->format(null, 50);
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch (InvalidArgumentException $e) {}
+    }
+
+    /**
+     * @depends test_format
      * @covers ::__construct
      */
     public function test_construct()
@@ -67,6 +85,20 @@ class FormFileTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(file_get_contents(self::FILE) . "\r\n", $this->FormFile['Content'], 'FormFile::__construct() set invalid Content');
 
         # Invalid arguments
+        try {
+            new FormFile(null, new GenericFile(self::FILE));
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch (InvalidArgumentException $e) {}
+
+        # Unreadable file
+        try {
+            new FormFile('foo', new GenericFile('z:\\undefined\\!!!'));
+            $this->fail('Failed to generate exception with inalid arguments');
+        }
+
+        catch (FileException $e) {}
     }
 
     /**
@@ -96,6 +128,8 @@ EOT;
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
+        @$this->FormFile['Content-Disposition'] = 'foo';
+
         # Content-Type
         try {
             $this->FormFile['Content-Type'] = 'foo';
@@ -105,6 +139,8 @@ EOT;
         catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
+
+        @$this->FormFile['Content-Type'] = 'foo';
 
         # Content-Transfer-Encoding
         try {
@@ -116,6 +152,8 @@ EOT;
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
+        @$this->FormFile['Content-Transfer-Encoding'] = 'foo';
+
         # Content
         try {
             $this->FormFile['Content'] = 'foo';
@@ -125,5 +163,10 @@ EOT;
         catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
+
+        @$this->FormFile['Content'] = 'foo';
+
+        # undefined
+        $this->FormFile['undefined'] = 'foo';
     }
 }

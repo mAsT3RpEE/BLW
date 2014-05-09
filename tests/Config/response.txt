@@ -8,6 +8,8 @@ Vary: Accept-Encoding, Cookie
 X-Frame-Options: SAMEORIGIN
 Set-Cookie: wordpress_homepage=existing; expires=Fri, 25-Apr-2014 18:08:23 GMT
 Content-Encoding: gzip
+SetCookie: foo=1
+SetCookie: bar=2
 
 <!DOCTYPE html>
 

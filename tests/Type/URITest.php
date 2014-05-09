@@ -15,35 +15,37 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Type;
+namespace BLW\Type;
 
 use ReflectionMethod;
 use BLW\Model\InvalidArgumentException;
+use BLW\Type\IURI;
 
 
 /**
  * Tests BLW Library Iterator type.
  * @package BLW\Core
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  *  @coversDefaultClass \BLW\Type\AURI
  */
-class URITest extends \PHPUnit_Framework_TestCase
+class URITest extends \BLW\Type\IterableTest
 {
     /**
-     * @var \BLW\Type\IURI $URI
+     * @var \BLW\Type\AURI $URI
      */
     protected $URI = NULL;
 
     public function setUp()
     {
-        $this->URI = $this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('http://a/b/c/d;p?q#f'));
-
+        $this->URI      = $this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('http://a/b/c/d;p?q#f'));
+        $this->Iterable = $this->URI;
     }
 
     public function tearDown()
     {
-        $this->URI = NULL;
+        $this->URI      = NULL;
+        $this->Iterable = NULL;
     }
 
     /**
@@ -51,11 +53,8 @@ class URITest extends \PHPUnit_Framework_TestCase
      */
     public function test_getFactoryMethods()
     {
-        $Expected = array(
-        	new ReflectionMethod($this->URI, 'createURIString')
-        );
-
-        $this->assertEquals($Expected, $this->URI->getFactoryMethods(), 'IURI::getFactoryMethods() returned invalid method list');
+        $this->assertNotEmpty($this->URI->getFactoryMethods(), 'IURI::getFactoryMethods() Returned an invalid value');
+        $this->assertContainsOnlyInstancesOf('ReflectionMethod', $this->URI->getFactoryMethods(), 'IURI::getFactoryMethods() Returned an invalid value');
     }
 
     public function generateParts()
@@ -63,19 +62,22 @@ class URITest extends \PHPUnit_Framework_TestCase
         return array(
              array(array(), '')
         	,array(array('scheme' => 'http', 'host' => 'www.example.com', 'userinfo' => 'user:pass', 'query' => array('foo' => 'bar'), 'fragment' => 'fragment'), 'http://user:pass@www.example.com?foo=bar#fragment')
-            ,array(parse_url('http://user:pass@www.example.com?foo=bar#fragment'), 'http://user:pass@www.example.com?foo=bar#fragment')
+        	,array(array('scheme' => 'http', 'host' => 'www.example.com', 'query' => false, 'fragment' => 'fragment'), 'http://www.example.com#fragment')
+            ,array(parse_url('http://user:pass@www.example.com/path/to/file?foo=bar#fragment'), 'http://user:pass@www.example.com/path/to/file?foo=bar#fragment')
             ,array(parse_url('http://user@www.example.com?foo=bar#fragment'), 'http://user@www.example.com?foo=bar#fragment')
             ,array(parse_url('http://www.example.com?foo=bar#fragment') + array('pass' => 'pass'), 'http://anonymous:pass@www.example.com?foo=bar#fragment')
         );
     }
 
     /**
-     * @dataProvider generateParts
      * @covers ::createURIString
+     * @covers ::_userInfo
      */
-    public function test_createURIString($Input, $Expected)
+    public function test_createURIString()
     {
-        $this->assertSame($Expected, $this->URI->createURIString($Input), 'IURI::createURIString() returned and invalid value');
+        for($i = $this->generateParts(); list($k,list($Input, $Expected)) = each($i);) {
+            $this->assertSame($Expected, $this->URI->createURIString($Input), 'IURI::createURIString() returned and invalid value');
+        }
     }
 
     public function generateValidURIs()
@@ -95,13 +97,6 @@ class URITest extends \PHPUnit_Framework_TestCase
             ,array('http://www.xn--n8jaaaaai5bhf7as8fsfk3jnknefdde3fg11amb5gzdb4wi9bya3kc6lra.w3.mag.keio.ac.jp/', 'http://www.xn--n8jaaaaai5bhf7as8fsfk3jnknefdde3fg11amb5gzdb4wi9bya3kc6lra.w3.mag.keio.ac.jp/')
             ,array('üסמחרני@üסמחרני.com', 'üסמחרני@üסמחרני.com')
             ,array(new \SplFileInfo('http://www.example.com'), 'http://www.example.com')
-        );
-    }
-
-    public function generateInvalidURIs()
-    {
-        return array(
-            array('')
         );
     }
 
@@ -231,12 +226,13 @@ class URITest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers ::parse
+     * @covers ::_parse
      */
     public function test_parse()
     {
         # Valid arguments
         $Test  = array(
-             'scheme'       => 'http'
+             'scheme'       => 'https'
             ,'userinfo'     => ''
             ,'host'         => 'www.example.co.uk'
             ,'port'         => ''
@@ -248,7 +244,43 @@ class URITest extends \PHPUnit_Framework_TestCase
             ,'TLD'          => 'co.uk'
         );
 
-        $this->assertEquals($Test, $this->URI->parse('http://www.example.co.uk/path/file?query=1#fragment'), 'IURI::parse() returned an invalid value');
+        $Base  = array(
+            'scheme'        => 'http'
+            ,'host'         => 'foo.com'
+            ,'path'         => '/path/file'
+            ,'query'        => Array ('query' => 1)
+            ,'fragment'     => 'fragment'
+            ,'TLD'          => 'com'
+        );
+
+        $this->assertEquals($Test, $this->URI->parse('https://www.example.co.uk/path/file?query=1#fragment', $Base), 'IURI::parse() returned an invalid value');
+
+        # no scheme
+        $Test['scheme'] = 'http';
+
+        $this->assertEquals($Test, $this->URI->parse('//www.example.co.uk/path/file?query=1#fragment', $Base), 'IURI::parse() returned an invalid value');
+
+        # no authority
+        $Test['host'] = 'foo.com';
+        $Test['TLD']  = 'com';
+
+        $this->assertEquals($Test, $this->URI->parse('/path/file?query=1#fragment', $Base), 'IURI::parse() returned an invalid value');
+
+        # relative path
+        $Test['path'] = '/path/file2';
+
+        $this->assertEquals($Test, $this->URI->parse('file2?query=1#fragment', $Base), 'IURI::parse() returned an invalid value');
+
+        # no path
+        $Test['path'] = '/path/file';
+
+        $this->assertEquals($Test, $this->URI->parse('?query=1#fragment', $Base), 'IURI::parse() returned an invalid value');
+        $this->assertEquals($Test, $this->URI->parse('#fragment', $Base), 'IURI::parse() returned an invalid value');
+
+        # Invalid URI
+        $Test['fragment'] = '';
+
+        $this->assertEquals($Test, $this->URI->parse('', $Base), 'IURI::parse() returned an invalid value');
 
         # Invalid arguments
         try {
@@ -268,43 +300,82 @@ class URITest extends \PHPUnit_Framework_TestCase
 
     public function generateRelativePaths()
     {
+        $default = array(
+            'scheme' => 'http',
+            'userinfo' => '',
+            'host' => 'a',
+            'port' => '',
+            'IPv4Address' => '',
+            'IPv6Address' => '',
+            'path' => '/b/c/d;p',
+            'query' => array(),
+            'fragment' => '',
+            'TLD' => ''
+        );
+
         return array(
-        	 array('g:h', 'g:h')
-            ,array('g', 'http://a/b/c/g')
-            ,array('./g', 'http://a/b/c/g')
-            ,array('g/', 'http://a/b/c/g/')
-            ,array('/g', 'http://a/g')
-            ,array('//g', 'http://g')
-            ,array('?y', 'http://a/b/c/d;p?y=')
-            ,array('g?y', 'http://a/b/c/g?y=')
-            ,array('#s', 'http://a/b/c/d;p?q=#s')
-            ,array('g#s', 'http://a/b/c/g#s')
-            ,array('g?y#s', 'http://a/b/c/g?y=#s')
-            ,array(';x', 'http://a/b/c/;x')
-            ,array('g;x', 'http://a/b/c/g;x')
-            ,array('g;x?y#s', 'http://a/b/c/g;x?y=#s')
-            ,array('""', 'http://a/b/c/d;p?q=')
-            ,array('.', 'http://a/b/c/')
-            ,array('./', 'http://a/b/c/')
-            ,array('..', 'http://a/b/')
-            ,array('../', 'http://a/b/')
-            ,array('../g', 'http://a/b/g')
-            ,array('../..', 'http://a/')
-            ,array('../../g', 'http://a/g')
-            ,array('../../../g', 'http://a/g')
-            ,array('../../../../g', 'http://a/g')
+        	 array('g:h', 'g:h', array('scheme' => 'g', 'host' => '', 'path' => 'h') + $default)
+            ,array('g', 'http://a/b/c/g', array('path' => '/b/c/g') + $default)
+            ,array('./g', 'http://a/b/c/g', array('path' => '/b/c/g') + $default)
+            ,array('g/', 'http://a/b/c/g/', array('path' => '/b/c/g/') + $default)
+            ,array('/g', 'http://a/g', array('path' => '/g') + $default)
+            ,array('//g', 'http://g', array('host' => 'g', 'path' => '') + $default)
+            ,array('?y', 'http://a/b/c/d;p?y=', array('query' => array('y' => null)) + $default)
+            ,array('g?y', 'http://a/b/c/g?y=', array('path' => '/b/c/g', 'query' => array('y' => null)) + $default)
+            ,array('#s', 'http://a/b/c/d;p?q=#s', array('query' => array('q' => null), 'fragment' => 's') + $default)
+            ,array('g#s', 'http://a/b/c/g#s', array('path' => '/b/c/g', 'fragment' => 's') + $default)
+            ,array('g?y#s', 'http://a/b/c/g?y=#s', array('path' => '/b/c/g', 'query' => array('y' => null), 'fragment' => 's') + $default)
+            ,array(';x', 'http://a/b/c/;x', array('path' => '/b/c/;x') + $default)
+            ,array('g;x', 'http://a/b/c/g;x', array('path' => '/b/c/g;x') + $default)
+            ,array('g;x?y#s', 'http://a/b/c/g;x?y=#s', array('path' => '/b/c/g;x', 'query' => array('y' => null), 'fragment' => 's') + $default)
+            ,array('""', 'http://a/b/c/d;p?q=', array('query' => array('q' => null)) + $default)
+            ,array('.', 'http://a/b/c/', array('path' => '/b/c/') + $default)
+            ,array('./', 'http://a/b/c/', array('path' => '/b/c/') + $default)
+            ,array('..', 'http://a/b/', array('path' => '/b/') + $default)
+            ,array('../', 'http://a/b/', array('path' => '/b/') + $default)
+            ,array('../g', 'http://a/b/g', array('path' => '/b/g') + $default)
+            ,array('../..', 'http://a/', array('path' => '/') + $default)
+            ,array('../../g', 'http://a/g', array('path' => '/g') + $default)
+            ,array('../../../g', 'http://a/g', array('path' => '/g') + $default)
+            ,array('../../../../g', 'http://a/g', array('path' => '/g') + $default)
         );
     }
 
     /**
      * @depends test_construct
      * @depends test_parse
-     * @dataProvider generateRelativePaths
      * @covers ::resolve
      */
-    public function test_resolve($Input, $Expected)
+    public function test_resolve()
     {
-        $this->assertSame($Expected, $this->URI->resolve($Input), 'IURL::resolve() returned an invalid value');
+        # Valid Input
+        foreach ($this->generateRelativePaths() as $Arguments) {
+
+            list($Input, $Expected1, $Expected2) = $Arguments;
+
+            $this->assertEquals($Expected1, $this->URI->resolve($Input, IURI::AS_STRING), 'IURL::resolve() returned an invalid value');
+            $this->assertEquals($Expected2, $this->URI->resolve($Input, IURI::AS_ARRAY), 'IURL::resolve() returned an invalid value');
+        }
+
+        # Invalid Input
+        try {
+            $this->URI->resolve('', 0);
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch (InvalidArgumentException $e) {}
+    }
+
+    public function generateInvalidURIs()
+    {
+        return array(
+             array('')
+            ,array(str_repeat('a', 32). '://a/b/c/d;p?q#f')
+            ,array('http://' . str_repeat('a', 256). '/b/c/d;p?q#f')
+            ,array('http://a/' . str_repeat('b', 2048). '/c/d;p?q#f')
+            ,array('http://a:65536/b/c/d;p?q#f')
+            ,array(str_repeat('a', 31). '://' . str_repeat('a', 255). '/' . str_repeat('b', 2000). '/c/d;p?q#f')
+        );
     }
 
     /**
@@ -367,29 +438,38 @@ class URITest extends \PHPUnit_Framework_TestCase
         }
 
         # Invalid URI's
-        foreach($this->generateInvalidURIs() as $Params) {
+        $URI = $this->getMockForAbstractClass('\\BLW\\Type\\AURI', array(''));
 
-            list($Input) = $Params;
-
-            $URI = $this->getMockForAbstractClass('\\BLW\\Type\\AURI', array($Input));
-
-            $this->assertEquals('', strval($URI), '(string) IURI should be empty.');
-        }
+        $this->assertEquals('', strval($URI), '(string) IURI should be empty.');
     }
 
     /**
      * @depends test_construct
      * @depends test_parse
-     * @dataProvider generateValidURIs
      * @covers ::offsetGet
      */
-    public function test_offsetGet($Input)
+    public function test_offsetGet()
     {
-        $URI = $this->getMockForAbstractClass('\\BLW\\Type\\AURI', array($Input));
+        # Valid arguments
+        foreach ($this->generateValidURIs() as $Arguments) {
 
-        foreach($this->URI->parse($Input) as $k => $v) {
-            $this->assertSame($v, $URI->offsetGet($k), sprintf('IURI[%s] should equal `%s`', $k, @strval($v)));
+            list($Input) = $Arguments;
+
+            $URI = $this->getMockForAbstractClass('\\BLW\\Type\\AURI', array($Input));
+
+            foreach($this->URI->parse($Input) as $k => $v)
+                $this->assertSame($v, $URI->offsetGet($k), sprintf('IURI[%s] should equal `%s`', $k, @strval($v)));
         }
+
+        # Invalid arguments
+        try {
+            $URI['undefined'];
+            $this->fail('Failed to generate notice with undefined value');
+        }
+
+        catch (\PHPUnit_Framework_Error_Notice $e) {}
+
+        @$URI['undefined'];
     }
 
     /**
@@ -400,11 +480,19 @@ class URITest extends \PHPUnit_Framework_TestCase
      */
     public function test_offsetExists($Input)
     {
-        $URI = $this->getMockForAbstractClass('\\BLW\\Type\\AURI', array($Input));
+        # Valid arguments
+        foreach ($this->generateValidURIs() as $Arguments) {
 
-        foreach($this->URI->parse($Input) as $k => $v) {
-            $this->assertTrue($URI->offsetExists($k), sprintf('IURI[%s] should exist', $k));
+            list($Input) = $Arguments;
+
+            $URI = $this->getMockForAbstractClass('\\BLW\\Type\\AURI', array($Input));
+
+            foreach($this->URI->parse($Input) as $k => $v)
+                $this->assertTrue($URI->offsetExists($k), sprintf('IURI[%s] should exist', $k));
         }
+
+        # Invalid arguments
+        $this->assertFalse(isset($URI['undefined']), 'IURI[undefined] should not exist');
     }
 
     /**
@@ -414,13 +502,15 @@ class URITest extends \PHPUnit_Framework_TestCase
     public function test_offsetSet()
     {
         try {
-            $this->URI->offsetSet('foo', 'bar');
+            $this->URI->offsetSet('undfined', 'bar');
             $this->fail('Failed to generate notice on readonly offset');
         }
 
         catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify', $e->getMessage(), 'Invalid Notice: '. $e->getMessage());
         }
+
+        @$this->URI->offsetSet('undfined', 'bar');
     }
 
 
@@ -431,12 +521,40 @@ class URITest extends \PHPUnit_Framework_TestCase
     public function test_offsetUnset()
     {
         try {
-            $this->URI->offsetSet('foo', 'bar');
+            unset($this->URI['host']);
             $this->fail('Failed to generate notice on readonly offset');
         }
 
         catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify', $e->getMessage(), 'Invalid Notice: '. $e->getMessage());
         }
+
+        @$this->URI->offsetUnset('Personal');
+    }
+
+    /**
+     * @depends test_construct
+     * @covers ::count
+     */
+    public function test_count()
+    {
+        $this->assertInternalType('integer', $this->URI->count(), 'IURI::count() Returned an invalid value');
+        $this->assertGreaterThan(1, $this->URI->count(), 'IURI::count() Returned an invalid value');
+    }
+
+    /**
+     * @depends test_construct
+     * @covers ::getIterator
+     */
+    public function test_getIterator()
+    {
+        $count = 0;
+
+        $this->assertInstanceOf('Traversable', $this->URI->getIterator(), 'IURI::getIterator() Returned an invalid result');
+
+        foreach($this->URI as $v)
+            $count++;
+
+        $this->assertSame(count($this->URI), $count, 'IEmailAddress::getIterator() Returned an invalid result');
     }
 }

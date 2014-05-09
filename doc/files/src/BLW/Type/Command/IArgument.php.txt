@@ -18,7 +18,6 @@
  */
 namespace BLW\Type\Command;
 
-use BLW\Type\IMediatable;
 use BLW\Type\IFactory;
 
 
@@ -98,7 +97,7 @@ Interface IArgument extends \BLW\Type\IFactory
      *            Array of options that have no value.
      * @return \BLW\Type\IContainer Instance of <code>IContainer</code> containing parsed arguments.
      */
-    public static function createFromArray($Arguments);
+    public static function createFromArray($Arguments, array $NoValue = array());
 
     /**
      * Creates an instance of IContainer containing arguments parsed from a string.

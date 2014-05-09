@@ -18,16 +18,9 @@
  */
 namespace BLW\Model;
 
-use ArrayObject;
 use Phar;
 use PharData;
-use CSSmin;
-use JSMin;
 use FilesystemIterator;
-
-use BLW\Type\IFile;
-
-use BLW\Model\Event\Generic as Event;
 
 
 // @codeCoverageIgnoreStart

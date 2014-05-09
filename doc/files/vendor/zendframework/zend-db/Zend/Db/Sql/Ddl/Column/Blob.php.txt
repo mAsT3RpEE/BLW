@@ -23,8 +23,8 @@ class Blob extends Column
 
     /**
      * @param null  $name
-     * @param int   $length
-     * @param bool  $nullable
+     * @param integer   $length
+     * @param boolean  $nullable
      * @param null  $default
      * @param array $options
      */

@@ -16,18 +16,17 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\Config;
-
-use ReflectionProperty;
-use ReflectionMethod;
+namespace BLW\Model\Config;
 
 use BLW\Model\GenericFile;
 use BLW\Model\Config\PHP as Config;
+use BLW\Model\FileException;
+
 
 /**
  * Tests BLW Library PHP configuration
  * @package BLW\Core
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Config\PHP
  */
@@ -73,5 +72,13 @@ class PHPTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('server', $Config['database'], 'PHP::__construct() Failed to parse sections');
         $this->assertArrayHasKey('port', $Config['database'], 'PHP::__construct() Failed to parse sections');
         $this->assertArrayHasKey('file', $Config['database'], 'PHP::__construct() Failed to parse sections');
+
+        # Invalid arguments
+        try {
+            new Config(new GenericFile('z:\\undefined'));
+            $this->fail('Failed to generate error with invalid arguments');
+        }
+
+        catch (FileException $e) {}
     }
 }

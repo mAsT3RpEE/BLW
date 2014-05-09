@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\MIME;
+namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
 use BLW\Model\MIME\ContentMD5;
@@ -24,7 +24,7 @@ use BLW\Model\MIME\ContentMD5;
 /**
  * Tests BLW Library MIME Content-MD5 header.
  * @package BLW\MIME
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Mime\ContentMD5
  */
@@ -35,27 +35,14 @@ class ContentMD5Test extends \PHPUnit_Framework_TestCase
      */
     protected $Header = NULL;
 
-    /**
-     * @var \ReflectionProperty[]
-     */
-    protected $Properties = array();
-
     protected function setUp()
     {
-        $this->Header      = new ContentMD5('9dd4e461268c8034f5c8564e155c67a6');
-        $this->Properties  = array(
-             'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
-        );
-
-        $this->Properties['Type']->setAccessible(true);
-        $this->Properties['Value']->setAccessible(true);
+        $this->Header = new ContentMD5('9dd4e461268c8034f5c8564e155c67a6');
     }
 
     protected function tearDown()
     {
-        $this->Properties = NULL;
-        $this->Header     = NULL;
+        $this->Header = NULL;
     }
 
     public function generateValidMD5s()
@@ -105,8 +92,8 @@ class ContentMD5Test extends \PHPUnit_Framework_TestCase
         $this->Header = new ContentMD5('9dd4e461268c8034f5c8564e155c67a6');
 
         # Check params
-        $this->assertEquals('Content-MD5', $this->Properties['Type']->getValue($this->Header), 'ContentMD5::__construct() failed to set $_Type');
-        $this->assertEquals('9dd4e461268c8034f5c8564e155c67a6', $this->Properties['Value']->getValue($this->Header), 'ContentMD5::__construct() failed to set $_Value');
+        $this->assertAttributeEquals('Content-MD5', '_Type', $this->Header, 'ContentMD5::__construct() failed to set $_Type');
+        $this->assertAttributeEquals('9dd4e461268c8034f5c8564e155c67a6', '_Value', $this->Header, 'ContentMD5::__construct() failed to set $_Value');
 
         # Invalid arguments
         try {

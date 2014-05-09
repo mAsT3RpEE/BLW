@@ -22,7 +22,6 @@ use ReflectionClass;
 use ReflectionMethod;
 
 use BLW\Type\IURI;
-use BLW\Type\IContainer;
 use BLW\Type\HTTP\IRequest;
 use BLW\Type\MIME\IHeader;
 use BLW\Type\IFile;

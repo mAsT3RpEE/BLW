@@ -15,9 +15,8 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Type\Command;
+namespace BLW\Type\Command;
 
-use ReflectionProperty;
 use ReflectionMethod;
 use BLW\Model\GenericContainer;
 use BLW\Type\Command\IArgument;
@@ -26,13 +25,13 @@ use BLW\Model\InvalidArgumentException;
 /**
  * Tests Command\Argument data type
  * @package BLW\Command
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Type\Command\AArgument
  */
 class ArgumentTest extends \PHPUnit_Framework_TestCase
 {
-    const COMMANDLINE = "command file.txt -a \"value for a\" -b 'value for b' -c\"value for c\" -d'value for d' -e1 foo -f\t--g gvalue --h=\"value for h\" --i=1 --j jvalue -k \"\n\n\r\n\" -x arg1 arg2 http://example.com \"\n\n\r\n\"";
+    const COMMANDLINE = "command file.txt\t-a\r\"value for a\" -b 'value \\' for b' -c\"value \\' for c\" -d'value for d' -e1 foo -f\t--g gvalue --h=\"value for h\" --i=1 --j jvalue -k \"\n\n\r\n\" -x arg1 arg2 http://example.com \"\n\n\r\n\"";
 
 
     /**
@@ -51,16 +50,21 @@ class ArgumentTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::getFactoryMethods
+     */
+    public function test_getFactoryMethods()
+    {
+        $this->assertGreaterThanOrEqual(2, count($this->Argument->getFactoryMethods()), 'IArgument::getFactoryMethods() Returned an invalid value');
+        $this->assertContainsOnlyInstancesOf('ReflectionMethod', $this->Argument->getFactoryMethods(), 'IArgument::getFactoryMethods() Returned an invalid value');
+    }
+
+    /**
      * @covers ::__construct
      */
     public function test_construct ()
     {
         # Check properties
-        $Value = new ReflectionProperty($this->Argument, '_Value');
-
-        $Value->setAccessible(true);
-
-        $this->assertSame('test argument', $Value->getValue($this->Argument), 'IArgument::__construct() failed to set $_Value');
+        $this->assertAttributeSame('test argument', '_Value', $this->Argument, 'IArgument::__construct() failed to set $_Value');
 
         # Invalid arguments
         try {
@@ -78,6 +82,10 @@ class ArgumentTest extends \PHPUnit_Framework_TestCase
     public function test_toString()
     {
         $this->assertRegExp('!["\']test argument["\']!', strval($this->Argument), '(strval) IArgument returned an invalid value');
+
+        $this->Argument = $this->getMockForAbstractClass('\BLW\Type\Command\AArgument', array('test'));
+
+        $this->assertEquals('test', strval($this->Argument), '(strval) IArgument returned an invalid value');
     }
 
     public function generateArgV()
@@ -87,6 +95,7 @@ class ArgumentTest extends \PHPUnit_Framework_TestCase
         $Expected[] = $this->getMockForAbstractClass('\\BLW\\Type\\Command\\AArgument', array('command'));
         $Expected[] = $this->getMockForAbstractClass('\\BLW\\Type\\Command\\AArgument', array('file'));
         $Expected[] = $this->getMockForAbstractClass('\\BLW\\Type\\Command\\AArgument', array('argument'));
+        $Tricky     = new GenericContainer(IArgument::CLASSNAME);
 
         return array(
              array(array('command', 'file', '-x',           'argument'), array('x'), $Expected)
@@ -95,6 +104,8 @@ class ArgumentTest extends \PHPUnit_Framework_TestCase
             ,array(array('command', 'file', '--a',  'foo',  'argument'), array('x'), $Expected)
             ,array(array('command', 'file', '--a=', 'foo',  'argument'), array('x'), $Expected)
             ,array(array('command', 'file', '--a=foo',      'argument'), array('x'), $Expected)
+            ,array(new \ArrayObject(array('command', 'file', '--a=foo', 'argument')), array('x'), $Expected)
+            ,array(array( '', null, array(), false, 0, 0.0), array('x'), $Tricky)
         );
     }
 
@@ -127,6 +138,7 @@ class ArgumentTest extends \PHPUnit_Framework_TestCase
      */
     public function test_createFromString()
     {
+        #Valid values
         $Expected   = new GenericContainer(IArgument::CLASSNAME);
         $Expected[] = $this->getMockForAbstractClass('\\BLW\\Type\\Command\\AArgument', array('command'));
         $Expected[] = $this->getMockForAbstractClass('\\BLW\\Type\\Command\\AArgument', array('file.txt'));
@@ -136,8 +148,13 @@ class ArgumentTest extends \PHPUnit_Framework_TestCase
         $Expected[] = $this->getMockForAbstractClass('\\BLW\\Type\\Command\\AArgument', array('http://example.com'));
         $Expected[] = $this->getMockForAbstractClass('\\BLW\\Type\\Command\\AArgument', array("\n\n\r\n"));
 
-        #Valid values
         $this->assertEquals($Expected, $this->Argument->createFromString(self::COMMANDLINE, array('x')), 'IArgument::createFromString() returned an invalid value');
+
+
+        $Expected   = new GenericContainer(IArgument::CLASSNAME);
+        $Expected[] = $this->getMockForAbstractClass('\\BLW\\Type\\Command\\AArgument', array(__FILE__));
+
+        $this->assertEquals($Expected, $this->Argument->createFromString(new \SplFileInfo(__FILE__)), 'IArgument::createFromString() returned an invalid value');
 
         # Invalid arguments
         try {
@@ -157,12 +174,15 @@ class ArgumentTest extends \PHPUnit_Framework_TestCase
         #Value
         $this->assertSame('test argument', $this->Argument->Value, 'IArgument::$Value should be `foo`');
 
+        # Undefined
         try {
         	$this->Argument->undefined;
         	$this->fail('Failed to generate notice with undefined property');
         }
 
         catch (\PHPUnit_Framework_Error_Notice $e) {}
+
+        $this->assertNull(@$this->Argument->undefined, 'IArgument::__get() Should return NULL for undefined value');
     }
 
 
@@ -173,7 +193,7 @@ class ArgumentTest extends \PHPUnit_Framework_TestCase
     public function test_isset()
     {
         # Value
-        $this->assertTrue(isset($this->Argument->Value), 'IArgument::$Value should exist');
+        $this->assertSame($this->readAttribute($this->Argument, '_Value') !== null, isset($this->Argument->Value), 'IArgument::$Value should exist');
 
         # Undefined
         $this->assertFalse(isset($this->Argument->undefined), 'IArgument::$undefined should not exist');
@@ -195,6 +215,8 @@ class ArgumentTest extends \PHPUnit_Framework_TestCase
         	$this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
+        @$this->Argument->Value = '';
+
         # Undefined
         try {
             $this->Argument->undefined = '';
@@ -204,6 +226,8 @@ class ArgumentTest extends \PHPUnit_Framework_TestCase
         catch (\PHPUnit_Framework_Error $e) {
             $this->assertContains('non-existant property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
+
+        @$this->Argument->undefined = '';
     }
 
     /**
@@ -221,6 +245,8 @@ class ArgumentTest extends \PHPUnit_Framework_TestCase
         catch (\PHPUnit_Framework_Error_Notice $e) {
         	$this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
+
+        @$this->Argument->__unset('Value');
 
         # Undefined
         unset($this->Argument->undefined);

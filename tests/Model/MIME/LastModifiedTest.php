@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\MIME;
+namespace BLW\Model\MIME;
 
 use DateTime;
 use BLW\Model\InvalidArgumentException;
@@ -25,7 +25,7 @@ use BLW\Model\MIME\LastModified;
 /**
  * Tests BLW Library MIME LastModified header.
  * @package BLW\MIME
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Mime\LastModified
  */
@@ -40,27 +40,14 @@ class LastModifiedTest extends \PHPUnit_Framework_TestCase
      */
     protected $Header = NULL;
 
-    /**
-     * @var \ReflectionProperty[]
-     */
-    protected $Properties = array();
-
     protected function setUp()
     {
         $this->LastModified    = new DateTime;
         $this->Header          = new LastModified($this->LastModified);
-        $this->Properties      = array(
-             'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
-        );
-
-        $this->Properties['Type']->setAccessible(true);
-        $this->Properties['Value']->setAccessible(true);
     }
 
     protected function tearDown()
     {
-        $this->Properties      = NULL;
         $this->Header          = NULL;
         $this->LastModified = NULL;
     }
@@ -80,8 +67,8 @@ class LastModifiedTest extends \PHPUnit_Framework_TestCase
     public function test_construct()
     {
         # Check params
-        $this->assertEquals('Last-Modified', $this->Properties['Type']->getValue($this->Header), 'LastModified::__construct() failed to set $_Type');
-        $this->assertSame($this->LastModified->format(LastModified::FORMAT), $this->Properties['Value']->getValue($this->Header), 'LastModified::__construct() failed to set $_Value');
+        $this->assertAttributeEquals('Last-Modified', '_Type', $this->Header, 'LastModified::__construct() failed to set $_Type');
+        $this->assertAttributeSame($this->LastModified->format(LastModified::FORMAT), '_Value', $this->Header, 'LastModified::__construct() failed to set $_Value');
 
         # Valid arguments
         foreach($this->generateValidDates() as $Arguments) {
@@ -89,8 +76,14 @@ class LastModifiedTest extends \PHPUnit_Framework_TestCase
 
             $this->Header = new LastModified($LastModified);
 
-            $this->assertEquals($LastModified->format(LastModified::FORMAT), $this->Properties['Value']->getValue($this->Header), 'LastModified::__construct() failed to set $_Value');
+            $this->assertAttributeEquals($LastModified->format(LastModified::FORMAT), '_Value', $this->Header, 'LastModified::__construct() failed to set $_Value');
         }
+
+        # NULL date
+        $this->Header = new LastModified;
+        $Expected     = new DateTime;
+
+        $this->assertAttributeContains($Expected->format(substr(LastModified::FORMAT, 0, -5)), '_Value', $this->Header, 'LastModified::__construct() failed to set $_Value');
 
         # Invalid arguments
     }

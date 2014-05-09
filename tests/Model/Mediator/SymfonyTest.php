@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-Namespace BLW\Tests\Model\Mediator;
+Namespace BLW\Model\Mediator;
 
 use BLW\Type\IMediator;
 use BLW\Type\IEventSubscriber;
@@ -25,7 +25,7 @@ use BLW\Model\Mediator\Symfony as Mediator;
 use ReflectionObject;
 use PHPUnit_Framework_Error_Notice;
 use PHPUnit_Framework_Error;
-use BLW\Model\Event\Generic as GenericEvent;
+use BLW\Model\GenericEvent;
 
 class CallableClass
 {
@@ -98,11 +98,11 @@ class MockEventSubscriberWithMultipleCallbacks implements IEventSubscriber
 /**
  * Tests BLW Library Mediator type.
  * @package BLW\Core
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Mediator\Symfony
  */
-class Symfony extends \PHPUnit_Framework_TestCase
+class SymfonyTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \BLW\Type\IMediator
@@ -137,6 +137,14 @@ class Symfony extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::getID
+     */
+    public function test_getID()
+    {
+        $this->assertContains('Mediator', $this->Mediator->getID(), 'Symfony::getID() Returned an invalid value');
+    }
+
+    /**
      * @covers ::register
      */
     public function test_register()
@@ -144,6 +152,7 @@ class Symfony extends \PHPUnit_Framework_TestCase
         # Register Listener
         $this->assertTrue($this->Mediator->register('pre.foo',  array($this->Listener, 'preFoo')), 'IMediator::register() should return true');
         $this->assertTrue($this->Mediator->register('post.foo', array($this->Listener, 'postFoo')), 'IMediator::register() should return true');
+        $this->assertTrue($this->Mediator->register('post.foo', function() {}), 'IMediator::register() should return true');
     }
 
     /**
@@ -367,15 +376,16 @@ class Symfony extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends test_trigger
-     * @covers ::_Dispatch
+     * @covers ::_dispatch
      */
-    public function test_Dispatch()
+    public function test_dispatch()
     {
         # Test call parameters
         $Test  = new MockWithDispatcher;
         $Event = new GenericEvent;
 
         $this->Mediator->register('foo', array($Test, 'foo'));
+        $this->Mediator->register('foo', function($Event) {$Event->stopPropagation();}, -100);
         $this->Mediator->trigger('foo', $Event);
 
         $this->assertSame($Event, $Test->Event, 'IMediator::trigger() did not pass event object to registered callback');

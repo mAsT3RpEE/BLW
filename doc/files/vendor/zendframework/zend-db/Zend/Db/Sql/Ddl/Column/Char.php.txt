@@ -23,7 +23,7 @@ class Char extends Column
 
     /**
      * @param string $name
-     * @param int $length
+     * @param integer $length
      */
     public function __construct($name, $length)
     {

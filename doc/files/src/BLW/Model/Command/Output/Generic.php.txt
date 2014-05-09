@@ -53,9 +53,9 @@ class Generic extends \BLW\Type\Command\AOutput
      * Constructor
      *
      * @param \BLW\Type\IStream $OutStream
-     *              stdOut
+     *              Output stream.
      * @param \BLW\Type\IStream $ErrStream
-     *              stdErr
+     *              Error stream.
      */
     public function __construct(IStream $stdOut, IStream $stdErr)
     {

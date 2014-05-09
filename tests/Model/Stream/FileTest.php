@@ -15,10 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\Stream;
-
-use ReflectionProperty;
-use PHPUnit_Framework_Error_Notice;
+namespace BLW\Model\Stream;
 
 use BLW\Type\IFile;
 use BLW\Type\IStream;
@@ -27,7 +24,7 @@ use BLW\Model\Stream\File as Stream;
 /**
  * Tests BLW Library Adaptor type.
  * @package BLW\Core
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Stream\File
  */
@@ -44,7 +41,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
     protected $File = NULL;
 
     /**
-     * @var \BLW\Type\IStream
+     * @var \BLW\Model\Stream\File
      */
     protected $Stream = NULL;
 
@@ -70,6 +67,16 @@ class FileTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertTrue(file_exists($this->Path), sprintf('File `%s` should exist', $this->Path));
         $this->assertEmpty(file_get_contents($this->Path), sprintf('File `%s` should be empty', $this->Path));
+    }
+
+    /**
+     * @covers ::__destruct
+     */
+    public function test_destruct()
+    {
+        $this->Stream->__destruct();
+
+        $this->assertFalse(is_resource($this->readAttribute($this->Stream, '_fp')), 'File::__destruct() Failed to close file pointer');
     }
 
     /**
@@ -113,14 +120,10 @@ class FileTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers ::__get
      */
-    public function test__get()
+    public function test_get()
     {
-	    # Make property readable / writable
-	    $Status = new ReflectionProperty($this->Stream, '_Status');
-	    $Status->setAccessible(true);
-
 	    # Status
-        $this->assertSame($this->Stream->Status, $Status->getValue($this->Stream), 'IObject::$Status should equal IObject::_Status');
+        $this->assertAttributeSame($this->Stream->Status, '_Status', $this->Stream, 'IObject::$Status should equal IObject::_Status');
 
 	    # Serializer
 	    $this->assertSame($this->Stream->Serializer, $this->Stream->getSerializer(), 'IObject::$Serializer should equal IObject::getSerializer()');
@@ -137,27 +140,32 @@ class FileTest extends \PHPUnit_Framework_TestCase
         # File
         $this->assertInstanceOf('\\BLW\\Type\\IFile', $this->Stream->File, 'IStream::$File should be an instance of IFile');
 
-        # Context
-        $this->assertTrue(is_resource($this->Stream->Context) || empty($tihs->Stream->Context), 'IStream::$Context should be an resource / empty');
+        # Flags
+        $this->assertTrue(is_int($this->Stream->Flags), 'IStream::$Flags should be an integer');
+
+        # Options
+        $this->assertTrue(is_array($this->Stream->Options), 'IStream::$Options should be an array');
 
         # Test undefined property
         try {
-            $this->Stream->bar;
-            $this->fail('IObject::$bar is undefined and should raise a notice');
+            $this->Stream->undefined;
+            $this->fail('Failed to generate notice with undefined property');
         }
 
-        catch (PHPUnit_Framework_Error_Notice $e) {
+        catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Undefined property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
-   }
+
+        @$this->Stream->undefined;
+    }
 
    /**
     * @covers ::__isset
     */
-   public function test__isset()
+   public function test_isset()
    {
         # Status
-       $this->assertTrue(isset($this->Stream->Serializer), 'IObject::$Status should exist');
+        $this->assertTrue(isset($this->Stream->Serializer), 'IObject::$Status should exist');
 
 	    # Serializer
 	    $this->assertTrue(isset($this->Stream->Serializer), 'IObject::$Serializer should exist');
@@ -168,14 +176,17 @@ class FileTest extends \PHPUnit_Framework_TestCase
 	    # ID
         $this->assertTrue(isset($this->Stream->ID), 'IObject::$ID should exist');
 
-       # fp
+        # fp
         $this->assertTrue(isset($this->Stream->fp), 'IStream::$fp should exist');
 
         # File
         $this->assertTrue(isset($this->Stream->File), 'IStream::$File should exist');
 
-        # Context
-        $this->assertTrue(isset($this->Stream->Context), 'IStream::$Context should exist');
+        # Flags
+        $this->assertTrue(isset($this->Stream->Flags), 'IStream::$Flags should exist');
+
+        # Options
+        $this->assertTrue(isset($this->Stream->Options), 'IStream::$Options should exist');
 
         # Test undefined property
        $this->assertFalse(isset($this->Stream->bar), 'IObject::$bar shouldn\'t exist');
@@ -184,7 +195,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers ::__set
      */
-    public function test__set()
+    public function test_set()
     {
         # Status
         try {
@@ -192,9 +203,11 @@ class FileTest extends \PHPUnit_Framework_TestCase
             $this->fail('Failed to generate notice on readonly property');
         }
 
-        catch (PHPUnit_Framework_Error_Notice $e) {
+        catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
+
+        @$this->Stream->Status = 0;
 
         # Serializer
         try {
@@ -202,24 +215,49 @@ class FileTest extends \PHPUnit_Framework_TestCase
             $this->fail('Failed to generate notice on readonly property');
         }
 
-        catch (PHPUnit_Framework_Error_Notice $e) {
+        catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
+
+        @$this->Stream->Serializer = 0;
 
         # Parent
-        $this->Stream->Parent = $this->getMockForAbstractClass('\\BLW\\Type\\IObject');
-        $this->assertSame($this->Stream->Parent, $this->Stream->getParent(), 'IObject::$Parent should equal IObject::getParent');
-        $this->assertTrue(isset($this->Stream->Parent), 'IObject::$Parent should exist');
+        $Parent                = $this->getMockForAbstractClass('\\BLW\\Type\\AObject');
+        $this->Stream->Parent = $Parent;
 
-	    # ID
+        $this->assertSame($Parent, $this->Stream->Parent, 'IStream::$Parent should equal IStream::getParent()');
+
         try {
-            $this->Stream->ID = 0;
-            $this->fail('Failed to generate notice on readonly property');
+            $this->Stream->Parent = null;
+            $this->fail('Failed to generate notice with invalid value');
         }
 
-        catch (PHPUnit_Framework_Error_Notice $e) {
-            $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
+        catch (\PHPUnit_Framework_Error_Notice $e) {
+            $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
+
+        @$this->Stream->Parent = null;
+
+        try {
+            $this->Stream->Parent = $Parent;
+            $this->fail('Failed to generate notice with oneshot value');
+        }
+
+        catch (\PHPUnit_Framework_Error_Notice $e) {
+            $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
+        }
+
+        # ID
+        try {
+            $this->Stream->ID = 'foo';
+            $this->fail('Failed to generate notice with invalid value');
+        }
+
+        catch (\PHPUnit_Framework_Error_Notice $e) {
+            $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
+        }
+
+        @$this->Stream->ID = 'foo';
 
 	    # fp
         try {
@@ -227,38 +265,106 @@ class FileTest extends \PHPUnit_Framework_TestCase
             $this->fail('Failed to generate notice on readonly property');
         }
 
-        catch (PHPUnit_Framework_Error_Notice $e) {
+        catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
-	    # File
+        @$this->Stream->fp = 0;
+
+        # File
         try {
             $this->Stream->File = 0;
             $this->fail('Failed to generate notice on readonly property');
         }
 
-        catch (PHPUnit_Framework_Error_Notice $e) {
+        catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
-	    # Context
+        @$this->Stream->File = 0;
+
+        # Flags
         try {
-            $this->Stream->Context = 0;
+            $this->Stream->Flags = 0;
             $this->fail('Failed to generate notice on readonly property');
         }
 
-        catch (PHPUnit_Framework_Error_Notice $e) {
+        catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
-	    # Invalid property
+        @$this->Stream->Flags = 0;
+
+        # Options
         try {
-            $this->Stream->bar = 0;
+            $this->Stream->Options = 0;
             $this->fail('Failed to generate notice on readonly property');
         }
 
-        catch (PHPUnit_Framework_Error_Notice $e) {
-            $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
+        catch (\PHPUnit_Framework_Error_Notice $e) {
+            $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
+
+        @$this->Stream->Options = 0;
+
+        # undefined property
+        try {
+            $this->Stream->undefined = 0;
+            $this->fail('Failed to generate warning on readonly property');
+        }
+
+        catch (\PHPUnit_Framework_Error_Warning $e) {
+            $this->assertContains('non-existant', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
+        }
+
+        @$this->Stream->undefined = 0;
+    }
+
+    /**
+     * @depends test_get
+     * @depends test_set
+     * @covers ::__unset
+     */
+    public function test_unset()
+    {
+        # Parent
+        $this->Stream->Parent = $this->getMockForAbstractClass('\\BLW\Type\AObject');
+
+        unset($this->Stream->Parent);
+
+        $this->assertNull($this->Stream->Parent, 'unset(IStream::$Parent) Did not reset $_Parent');
+
+        # Status
+        unset($this->Stream->Status);
+
+        $this->assertSame(0, $this->Stream->Status, 'unset(IStream::$Status) Did not reset $_Status');
+
+        # Undefined
+        unset($this->Stream->undefined);
+    }
+
+    /**
+     * @depends test_putContents
+     * @covers ::doSerialize
+     */
+    public function test_serialize()
+    {
+        $this->Stream->putContents("line1\r\nline2");
+        fseek($this->Stream->fp, 2);
+
+        $this->assertInternalType('string', serialize($this->Stream), 'serialize(File) Returned an invalid value');
+        $this->assertNotEmpty(serialize($this->Stream), 'serialize(File) Returned an invalid value');
+    }
+
+    /**
+     * @depends test_serialize
+     * @covers ::doUnserialize
+     */
+    public function test_unserialize()
+    {
+        $this->Stream->putContents("line1\r\nline2");
+        fseek($this->Stream->fp, 2);
+
+        $this->assertEmpty(strval(unserialize(serialize($this->Stream))), 'unserialize(serialize(File)) should equal empty file');
     }
 }

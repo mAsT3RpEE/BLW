@@ -122,7 +122,7 @@ abstract class ASerializable implements \BLW\Type\ISerializable
      *
      * <hr>
      *
-     * @return \BLW\Type\Serializer $this->Serializer
+     * @return \BLW\Type\ISerializer $this->Serializer
      */
     public function getSerializer()
     {

@@ -18,8 +18,6 @@
  */
 namespace BLW\Model\MIME;
 
-use BLW\Type\IDataMapper;
-
 use BLW\Model\InvalidArgumentException;
 
 

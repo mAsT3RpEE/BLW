@@ -51,7 +51,7 @@ class NULL extends \BLW\Type\Mail\ATransport
     /**
      * Does the actual work of sending the message.
      *
-     * @param \BLW\Model\MIME\Message $Message
+     * @param \BLW\Type\Mail\IMessage $Message
      *            Message to send.
      * @return int ITransport::RESULT_FLAGS
      */

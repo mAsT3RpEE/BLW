@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\Command;
+namespace BLW\Model\Command;
 
 use ReflectionProperty;
 use ReflectionMethod;
@@ -24,6 +24,7 @@ use BLW\Type\Command\IOutput;
 use BLW\Type\Command\IInput;
 use BLW\Type\Command\ICommand;
 
+use BLW\Model\InvalidArgumentException;
 use BLW\Model\Config\Generic as GenericConfig;
 
 use BLW\Model\Command\Callback as Command;
@@ -37,7 +38,7 @@ use BLW\Model\Mediator\Symfony as SymfonyMediator;
 /**
  * Test for BLW CallbackCommand object
  * @package BLW\Command
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Command\Callback
  */
@@ -67,7 +68,7 @@ class CallbackTest extends \PHPUnit_Framework_TestCase
     protected $Config = NULL;
 
     /**
-     * @var \BLW\Model\Command\Shell
+     * @var \BLW\Model\Command\Callback
      */
     protected $Command = NULL;
 
@@ -114,28 +115,38 @@ class CallbackTest extends \PHPUnit_Framework_TestCase
      */
     public function test_construct()
     {
-        # Check properties
-        $Property = new ReflectionProperty($this->Command, '_Command');
+        # Valid arguments
+        $this->Command  = new Command($this->Action, $this->Config, $this->Mediator);
 
-        $Property->setAccessible(true);
-
-        $this->assertInstanceof('\\Jeremeamia\\SuperClosure\\SerializableClosure', $Property->getValue($this->Command), 'ICommand::__construct() Failed to set $_Command');
-
-        $Property = new ReflectionProperty($this->Command, '_Config');
-
-        $Property->setAccessible(true);
-
-        $this->assertSame($this->Config, $Property->getValue($this->Command), 'ICommand::__construct() Failed to set $_Config');
-        $this->assertSame('CallbackCommand', $this->Command->getID(), 'ICommand::__construct() Failed to set $_ID');
+        $this->assertAttributeInstanceOf('\\Jeremeamia\\SuperClosure\\SerializableClosure', '_Command', $this->Command, 'ICommand::__construct() Failed to set $_Command');
+        $this->assertAttributeSame($this->Config, '_Config', $this->Command, 'ICommand::__construct() Failed to set $_Config');
+        $this->assertRegExp('!BLW_.*!', $this->Command->getID(), 'ICommand::__construct() Failed to set $_ID');
         $this->assertSame($this->Mediator, $this->Command->getMediator(), 'ICommand::__construct() Failed to set $_Mediator');
 
-        # Invalid ID
+        # Invalid arguments
         try {
-            $this->Command = $this->getMockForAbstractClass('\\BLW\\Type\\Command\\ACommand', array('ping', $this->Config, $this->Mediator, array()));
-            $this->fail('Failed to generate error with invalid $ID');
+            $this->Command = new Command('ping', $this->Config, $this->Mediator, 'CallbackCommand');
+            $this->fail('Failed to generate notice with invalid $ID');
+
+        } catch (InvalidArgumentException $e) {
+
         }
 
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        try {
+            $this->Command = new Command($this->Action, new GenericConfig, $this->Mediator, 'CallbackCommand');
+            $this->fail('Failed to generate exception with invalid $ID');
+
+        } catch (InvalidArgumentException $e) {
+
+        }
+
+        try {
+            $this->Command = new Command($this->Action, $this->Config, $this->Mediator, array());
+            $this->fail('Failed to generate exception with invalid $ID');
+
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
+
+        }
     }
 
     /**

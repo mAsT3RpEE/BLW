@@ -11,46 +11,15 @@ filter:
 
 tools:
     external_code_coverage:
-        enabled: true
-        timeout: 900
-    sensiolabs_security_checker: true
-    php_analyzer:
-        enabled: true
+        timeout: 600
+    php_analyzer: true
+    php_code_sniffer:
         config:
-            reflection_fixes:
-                enabled: true
-            doc_comment_fixes:
-                enabled: true
-            use_statement_fixes:
-                enabled: true
-                remove_unused: true
-                preserve_multiple: false
-                preserve_blanklines: true
-                order_alphabetically: false
-    php_changetracking: true
-    php_cs_fixer:
-        enabled: true
-        config:
-            level: psr1
-            fixers:
-                indentation:          true
-                linefeed:             false
-                trailing_spaces:      true
-                unused_use:           true
-                phpdoc_params:        true
-                visibility:           true
-                return:               true
-                short_tag:            false
-                braces:               false
-                include:              true
-                php_closing_tag:      false
-                extra_empty_lines:    false
-                controls_spaces:      false
-                elseif:               false
-                eof_ending:           true
-    php_code_coverage: true
-    php_code_sniffer: true
-    php_mess_detector: true
+            ruleset: config/ruleset.xml
+    php_cs_fixer: true
     php_loc: true
+    php_mess_detector: true
     php_pdepend: true
-    php_sim: true
+    sensiolabs_security_checker: true
+    php_changetracking: true
+    php_sim: true    

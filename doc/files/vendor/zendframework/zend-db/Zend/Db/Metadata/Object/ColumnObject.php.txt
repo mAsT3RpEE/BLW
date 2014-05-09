@@ -167,7 +167,7 @@ class ColumnObject
     }
 
     /**
-     * @return int $ordinalPosition
+     * @return integer $ordinalPosition
      */
     public function getOrdinalPosition()
     {
@@ -175,7 +175,7 @@ class ColumnObject
     }
 
     /**
-     * @param int $ordinalPosition to set
+     * @param integer $ordinalPosition to set
      * @return ColumnObject
      */
     public function setOrdinalPosition($ordinalPosition)
@@ -203,7 +203,7 @@ class ColumnObject
     }
 
     /**
-     * @return bool $isNullable
+     * @return boolean $isNullable
      */
     public function getIsNullable()
     {
@@ -211,7 +211,7 @@ class ColumnObject
     }
 
     /**
-     * @param bool $isNullable to set
+     * @param boolean $isNullable to set
      * @return ColumnObject
      */
     public function setIsNullable($isNullable)
@@ -221,7 +221,7 @@ class ColumnObject
     }
 
     /**
-     * @return bool $isNullable
+     * @return boolean $isNullable
      */
     public function isNullable()
     {
@@ -255,7 +255,7 @@ class ColumnObject
     }
 
     /**
-     * @param int $characterMaximumLength the $characterMaximumLength to set
+     * @param integer $characterMaximumLength the $characterMaximumLength to set
      * @return ColumnObject
      */
     public function setCharacterMaximumLength($characterMaximumLength)
@@ -273,7 +273,7 @@ class ColumnObject
     }
 
     /**
-     * @param int $characterOctetLength the $characterOctetLength to set
+     * @param integer $characterOctetLength the $characterOctetLength to set
      * @return ColumnObject
      */
     public function setCharacterOctetLength($characterOctetLength)
@@ -283,7 +283,7 @@ class ColumnObject
     }
 
     /**
-     * @return int the $numericPrecision
+     * @return integer the $numericPrecision
      */
     public function getNumericPrecision()
     {
@@ -291,7 +291,7 @@ class ColumnObject
     }
 
     /**
-     * @param int $numericPrecision the $numericPrevision to set
+     * @param integer $numericPrecision the $numericPrevision to set
      * @return ColumnObject
      */
     public function setNumericPrecision($numericPrecision)
@@ -301,7 +301,7 @@ class ColumnObject
     }
 
     /**
-     * @return int the $numericScale
+     * @return integer the $numericScale
      */
     public function getNumericScale()
     {
@@ -309,7 +309,7 @@ class ColumnObject
     }
 
     /**
-     * @param int $numericScale the $numericScale to set
+     * @param integer $numericScale the $numericScale to set
      * @return ColumnObject
      */
     public function setNumericScale($numericScale)

@@ -138,14 +138,14 @@ class Document extends \DOMDocument implements \BLW\Type\DOM\IDocument
      *
      * <hr>
      *
-     * @return \BLW\Type\Serializer $this->Serializer
+     * @return \BLW\Type\ISerializer $this->Serializer
      */
     public function getSerializer()
     {
         global $BLW_Serializer;
 
         if (! $BLW_Serializer instanceof ISerializer) {
-            $BLW_Serializer = new \BLW\Model\Serializer\PHP();
+            $BLW_Serializer = new \BLW\Model\Serializer\PHP;
         }
 
         return $BLW_Serializer;
@@ -236,7 +236,7 @@ class Document extends \DOMDocument implements \BLW\Type\DOM\IDocument
     public function doSerialize()
     {
         // Store HTML
-        $this->_HTML = $this->saveHTML();
+        $this->_HTML = $this->saveHTML() ?: '';
     }
 
     /**

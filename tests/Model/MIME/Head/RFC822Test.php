@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\MIME\Head;
+namespace BLW\Model\MIME\Head;
 
 use ReflectionMethod;
 use ReflectionProperty;
@@ -32,7 +32,7 @@ use BLW\Model\MIME\Generic as GenericHeader;
 /**
  * Tests BLW Library MIME Head header.
  * @package BLW\MIME
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Mime\Head\RFC822
  */
@@ -126,6 +126,15 @@ class RFC822Test extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('\\BLW\\Type\\MIME\\IHeader', $this->Head->getHeader('Foo'), 'IHead::getHeader() Should return an instance of IHeader');
         $this->assertSame('bar', $this->Head->getHeader('Bar'), 'IHead::getHeader() Should return `bar`');
+        $this->assertFalse($this->Head->getHeader(new \SplFileInfo(__FILE__)), 'IHead::getHeader() should return FALSE');
+
+        # Invalid argument
+        try {
+            $this->Head->getHeader(null);
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch (InvalidArgumentException $e) {}
     }
 
     /**

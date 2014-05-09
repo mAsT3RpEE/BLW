@@ -72,7 +72,7 @@ final class InlineAttachment extends \BLW\Type\AContainer implements \BLW\Type\M
     /**
      * Constructor
      *
-     * @param \BLW\Type\File $File
+     * @param \BLW\Type\IFile $File
      *            File to attatch.
      * @param string $Name
      *            [optional] File name (basename).

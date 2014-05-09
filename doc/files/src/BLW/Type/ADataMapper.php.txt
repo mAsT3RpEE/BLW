@@ -20,7 +20,6 @@ namespace BLW\Type;
 
 use Closure;
 use ArrayObject;
-use UnexpectedValueException;
 use ReflectionMethod;
 
 use BLW\Model\InvalidArgumentException;
@@ -108,8 +107,6 @@ abstract class ADataMapper extends \ArrayObject implements \BLW\Type\IDataMapper
      *
      * @param mixed $index
      *            The index being set.
-     * @param mixed $newval
-     *            The new value for the index.
      */
     public function offsetGet($index)
     {

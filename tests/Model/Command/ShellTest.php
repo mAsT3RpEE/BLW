@@ -15,15 +15,15 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\Command;
+namespace BLW\Model\Command;
 
 use ReflectionProperty;
 use ReflectionMethod;
 
 use BLW\Type\Command\IOutput;
 
+use BLW\Model\InvalidArgumentException;
 use BLW\Model\Config\Generic as GenericConfig;
-
 use BLW\Model\Command\Shell as Command;
 use BLW\Model\Command\Input\Generic as GenericInput;
 use BLW\Model\Command\Output\Generic as GenericOutput;
@@ -31,11 +31,12 @@ use BLW\Model\Command\Argument\Generic as GenericArgument;
 use BLW\Model\Command\Option\Generic as GenericOption;
 use BLW\Model\Stream\Handle as HandleStream;
 use BLW\Model\Mediator\Symfony as SymfonyMediator;
+use JMS\Serializer\Tests\Fixtures\Input;
 
 /**
  * Test for BLW ShellCommand object
  * @package BLW\Command
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Command\Shell
  */
@@ -90,7 +91,7 @@ class ShellTest extends \PHPUnit_Framework_TestCase
 
         $this->Command = new Command('php', $this->Config, $this->Mediator, 'ShellCommand');
 
-        $this->Input->Options[] = new GenericOption('r', "sleep(10); print 'foo';");
+        $this->Input->Options[] = new GenericOption('r', "sleep(10); print 'foo'; exit;");
     }
 
     protected function tearDown()
@@ -108,7 +109,8 @@ class ShellTest extends \PHPUnit_Framework_TestCase
      */
     public function test_getFactoryMethods()
     {
-        $this->assertGreaterThan(1, count($this->Command->getFactoryMethods()), 'ShellCommand::getFactoryMethods() returned an invalid result');
+        $this->assertNotEmpty($this->Command->getFactoryMethods(), 'ShellCommand::getFactoryMethods() returned an ivalid result');
+        $this->assertContainsOnlyInstancesOf('ReflectionMethod', $this->Command->getFactoryMethods(), 'ShellCommand::getFactoryMethods() returned an invalid result');
     }
 
     /**
@@ -125,7 +127,7 @@ class ShellTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::createCommandLine
+     * @covers ::createDescriptors
      */
     public function test_createDescriptors()
     {
@@ -135,7 +137,31 @@ class ShellTest extends \PHPUnit_Framework_TestCase
         	,Command::STDERR => array('pipe', 'w')
 	   );
 
-        $this->assertEquals($Expected, $this->Command->createDescriptiors(), 'ShellCommand::createCommandLine() returned an invalid result');
+        $this->assertEquals($Expected, $this->Command->createDescriptors(), 'ShellCommand::createCommandLine() returned an invalid result');
+    }
+
+    public function generateInvalidArgs()
+    {
+        $NoTimeout     = clone $this->Config;
+        $NoCWD         = clone $this->Config;
+        $NoEnvironment = clone $this->Config;
+        $NoExtras      = clone $this->Config;
+        $BadExtras     = clone $this->Config;
+
+        unset($NoTimeout['Timeout']);
+        unset($NoCWD['CWD']);
+        unset($NoEnvironment['Environment']);
+        unset($NoExtras['Extras']);
+
+        $BadExtras['Extras'] = 0;
+
+        return array(
+            array('ping', $NoTimeout, $this->Mediator, 'CallbackCommand'),
+            array('ping', $NoCWD, $this->Mediator, 'CallbackCommand'),
+            array('ping', $NoEnvironment, $this->Mediator, 'CallbackCommand'),
+            array('ping', $NoExtras, $this->Mediator, 'CallbackCommand'),
+            array('ping', $BadExtras, $this->Mediator, 'CallbackCommand'),
+        );
     }
 
     /**
@@ -144,27 +170,36 @@ class ShellTest extends \PHPUnit_Framework_TestCase
     public function test_construct()
     {
         # Check properties
-        $Property = new ReflectionProperty($this->Command, '_Command');
-
-        $Property->setAccessible(true);
-
-        $this->assertSame('php', $Property->getValue($this->Command), 'ICommand::__construct() Failed to set $_Command');
-
-        $Property = new ReflectionProperty($this->Command, '_Config');
-
-        $Property->setAccessible(true);
-
-        $this->assertSame($this->Config, $Property->getValue($this->Command), 'ICommand::__construct() Failed to set $_Config');
+        $this->assertAttributeSame('php', '_Command', $this->Command, 'ICommand::__construct() Failed to set $_Command');
+        $this->assertAttributeSame($this->Config, '_Config', $this->Command, 'ICommand::__construct() Failed to set $_Config');
         $this->assertSame('ShellCommand', $this->Command->getID(), 'ICommand::__construct() Failed to set $_ID');
         $this->assertSame($this->Mediator, $this->Command->getMediator(), 'ICommand::__construct() Failed to set $_Mediator');
+
+        # Null ID
+        $this->Command = new Command('php', $this->Config, $this->Mediator);
+
+        $this->assertRegExp('!BLW_[0-9a-z]+!', $this->Command->getID(), 'ICommand::__construct() Failed to set $_ID');
 
         # Invalid ID
         try {
             $this->Command = $this->getMockForAbstractClass('\\BLW\\Type\\Command\\ACommand', array('ping', $this->Config, $this->Mediator, array()));
             $this->fail('Failed to generate error with invalid $ID');
+
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
+
         }
 
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        # Invalid arguments
+        for ($i = $this->generateInvalidArgs(); list($k, list($Command, $Config, $Mediator, $ID)) = each($i);) {
+
+            try {
+                new Command($Command, $Config, $Mediator, $ID);
+                $this->fail('Failed to generate exception with invalid arguments');
+
+            } catch (InvalidArgumentException $e) {
+
+            }
+        }
     }
 
     /**
@@ -179,6 +214,10 @@ class ShellTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends test_isSystemCallInterupt
      * @covers ::transferStreams
+     * @covers ::_transferStdIn
+     * @covers ::_transferStdOut
+     * @covers ::_transferStdErr
+     * @covers ::getStatus
      */
     public function test_transferStreams()
     {
@@ -194,14 +233,17 @@ class ShellTest extends \PHPUnit_Framework_TestCase
         $Property->setAccessible(true);
         $Property->setValue($this->Command, $Pipes);
 
+        $this->Input->setMediator($this->Mediator);
+        $this->Output->setMediator($this->Mediator);
         $this->Command->transferStreams($this->Input, $this->Output, 10);
 
         $this->assertEquals('test output', $this->Output->stdOut->getContents(), 'ShellCommand::_transferStreams() Failed to transfer STDOUT');
         $this->assertEquals('test error', $this->Output->stdErr->getContents(), 'ShellCommand::_transferStreams() Failed to transfer STDERR');
         $this->assertEquals($this->Input->stdIn->getContents(), file_get_contents($Input), 'ShellCommand::_transferStreams() Failed to trasfer STDIN');
 
-        foreach($Pipes as $fp)
+        foreach($Pipes as $fp) {
             fclose($fp);
+        }
 
         sleep(1); @unlink($Input);
     }
@@ -211,13 +253,55 @@ class ShellTest extends \PHPUnit_Framework_TestCase
      * @depends test_createDescriptors
      * @depends test_transferStreams
      * @covers ::doRun
+     * @covers ::open
+     * @covers ::close
+     * @covers ::transferStreams
+     * @covers ::getStatus
      */
     public function test_doRun()
     {
         $Expected = 'foo';
 
-        $this->assertEquals(0, $this->Command->doRun($this->Input, $this->Output), 'ShellCommand::doRun() returned an invalid result');
+        $this->assertLessThanOrEqual(0, $this->Command->doRun($this->Input, $this->Output), 'ShellCommand::doRun() returned an invalid result');
         $this->assertEquals($Expected, $this->Output->stdOut->getContents(), 'ShellCommand::doRun() Failed to process command output');
         $this->assertEmpty($this->Output->stdErr->getContents(), 'ShellCommand::doRun() Failed to process command error');
+    }
+
+    /**
+     * @depends test_doRun
+     * @covers ::__destruct
+     * @covers ::close
+     */
+    public function test_destruct()
+    {
+        $this->assertTrue($this->Command->open($this->Input), 'ShellCommand::open() should return TRUE');
+        $this->Command->__destruct();
+
+        sleep(5);
+
+        $Status = @proc_get_status($this->readAttribute($this->Command, '_fp'));
+
+        if ($Status) {
+            $this->assertFalse($Status['running'], 'ShellCommand::$_fp should not be a resource');
+        }
+    }
+
+    /**
+     * @depends test_doRun
+     * @covers ::getStatus
+     */
+    public function test_getStatus()
+    {
+        $this->assertTrue($this->Command->open($this->Input), 'ShellCommand::open() should return TRUE');
+        $this->assertTrue($this->Command->getStatus('running'), 'ShellCommand::getStatus() should return TRUE');
+
+        # Invalid arguments
+        try {
+            $this->Command->getStatus(null);
+            $this->fail('Failed to generate exception with invalid arguments');
+
+        } catch (InvalidArgumentException $e) {
+
+        }
     }
 }

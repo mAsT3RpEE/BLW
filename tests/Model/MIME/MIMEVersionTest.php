@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\MIME;
+namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
 use BLW\Model\MIME\MIMEVersion;
@@ -24,7 +24,7 @@ use BLW\Model\MIME\MIMEVersion;
 /**
  * Tests BLW Library MIME Version header.
  * @package BLW\MIME
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Mime\MIMEVersion
  */
@@ -100,5 +100,19 @@ class MIMEVersionTest extends \PHPUnit_Framework_TestCase
     public function test_toString()
     {
         $this->assertEquals("MIME-Version: 1.0\r\n", @strval($this->Header), 'MIMEVersion::__toSting() returned an invalid format');
+
+        @strval($this->Header);
+
+        # Update Type
+        $Property = new \ReflectionProperty($this->Header, '_Type');
+
+        $Property->setAccessible(true);
+        $Property->setValue($this->Header, '');
+
+        @strval($this->Header);
+
+        $e = error_get_last();
+
+        $this->assertContains('Type or Value', $e['message'], 'Failed to generate warning on (string) IHeader');
     }
 }

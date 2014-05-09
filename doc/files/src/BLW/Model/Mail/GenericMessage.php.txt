@@ -23,7 +23,6 @@ use ReflectionMethod;
 
 use BLW\Type\IDataMapper;
 use BLW\Type\IMediator;
-use BLW\Type\IObject;
 use BLW\Type\IMediatable;
 use BLW\Type\IEvent;
 use BLW\Type\IContainer;
@@ -128,7 +127,7 @@ class GenericMessage extends \BLW\Type\AObject implements \BLW\Type\Mail\IMessag
     /**
      * Pointer to current mediator.
      *
-     * @var \BLW\Type\IMediatable $_Mediator
+     * @var \BLW\Type\IMediator $_Mediator
      */
     protected $_Mediator = null;
 
@@ -1021,7 +1020,6 @@ class GenericMessage extends \BLW\Type\AObject implements \BLW\Type\Mail\IMessag
      *            Label of property to set.
      * @param mixed $value
      *            Value of property.
-     * @return bool Returns a <code>IDataMapper</code> status code.
      */
     public function __set($name, $value)
     {
@@ -1093,7 +1091,6 @@ class GenericMessage extends \BLW\Type\AObject implements \BLW\Type\Mail\IMessag
      *
      * @param string $name
      *            Label of dynamic property. (case sensitive)
-     * @return bool Returns a <code>TRUE</code> if property exists. <code>FALSE</code> otherwise.
      */
     public function __unset($name)
     {

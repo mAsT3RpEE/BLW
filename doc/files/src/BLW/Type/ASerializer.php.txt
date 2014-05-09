@@ -18,9 +18,7 @@
  */
 namespace BLW\Type;
 
-use stdClass;
 use ReflectionObject;
-use ReflectionProperty;
 
 
 // @codeCoverageIgnoreStart
@@ -219,7 +217,7 @@ abstract class ASerializer extends \BLW\Type\ASerializable implements \BLW\Type\
         $Exported = $Exported ?: array();
 
         // Gets properties of Object to export to $Exportded.
-        $Properties = function (ISerializable $o)
+        $Properties = function ($o)
         {
             // Do pre Serialization.
             $o->doSerialize();
@@ -244,8 +242,8 @@ abstract class ASerializer extends \BLW\Type\ASerializable implements \BLW\Type\
         };
 
         // Export properties
-        $count = 0;
-        $Clone = clone $Object;
+        $Clone  = clone $Object;
+        $count  = 0;
 
         foreach ($Properties($Clone) as $Property) {
             $Exported[$Property->getName()] = $Property->getValue($Clone);
@@ -253,6 +251,7 @@ abstract class ASerializer extends \BLW\Type\ASerializable implements \BLW\Type\
             $count += 1;
         }
 
+        // Done
         return $count;
     }
 
@@ -377,7 +376,6 @@ abstract class ASerializer extends \BLW\Type\ASerializable implements \BLW\Type\
      *            Label of property to set.
      * @param mixed $value
      *            Value of property.
-     * @return void
      */
     public function __set($name, $value)
     {
@@ -422,7 +420,6 @@ abstract class ASerializer extends \BLW\Type\ASerializable implements \BLW\Type\
      *
      * @param string $name
      *            Label of dynamic property. (case sensitive)
-     * @return bool Returns a <code>TRUE</code> if property exists. <code>FALSE</code> otherwise.
      */
     public function __unset($name)
     {

@@ -19,7 +19,8 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Type\IDataMapper;
+
+
 // @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 

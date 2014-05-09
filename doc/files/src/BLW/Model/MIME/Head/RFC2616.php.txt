@@ -19,7 +19,6 @@
 namespace BLW\Model\MIME\Head;
 
 use BLW\Type\MIME\IHeader;
-use BLW\Type\MIME\ISection;
 use BLW\Model\InvalidArgumentException;
 
 

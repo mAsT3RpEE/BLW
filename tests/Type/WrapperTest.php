@@ -15,24 +15,32 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Type;
+namespace BLW\Type;
 
 use DOMDocument;
-use ReflectionMethod;
 use ReflectionProperty;
+use ReflectionMethod;
 use PHPUnit_Framework_Error_Notice;
 use BadMethodCallException;
 
 use BLW\Type\IDataMapper;
 
+class MockComponent2073
+{
+    public $foo = 1;
+    public $callable = array(__CLASS__, 'foo');
+    public static function foo() {return 'foo';}
+    public function __set($nam, $val) {throw new \Exception('foo');}
+}
+
 /**
  * Tests BLW Library Adaptor type.
  * @package BLW\Core
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  *  @coversDefaultClass \BLW\Type\AWrapper
  */
-class WrapperTest extends \PHPUnit_Framework_TestCase
+class WrapperTest extends \BLW\Type\IterableTest
 {
     /**
      * @var \BLW\Type\IWrapper
@@ -46,23 +54,39 @@ class WrapperTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $Document           = new DOMDocument("1.0");
-        $this->Component    = $Document->createElement('span', 'text');
+        $this->Component    = new MockComponent2073;
         $this->Wrapper      = $this->getMockForAbstractClass('\\BLW\\Type\\AWrapper', array($this->Component));
-
-        $this->Component->setAttribute('foo', 'checked');
+        $this->Iterable     = $this->Wrapper;
 
         $Status = new ReflectionProperty($this->Wrapper, '_Status');
+
         $Status->setAccessible(true);
         $Status->setValue($this->Wrapper, -1);
 
-        unset($Document);
+        $this->Wrapper
+            ->expects($this->any())
+            ->method('getID')
+            ->will($this->returnValue('IWrapper'));
     }
 
     protected function tearDown()
     {
         $this->Component   = NULL;
         $this->Wrapper     = NULL;
+        $this->Iterable    = NULL;
+    }
+
+    /**
+     * @covers ::__construct
+     */
+    public function test_construct()
+    {
+        $Document   = new DOMDocument('1.0', 'UTF-8');
+        $Component  = $Document->createElement('span', 'foo');
+        $Wrapper    = $this->getMockForAbstractClass('\\BLW\\Type\\AWrapper', array($Component));
+
+        # Check properties
+        $this->assertAttributeSame($Component, '_Component', $Wrapper, 'IWrapper::__construct() Failed to set component');
     }
 
     /**
@@ -76,8 +100,7 @@ class WrapperTest extends \PHPUnit_Framework_TestCase
         $Status->setAccessible(true);
         $Status->setValue($Copy, -1);
 
-        // PHPUnit has changed for the worse with their DOMNode tests. yuk!!
-        @$this->assertEquals($Copy, $this->Wrapper, 'IWrapper::getInstance() returned invalid value');
+        $this->assertEquals($Copy, $this->Wrapper, 'IWrapper::getInstance() returned invalid value');
     }
 
     /**
@@ -85,13 +108,15 @@ class WrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function test__call()
     {
-        # Test Valid calls
-        $this->assertEquals($this->Component->hasAttribute('foo'), $this->Wrapper->hasAttribute('foo'), 'Wrapper::hasAttribute() returned invalid value');
-        $this->assertEquals($this->Component->getAttribute('foo'), $this->Wrapper->getAttribute('foo'), 'Wrapper::getAttribute() returned invalid value');
+        # Component function
+        $this->assertEquals('foo', $this->Wrapper->foo(), 'IWrapper::__call() Failed to invoke $_Component->foo()');
+
+        # Variable function
+        $this->assertEquals('foo', $this->Wrapper->callable(), 'IWrapper::__call() Failed to call variable function');
 
         # Test Invalid call
         try {
-            $this->Wrapper->foo();
+            $this->Wrapper->undefined();
             $this->fail('Unable to raise exception on undefined function');
         }
 
@@ -99,59 +124,68 @@ class WrapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @depends test_construct
      * @covers ::__get
      */
-    public function test__get()
+    public function test_get()
     {
-	    # Make property readable / writable
-	    $Status = new ReflectionProperty($this->Wrapper, '_Status');
-	    $Status->setAccessible(true);
+        # Status
+        $this->assertAttributeSame($this->Wrapper->Status, '_Status', $this->Wrapper, 'IWrapper::$Status should equal IWrapper::_Status');
 
-	    # Status
-        $this->assertSame($this->Wrapper->Status, $Status->getValue($this->Wrapper), 'IWrapper::$Status should equal IWrapper::_Status');
+        # Serializer
+        $this->assertSame( $this->Wrapper->getSerializer(), $this->Wrapper->Serializer,'IWrapper::$Serializer should equal IWrapper::getSerializer()');
 
-	    # Serializer
-	    $this->assertSame($this->Wrapper->Serializer, $this->Wrapper->getSerializer(), 'IWrapper::$Serializer should equal IWrapper::getSerializer()');
-
-	    # Parent
-        $this->assertNULL($this->Wrapper->Parent, 'IWrapper::$Parent should initially be NULL');
+        # Parent
+        $this->assertSame($this->Wrapper->getParent(), $this->Wrapper->Parent, 'IWrapper::$Parent should equal IWrapper::getParent()');
 
         # ID
-        $this->assertSame($this->Wrapper->ID, $this->Wrapper->getID(), 'IWrapper::$ID should equal IWrapper::getID()');
+        $this->assertSame($this->Wrapper->getID(), $this->Wrapper->ID, 'IWrapper::$ID should equal IWrapper::getID()');
 
-        # Test dynamic property
-        $this->assertEquals('span', $this->Wrapper->tagName, 'Wrapper::$tagName should equal `span`');
+        # Component
+        $this->assertSame($this->Component, $this->Wrapper->Component, 'IWrapper::$Component should equal $_Component');
+
+        # Test Component property
+        $this->assertEquals(1, $this->Wrapper->foo, 'IWrapper::$foo should equal IWrapper::$_Component->foo');
 
         # Test undefined property
-        try { $this->Wrapper->bar; }
-
-        catch (PHPUnit_Framework_Error_Notice $e) {
-            $this->assertContains('Undefined property', $e->getMessage(), 'Wrapper::$bar is undefined and should raise a notice');
+        try {
+            $this->Wrapper->undefined;
+            $this->fail('Failed to generate notice with undefined property');
         }
-   }
+
+        catch (\PHPUnit_Framework_Error_Notice $e) {
+            $this->assertContains('Undefined property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
+        }
+
+        $this->assertNull(@$this->Wrapper->undefined, 'IWrapper::$undifined should be NULL');
+    }
 
    /**
+    * @depends test_construct
     * @covers ::__isset
     */
    public function test__isset()
    {
         # Status
-       $this->assertTrue(isset($this->Wrapper->Status), 'IWrapper::$Status should exist');
+        $this->assertTrue(isset($this->Wrapper->Serializer), 'IWrapper::$Status should exist');
 
-	    # Serializer
-	    $this->assertTrue(isset($this->Wrapper->Serializer), 'IWrapper::$Serializer should exist');
+        # Serializer
+        $this->assertTrue(isset($this->Wrapper->Serializer), 'IWrapper::$Serializer should exist');
 
-	    # Parent
+        # Parent
         $this->assertFalse(isset($this->Wrapper->Parent), 'IWrapper::$Parent should not exist');
 
-	    # ID
-        $this->assertEquals(isset($this->Wrapper->ID), $this->Wrapper->getID() !== NULL, 'IWrapper::$ID should exist');
+        # ID
+        $this->assertTrue(isset($this->Wrapper->ID), 'IWrapper::$ID should exist');
 
-       # Test dynamic property
-       $this->assertTrue(isset($this->Wrapper->tagName), 'Wrapper::$tagName should exist');
+        # Component
+        $this->assertTrue(isset($this->Wrapper->Component), 'IWrapper::$Component should exist');
+
+        # Test component property
+       $this->assertTrue(isset($this->Wrapper->foo), 'Wrapper::$foo should exist.');
 
         # Test undefined property
-       $this->assertFalse(isset($this->Wrapper->bar), 'Wrapper::$bar shouldn\'t exist');
+       $this->assertFalse(isset($this->Wrapper->bar), 'Wrapper::$bar shouldn\'t exist.');
   }
 
     /**
@@ -165,9 +199,11 @@ class WrapperTest extends \PHPUnit_Framework_TestCase
             $this->fail('Failed to generate notice on readonly property');
         }
 
-        catch (PHPUnit_Framework_Error_Notice $e) {
+        catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
+
+        @$this->Wrapper->Status = 0;
 
         # Serializer
         try {
@@ -175,28 +211,101 @@ class WrapperTest extends \PHPUnit_Framework_TestCase
             $this->fail('Failed to generate notice on readonly property');
         }
 
-        catch (PHPUnit_Framework_Error_Notice $e) {
+        catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
+
+        @$this->Wrapper->Serializer = 0;
 
         # Parent
-        $this->Wrapper->Parent = $this->getMockForAbstractClass('\\BLW\\Type\\IObject');
-        $this->assertSame($this->Wrapper->Parent, $this->Wrapper->getParent(), 'IWrapper::$Parent should equal IWrapper::getParent');
-        $this->assertTrue(isset($this->Wrapper->Parent), 'IWrapper::$Parent should exist');
+        $Parent                = $this->getMockForAbstractClass('\\BLW\\Type\\AObject');
+        $this->Wrapper->Parent = $Parent;
 
-	    # ID
+        $this->assertSame($Parent, $this->Wrapper->Parent, 'IWrapper::$Parent should equal IWrapper::getParent()');
+
+        try {
+            $this->Wrapper->Parent = null;
+            $this->fail('Failed to generate notice with invalid value');
+        }
+
+        catch (\PHPUnit_Framework_Error_Notice $e) {
+            $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
+        }
+
+        @$this->Wrapper->Parent = null;
+
+        try {
+            $this->Wrapper->Parent = $Parent;
+            $this->fail('Failed to generate notice with oneshot value');
+        }
+
+        catch (\PHPUnit_Framework_Error_Notice $e) {
+            $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
+        }
+
+        # ID
         try {
             $this->Wrapper->ID = 'foo';
-            $this->fail('Failed to generate notice on readonly property');
+            $this->fail('Failed to generate notice with invalid value');
         }
 
-        catch (PHPUnit_Framework_Error_Notice $e) {
-            $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
+        catch (\PHPUnit_Framework_Error_Notice $e) {
+            $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
-        # Test dynamic property
-        $this->Wrapper->nodeValue = 1;
-        $this->assertEquals(1, $this->Wrapper->nodeValue, 'Wrapper::$nodeValue should equal 1.');
+        @$this->Wrapper->ID = 'foo';
+
+        # ID
+        try {
+            $this->Wrapper->Component = null;
+            $this->fail('Failed to generate notice with invalid value');
+        }
+
+        catch (\PHPUnit_Framework_Error_Notice $e) {
+            $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
+        }
+
+        @$this->Wrapper->Component = null;
+
+        # Component property
+        $this->Wrapper->foo = 100;
+        $this->assertEquals(100, $this->Wrapper->foo, 'Wrapper::$foo failed to update component.');
+
+        # Undefined property
+        try {
+            $this->Wrapper->undefined = 1;
+            $this->fail('Failed to generate notice with undefined property');
+        }
+
+        catch (\PHPUnit_Framework_Error_Warning $e) {}
+
+        @$this->Wrapper->undefined = 1;
+    }
+
+    /**
+     * @covers ::__unset
+     */
+    public function test_unset()
+    {
+        # Parent
+        $this->Wrapper->Parent = $this->getMockForAbstractClass('\\BLW\Type\IObject');
+
+        unset($this->Wrapper->Parent);
+
+        $this->assertNull($this->Wrapper->Parent, 'unset(IWrapper::$Parent) Did not reset $_Parent');
+
+        # Status
+        unset($this->Wrapper->Status);
+
+        $this->assertSame(0, $this->Wrapper->Status, 'unset(IWrapper::$Status) Did not reset $_Status');
+
+        # Component property
+        unset($this->Wrapper->foo);
+
+        $this->assertFalse(isset($this->Wrapper->foo), 'unset(IWrapper::$foo) Failed to delete property from component');
+
+        # undefined
+        unset($this->Wrapper->undefined);
     }
 
     /**
@@ -204,6 +313,8 @@ class WrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function test__toString()
     {
-        $this->assertRegExp("/\\x5b[\\x30-\\x39\\x41-\\x5a\\x61-\\x7a\\x5f]+\\x3aDOMElement\\x5d/", @strval($this->Wrapper), 'strval(IWrapper) should equal `[IWrapper::DOMNode]`');
+        $Expected = '!\x5b[\x30-\x39\x41-\x5a\x5f\x61-\x7a\x5f]+\x3aBLW\x5cType\x5cMockComponent2073\x5d!';
+
+        $this->assertRegExp($Expected, @strval($this->Wrapper), 'strval(IWrapper) should equal `[IWrapper::MockComponent2073]`');
     }
 }

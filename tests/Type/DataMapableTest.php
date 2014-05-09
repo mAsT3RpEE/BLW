@@ -15,18 +15,16 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Type;
+namespace BLW\Type;
 
+use ReflectionProperty;
 use BLW\Type\IDataMapper;
-use ReflectionObject;
-use PHPUnit_Framework_Error_Notice;
-use PHPUnit_Framework_Error;
 
 
 /**
  * Tests BLW Library Adaptor type.
  * @package BLW\Core
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Type\ADataMapable
  */
@@ -74,6 +72,9 @@ class DataMapableTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function mock_unset($name)
+    {}
+
     protected function setUp()
     {
         $this->DataMapper  = $this->getMockForAbstractClass('\\BLW\\Type\\IDataMapper', array(), '', false);
@@ -94,14 +95,15 @@ class DataMapableTest extends \PHPUnit_Framework_TestCase
             ->method('offsetSet')
             ->will($this->returnCallback(array($this, 'mock_set')));
 
-        $Object   = new ReflectionObject($this->DataMapable);
-        $Property = $Object->getProperty('_DataMapper');
+        $this->DataMapper
+            ->expects($this->any())
+            ->method('offsetUnset')
+            ->will($this->returnCallback(array($this, 'mock_unset')));
+
+        $Property = new ReflectionProperty($this->DataMapable, '_DataMapper');
 
         $Property->setAccessible(true);
         $Property->setValue($this->DataMapable, $this->DataMapper);
-        $Property->setAccessible(false);
-
-        unset($Property, $Object);
     }
 
     protected function tearDown()
@@ -116,15 +118,20 @@ class DataMapableTest extends \PHPUnit_Framework_TestCase
     public function test__get()
     {
         # Test dynamic property
-        $this->assertEquals(1, $this->DataMapable->foo, 'DataMapable::$foo should equal 1.');
+        $this->assertEquals(1, $this->DataMapable->foo, 'IDataMapable::$foo should equal 1.');
 
         # Test undefined property
-        try { $this->DataMapable->bar; }
+        try {
+            $this->DataMapable->undefined;
+            $this->fail('Failed to generate exception with undefined property');
+        }
 
-        catch (PHPUnit_Framework_Error_Notice $e) {
+        catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Undefined property', $e->getMessage());
         }
-   }
+
+        $this->assertNull(@$this->DataMapable->undefined, 'IDataMapable::$undefined should be null');
+    }
 
    /**
     * @covers ::__isset
@@ -132,10 +139,10 @@ class DataMapableTest extends \PHPUnit_Framework_TestCase
    public function test__isset()
    {
        # Test dynamic property
-       $this->assertTrue(isset($this->DataMapable->foo), 'DataMapable::$foo should exist.');
+       $this->assertTrue(isset($this->DataMapable->foo), 'IDataMapable::$foo should exist.');
 
         # Test undefined property
-       $this->assertFalse(isset($this->DataMapable->bar), 'DataMapable::$bar shouldn\'t exist.');
+       $this->assertFalse(isset($this->DataMapable->undefined), 'IDataMapable::$undefined should not exist.');
   }
 
     /**
@@ -145,7 +152,6 @@ class DataMapableTest extends \PHPUnit_Framework_TestCase
     {
         # Test dynamic property
         $this->DataMapable->foo1 = 1;
-        $this->assertEquals(1, $this->DataMapable->foo1, 'DataMapable::$foo should equal 1');
 
         # Test readonly property
         try {
@@ -153,9 +159,11 @@ class DataMapableTest extends \PHPUnit_Framework_TestCase
             $this->fail('Failed to generate notice on readonly property');
         }
 
-        catch (PHPUnit_Framework_Error_Notice $e) {
+        catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
+
+        @$this->DataMapable->foo2 = 1;
 
         # Test singleshot property
         try {
@@ -163,9 +171,11 @@ class DataMapableTest extends \PHPUnit_Framework_TestCase
             $this->fail('Failed to generate warning on singleshot property');
         }
 
-        catch (PHPUnit_Framework_Error_Notice $e) {
+        catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
+
+        @$this->DataMapable->foo3 = 1;
 
         # Test invalid value
         try {
@@ -173,9 +183,11 @@ class DataMapableTest extends \PHPUnit_Framework_TestCase
             $this->fail('Failed to generate warning on invalid value');
         }
 
-        catch (PHPUnit_Framework_Error_Notice $e) {
+        catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
+
+        @$this->DataMapable->foo4 = 1;
 
         # Test undefined property
         try {
@@ -183,9 +195,18 @@ class DataMapableTest extends \PHPUnit_Framework_TestCase
             $this->fail('Failed to generate notice on undefined property');
         }
 
-        catch (PHPUnit_Framework_Error $e) {
+        catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Tried to modify non-existant property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
+        @$this->DataMapable->foo5 = 1;
+    }
+
+    /**
+     * @covers ::__unset()
+     */
+    public function test_unset()
+    {
+        unset($this->DataMapable->undefined);
     }
 }

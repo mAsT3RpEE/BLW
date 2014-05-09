@@ -21,17 +21,17 @@ namespace BLW\Model\MIME;
 use BLW\Model\InvalidArgumentException;
 use BLW\Type\IDataMapper;
 if (! defined('BLW')) {
-    
+
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
         header("$_SERVER[SERVER_PROTOCOL] 404 Not Found");
         header('Status: 404 Not Found');
-        
+
         $_SERVER['REDIRECT_STATUS'] = 404;
-        
+
         echo "<html>\r\n<head><title>404 Not Found</title></head><body bgcolor=\"white\">\r\n<center><h1>404 Not Found</h1></center>\r\n<hr>\r\n<center>nginx/1.5.9</center>\r\n</body>\r\n</html>\r\n";
         exit();
     }
-    
+
     return false;
 }
 
@@ -41,50 +41,51 @@ if (! defined('BLW')) {
  * <h3>RFC822</h3>
  *
  * <pre>
- * content := "Content-Type" ":" type "/" subtype
- * *(";" parameter)
- * ; Matching of media type and subtype
- * ; is ALWAYS case-insensitive.
+ * content          := "Content-Type" ":" type "/" subtype
+ *                     *(";" parameter)
+ *                     ; Matching of media type and subtype
+ *                     ; is ALWAYS case-insensitive.
  *
- * type := discrete-type / composite-type
+ * type             := discrete-type / composite-type
  *
- * subtype := extension-token / iana-token
+ * subtype          := extension-token / iana-token
  *
- * parameter := attribute "=" value
+ * parameter        := attribute "=" value
  *
- * discrete-type := "text" / "image" / "audio" / "video" /
- * "application" / extension-token
+ * discrete-type    := "text" / "image" / "audio" / "video" /
+ *                     "application" / extension-token
  *
- * composite-type := "message" / "multipart" / extension-token
+ * composite-type   := "message" / "multipart" / extension-token
  *
- * extension-token := ietf-token / x-token
+ * extension-token  := ietf-token / x-token
  *
- * iana-token := <A publicly-defined extension token. Tokens
- * of this form must be registered with IANA
- * as specified in RFC 2048.>
+ * iana-token       := <A publicly-defined extension token. Tokens
+ *                      of this form must be registered with IANA
+ *                      as specified in RFC 2048.>
+ *
  * http://www.mhonarc.org/~ehood/MIME/2048/rfc2048.html
  *
- * ietf-token := <An extension token defined by a
- * standards-track RFC and registered
- * with IANA.>
+ * ietf-token       := <An extension token defined by a
+ *                      standards-track RFC and registered
+ *                      with IANA.>
  *
- * x-token := <The two characters "X-" or "x-" followed, with
- * no intervening white space, by any token>
+ * x-token          := <The two characters "X-" or "x-" followed, with
+ *                      no intervening white space, by any token>
  *
- * attribute := token
- * ; Matching of attributes
- * ; is ALWAYS case-insensitive.
+ * attribute        := token
+ *                     ; Matching of attributes
+ *                     ; is ALWAYS case-insensitive.
  *
- * value := token / quoted-string
+ * value            := token / quoted-string
  *
- * token := 1*<any (US-ASCII) CHAR except SPACE, CTLs,
- * or tspecials>
+ * token            := 1*<any (US-ASCII) CHAR except SPACE, CTLs,
+ *                        or tspecials>
  *
- * tspecials := "(" / ")" / "<" / ">" / "@" /
- * "," / ";" / ":" / "\" / <">
- * "/" / "[" / "]" / "?" / "="
- * ; Must be in quoted-string,
- * ; to use within parameter values
+ * tspecials        := "(" / ")" / "<" / ">" / "@" /
+ *                     "," / ";" / ":" / "\" / <">
+ *                     "/" / "[" / "]" / "?" / "="
+ *                     ; Must be in quoted-string,
+ *                     ; to use within parameter values
  * </pre>
  *
  * <hr>
@@ -98,7 +99,7 @@ final class ContentType extends \BLW\Type\MIME\AHeader
 {
     // image / audio / video / application
     const DISCRETE_TYPE = '(?:text|image|audio|video|application)';
-    
+
     // message / multipart
     const COMPOSITE_TYPE = '(?:message|multipart)';
 
@@ -106,40 +107,40 @@ final class ContentType extends \BLW\Type\MIME\AHeader
      * Constructor
      *
      * @throws \BLW\Model\InvalidArgumentException If <code>$Type</code> is not a string.
-     *        
-     * @param string $Type            
+     *
+     * @param string $Type
+     *            MIME Content-Type.
      * @param array $Params
      *            Array of parameters with atribute as key and value as value
-     * @return void
      */
     public function __construct($Type, array $Params = array())
     {
         // 1. Header type
         $this->_Type = 'Content-Type';
-        
+
         // 2. Header value
-        
+
         // Validate $Type
         if (is_string($Type) ?  : is_callable(array(
             $Type,
             '__toString'
         ))) {
-            
+
             // Type
             $this->_Value = $this->parseType($Type);
-            
+
             // Parameters
             foreach ($Params as $Attribute => $Value) {
-                
+
                 // Add parameter to value
                 try {
                     $this->_Value .= $this->parseParameter($Attribute, $Value);
-                }                
+                }
 
                 // Skip errors
                 catch (InvalidArgumentException $e) {}
             }
-        }         
+        }
 
         // Invalid $Type
         else
@@ -150,9 +151,8 @@ final class ContentType extends \BLW\Type\MIME\AHeader
      * Parse a string for content-type.
      *
      * @api BLW
-     * 
      * @since 1.0.0
-     *       
+     *
      * @param string $Test
      *            String to search.
      * @return string Returns `text/plain` in case of error.
@@ -161,16 +161,20 @@ final class ContentType extends \BLW\Type\MIME\AHeader
     {
         // Type Regex
         $Type = sprintf('(?:%s|%s|%s)', self::DISCRETE_TYPE, self::COMPOSITE_TYPE, self::EXTENTION_TOKEN);
-        
+
         // Subtype Regex
         $SubType = self::TOKEN;
-        
+
         // Match Regex `type/subtype`
         if (preg_match("!$Type\\x2f$SubType!", @strtolower($Test), $m))
             return $m[0];
-            
-            // Default
+
+        // Default
         return 'text/plain';
     }
 }
+
+// @codeCoverageIgnoreStart
+return true;
+// @codeCoverageIgnoreEnd
 

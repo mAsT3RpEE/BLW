@@ -28,7 +28,7 @@ class Decimal extends Column
 
     /**
      * @param null|string $name
-     * @param int $precision
+     * @param integer $precision
      * @param null|int $scale
      */
     public function __construct($name, $precision, $scale = null)

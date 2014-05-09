@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\MIME;
+namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
 use BLW\Model\MIME\ContentEncoding;
@@ -24,7 +24,7 @@ use BLW\Model\MIME\ContentEncoding;
 /**
  * Tests BLW Library MIME Contetn-Type header.
  * @package BLW\MIME
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Mime\ContentEncoding
  */
@@ -35,27 +35,14 @@ class ContentEncodingTest extends \PHPUnit_Framework_TestCase
      */
     protected $Header = NULL;
 
-    /**
-     * @var \ReflectionProperty[]
-     */
-    protected $Properties = array();
-
     protected function setUp()
     {
-        $this->Header      = new ContentEncoding('compress, gzip; q=0.5');
-        $this->Properties  = array(
-             'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
-        );
-
-        $this->Properties['Type']->setAccessible(true);
-        $this->Properties['Value']->setAccessible(true);
+        $this->Header = new ContentEncoding('compress, gzip; q=0.5');
     }
 
     protected function tearDown()
     {
-        $this->Properties = NULL;
-        $this->Header     = NULL;
+        $this->Header = NULL;
     }
 
     public function generateValidEncodings()
@@ -99,14 +86,15 @@ class ContentEncodingTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends test_parseEncoding
      * @covers ::__construct
+     * @covers ::_combine
      */
     public function test_construct()
     {
         $this->Header = new ContentEncoding('compress, gzip');
 
         # Check params
-        $this->assertEquals('Content-Encoding', $this->Properties['Type']->getValue($this->Header), 'ContentEncoding::__construct() failed to set $_Type');
-        $this->assertEquals('compress, gzip', $this->Properties['Value']->getValue($this->Header), 'ContentEncoding::__construct() failed to set $_Value');
+        $this->assertAttributeEquals('Content-Encoding', '_Type', $this->Header, 'ContentEncoding::__construct() failed to set $_Type');
+        $this->assertAttributeEquals('compress, gzip', '_Value', $this->Header, 'ContentEncoding::__construct() failed to set $_Value');
 
         # Invalid arguments
         try {

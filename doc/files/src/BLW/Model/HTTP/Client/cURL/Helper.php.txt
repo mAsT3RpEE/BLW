@@ -351,10 +351,10 @@ class Helper
     }
 
     /**
-     * Calculates the number of new requests made in the last minute.
+     * Calculates the number of new requests made per minute.
      *
      * @todo Everything
-     * @return int
+     * @return double Number of new requests in the last minute.
      */
     public function getRate()
     {

@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\MIME;
+namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
 use BLW\Model\MIME\Allow;
@@ -24,7 +24,7 @@ use BLW\Model\MIME\Allow;
 /**
  * Tests BLW Library MIME Allow header.
  * @package BLW\MIME
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Mime\Allow
  */
@@ -99,6 +99,7 @@ class AllowTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends test_parseAllow
      * @covers ::__construct
+     * @covers ::_combine
      */
     public function test_construct()
     {

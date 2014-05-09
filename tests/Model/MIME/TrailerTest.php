@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\MIME;
+namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
 use BLW\Model\MIME\Trailer;
@@ -24,7 +24,7 @@ use BLW\Model\MIME\Trailer;
 /**
  * Tests BLW Library MIME Contetn-Type header.
  * @package BLW\MIME
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Mime\Trailer
  */
@@ -99,14 +99,15 @@ class TrailerTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends test_parseFieldName
      * @covers ::__construct
+     * @covers ::_combine
      */
     public function test_construct()
     {
-        $this->Header = new Trailer('Content-Type');
+        $this->Header = new Trailer('Content-Type, Content-Encoding');
 
         # Check params
         $this->assertEquals('Trailer', $this->Properties['Type']->getValue($this->Header), 'Trailer::__construct() failed to set $_Type');
-        $this->assertEquals('Content-Type', $this->Properties['Value']->getValue($this->Header), 'Trailer::__construct() failed to set $_Value');
+        $this->assertEquals('Content-Type, Content-Encoding', $this->Properties['Value']->getValue($this->Header), 'Trailer::__construct() failed to set $_Value');
 
         # Invalid arguments
         try {

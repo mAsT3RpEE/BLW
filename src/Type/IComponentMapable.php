@@ -1,0 +1,146 @@
+<?php
+/**
+ * IComponentMapable.php | Feb 10, 2014
+ *
+ * @filesource
+ * @license MIT
+ * @copyright Copyright (c) 2013-2018, mAsT3RpEE's Zone
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+/**
+ *
+ * @package BLW\Core
+ * @version GIT: 0.2.0
+ * @author  Walter Otsyula <wotsyula@mast3rpee.tk>
+ */
+namespace BLW\Type;
+
+// @codeCoverageIgnoreStart
+if (! defined('BLW')) {
+
+    if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
+        header("$_SERVER[SERVER_PROTOCOL] 404 Not Found");
+        header('Status: 404 Not Found');
+
+        $_SERVER['REDIRECT_STATUS'] = 404;
+
+        echo "<html>\r\n<head><title>404 Not Found</title></head><body bgcolor=\"white\">\r\n<center><h1>404 Not Found</h1></center>\r\n<hr>\r\n<center>nginx/1.5.9</center>\r\n</body>\r\n</html>\r\n";
+        exit();
+    }
+
+    return false;
+}
+// @codeCoverageIgnoreEnd
+
+
+/**
+ * Interface for all objects that immport component methods / properties.
+ *
+ * <h3>Summary</h3>
+ *
+ * <pre>
+ * +---------------------------------------------------+
+ * | COMPONENTMAPABLE                                  |
+ * +---------------------------------------------------+
+ * | _Component: object                                |
+ * +---------------------------------------------------+
+ * | __call(): _Component->###()                       |
+ * |           Variable functions                      |
+ * |                                                   |
+ * | $name:       string                               |
+ * | $arguments:  array                                |
+ * +---------------------------------------------------+
+ * | __get(): _Component->###                          |
+ * |                                                   |
+ * | $name:  string                                    |
+ * +---------------------------------------------------+
+ * | __set(): _Component->###                          |
+ * |                                                   |
+ * | $name:   string                                   |
+ * | $value:  mixed                                    |
+ * +---------------------------------------------------+
+ * | __isset(): _Component->###                        |
+ * |                                                   |
+ * | $name:  string                                    |
+ * +---------------------------------------------------+
+ * </pre>
+ *
+ * <hr>
+ *
+ * @package BLW\Core
+ * @api     BLW
+ * @since   1.0.0
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
+ *
+ * @property $_Component mixed [protected] Pointer to component of the object.
+ */
+interface IComponentMapable
+{
+
+    /**
+     * Import component methods / Variable functions.
+     *
+     * @api BLW
+     * @since 0.1.0
+     *
+     * @throws \BadMethodCallException If method is not found.
+     *
+     * @param string $name
+     *            Label of method to look for.
+     * @param array $arguments
+     *            Arguments to pass to method.
+     * @return mixed Component method return value.
+     */
+    public function __call($name, array $arguments);
+
+    /**
+     * Import component properties.
+     *
+     * <h4>Note:</h4>
+     *
+     * <p>Raises a <b>Warning</b> if property is not found.</p>
+     *
+     * <hr>
+     *
+     * @api BLW
+     * @since 0.1.0
+     *
+     * @param string $name
+     *            Label of property to search for.
+     * @return mixed Returns <code>null</code> if not found.
+     */
+    public function __get($name);
+
+    /**
+     * Import component properties.
+     *
+     * @api BLW
+     * @since 0.1.0
+     *
+     * @param string $name
+     *            Label of property to search for.
+     * @return boolean Returns a <code>TRUE</code> if property exists. <code>FALSE</code> otherwise.
+     */
+    public function __isset($name);
+
+    /**
+     * Import component properties.
+     *
+     * @api BLW
+     * @since 0.1.0
+     *
+     * @param string $name
+     *            Label of property to set.
+     * @param mixed $value
+     *            Value of property.
+     * @return boolean Returns a <code>IDataMapper</code> status code.
+     */
+    public function __set($name, $value);
+}
+
+// @codeCoverageIgnoreStart
+return true;
+// @codeCoverageIgnoreEnd

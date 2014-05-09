@@ -223,7 +223,7 @@ abstract class AFile extends \BLW\Type\AWrapper implements \BLW\Type\IFile
      *
      * @link www.php.net/manual/en/splfileobject.key.php SplFileObject::key()
      *
-     * @return mixed|null Current key.
+     * @return int|null Current key.
      */
     public function key()
     {
@@ -279,7 +279,7 @@ abstract class AFile extends \BLW\Type\AWrapper implements \BLW\Type\IFile
     {
         // Is file opened?
         if ($this->_Component instanceof SplFileObject)
-            return $this->_Component->valid();
+            return (bool) $this->_Component->valid();
 
         // No?
         else
@@ -319,7 +319,7 @@ abstract class AFile extends \BLW\Type\AWrapper implements \BLW\Type\IFile
     {
         // Is file opened?
         if ($this->_Component instanceof SplFileObject)
-            return $this->_Component->hasChildren();
+            return (bool) $this->_Component->hasChildren();
 
         // No?
         else
@@ -651,14 +651,14 @@ abstract class AFile extends \BLW\Type\AWrapper implements \BLW\Type\IFile
         $this->_Component = new SplFileInfo($this->_FileName);
 
         // Restore properties
-        array_walk($Propterties, function ($v, $k)
-        {
+        foreach ($Propterties as $k => $v) {
+
             try {
                 $this->_Component->{$k} = $v;
             }
 
             catch (\Exception $e) {}
-        });
+        };
 
         // Reopen file
         if (!empty($this->_Flags))

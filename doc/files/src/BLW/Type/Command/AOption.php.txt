@@ -417,10 +417,11 @@ abstract class AOption implements \BLW\Type\Command\IOption
         }
 
         // Explode string and filter empty items
-        $Arguments = array_filter(explode($split, $Arguments), function ($v)
+        $nowsctrl  = self::$_NOWS_CTRL;
+        $Arguments = array_filter(explode($split, $Arguments), function ($v) use($nowsctrl)
         {
             return ! empty($v)
-                ? ! in_array($v, self::$_NOWS_CTRL)
+                ? ! in_array($v, $nowsctrl)
                 : false;
         });
 

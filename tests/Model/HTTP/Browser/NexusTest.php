@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\HTTP\Browser;
+namespace BLW\Model\HTTP\Browser;
 
 use ReflectionProperty;
 use ReflectionMethod;
@@ -30,7 +30,7 @@ use Psr\Log\NullLogger;
 /**
  * Test for Nexus HTTP Browser
  * @package BLW\HTTP
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\HTTP\Browser\Nexus
  */
@@ -68,11 +68,36 @@ class NexusTest  extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @coverst ::__construct()
+     * @coverst ::__construct
      */
     public function test_construct()
     {
-        $this->Browser = new Browser($this->Client, new Config, new NullLogger);
+        $Config        = new Config;
+        $Logger        = new NullLogger;
+        $this->Browser = new Browser($this->Client, $Config, $Logger);
+
+        $this->assertAttributeSame($Logger, 'logger', $this->Browser, 'Nexus::__construct() Failed to set $logger');
+        $this->assertAttributeInstanceOf('\\BLW\\Type\\IContainer', '_History', $this->Browser, 'Nexus::__construct() Failed to set $_History');
+        $this->assertAttributeInstanceOf('\\BLW\\Type\\IMediator', '_Mediator', $this->Browser, 'Nexus::__construct() Failed to set $_Mediator');
+        $this->assertAttributeInstanceOf('\\BLW\\Type\\IContainer', '_Engines', $this->Browser, 'Nexus::__construct() Failed to set $_Engines');
+        $this->assertAttributeInstanceOf('\\BLW\\Type\\IContainer', '_Plugins', $this->Browser, 'Nexus::__construct() Failed to set $_Plugins');
+        $this->assertAttributeInstanceOf('\\BLW\\Type\\HTTP\\Browser\\IPage', '_Component', $this->Browser, 'Nexus::__construct() Failed to set $_Component');
+    }
+
+    /**
+     * @covers ::createHeaders
+     */
+    public function test_createHeaders()
+    {
+        $Called = 0;
+
+        $this->Browser->_on('Headers', function() use(&$Called) {$Called++;});
+
+        $Headers = $this->Browser->createHeaders();
+
+        $this->assertArrayHasKey('User-Agent', $Headers, 'Nexus::getHeaders() Failed to set UserAgent');
+        $this->assertContainsOnlyInstancesOf('\\BLW\\Type\\MIME\\IHeader', $Headers, 'Nexus::getHeaders() Returned an invalid value');
+        $this->assertSame(1, $Called, 'Nexus::getHeaders() Failed to trigger Headers event');
     }
 
     /**

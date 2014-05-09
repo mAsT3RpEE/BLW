@@ -15,7 +15,11 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Type;
+namespace BLW\Type;
+
+if (!class_exists('\\BLW\\Tests\\Type\\IterableTest'))
+    include_once 'IterableTest.php';
+
 
 use BLW\Type\IDataMapper;
 use BLW\Type\ISerializer;
@@ -25,14 +29,14 @@ use BLW\Type\ISerializable;
 /**
  * Tests BLW Library Serializer type.
  * @package BLW\Core
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  *  @coversDefaultClass \BLW\Type\ASerializer
  */
-class SerializerTest extends \PHPUnit_Framework_TestCase
+class SerializerTest extends \BLW\Type\IterableTest
 {
     /**
-     * @var \BLW\Type\ISerializer
+     * @var \BLW\Type\ASerializer
      */
     protected $Serializer = NULL;
 
@@ -44,17 +48,18 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->Serializer                        = $this->getMockForAbstractClass('\\BLW\\Type\\ASerializer');
+        $this->Iterable                          = $this->Serializer;
         $this->Serializable                      = $this->getMockForAbstractClass('\\BLW\\Type\\AObject');
-        $this->Serializable->Child1              = $this->getMockForAbstractClass('\\BLW\\Type\\AObject');
+        $this->Serializable->Child1              = $this->getMockForAbstractClass('\\BLW\\Type\\AEmailAddress', array('root'));
         $this->Serializable->Child2              = $this->getMockForAbstractClass('\\BLW\\Type\\AObject');
         $this->Serializable->Child3              = $this->getMockForAbstractClass('\\BLW\\Type\\AObject');
         $this->Serializable->Child4              = $this->getMockForAbstractClass('\\BLW\\Type\\AObject');
-        $this->Serializable->Child1->GrandChild1 = $this->getMockForAbstractClass('\\BLW\\Type\\AObject');
-        $this->Serializable->Child1->GrandChild2 = $this->getMockForAbstractClass('\\BLW\\Type\\AObject');
-        $this->Serializable->Child2->GrandChild3 = $this->getMockForAbstractClass('\\BLW\\Type\\AObject');
-        $this->Serializable->Child2->GrandChild4 = $this->getMockForAbstractClass('\\BLW\\Type\\AObject');
-        $this->Serializable->Child3->GrandChild5 = $this->getMockForAbstractClass('\\BLW\\Type\\AObject');
-        $this->Serializable->Child3->GrandChild6 = $this->getMockForAbstractClass('\\BLW\\Type\\AObject');
+        $this->Serializable->Child1->GrandChild1 = $this->getMockForAbstractClass('\\BLW\\Type\\AEmailAddress', array('test@example.com'));
+        $this->Serializable->Child1->GrandChild2 = $this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('http://foo.com'));
+        $this->Serializable->Child2->GrandChild3 = $this->getMockForAbstractClass('\\BLW\\Type\\AFile', array(__FILE__));
+        $this->Serializable->Child2->GrandChild4 = $this->getMockForAbstractClass('\\BLW\\Type\\AContainer');
+        $this->Serializable->Child3->GrandChild5 = $this->getMockForAbstractClass('\\BLW\\Type\\AWrapper', array(null));
+        $this->Serializable->Child3->GrandChild6 = $this->getMockForAbstractClass('\\BLW\\Type\\AObjectStorage');
         $this->Serializable->Child4->GrandChild1 = $this->Serializable->Child1->GrandChild1;
         $this->Serializable->Child4->GrandChild1 = $this->Serializable->Child1->GrandChild2;
 
@@ -74,11 +79,13 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     protected function tearDown()
     {
         $this->Serializer   = NULL;
+        $this->Iterable     = NULL;
         $this->Serializable = NULL;
     }
 
     /**
      * @covers ::export
+     * @covers ::_properties
      */
     public function test_export()
     {
@@ -93,6 +100,9 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($Expected, $Exported['_DataMapper'], 'ISerializer::export() did not export object');
         $this->assertEquals($this->Serializable->getID(), $Exported['_ID'], 'ISerializer::export() did not export object');
         $this->assertEquals($this->Serializable->getParent(), $Exported['_Parent'], 'ISerializer::export() did not export object');
+
+        # Static variable
+        $this->assertGreaterThan(4, $this->Serializer->export($this->Serializable->Child1, $Exported), 'ISerializer::export() should return 4');
     }
 
     /**
@@ -104,6 +114,8 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $New = $this->getMockForAbstractClass('\\BLW\\Type\\AObject');
 
         $this->Serializer->export($this->Serializable, $Exported);
+        $Exported['foo'] = 1;
+        $Exported['bar'] = 2;
         $this->Serializer->import($New, $Exported);
 
         $this->assertEquals($this->Serializable, $New, 'ISerializer::import() did not import all parameters');
@@ -128,17 +140,13 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers ::__get
      */
-    public function test__get()
+    public function test_get()
     {
-	    # Make property readable / writable
-	    $Status = new \ReflectionProperty($this->Serializer, '_Status');
-	    $Status->setAccessible(true);
-
 	    # Status
-        $this->assertSame($this->Serializer->Status, $Status->getValue($this->Serializer), 'ISerializer::$Status should equal ISerializer::_Status');
+        $this->assertAttributeSame($this->Serializer->Status, '_Status', $this->Serializer, 'ISerializer::$Status should equal ISerializer::_Status');
 
 	    # Serializer
-	    $this->assertSame($this->Serializer->Serializer, $this->Serializer->getSerializer(), 'ISerializer::$Serializer should equal ISerializer::getSerializer()');
+	    $this->assertSame($this->Serializer->getSerializer(), $this->Serializer->Serializer, 'ISerializer::$Serializer should equal ISerializer::getSerializer()');
 
 	    # Parent
         $this->assertNULL($this->Serializer->Parent, 'ISerializer::$Parent should initially be NULL');
@@ -148,19 +156,21 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 
 	    # Test undefined property
         try {
-            $this->Serializer->bar;
-            $this->fail('ISerializer::$bar is undefined and should raise a notice');
+            $this->Serializer->undefined;
+            $this->fail('Failed to generate notice with undefined property');
         }
 
         catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Undefined property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
-   }
+
+        @$this->Serializer->undefined;
+    }
 
    /**
     * @covers ::__isset
     */
-   public function test__isset()
+   public function test_isset()
    {
         # Status
        $this->assertTrue(isset($this->Serializer->Serializer), 'ISerializer::$Status should exist');
@@ -181,7 +191,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers ::__set
      */
-    public function test__set()
+    public function test_set()
     {
         # Status
         try {
@@ -193,6 +203,8 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
+        @$this->Serializer->Status = 0;
+
         # Serializer
         try {
             $this->Serializer->Serializer = 0;
@@ -203,29 +215,79 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
-        # Parent
-        $this->Serializer->Parent = $this->getMockForAbstractClass('\\BLW\\Type\\IObject');
-        $this->assertSame($this->Serializer->Parent, $this->Serializer->getParent(), 'ISerializer::$Parent should equal ISerializer::getParent');
-        $this->assertTrue(isset($this->Serializer->Parent), 'ISerializer::$Parent should exist');
+        @$this->Serializer->Serializer = 0;
 
-	    # ID
+        # Parent
+        $Parent                = $this->getMockForAbstractClass('\\BLW\\Type\\AObject');
+        $this->Serializer->Parent = $Parent;
+
+        $this->assertSame($Parent, $this->Serializer->Parent, 'ISerializer::$Parent should equal ISerializer::getParent()');
+
         try {
-            $this->Serializer->ID = 'foo';
-            $this->fail('Failed to generate notice on readonly property');
+            $this->Serializer->Parent = null;
+            $this->fail('Failed to generate notice with invalid value');
         }
 
         catch (\PHPUnit_Framework_Error_Notice $e) {
-            $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
+            $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
-        # Undefined property
+        @$this->Serializer->Parent = null;
+
         try {
-            $this->Serializer->bar = 0;
-            $this->fail('Failed to generate notice on undefined property');
+            $this->Serializer->Parent = $Parent;
+            $this->fail('Failed to generate notice with oneshot value');
+        }
+
+        catch (\PHPUnit_Framework_Error_Notice $e) {
+            $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
+        }
+
+        # ID
+        try {
+            $this->Serializer->ID = 'foo';
+            $this->fail('Failed to generate notice with readonly property');
+        }
+
+        catch (\PHPUnit_Framework_Error_Notice $e) {
+            $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
+        }
+
+        @$this->Serializer->ID = 'foo';
+
+        # Undefined
+        try {
+            $this->Serializer->undefined = '';
+            $this->fail('Failed to generate notice with undefined property');
         }
 
         catch (\PHPUnit_Framework_Error $e) {
-            $this->assertContains('Cannot modify non-existant property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
+            $this->assertContains('non-existant property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
+
+        @$this->Serializer->undefined = '';
+    }
+
+    /**
+     * @depends test_get
+     * @depends test_set
+     * @covers ::__unset
+     */
+    public function test_unset()
+    {
+        # Parent
+        $this->Serializer->Parent = $this->getMockForAbstractClass('\\BLW\Type\IObject');
+
+        unset($this->Serializer->Parent);
+
+        $this->assertNull($this->Serializer->Parent, 'unset(ISerializer::$Parent) Did not reset $_Parent');
+
+        # Status
+        unset($this->Serializer->Status);
+
+        $this->assertSame(0, $this->Serializer->Status, 'unset(ISerializer::$Status) Did not reset $_Status');
+
+        # Undefined
+        unset($this->Serializer->undefined);
     }
 }

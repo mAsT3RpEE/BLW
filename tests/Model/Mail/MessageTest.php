@@ -11,18 +11,11 @@
  */
 
 /**
- *    @package BLW\Mail
- *    @version 1.0.0
- *    @author Walter Otsyula <wotsyula@mast3rpee.tk>
- */
-namespace BLW\Test\Model\Mail;
-
-/**
  * @package BLW\Mail
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\Mail;
+namespace BLW\Model\Mail;
 
 use ReflectionProperty;
 
@@ -33,18 +26,20 @@ use BLW\Model\GenericEmailAddress;
 use BLW\Model\GenericFile;
 use BLW\Model\GenericContainer;
 use BLW\Model\FileException;
+use BLW\Model\ClassException;
 use BLW\Model\Mail\MIME\Message as MIMEMessage;
 use BLW\Model\Mail\GenericMessage;
 use BLW\Model\Mail\Transport\Mock as Transport;
 
+
 /**
  * Tests Message Module type.
  * @package BLW\Mail
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Mail\GenericMessage
  */
-class MessageTest extends \PHPUnit_Framework_TestCase
+class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
 {
     const FILE   = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII=';
 
@@ -60,30 +55,14 @@ class MessageTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->Message    = new GenericMessage;
-        $this->Properties = array(
-            'To'                  => new ReflectionProperty($this->Message, '_To')
-            ,'From'               => new ReflectionProperty($this->Message, '_From')
-            ,'ReplyTo'            => new ReflectionProperty($this->Message, '_ReplyTo')
-            ,'CC'                 => new ReflectionProperty($this->Message, '_CC')
-            ,'BCC'                => new ReflectionProperty($this->Message, '_BCC')
-            ,'Attachments'       => new ReflectionProperty($this->Message, '_Attachments')
-            ,'InlineAttachments' => new ReflectionProperty($this->Message, '_InlineAttachments')
-        );
-
-        $this->Properties['To']->setAccessible(true);
-        $this->Properties['From']->setAccessible(true);
-        $this->Properties['ReplyTo']->setAccessible(true);
-        $this->Properties['CC']->setAccessible(true);
-        $this->Properties['BCC']->setAccessible(true);
-        $this->Properties['Attachments']->setAccessible(true);
-        $this->Properties['InlineAttachments']->setAccessible(true);
+        $this->Message        = new GenericMessage;
+        $this->AddressHandler = $this->Message;
     }
 
     protected function tearDown()
     {
-        $this->Message    = NULL;
-        $this->Properties = NULL;
+        $this->Message        = NULL;
+        $this->AddressHandler = NULL;
     }
 
     /**
@@ -176,18 +155,19 @@ class MessageTest extends \PHPUnit_Framework_TestCase
     }
     /**
      * @depends test_getSubject
-     * @covers ::setText
+     * @covers ::setSubject
      */
     public function test_setSubject()
     {
         $Subject = 'Test Subject';
+        $Object  = new \SplFileInfo(__FILE__);
 
         # Valid Subject
         $this->assertEquals(IDataMapper::UPDATED, $this->Message->setSubject($Subject), 'IMessage::setSubject() should return IDataMapper::UPDATED');
         $this->assertSame($Subject, $this->Message->getSubject(), 'IMessage::setSubject() did not update message as expected');
 
         # Invalid Subject
-        $this->assertEquals(IDataMapper::INVALID, $this->Message->setText(NULL), 'IMessage::setText() should return IDataMapper::INVALID');
+        $this->assertEquals(IDataMapper::INVALID, $this->Message->setSubject(NULL), 'IMessage::setText() should return IDataMapper::INVALID');
 
         # Subject Filtering
         foreach($this->generateSubjects() as $Arguments) {
@@ -208,11 +188,11 @@ class MessageTest extends \PHPUnit_Framework_TestCase
 
         # ReadableFile
         $this->assertEquals(IDataMapper::UPDATED, $this->Message->addAttachment($Expected), 'IMessage::addAttachment() should return IDataMapper::UPDATED');
-        $this->assertSame($Expected, $this->Properties['Attachments']->getValue($this->Message)->offsetGet(0), 'IMessage::$_Attachments was not updated by IMessage::addAttachments()');
+        $this->assertSame($Expected, $this->readAttribute($this->Message, '_Attachments')->offsetGet(0), 'IMessage::$_Attachments was not updated by IMessage::addAttachments()');
 
         # Unreadable file
         try {
-            $this->Message->addAttachment(new GenericFile('X:\\undefined'));
+            $this->Message->addAttachment(new GenericFile('z:\\undefined\\!!!'));
             $this->fail('Failed to generate exception on invalid file');
         }
 
@@ -243,9 +223,9 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $Regex = '!\\x40[\\x30-\\x39\\x41-\\x5a\\x61\\x7a]+!';
 
         # ReadableFile
-        $this->assertRegExp($Regex, $this->Message->InlineAttachment($File), 'IMessage::InlineAttachment() should return string of format `@[\w]+');
+        $this->assertRegExp($Regex, $this->Message->inlineAttachment($File), 'IMessage::inlineAttachment() should return string of format `@[\w]+');
         $this->assertTrue(!empty($File->UniqueID), 'IFile::$UniqueID should exist and should not be empty');
-        $this->assertSame($File, $this->Properties['InlineAttachments']->getValue($this->Message)->offsetGet(0), 'IMessage::$_Attachments was not updated by IMessage::addAttachments()');
+        $this->assertSame($File, $this->readAttribute($this->Message, '_InlineAttachments')->offsetGet(0), 'IMessage::$_Attachments was not updated by IMessage::addAttachments()');
 
         # Unreadable file
         try {
@@ -267,7 +247,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $Regex    = '!\\x40[\\x30-\\x39\\x41-\\x5a\\x61\\x7a]+!';
         $Expected->append($File);
 
-        $this->assertRegExp($Regex, $this->Message->InlineAttachment($File), 'IMessage::InlineAttachment() should return string of format `@[\w]+');
+        $this->assertRegExp($Regex, $this->Message->inlineAttachment($File), 'IMessage::inlineAttachment() should return string of format `@[\w]+');
         $this->assertInstanceOf('\\BLW\\Type\\IContainer', $this->Message->getInlineAttachments(), 'IMessage::getInlineAttachments() should return an instance of IContainer');
         $this->assertEquals($Expected, $this->Message->getInlineAttachments(), 'IMessage::getInlineAttachments() returned an invalid IContainer');
     }
@@ -361,6 +341,8 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Undefined property', $e->getMessage(), 'Message::$undefined is undefined and should raise a notice');
         }
+
+        @$this->Message->undefined;
     }
 
     /**
@@ -419,7 +401,6 @@ class MessageTest extends \PHPUnit_Framework_TestCase
 
         # Test undefined property
        $this->assertFalse(isset($this->Message->undefined), 'IObject::$undefined shouldn\'t exist');
-
     }
 
     /**
@@ -438,6 +419,8 @@ class MessageTest extends \PHPUnit_Framework_TestCase
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
+        @$this->Message->Status = 0;
+
         # Serializer
         try {
             $this->Message->Serializer = 0;
@@ -447,6 +430,8 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
+
+        @$this->Message->Serializer = 0;
 
         # Parent
         $Expected = $this->getMockForAbstractClass('\\BLW\\Type\\IObject');
@@ -472,6 +457,8 @@ class MessageTest extends \PHPUnit_Framework_TestCase
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
+        @$this->Message->MediatorID = 0;
+
         # To
         $this->Message->To = new GenericEmailAddress('test@example.com');
         $this->assertCount(1, $this->Message->To, 'IMessage::$To should now contain 1 email addresses');
@@ -482,8 +469,10 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         }
 
         catch (\PHPUnit_Framework_Error_Notice $e) {
-            $this->assertContains('Invalid value foo for property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
+            $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
+
+        @$this->Message->To = 'foo';
 
         # From
         $this->Message->From = new GenericEmailAddress('test@example.com');
@@ -495,8 +484,10 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         }
 
         catch (\PHPUnit_Framework_Error_Notice $e) {
-            $this->assertContains('Invalid value foo for property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
+            $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
+
+        @$this->Message->From = 'foo';
 
         # ReplyTo
         $this->Message->ReplyTo = new GenericEmailAddress('test@example.com');
@@ -508,8 +499,10 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         }
 
         catch (\PHPUnit_Framework_Error_Notice $e) {
-            $this->assertContains('Invalid value foo for property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
+            $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
+
+        @$this->Message->ReplyTo = 'foo';
 
         # CC
         $this->Message->CC = new GenericEmailAddress('test@example.com');
@@ -521,8 +514,10 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         }
 
         catch (\PHPUnit_Framework_Error_Notice $e) {
-            $this->assertContains('Invalid value foo for property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
+            $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
+
+        @$this->Message->CC = 'foo';
 
         # BCC
         $this->Message->BCC = new GenericEmailAddress('test@example.com');
@@ -534,8 +529,10 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         }
 
         catch (\PHPUnit_Framework_Error_Notice $e) {
-            $this->assertContains('Invalid value foo for property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
+            $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
+
+        @$this->Message->BCC = 'foo';
 
         # HTML
         $Expected = new \DOMDocument('1.0');
@@ -548,8 +545,10 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         }
 
         catch (\PHPUnit_Framework_Error_Notice $e) {
-            $this->assertContains('Invalid value foo for property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
+            $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
+
+        @$this->Message->HTML = 'foo';
 
         # Text
         $Expected = 'Text Body';
@@ -562,8 +561,10 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         }
 
         catch (\PHPUnit_Framework_Error_Notice $e) {
-            $this->assertContains('Invalid value 1.1 for property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
+            $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
+
+        @$this->Message->HTML = 1.1;
 
         # Subject
         $Expected = 'Test Subject';
@@ -576,8 +577,10 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         }
 
         catch (\PHPUnit_Framework_Error_Notice $e) {
-            $this->assertContains('Invalid value 1.1 for property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
+            $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
+
+        @$this->Message->Subject = 1.1;
 
         # Test undefined property
         $this->Message->foo = 1;
@@ -622,19 +625,87 @@ class MessageTest extends \PHPUnit_Framework_TestCase
      */
     public function test_getFactoryMethods()
     {
-        $this->assertGreaterThanOrEqual(1, count($this->Message->getFactoryMethods()), 'IMessage::getFactoryMethods() should return an array of ReflectionMethod');
+        $this->assertNotEmpty($this->Message->getFactoryMethods(), 'IMessage::getFactoryMethods() Returned an invalid value');
+        $this->assertContainsOnlyInstancesOf('ReflectionMethod', $this->Message->getFactoryMethods(), 'IMessage::getFactoryMethods() should return an array of ReflectionMethod');
     }
 
     /**
      * @depends test_get
      * @depends test_set
      * @covers ::createMimeMessage
+     * @covers ::_createMimeMessageWithAddresses
+     * @covers ::_addBodyWithoutInlineAttachments
+     * @covers ::_addBodyWithInlineAttachments
      */
     public function test_createMimeMessage()
     {
         $this->generateMessage();
 
+        # Inline attachments
         $this->assertInstanceof('\\BLW\\Type\\MIME\\IMessage', $this->Message->createMimeMessage(), 'IMessage::createMimeMessage() returned an invalid value');
+
+        # No Inline attachments
+        $Attachments = $this->readAttribute($this->Message, '_InlineAttachments');
+        unset($Attachments[0]);
+
+        $this->assertInstanceof('\\BLW\\Type\\MIME\\IMessage', $this->Message->createMimeMessage(), 'IMessage::createMimeMessage() returned an invalid value');
+
+        # Invalid attachment
+        $Attachments[0] = new GenericFile('z:\\undefined\\!!!');
+
+        try {
+            $this->Message->createMimeMessage();
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch (FileException $e) {}
+
+        # No recipient
+        $x = $this->Message->To[0];
+        unset($this->Message->To[0]);
+
+        try {
+            $this->Message->createMimeMessage();
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch (ClassException $e) {}
+
+        # No sender
+        $this->Message->To[0] = $x;
+        $x = $this->Message->From[0];
+        unset($this->Message->From[0]);
+
+        try {
+            $this->Message->createMimeMessage();
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch (ClassException $e) {}
+
+        # No subject
+        $this->Message->From[0] = $x;
+        $x = $this->Message->Subject;
+        unset($this->Message->Subject);
+
+        try {
+            $this->Message->createMimeMessage();
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch (ClassException $e) {}
+
+        # No Body
+        $this->Message->Subject = $x;
+        $x = $this->Message->Text;
+        unset($this->Message->Text);
+
+        try {
+            $this->Message->createMimeMessage();
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch (ClassException $e) {}
     }
 
     /**

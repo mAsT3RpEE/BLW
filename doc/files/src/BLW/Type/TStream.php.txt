@@ -228,7 +228,7 @@ trait TStream
         if (is_resource($this->_fp)) {
 
             // Rewind stream
-            rewind($this->_fp);
+            ftruncate($this->_fp, 0) ?: rewind($this->_fp);
 
             // Data is an instance of stream
             if ($Data instanceof IStream) {
@@ -262,7 +262,7 @@ trait TStream
                 for (
                     $current = $Offset, $len = min(strlen($Data), $MaxLength + $Offset);
 
-                $current < $len;
+                    $current < $len;
                 ) {
                     $current += fwrite($this->_fp, substr($Data, $current, 1024), 1024);
 
@@ -318,21 +318,21 @@ trait TStream
     {
         switch ($name) {
             // ISerializable
-        	case 'Status':
-        	    return $this->_Status;
-        	case 'Serializer':
-        	    return $this->getSerializer();
-        	    // IIterable
-        	case 'Parent':
-        	    return $this->_Parent;
-        	case 'ID':
-        	    return $this->getID();
-        	    // IStream
-        	case 'fp':
-        	    return $this->_fp;
-        	    // Undefined property
-        	default:
-        	    trigger_error(sprintf('Undefined property %s::$%s', get_class($this), $name), E_USER_NOTICE);
+            case 'Status':
+                return $this->_Status;
+            case 'Serializer':
+                return $this->getSerializer();
+            // IIterable
+            case 'Parent':
+                return $this->_Parent;
+            case 'ID':
+                return $this->getID();
+            // IStream
+            case 'fp':
+                return $this->_fp;
+            // Undefined property
+            default:
+                trigger_error(sprintf('Undefined property %s::$%s', get_class($this), $name), E_USER_NOTICE);
         }
 
         // Default
@@ -350,20 +350,20 @@ trait TStream
     {
         switch ($name) {
             // ISerializable
-        	case 'Status':
-        	case 'Serializer':
-        	    return true;
-        	    // IIterable
-        	case 'Parent':
-        	    return $this->_Parent !== null;
-        	case 'ID':
-        	    return $this->getID() !== null;
-        	    // IStream
-        	case 'fp':
-        	    return $this->_fp !== null;
-        	    // Undefined property
-        	default:
-        	    false;
+            case 'Status':
+            case 'Serializer':
+                return true;
+            // IIterable
+            case 'Parent':
+                return $this->_Parent !== null;
+            case 'ID':
+                return $this->getID() !== null;
+            // IStream
+            case 'fp':
+                return $this->_fp !== null;
+            // Undefined property
+            default:
+                false;
         }
     }
 
@@ -374,7 +374,6 @@ trait TStream
      *            Label of property to set.
      * @param mixed $value
      *            Value of property.
-     * @return bool Returns a <code>IDataMapper</code> status code.
      */
     public function __set($name, $value)
     {
@@ -383,40 +382,40 @@ trait TStream
         // Try to set property
         switch ($name) {
             // ISerializable
-        	case 'Status':
-        	case 'Serializer':
-        	    $result = IDataMapper::READONLY;
-        	    break;
-        	    // IIterable
-        	case 'ID':
-        	    $result = $this->setID($value);
-        	    break;
-        	case 'Parent':
-        	    $result = $this->setParent($value);
-        	    break;
-        	    // IStream
-        	case 'fp':
-        	    $result = IDataMapper::READONLY;
-        	    break;
-        	default:
-        	    $result = IDataMapper::UNDEFINED;
+            case 'Status':
+            case 'Serializer':
+                $result = IDataMapper::READONLY;
+                break;
+            // IIterable
+            case 'ID':
+                $result = $this->setID($value);
+                break;
+            case 'Parent':
+                $result = $this->setParent($value);
+                break;
+            // IStream
+            case 'fp':
+                $result = IDataMapper::READONLY;
+                break;
+            default:
+                $result = IDataMapper::UNDEFINED;
         }
 
         // Check results
         switch ($result) {
             // Readonly property
-        	case IDataMapper::READONLY:
-        	case IDataMapper::ONESHOT:
-        	    trigger_error(sprintf('Cannot modify readonly property: %s::$%s', get_class($this), $name), E_USER_NOTICE);
-        	    break;
-        	    // Invalid value for property
-        	case IDataMapper::INVALID:
-        	    trigger_error(sprintf('Invalid value %s for property: %s::$%s', @print_r($value, true), get_class($this), $name), E_USER_NOTICE);
-        	    break;
-        	    // Undefined property property
-        	case IDataMapper::UNDEFINED:
-        	    trigger_error(sprintf('Tried to modify non-existant property: %s::$%s', get_class($this), $name), E_USER_ERROR);
-        	    break;
+            case IDataMapper::READONLY:
+            case IDataMapper::ONESHOT:
+                trigger_error(sprintf('Cannot modify readonly property: %s::$%s', get_class($this), $name), E_USER_NOTICE);
+                break;
+            // Invalid value for property
+            case IDataMapper::INVALID:
+                trigger_error(sprintf('Invalid value %s for property: %s::$%s', @print_r($value, true), get_class($this), $name), E_USER_NOTICE);
+                break;
+            // Undefined property property
+            case IDataMapper::UNDEFINED:
+                trigger_error(sprintf('Tried to modify non-existant property: %s::$%s', get_class($this), $name), E_USER_ERROR);
+                break;
         }
     }
 
@@ -427,19 +426,18 @@ trait TStream
      *
      * @param string $name
      *            Label of dynamic property. (case sensitive)
-     * @return bool Returns a <code>TRUE</code> if property exists. <code>FALSE</code> otherwise.
      */
     public function __unset($name)
     {
         // Try to unset property
         switch ($name) {
             // IIterable
-        	case 'Parent':
-        	    $result = $this->clearParent();
-        	    break;
-        	    // IDataMapable
-        	default:
-        	    $result = IDataMapper::UNDEFINED;
+            case 'Parent':
+                $result = $this->clearParent();
+                break;
+            // IDataMapable
+            default:
+                $result = IDataMapper::UNDEFINED;
         }
     }
 

@@ -301,8 +301,8 @@ class Compiler extends \BLW\Type\AMediatableObject
      *
      * @throws \BLW\Model\FileException If <code>$Dir</code> is not a readable directory.
      *
-     * @param \BLW\Type\IFile $File
-     *            File to add to compiler.
+     * @param \BLW\Type\IFile $Dir
+     *            Directory to add files from.
      * @param string $Extention
      *            [optional] Extention of files to add.
      * @param ...

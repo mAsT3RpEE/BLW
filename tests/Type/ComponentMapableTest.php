@@ -15,18 +15,26 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Type;
+namespace BLW\Type;
 
-use BLW\Type\IDataMapper;
 use DOMDocument;
-use ReflectionObject;
-use PHPUnit_Framework_Error_Notice;
+use ReflectionProperty;
 use BadMethodCallException;
 
+use BLW\Type\IDataMapper;
+
+class MockComponent1089
+{
+    public $foo = 1;
+    public $callable = array(__CLASS__, 'foo');
+    public static function foo() {return 'foo';}
+    public function __set($nam, $val) {throw new \Exception('foo');}
+}
+
 /**
- * Tests BLW Library Adaptor type.
+ * Tests BLW Library Wrapper type.
  * @package BLW\Core
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Type\AComponentMapable
  */
@@ -38,24 +46,19 @@ class ComponentMapableTest extends \PHPUnit_Framework_TestCase
     protected $ComponentMapable = NULL;
 
     /**
-     * @var \DOMElement
+     * @var \BLW\MockComponent
      */
     protected $Component   = NULL;
 
     protected function setUp()
     {
-        $Document               = new DOMDocument("1.0");
-        $this->Component        = $Document->createElement('span', 'text');
+        $this->Component        = new MockComponent1089();
         $this->ComponentMapable = $this->getMockForAbstractClass('\\BLW\\Type\\AComponentMapable');
 
-        $this->Component->setAttribute('foo', 'checked');
-
-        $Object   = new ReflectionObject($this->ComponentMapable);
-        $Property = $Object->getProperty('_Component');
+        $Property = new ReflectionProperty($this->ComponentMapable, '_Component');
 
         $Property->setAccessible(true);
         $Property->setValue($this->ComponentMapable, $this->Component);
-        $Property->setAccessible(false);
 
         unset($Property, $Object, $Document);
     }
@@ -71,13 +74,15 @@ class ComponentMapableTest extends \PHPUnit_Framework_TestCase
      */
     public function test__call()
     {
-        # Test Valid calls
-        $this->assertEquals($this->Component->hasAttribute('foo'), $this->ComponentMapable->hasAttribute('foo'), 'ComponentMapable::hasAttribute() returned invalid value.');
-        $this->assertEquals($this->Component->getAttribute('foo'), $this->ComponentMapable->getAttribute('foo'), 'ComponentMapable::getAttribute() returned invalid value.');
+        # Component function
+        $this->assertEquals('foo', $this->ComponentMapable->foo(), 'IComponentMapable::__call() Failed to invoke $_Component->foo()');
+
+        # Variable function
+        $this->assertEquals('foo', $this->ComponentMapable->callable(), 'IComponentMapable::__call() Failed to call variable function');
 
         # Test Invalid call
         try {
-            $this->ComponentMapable->foo();
+            $this->ComponentMapable->undefined();
             $this->fail('Unable to raise exception on undefined function');
         }
 
@@ -89,16 +94,21 @@ class ComponentMapableTest extends \PHPUnit_Framework_TestCase
      */
     public function test__get()
     {
-        # Test dynamic property
-        $this->assertEquals('span', $this->ComponentMapable->tagName, 'ComponentMapable::$tagName should equal `span`.');
+        # Test Component property
+        $this->assertEquals(1, $this->ComponentMapable->foo, 'IComponentMapable::$foo should equal IComponentMapable::$_Component->foo');
 
         # Test undefined property
-        try { $this->ComponentMapable->bar; }
+        try {
+            $this->ComponentMapable->undefined;
+            $this->fail('Failed to generate notice with undefined property');
+        }
 
-        catch (PHPUnit_Framework_Error_Notice $e) {
+        catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Undefined property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
-   }
+
+        $this->assertNull(@$this->ComponentMapable->undefined, 'IComponentMapable::$undifined should be NULL');
+    }
 
    /**
     * @covers ::__isset
@@ -106,7 +116,7 @@ class ComponentMapableTest extends \PHPUnit_Framework_TestCase
    public function test__isset()
    {
        # Test dynamic property
-       $this->assertTrue(isset($this->ComponentMapable->tagName), 'ComponentMapable::$tagName should exist.');
+       $this->assertTrue(isset($this->ComponentMapable->foo), 'ComponentMapable::$foo should exist.');
 
         # Test undefined property
        $this->assertFalse(isset($this->ComponentMapable->bar), 'ComponentMapable::$bar shouldn\'t exist.');
@@ -117,8 +127,32 @@ class ComponentMapableTest extends \PHPUnit_Framework_TestCase
      */
     public function test__set()
     {
-        # Test dynamic property
-        $this->ComponentMapable->nodeValue = 1;
-        $this->assertEquals(1, $this->ComponentMapable->nodeValue, 'ComponentMapable::$nodeValue should equal 1.');
+        # Component property
+        $this->ComponentMapable->foo = 100;
+        $this->assertEquals(100, $this->ComponentMapable->foo, 'ComponentMapable::$foo failed to update component.');
+
+        # Undefined property
+        try {
+            $this->ComponentMapable->undefined = 1;
+            $this->fail('Failed to generate notice with undefined property');
+        }
+
+        catch (\PHPUnit_Framework_Error_Warning $e) {}
+
+        @$this->ComponentMapable->undefined = 1;
+    }
+
+    /**
+     * @covers ::__unset
+     */
+    public function test_unset()
+    {
+        # Component property
+        unset($this->ComponentMapable->foo);
+
+        $this->assertFalse(isset($this->ComponentMapable->foo), 'unset(IComponentMapable::$foo) Failed to delete property from component');
+
+        # undefined
+        unset($this->ComponentMapable->undefined);
     }
 }

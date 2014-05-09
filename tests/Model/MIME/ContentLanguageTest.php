@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\MIME;
+namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
 use BLW\Model\MIME\ContentLanguage;
@@ -24,7 +24,7 @@ use BLW\Model\MIME\ContentLanguage;
 /**
  * Tests BLW Library MIME Contetn-Type header.
  * @package BLW\MIME
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Mime\ContentLanguage
  */
@@ -100,6 +100,7 @@ class ContentLanguageTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends test_parseLanguage
      * @covers ::__construct
+     * @covers ::_combine
      */
     public function test_construct()
     {

@@ -18,7 +18,6 @@
  */
 namespace BLW\Type;
 
-use Traversable;
 use ArrayObject;
 use UnexpectedValueException;
 
@@ -133,7 +132,7 @@ abstract class AContainer extends \ArrayObject implements \BLW\Type\IContainer
      *
      * <hr>
      *
-     * @return \BLW\Type\Serializer $this->Serializer
+     * @return \BLW\Type\ISerializer $this->Serializer
      */
     public function getSerializer()
     {

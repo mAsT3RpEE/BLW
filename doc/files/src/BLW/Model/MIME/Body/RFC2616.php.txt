@@ -169,8 +169,8 @@ class RFC2616 extends \BLW\Type\AContainer implements \BLW\Type\MIME\IBody
      *
      * @throws InvalidArgumentException If <code>$Attachment</code> is not a real attachment.
      *
-     * @param \BLW\Model\MIME\Attachment|\BLW\Model\MIME\InlineAttachment $Attatchment
-     *            Attachment to add.
+     * @param \BLW\Model\MIME\IPart $Part
+     *            Attachment / FormField / HTML / Text / etc MIME Part.
      * @return bool <code>TRUE</code> on success. <code>FALSE</code> otherwise.
      */
     public function addPart(IPart $Part)

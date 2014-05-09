@@ -18,7 +18,6 @@
  */
 namespace BLW\Model\Command;
 
-use ReflectionMethod;
 use ArrayObject;
 
 use BLW\Type\IConfig;

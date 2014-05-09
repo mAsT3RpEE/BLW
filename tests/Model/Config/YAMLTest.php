@@ -16,18 +16,17 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\Config;
-
-use ReflectionProperty;
-use ReflectionMethod;
+namespace BLW\Model\Config;
 
 use BLW\Model\GenericFile;
 use BLW\Model\Config\YAML as Config;
+use BLW\Model\FileException;
+
 
 /**
  * Tests BLW Library YAML configuration
  * @package BLW\Core
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Config\YAML
  */
@@ -73,6 +72,14 @@ class YAMLTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('server', $Config['database'], 'YAML::__construct() Failed to parse sections');
         $this->assertArrayHasKey('port', $Config['database'], 'YAML::__construct() Failed to parse sections');
         $this->assertArrayHasKey('file', $Config['database'], 'YAML::__construct() Failed to parse sections');
+
+        # Invalid arguments
+        try {
+            new Config(new GenericFile('z:\\undefined'));
+            $this->fail('Failed to generate error with invalid arguments');
+        }
+
+        catch (FileException $e) {}
     }
 
     /**

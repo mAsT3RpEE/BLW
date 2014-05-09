@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Type\HTTP;
+namespace BLW\Type\HTTP;
 
 use DateTime;
 use ReflectionProperty;
@@ -44,7 +44,7 @@ use Psr\Log\NullLogger;
 /**
  * Test for HTTP Browser base class
  * @package BLW\HTTP
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Type\HTTP\ABrowser
  */
@@ -232,7 +232,37 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\\BLW\\Type\\HTTP\\Browser\\IPage', $Page, 'IBrowser::createPage() Returned an invalid result');
         $this->assertInstanceof('\\BLW\\Type\\DOM\\IDocument', $Page->Component, 'IBrowser::$Component Should be an instance of IDocument');
 
+        # Unknown response
+        $Request        = new Request;
+        $Request->URI   = new GenericURI('http://example.com');
+        $Response       = new Response('HTTP', '1.1', 0);
+        $Response->URI  = new GenericURI('http://example.com');
+        $Page           = $this->Browser->createPage($Request, $Response);
+
+        $this->assertInstanceOf('\\BLW\\Type\\HTTP\\Browser\\IPage', $Page, 'IBrowser::createPage() Returned an invalid result');
+        $this->assertInstanceof('\\BLW\\Type\\DOM\\IDocument', $Page->Component, 'IBrowser::$Component Should be an instance of IDocument');
+
         # Invalid args
+    }
+
+    /**
+     * @covers ::getID
+     */
+    public function test_getID()
+    {
+        $this->assertStringStartsWith('[Browser:', $this->Browser->getID(), 'IBrowser::getID() Returned an invalid value');
+        $this->assertStringEndsWith(']', $this->Browser->getID(), 'IBrowser::getID() Returned an invalid value');
+    }
+
+    /**
+     * @covers ::setLogger
+     */
+    public function test_setLogger()
+    {
+        $Logger = new NullLogger;
+
+        $this->assertSame(IDataMapper::UPDATED, $this->Browser->setLogger($Logger), 'IBrowser::setLogger() Should return IDataMapper::UPDATED');
+        $this->assertAttributeSame($Logger, 'logger', $this->Browser, 'IBrowser::setLogger() failed to set $logger');
     }
 
     /**
@@ -241,13 +271,10 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
     public function test_setUserAgent()
     {
         $Expected = 'Mozilla/5.0 (Linux; Android 4.1.2; Nexus 7 Build/JZ054K) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Safari/535.19';
-        $Property = new ReflectionProperty($this->Browser, '_UserAgent');
-
-        $Property->setAccessible(true);
 
         # Valid arguments
         $this->assertSame(IDataMapper::UPDATED, $this->Browser->setUserAgent($Expected), 'IBrowser::setUserAgent() Returned an invalid value');
-        $this->assertSame($Expected, $Property->getValue($this->Browser), 'IBrowser::setUserAgent() Failed to update $_UserAgent');
+        $this->assertAttributeSame($Expected, '_UserAgent', $this->Browser, 'IBrowser::setUserAgent() Failed to update $_UserAgent');
 
         # Invalid arguments
         $this->assertSame(IDataMapper::INVALID, $this->Browser->setUserAgent(NULL), 'IBrowser::setUserAgent() Returned an invalid value');
@@ -274,13 +301,10 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
     public function test_setPage()
     {
         $Page       = new HTMLPage(new Document, new GenericURI(''), new RFC2616Head, new RFC2616Head);
-        $Property   = new ReflectionProperty($this->Browser, '_Component');
-
-        $Property->setAccessible(true);
 
         # Valid Arguments
         $this->assertSame(IDataMapper::UPDATED, $this->Browser->setPage($Page), 'IBrowser::setPage() Returned an invalid value');
-        $this->assertSame($Page, $Property->getValue($this->Browser), 'IBrowser::setPage() Failed to update $_Component');
+        $this->assertAttributeSame($Page, '_Component', $this->Browser, 'IBrowser::setPage() Failed to update $_Component');
 
         # Invalid arguments
         $this->assertSame(IDataMapper::INVALID, $this->Browser->setPage(NULL), 'IBrowser::setPage() Returned an invalid value');
@@ -314,10 +338,14 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers ::doGo
+     * @covers ::_getURI
      */
     public function test_doGo()
     {
+        $called = 0;
+
         $this->Browser->_on('go', array($this->Browser, 'doGo'));
+        $this->Browser->_on('Page.Ready', function() use (&$called) {$called++;});
 
         # Normal browsing
         $this->Browser->go('http://example.com');
@@ -325,10 +353,12 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $this->History, 'IBrowser::doGo() Failed to update $_History');
         $this->assertEquals('http://example.com', strval($this->Browser->Base), 'IBrowser::doGo() Did not navigate to the page specified');
         $this->assertEquals('Heading', $this->Browser->filter('h1')->offsetGet(0)->textContent, 'IBrowser::doGo() Did not load page');
+        $this->assertSame(1, $called, 'IBrowser::goGo() Failed to generate Page.Ready event');
 
         $this->Browser->go(new GenericURI('http://example.com'));
         $this->assertCount(2, $this->History, 'IBrowser::doGo() Failed to update $_History');
         $this->assertEquals('http://example.com', strval($this->Browser->Base), 'IBrowser::doGo() Did not navigate to the page specified');
+        $this->assertSame(2, $called, 'IBrowser::goGo() Failed to generate Page.Ready event');
 
         # Timeout
         $this->Client->Timeout = true;
@@ -351,6 +381,11 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         $Event = new Event($this->Browser);
 
         $this->Browser->doGo($Event);
+
+        # Page>Download stopped propagation
+        $this->Browser->_on('Page.Download', function ($Event) {$Event->stopPropagation();});
+        $this->Browser->go('http://example.com');
+        $this->assertSame(3, $called, 'IBrowser::goGo() Failed to stop with event Page.Download');
     }
 
     /**
@@ -479,6 +514,8 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
     {
         $this->Browser->_on('debug', array($this->Browser, 'doDebug'));
         $this->assertTrue($this->Browser->debug('test'), 'IBrowser::debug() should return true');
+        $this->assertTrue($this->Browser->debug(new \SplFileInfo(__FILE__)), 'IBrowser::debug() should return true');
+        $this->assertTrue($this->Browser->debug(null));
     }
 
     /**
@@ -487,7 +524,10 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
     public function test_doNotice()
     {
         $this->Browser->_on('notice', array($this->Browser, 'doNotice'));
-        $this->assertTrue($this->Browser->warning('test'), 'IBrowser::debug() should return true');
+        $this->assertTrue($this->Browser->notice('test'), 'IBrowser::debug() should return true');
+        $this->assertTrue($this->Browser->notice(new \SplFileInfo(__FILE__)), 'IBrowser::debug() should return true');
+        $this->assertTrue($this->Browser->notice(null));
+        $this->assertTrue($this->Browser->notice());
     }
 
     /**
@@ -503,6 +543,20 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         }
 
         catch (\PHPUnit_Framework_Error_Notice $e) {}
+
+        @$this->Browser->warning('test');
+
+        try {
+            $this->Browser->warning(new \SplFileInfo(__FILE__));
+            $this->fail('IBrowser::doWarning() Failed to generate notice');
+        }
+
+        catch (\PHPUnit_Framework_Error_Notice $e) {}
+
+        @$this->Browser->warning(new \SplFileInfo(__FILE__));
+
+        $this->Browser->warning(null);
+        $this->Browser->warning();
     }
 
     /**
@@ -518,6 +572,20 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         }
 
         catch (\PHPUnit_Framework_Error_Warning $e) {}
+
+        @$this->Browser->error('test');
+
+        try {
+            $this->Browser->error(new \SplFileInfo(__FILE__));
+            $this->fail('IBrowser::doError() Failed to generate warning');
+        }
+
+        catch (\PHPUnit_Framework_Error_Warning $e) {}
+
+        @$this->Browser->error(new \SplFileInfo(__FILE__));
+
+        $this->Browser->error(null);
+        $this->Browser->error();
     }
 
     /**
@@ -533,6 +601,16 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         }
 
         catch (\RuntimeException $e) {}
+
+        try {
+            $this->Browser->exception(new \SplFileInfo(__FILE__));
+            $this->fail('IBrowser::doException() Failed to generate exception');
+        }
+
+        catch (\RuntimeException $e) {}
+
+        $this->Browser->exception(null);
+        $this->Browser->exception();
     }
 
     /**
@@ -540,12 +618,8 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
      */
     public function test_get()
     {
-	    # Make property readable / writable
-	    $Status = new ReflectionProperty($this->Browser, '_Status');
-	    $Status->setAccessible(true);
-
 	    # Status
-        $this->assertSame($this->Browser->Status, $Status->getValue($this->Browser), 'IBrowser::$Status should equal IBrowser::_Status');
+        $this->assertAttributeSame($this->Browser->Status, '_Status', $this->Browser, 'IBrowser::$Status should equal IBrowser::_Status');
 
 	    # Serializer
 	    $this->assertSame($this->Browser->Serializer, $this->Browser->getSerializer(), 'IBrowser::$Serializer should equal IBrowser::getSerializer()');
@@ -579,11 +653,16 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->Browser->Component->Base, $this->Browser->Base, 'IBrowser::$tagName should equal `span`');
 
         # Test undefined property
-        try { $this->Browser->bar; }
+        try {
+            $this->Browser->undefined;
+            $this->fail('Failed to generate notice with undefined property');
+        }
 
         catch (\PHPUnit_Framework_Error_Notice $e) {
-            $this->assertContains('Undefined property', $e->getMessage(), 'IBrowser::$bar is undefined and should raise a notice');
+            $this->assertContains('Undefined property', $e->getMessage(), 'IBrowser::$undefined is undefined and should raise a notice');
         }
+
+        $this->assertNull(@$this->Browser->undefined, 'IBrowser::$undefined should return NULL');
    }
 
    /**
@@ -644,6 +723,8 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
+        @$this->Browser->Status = 0;
+
         # Serializer
         try {
             $this->Browser->Serializer = 0;
@@ -654,30 +735,55 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
-        # Parent
-        $this->Browser->Parent = $this->getMockForAbstractClass('\\BLW\\Type\\IObject');
-        $this->assertSame($this->Browser->Parent, $this->Browser->getParent(), 'IBrowser::$Parent should equal IBrowser::getParent');
-        $this->assertTrue(isset($this->Browser->Parent), 'IBrowser::$Parent should exist');
+        @$this->Browser->Serializer = 0;
 
-	    # ID
+        # Parent
+        $Parent                = $this->getMockForAbstractClass('\\BLW\\Type\\AObject');
+        $this->Browser->Parent = $Parent;
+
+        $this->assertSame($Parent, $this->Browser->Parent, 'IBrowser::$Parent should equal IBrowser::getParent()');
+
+        try {
+            $this->Browser->Parent = null;
+            $this->fail('Failed to generate notice with invalid value');
+        }
+
+        catch (\PHPUnit_Framework_Error_Notice $e) {
+            $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
+        }
+
+        @$this->Browser->Parent = null;
+
+        try {
+            $this->Browser->Parent = $Parent;
+            $this->fail('Failed to generate notice with oneshot value');
+        }
+
+        catch (\PHPUnit_Framework_Error_Notice $e) {
+            $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
+        }
+
+        # ID
         try {
             $this->Browser->ID = 'foo';
-            $this->fail('Failed to generate notice on readonly property');
+            $this->fail('Failed to generate notice with readonly property');
         }
 
         catch (\PHPUnit_Framework_Error_Notice $e) {
-            $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
+            $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
-	    # Component
+        @$this->Browser->ID = 'foo';
+
+        # Component
         try {
-            $this->Browser->Component = 'foo';
-            $this->fail('Failed to generate notice on readonly property');
+        	$this->Browser->Component = $this->Component;
+        	$this->fail('Failed generating notice with readonly property');
         }
 
-        catch (\PHPUnit_Framework_Error_Notice $e) {
-            $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
-        }
+        catch (\PHPUnit_Framework_Error_Notice $e) {}
+
+    	@$this->Browser->Component = $this->Component;
 
 	    # Client
         try {
@@ -689,7 +795,9 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
-	    # RequestFactory
+        @$this->Browser->Client = 'foo';
+
+        # RequestFactory
         try {
             $this->Browser->RequestFactory = 'foo';
             $this->fail('Failed to generate notice on readonly property');
@@ -699,7 +807,9 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
-	    # Engines
+        @$this->Browser->RequestFactory = 'foo';
+
+        # Engines
         try {
             $this->Browser->Engines = 'foo';
             $this->fail('Failed to generate notice on readonly property');
@@ -709,7 +819,9 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
-	    # Plugins
+        @$this->Browser->Engines = 'foo';
+
+        # Plugins
         try {
             $this->Browser->Plugins = 'foo';
             $this->fail('Failed to generate notice on readonly property');
@@ -719,9 +831,22 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
+        @$this->Browser->Plugins = 'foo';
+
         # UserAgent
         $this->Browser->UserAgent = 'foo';
-        $this->assertEquals('foo', $this->Browser->getUserAgent(), 'IBrowser::$UserAgent ');
+        $this->assertEquals('foo', $this->Browser->getUserAgent(), 'IBrowser::$UserAgent failed to update $_UserAgent');
+
+        try {
+            $this->Browser->UserAgent = null;
+            $this->fail('Failed to generate notice with invalid value');
+        }
+
+        catch (\PHPUnit_Framework_Error_Notice $e) {
+            $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
+        }
+
+        @$this->Browser->UserAgent = null;
 
         # Test component property
         $Now                    = new DateTime;
@@ -739,6 +864,19 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
      */
     public function test_unset()
     {
+        # Parent
+        $this->Browser->Parent = $this->getMockForAbstractClass('\\BLW\Type\IObject');
+
+        unset($this->Browser->Parent);
+
+        $this->assertNull($this->Browser->Parent, 'unset(IBrowser::$Parent) Did not reset $_Parent');
+
+        # Status
+        unset($this->Browser->Status);
+
+        $this->assertSame(0, $this->Browser->Status, 'unset(IBrowser::$Status) Did not reset $_Status');
+
+        # Undefined
         unset($this->Browser->undefined);
     }
 }

@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\MIME\Part;
+namespace BLW\Model\MIME\Part;
 
 use BLW\Model\InvalidArgumentException;
 use BLW\Model\MIME\Part\FormField;
@@ -24,7 +24,7 @@ use BLW\Model\MIME\Part\FormField;
 /**
  * Tests BLW Library MIME Part header.
  * @package BLW\MIME
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\MIME\Part\FormField
  */
@@ -54,6 +54,14 @@ class FormFieldTest extends \PHPUnit_Framework_TestCase
     public function test_format()
     {
         $this->assertSame(self::TEXT, quoted_printable_decode($this->FormField->format(self::TEXT, 76)), 'FormField::fomrat() did not create valid quoted-printable string');
+
+        # Invalid arguments
+        try {
+            $this->FormField->format(null, 50);
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -76,8 +84,22 @@ class FormFieldTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(self::HTML . "\r\n", quoted_printable_decode($this->FormField['Content']), 'FormField::__construct() set invalid Content');
 
         # Invalid arguments
+        try {
+            new FormField('foo', 'text/plain', null);
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch (InvalidArgumentException $e) {}
     }
 
+    /**
+     * @depends test_construct
+     * @covers ::getField
+     */
+    public function test_getField()
+    {
+        $this->assertSame('fieldname', $this->FormField->getField(), 'FormField::getField() should return `fieldname`');
+    }
     /**
      * @depends test_construct
      * @covers ::__toString
@@ -110,6 +132,8 @@ EOT;
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
+        @$this->FormField['Content-Type'] = 'foo';
+
         # Content-Disposition
         try {
             $this->FormField['Content-Disposition'] = 'foo';
@@ -119,6 +143,8 @@ EOT;
         catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
+
+        @$this->FormField['Content-Disposition'] = 'foo';
 
         # Content-Transfer-Encoding
         try {
@@ -130,6 +156,8 @@ EOT;
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
+        @$this->FormField['Content-Transfer-Encoding'] = 'foo';
+
         # Content
         try {
             $this->FormField['Content'] = 'foo';
@@ -139,5 +167,10 @@ EOT;
         catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
+
+        @$this->FormField['Content'] = 'foo';
+
+        # Undefined
+        $this->FormField['undedined'] = 'foo';
     }
 }

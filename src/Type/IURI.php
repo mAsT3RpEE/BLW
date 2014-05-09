@@ -1,0 +1,365 @@
+<?php
+/**
+ * URL.php | Dec 21, 2013
+ *
+ * @filesource
+ * @license MIT
+ * @copyright Copyright (c) 2013-2018, mAsT3RpEE's Zone
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+/**
+ *
+ * @package BLW\Mail
+ * @version GIT: 0.2.0
+ * @author  Walter Otsyula <wotsyula@mast3rpee.tk>
+ */
+namespace BLW\Type;
+
+// @codeCoverageIgnoreStart
+if (! defined('BLW')) {
+
+    if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
+        header("$_SERVER[SERVER_PROTOCOL] 404 Not Found");
+        header('Status: 404 Not Found');
+
+        $_SERVER['REDIRECT_STATUS'] = 404;
+
+        echo "<html>\r\n<head><title>404 Not Found</title></head><body bgcolor=\"white\">\r\n<center><h1>404 Not Found</h1></center>\r\n<hr>\r\n<center>nginx/1.5.9</center>\r\n</body>\r\n</html>\r\n";
+        exit();
+    }
+
+    return false;
+}
+// @codeCoverageIgnoreEnd
+
+
+/**
+ * Interface for all URL's and URI's
+ *
+ * <h3>RFC 3986</h3>
+ *
+ * <pre>
+ * foo://example.com:8042/over/there?name=ferret#nose
+ * \_/ \______________/\_________/ \_________/ \__/
+ * | | | | |
+ * scheme authority path query fragment
+ * | _____________________|__
+ * / \ / \
+ * urn:example:animal:ferret:nose
+ * </pre>
+ *
+ * <pre>
+ * URI-reference := URI / relative-ref
+ *
+ * URI           := scheme ":" hier-part ["?" query] ["#" fragment]
+ *
+ * relative-ref  := relative-part ["?" query] ["#" fragment]
+ *
+ * absolute-URI  := scheme ":" hier-part ["?" query]
+ * </pre>
+ *
+ * <h3>Summary</h3>
+ *
+ * <pre>
+ * +---------------------------------------------------+       +--------------------+
+ * | URI                                               |<------| SERIALIZABLE       |
+ * +---------------------------------------------------+       | ================== |
+ * | AS_STRING                                         |       | Serializable       |
+ * | AS_ARRAY                                          |       +--------------------+
+ * +---------------------------------------------------+<------| ITERABLE           |
+ * | [scheme]:       string                            |       +--------------------+
+ * | [userinfo]:     string                            |<------| IFACTORY           |
+ * | [host]:         string                            |       +--------------------+
+ * | [port]:         string                            |<------| ArrayAccess        |
+ * | [path]:         string                            |       +--------------------+
+ * | [query]:        string                            |<------| Countable          |
+ * | [fragment]:     string                            |       +--------------------+
+ * | [IPv4Address]:  string                            |<------| IteratorAggregate  |
+ * | [IPv4Address]:  string                            |       +--------------------+
+ * +---------------------------------------------------+
+ * | _Storage: array                                   |
+ * +---------------------------------------------------+
+ * | createString(): string                            |
+ * |                                                   |
+ * | $Parts:  array                                    |
+ * +---------------------------------------------------+
+ * | __construct():                                    |
+ * |                                                   |
+ * | $URI:  string                                     |
+ * +---------------------------------------------------+
+ * | getRegex(): string                                |
+ * +---------------------------------------------------+
+ * | removeDotSegments(): string                       |
+ * |                                                   |
+ * | $path:  string                                    |
+ * +---------------------------------------------------+
+ * | parseTLD(): array                                 |
+ * |                                                   |
+ * | $Domain:  string                                  |
+ * +---------------------------------------------------+
+ * | parse(): array                                    |
+ * |                                                   |
+ * | $URI:      string                                 |
+ * | $baseURI:  array                                  |
+ * +---------------------------------------------------+
+ * | resolve(): array|string                           |
+ * |                                                   |
+ * | $path:   string                                   |
+ * | $flags:  IURL::RESOLVE_FLAGS                      |
+ * +---------------------------------------------------+
+ * | isValid(): bool                                   |
+ * +---------------------------------------------------+
+ * | __tostring(): createString(_Storage)              |
+ * +---------------------------------------------------+
+ * </pre>
+ *
+ * <hr>
+ *
+ * @package BLW\Core
+ * @api     BLW
+ * @since   1.0.0
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @link http://www.php.net/manual/en/function.parse-url.php parse_url()
+ * @link http://tools.ietf.org/html/rfc3986 IETF
+ *
+ * @property array $_Storage URI parts
+ */
+interface IURI extends \BLW\Type\ISerializable, \BLW\Type\IIterable, \BLW\Type\IFactory, \IteratorAggregate, \ArrayAccess, \Countable
+{
+    // Resolve constants
+    const AS_ARRAY  = 0x0002;
+    const AS_STRING = 0x0004;
+
+    /**
+     * Returns whether the requested index exists
+     *
+     * @api BLW
+     * @since   1.0.0
+     * @link http://www.php.net/manual/en/arrayaccess.offsetexists.php ArrayAccess::offsetExists()
+     *
+     * @param mixed $index
+     *            The index being checked.
+     * @return boolean <code>TRUE</code> if the requested index exists, <code>FALSE</code> otherwise.
+     */
+    public function offsetExists($index);
+
+    /**
+     * Returns the value at the specified index
+     *
+     * @api BLW
+     * @since   1.0.0
+     * @link http://www.php.net/manual/en/arrayaccess.offsetget.php ArrayAccess::offsetGet()
+     *
+     * @param mixed $index
+     *            The index with the value.
+     * @return mixed The value at the specified index or <code>FALSE</code>.
+     */
+    public function offsetGet($index);
+
+    /**
+     * Sets the value at the specified index to newval
+     *
+     * @api BLW
+     * @since   1.0.0
+     * @link http://www.php.net/manual/en/arrayaccess.offsetset.php ArrayAccess::offsetSet()
+     *
+     * @param mixed $index
+     *            The index being set.
+     * @param mixed $newval
+     *            The new value for the index.
+     * @return void
+     */
+    public function offsetSet($index, $newval);
+
+    /**
+     * Unsets the value at the specified index
+     *
+     * @api BLW
+     * @since   1.0.0
+     * @link http://www.php.net/manual/en/arrayaccess.offsetunset.php ArrayAccess::offsetUnset()
+     *
+     * @param mixed $index
+     *            The index being unset.
+     * @return void
+     */
+    public function offsetUnset($index);
+
+    /**
+     * Get the number of public properties in the ArrayObject
+     *
+     * @api BLW
+     * @since   1.0.0
+     * @link http://www.php.net/manual/en/countable.count.php Countable::count()
+     *
+     * @return integer The number of public properties in the ArrayObject.
+     */
+    public function count();
+
+    /**
+     * Create a new iterator from an ArrayObject instance
+     *
+     * @api BLW
+     * @since   1.0.0
+     * @link http://www.php.net/manual/en/iteratoraggregate.getiterator.php IteratorAggregate::getIterator()
+     *
+     * @return \RecursiveArrayIterator An instance implementing <code>Iterator</code>.
+     */
+    public function getIterator();
+
+    /**
+     * Create a URI string from individual URI components.
+     *
+     * @api BLW
+     * @since 0.1.0
+     *
+     * @param array $Parts
+     *            Parts generated by <code>IURI::parse() / parse_url</code>.
+     * @return string Generated URI. Returns empty string on failure.
+     */
+    public static function createURIString(array $Parts);
+
+    /**
+     * Returns an URI regex.
+     *
+     * @api BLW
+     * @since 0.1.0
+     *
+     * @param string $Name
+     *            Name of regex:
+	 *
+     * <ul>
+     * <li><b>scheme</b>: URI scheme</li>
+     * <li><b>hier-part</b>: absolute path and userinfo</li>
+     * <li><b>relative-part</b>: relative path and userinfo</li>
+     * <li><b>query</b>: query string (part after `?`)</li>
+     * <li><b>fragment</b>: fragment (part after #)</li>
+     * <li><b>authority</b>: URI authority (userinfo, host, port)</li>
+     * <li><b>path-abempty</b>: URI path (type 1)</li>
+     * <li><b>path-absolute</b>: URI path (type 2)</li>
+     * <li><b>path-rootless</b>: URI path (type 3)</li>
+     * <li><b>path-noscheme</b>: URI path (type 4)</li>
+     * <li><b>path-empty</b>: URI path (type 5)</li>
+     * <li><b>userinfo</b>: username / pass / etc</li>
+     * <li><b>ipv6address</b>: see rfc3986</li>
+     * <li><b>ipv4address</b>: see rfc3986</li>
+     * </ul>
+	 *
+     * @return string PRCRE expression.
+     */
+    public static function getRegex($Name = 'uri-spec');
+
+    /**
+     * Resolves dot segments in a path.
+     *
+     * <h3>Introduction</h3>
+     *
+     * <p>This function takes a valid url path and nomalizes it into
+     * the simplest form possible.</p>
+     *
+     * <hr>
+     *
+     * @api BLW
+     * @since   1.0.0
+     *
+     * @throws \BLW\Model\InvalidArgumentException If <code>$path</code> is not a string or is empty.
+     *
+     * @param string $Path
+     *            path to normalize.
+     * @return string Normailized path.
+     */
+    public static function removeDotSegments($Path);
+
+    /**
+     * Parse a url into it's various components
+     *
+     * @api BLW
+     * @since   1.0.0
+     *
+     * @throws \BLW\Model\InvalidArgumentException If:
+     *
+     * <ul>
+     * <li>$URI is not a string.</li>
+     * <li>$baseURL is not an array containing `scheme`, `path` and `query`.
+     * </ul>
+     *
+     * @link http://tools.ietf.org/html/rfc3986#section-5.2.2 RFC3986
+     *
+     * @param string $URI
+     *            URI to parse.
+     * @param array $baseURI
+     *            Parts of base URI to use to resolve current URI.
+     * @return array Parsed parts:
+     *
+     * <ul>
+     * <li><b>scheme</b>: http / ftp / etc</li>
+     * <li><b>userinfo</b>:</li>
+     * <li><b>host</b>: domain name / ip address / ip literal</li>
+     * <li><b>port</b>: as a string</li>
+     * <li><b>path</b>:</li>
+     * <li><b>query</b>: part after `?`</li>
+     * <li><b>fragment</b>: part after `#`</li>
+     * <li><b>IPv4Address</b>: xxx.xxx.xxx of host if available</li>
+     * <li><b>IPv6Address</b>: xxxx:xxxx:xxxx:xxxx:xxxx</li>
+     * </ul>
+     */
+    public static function parse($URI, array $baseURI = array('scheme' => '', 'path' => '', 'query' => array()));
+
+    /**
+     * Parse a second URI using current URI as a base.
+     *
+     * @see \BLW\Type\IURI::parse() IURI::parse()
+     * @see \BLW\Type\IURI::createURIString() IURI::createURIString()
+     *
+     * @param string $URI
+     *            URI to parse.
+     * @param integer $flags
+     *            Relove flags.
+	 *
+     * <ul>
+     * <li><b>IURI::AS_STRING</b>: Return a string of uri (IURI::createString())
+     * <li><b>IURI::AS_ARRAY</b>: Return an array of uri parts (IURI::parse())
+     * </ul>
+	 *
+     * @return array string parts. Returns <code>null</code> in case of error.
+     */
+    public function resolve($URI, $flags = IURI::AS_STRING);
+
+    /**
+     * Validates a URI.
+     *
+     * @api BLW
+     * @since   1.0.0
+     *
+     * @return boolean <code>TRUE</code> if valid. <code>FALSE</code> otherwise.
+     */
+    public function isValid();
+
+    /**
+     * Validates an absolute URI.
+     *
+     * @api BLW
+     * @since   1.0.0
+     *
+     * @return boolean <code>TRUE</code> if absolute. <code>FALSE</code> otherwise.
+     */
+    public function isAbsolute();
+
+    /**
+     * All objects must have a string representation.
+     *
+     * @api BLW
+     * @since   1.0.0
+     *
+     * @link http://tools.ietf.org/html/rfc3986#section-5.3 RFC3986
+     *
+     * @return string String value of object.
+     */
+    public function __toString();
+}
+
+// @codeCoverageIgnoreStart
+return true;
+// @codeCoverageIgnoreEnd

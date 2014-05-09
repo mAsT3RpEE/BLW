@@ -52,7 +52,7 @@ class ViewObject extends AbstractTableObject
     }
 
     /**
-     * @return bool $isUpdatable
+     * @return boolean $isUpdatable
      */
     public function getIsUpdatable()
     {
@@ -60,7 +60,7 @@ class ViewObject extends AbstractTableObject
     }
 
     /**
-     * @param bool $isUpdatable to set
+     * @param boolean $isUpdatable to set
      * @return ViewObject
      */
     public function setIsUpdatable($isUpdatable)

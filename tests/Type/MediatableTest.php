@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Type;
+namespace BLW\Type;
 
 use BLW\Type\IDataMapper;
 use BLW\Type\IEvent;
@@ -26,9 +26,9 @@ use PHPUnit_Framework_Error_Notice;
 
 
 /**
- * Tests BLW Library Adaptor type.
+ * Tests BLW Library Mediatable trait.
  * @package BLW\Core
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  *  @coversDefaultClass \BLW\Type\AMediatable
  */
@@ -97,6 +97,7 @@ class MediatableTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers ::getMediator
+     * @covers \BLW\Type\AMediatable::getMediator
      */
     public function test_getMediator()
     {
@@ -105,6 +106,7 @@ class MediatableTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers ::setMediator
+     * @covers \BLW\Type\AMediatable::setMediator
      */
     public function test_setMediator()
     {
@@ -118,6 +120,7 @@ class MediatableTest extends \PHPUnit_Framework_TestCase
    /**
     * @depends test_setMediator
     * @covers ::clearMediator
+    * @covers \BLW\Type\AMediatable::clearMediator
     */
    public function test_clearMediator()
    {
@@ -129,6 +132,7 @@ class MediatableTest extends \PHPUnit_Framework_TestCase
 
    /**
     * @covers ::getMediatorID
+    * @covers \BLW\Type\AMediatable::getMediatorID
     */
     public function test_getMediatorID()
     {
@@ -138,6 +142,7 @@ class MediatableTest extends \PHPUnit_Framework_TestCase
    /**
     * @depends test_setMediator
     * @covers ::_on
+    * @covers \BLW\Type\AMediatable::_on
     */
     public function test_on()
     {
@@ -180,6 +185,7 @@ class MediatableTest extends \PHPUnit_Framework_TestCase
    /**
     * @depends test_on
     * @covers ::_do
+    * @covers \BLW\Type\AMediatable::_do
     */
     public function test_do()
     {

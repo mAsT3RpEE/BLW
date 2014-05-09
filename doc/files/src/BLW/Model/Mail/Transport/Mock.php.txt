@@ -20,6 +20,8 @@ namespace BLW\Model\Mail\Transport;
 
 use BLW\Type\Mail\IMessage;
 use BLW\Type\Mail\ITransport;
+
+
 // @codeCoverageIgnoreStart
 if (! defined('BLW')) {
 

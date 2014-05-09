@@ -40,8 +40,8 @@ use BLW\Model\Config;
 use BLW\Model\GenericFile;
 use BLW\Model\Mediator\Symfony as Mediator;
 use BLW\Model\Command\Callback as CallbackCommand;
-use BLW\Model\Command\Input\stdInput;
-use BLW\Model\Command\Output\stdOutput;
+use BLW\Model\Command\Input\StdInput;
+use BLW\Model\Command\Output\StdOutput;
 
 use Monolog\Logger;
 
@@ -72,7 +72,7 @@ abstract class Application
     /**
      * Application logger.
      *
-     * @var \Psr\Logger\LoggerInterface $Logger
+     * @var \Psr\Log\LoggerInterface $Logger
      */
     private static $Logger = NULL;
 
@@ -104,13 +104,13 @@ abstract class Application
      *            Command input.
      * @param \BLW\Type\Command\IOutput $Output
      *            Command output.
-     * @return int <code>NULL</code> or 0 if everything went fine. Error code otherwise.
+     * @return integer <code>NULL</code> or 0 if everything went fine. Error code otherwise.
      */
     public static function run($Callback, IInput $Input = null, IOutput $Output = null)
     {
         // Input and output
-        $Input  = $Input  ?: new stdInput();
-        $Output = $Output ?: new stdOutput();
+        $Input  = $Input  ?: new StdInput();
+        $Output = $Output ?: new StdOutput();
         $Start  = microtime(true);
 
         // Run console

@@ -15,13 +15,15 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Type\Command;
+namespace BLW\Type\Command;
 
 use ReflectionProperty;
 use ReflectionMethod;
+
 use BLW\Type\IDataMapper;
 use BLW\Type\Command\IArgument;
 use BLW\Type\Command\IOption;
+
 use BLW\Model\InvalidArgumentException;
 use BLW\Model\GenericContainer;
 use BLW\Model\GenericFile;
@@ -32,7 +34,7 @@ use BLW\Model\Mediator\Symfony as SymfonyMediator;
 /**
  * Test for command input base class
  * @package BLW\Command
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Type\Command\AInput
  */
@@ -159,21 +161,7 @@ class InputTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(IOption::CLASSNAME, $this->Input->getOption('a'), 'IInput::getOption() Failed to retrieve Option 0');
 
         # Invalid index
-        $this->assertFalse($this->Input->getOption('undefined'), 'IInput::getOption() Should return false');
-    }
-
-    /**
-     * @covers \BLW\Type\AMediatable::setMediator
-     */
-    public function test_setMediator ()
-    {
-        $Property = new ReflectionProperty($this->Input, '_Mediator');
-
-        $Property->setAccessible(true);
-
-        $this->Input->setMediator($this->Mediator);
-
-        $this->assertInstanceOf('\BLW\Type\IMediator', $Property->getValue($this->Input), 'IInput::setMediator() Failed to set $_Mediator');
+        $this->assertNull($this->Input->getOption('undefined'), 'IInput::getOption() Should return false');
     }
 
     /**
@@ -181,13 +169,14 @@ class InputTest extends \PHPUnit_Framework_TestCase
      */
     public function test_setMediatorID ()
     {
-        $Property = new ReflectionProperty($this->Input, '_MediatorID');
+        $this->assertSame(IDataMapper::UPDATED, $this->Input->setMediatorID('MockInput'), 'IInput::setMediatorID() Should return IDataMapper::UPDATED');
+        $this->assertAttributeSame('MockInput', '_MediatorID', $this->Input, 'IInput::setMediatorID() Failed to set $_MediatorID');
 
-        $Property->setAccessible(true);
+        $this->assertSame(IDataMapper::UPDATED, $this->Input->setMediatorID(new \SplFileInfo(__FILE__)), 'IInput::setMediatorID() Should return IDataMapper::UPDATED');
+        $this->assertAttributeSame(__FILE__, '_MediatorID', $this->Input, 'IInput::setMediatorID() Failed to set $_MediatorID');
 
-        $this->Input->setMediatorID('MockInput');
-
-        $this->assertSame('MockInput', $Property->getValue($this->Input), 'IInput::setMediatorID() Failed to set $_MediatorID');
+        # Invalid arguments
+        $this->assertSame(IDataMapper::INVALID, $this->Input->setMediatorID(NULL), 'IInput::setMediatorID() Should return IDataMapper::INVALID');
     }
 
     /**
@@ -205,6 +194,14 @@ class InputTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(2, $called, 'IInput::read() failed to call onInput hook');
         $this->assertFalse($this->Input->read(1024), 'IInput::read() returned an invalid value');
         $this->assertSame(3, $called, 'IInput::read() failed to call onInput hook');
+
+        # No stream
+        $Property = new ReflectionProperty($this->Input, '_InStream');
+
+        $Property->setAccessible(true);
+        $Property->setValue($this->Input, null);
+
+        $this->assertFalse($this->Input->read(1024), 'IInput::read() returned an invalid value');
     }
 
     /**
@@ -224,6 +221,14 @@ class InputTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(3, $called, 'IInput::read() failed to call onInput hook');
         $this->assertFalse($this->Input->readline(1024), 'IInput::readline() returned an invalid value');
         $this->assertSame(4, $called, 'IInput::read() failed to call onInput hook');
+
+        # No stream
+        $Property = new ReflectionProperty($this->Input, '_InStream');
+
+        $Property->setAccessible(true);
+        $Property->setValue($this->Input, null);
+
+        $this->assertFalse($this->Input->readline(1024), 'IInput::readline() returned an invalid value');
     }
 
     /**
@@ -232,6 +237,14 @@ class InputTest extends \PHPUnit_Framework_TestCase
     public function test_toString ()
     {
         $this->assertSame(substr(self::FILE, 16), @strval($this->Input), '(string) IInput returned and invalid value');
+
+        # No stream
+        $Property = new ReflectionProperty($this->Input, '_InStream');
+
+        $Property->setAccessible(true);
+        $Property->setValue($this->Input, null);
+
+        $this->assertSame('', @strval($this->Input), '(string) IInput returned an invalid value');
     }
 
     /**
@@ -261,6 +274,8 @@ class InputTest extends \PHPUnit_Framework_TestCase
         }
 
         catch (\PHPUnit_Framework_Error_Notice $e) {}
+
+        $this->assertNull(@$this->Input->undefined, 'IInput::$undefined should be NULL');
     }
 
 
@@ -290,16 +305,15 @@ class InputTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends test_get
-     * @depends test_setMediator
      * @depends test_setMediatorID
      * @covers ::__set
      */
     public function test_set()
     {
         # Mediator
-        $Expected = $this->getMockForAbstractClass('\\BLW\\Type\\IMediator');
-
+        $Expected              = $this->getMockForAbstractClass('\\BLW\\Type\\IMediator');
         $this->Input->Mediator = $Expected;
+
         $this->assertSame($Expected, $this->Input->Mediator, 'IInput::$Mediator could not be updated');
 
         try {
@@ -311,10 +325,12 @@ class InputTest extends \PHPUnit_Framework_TestCase
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
-        # MediatorID
-        $Expected = 'MediatorID';
+        @$this->Input->Mediator = NULL;
 
+        # MediatorID
+        $Expected                = 'MediatorID';
         $this->Input->MediatorID = $Expected;
+
         $this->assertSame($Expected, $this->Input->MediatorID, 'IInput::$MediatorID could not be updated');
 
         try {
@@ -326,6 +342,8 @@ class InputTest extends \PHPUnit_Framework_TestCase
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
+        @$this->Input->MediatorID = NULL;
+
         # Arguments
         try {
             $this->Input->Arguments = NULL;
@@ -335,6 +353,8 @@ class InputTest extends \PHPUnit_Framework_TestCase
         catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
+
+        @$this->Input->Arguments = NULL;
 
         # Options
         try {
@@ -346,6 +366,8 @@ class InputTest extends \PHPUnit_Framework_TestCase
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
+        @$this->Input->Options = NULL;
+
         # stdIn
         try {
             $this->Input->stdIn = NULL;
@@ -356,6 +378,8 @@ class InputTest extends \PHPUnit_Framework_TestCase
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
+        @$this->Input->stdIn = NULL;
+
         # Undefined
         try {
             $this->Input->undefined = '';
@@ -365,6 +389,8 @@ class InputTest extends \PHPUnit_Framework_TestCase
         catch (\PHPUnit_Framework_Error $e) {
             $this->assertContains('non-existant property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
+
+        @$this->Input->undefined = '';
     }
 
     /**
@@ -391,6 +417,8 @@ class InputTest extends \PHPUnit_Framework_TestCase
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
+        @$this->Input->__unset('Arguments');
+
         # Options
         try {
             unset($this->Input->Options);
@@ -401,6 +429,8 @@ class InputTest extends \PHPUnit_Framework_TestCase
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
+        @$this->Input->__unset('Options');
+
         # stdIn
         try {
             unset($this->Input->stdIn);
@@ -410,6 +440,8 @@ class InputTest extends \PHPUnit_Framework_TestCase
         catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
+
+        @$this->Input->__unset('stdIn');
 
         # Undefined
         unset($this->Input->undefined);

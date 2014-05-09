@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\MIME;
+namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
 use BLW\Model\MIME\ContentType;
@@ -24,7 +24,7 @@ use BLW\Model\MIME\ContentType;
 /**
  * Tests BLW Library MIME Contetn-Type header.
  * @package BLW\MIME
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Mime\ContentType
  */
@@ -119,6 +119,14 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         # No parameters
         $this->Header = new ContentType('text/plain');
         $this->assertEquals('text/plain', $this->Properties['Value']->getValue($this->Header), 'ContentType::__construct() failed to set $_Value');
+
+        # Invalid property
+        try {
+            new ContentType('text/plain', array('???' => '???'));
+            $this->fail('Failed to generate notice with invalid arguments');
+        }
+
+        catch (\PHPUnit_Framework_Error_Notice $e) {}
     }
 
     /**

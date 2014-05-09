@@ -28,12 +28,9 @@ use BLW\Type\MIME\IHead;
 use BLW\Type\HTTP\Browser\IPage;
 
 use BLW\Model\GenericURI;
-use BLW\Model\ClassException;
 use BLW\Model\InvalidArgumentException;
 use BLW\Model\GenericContainer;
 use BLW\Model\GenericFile;
-use BLW\Model\MIME\ContentDisposition;
-use BLW\Model\MIME\ContentDescription;
 use BLW\Model\MIME\Accept;
 use BLW\Model\MIME\AcceptLanguage;
 use BLW\Model\MIME\AcceptEncoding;
@@ -389,7 +386,7 @@ abstract class ABrowser extends \BLW\Type\AWrapper implements \BLW\Type\HTTP\IBr
      *            Request that produced response.
      * @param \BLW\Type\HTTP\IResponse $Response
      *            Response associated with request.
-     * @return \BLW\Type\HTTP\IPage Generated Page.
+     * @return \BLW\Type\HTTP\Browser\IPage Generated Page.
      */
     public function createStatusPage(IRequest $Request, IResponse $Response)
     {
@@ -412,7 +409,7 @@ abstract class ABrowser extends \BLW\Type\AWrapper implements \BLW\Type\HTTP\IBr
      *
      * @param \BLW\Type\HTTP\IRequest $Request
      *            Request that produced timeout.
-     * @return \BLW\Type\HTTP\IPage Generated Page.
+     * @return \BLW\Type\HTTP\Browser\IPage Generated Page.
      */
     public function createTimeoutPage(IRequest $Request)
     {
@@ -435,7 +432,7 @@ abstract class ABrowser extends \BLW\Type\AWrapper implements \BLW\Type\HTTP\IBr
      *
      * @param \BLW\Type\HTTP\IRequest $Request
      *            [optional] Request that produced timeout.
-     * @return \BLW\Type\HTTP\IPage Generated Page.
+     * @return \BLW\Type\HTTP\Browser\IPage Generated Page.
      */
     public function createUnknownPage(IRequest $Request = null)
     {
@@ -456,7 +453,7 @@ abstract class ABrowser extends \BLW\Type\AWrapper implements \BLW\Type\HTTP\IBr
     }
 
 #############################################################################################
-    // Browser Trait
+# Browser Trait
 #############################################################################################
 
     /**
@@ -1089,7 +1086,6 @@ abstract class ABrowser extends \BLW\Type\AWrapper implements \BLW\Type\HTTP\IBr
      *            Label of property to set.
      * @param mixed $value
      *            Value of property.
-     * @return bool Returns a <code>IDataMapper</code> status code.
      */
     public function __set($name, $value)
     {
@@ -1155,7 +1151,6 @@ abstract class ABrowser extends \BLW\Type\AWrapper implements \BLW\Type\HTTP\IBr
      *
      * @param string $name
      *            Label of dynamic property. (case sensitive)
-     * @return bool Returns a <code>TRUE</code> if property exists. <code>FALSE</code> otherwise.
      */
     public function __unset($name)
     {

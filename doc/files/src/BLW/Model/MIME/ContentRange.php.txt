@@ -19,20 +19,25 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
+
+
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
-    
+
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
         header("$_SERVER[SERVER_PROTOCOL] 404 Not Found");
         header('Status: 404 Not Found');
-        
+
         $_SERVER['REDIRECT_STATUS'] = 404;
-        
+
         echo "<html>\r\n<head><title>404 Not Found</title></head><body bgcolor=\"white\">\r\n<center><h1>404 Not Found</h1></center>\r\n<hr>\r\n<center>nginx/1.5.9</center>\r\n</body>\r\n</html>\r\n";
         exit();
     }
-    
+
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Header class for Content-Range.
@@ -40,16 +45,17 @@ if (! defined('BLW')) {
  * <h3>RFC2616</h3>
  *
  * <pre>
- * Content-Range := "Content-Range" ":" content-range-spec
+ * Content-Range           := "Content-Range" ":" content-range-spec
  *
- * content-range-spec := byte-content-range-spec
+ * content-range-spec      := byte-content-range-spec
  * byte-content-range-spec := token SP
- * byte-range-resp-spec "/"
- * ( instance-length | "*" )
+ *                            byte-range-resp-spec "/"
+ *                            ( instance-length | "*" )
  *
- * byte-range-resp-spec := (first-byte-pos "-" last-byte-pos)
- * | "*"
- * instance-length := 1*DIGIT
+ * byte-range-resp-spec    := (first-byte-pos "-" last-byte-pos)
+ *                          | "*"
+ *
+ * instance-length         := 1*DIGIT
  * </pre>
  *
  * <hr>
@@ -68,27 +74,26 @@ final class ContentRange extends \BLW\Type\MIME\AHeader
      * Constructor
      *
      * @throws \BLW\Model\InvalidArgumentException If <code>$Range</code> is not a string.
-     *        
+     *
      * @param string $Range
      *            Value of Content-Desctiption header
-     * @return void
      */
     public function __construct($Range)
     {
         // 1. Header type
         $this->_Type = 'Content-Range';
-        
+
         // 2. Header value
-        
+
         // Validate $Range
         if (is_string($Range) ?  : is_callable(array(
             $Range,
             '__toString'
         ))) {
-            
+
             // Range
             $this->_Value = $this->parseRange($Range);
-        }         
+        }
 
         // Invalid $Range
         else
@@ -99,9 +104,8 @@ final class ContentRange extends \BLW\Type\MIME\AHeader
      * Parse a string for content-range-spec.
      *
      * @api BLW
-     * 
      * @since 1.0.0
-     *       
+     *
      * @param string $Test
      *            String to search.
      * @return string Returns `invalid` in case of error.
@@ -110,12 +114,12 @@ final class ContentRange extends \BLW\Type\MIME\AHeader
     {
         // Type Regex
         $Range = self::CONTENT_RANGE;
-        
+
         // Match Regex `content-range-spec`
         if (preg_match("!$Range!", @substr($Test, 0, 1024), $m))
             return $m[0];
-            
-            // Default
+
+        // Default
         return 'invalid';
     }
 }

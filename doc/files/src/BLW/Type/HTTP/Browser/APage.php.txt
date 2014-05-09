@@ -120,7 +120,7 @@ abstract class APage extends \BLW\Type\AWrapper implements \BLW\Type\HTTP\Browse
     /**
      * Pointer to current mediator.
      *
-     * @var \BLW\Type\IMediatable $_Mediator
+     * @var \BLW\Type\IMediator $_Mediator
      */
     protected $_Mediator = null;
 
@@ -560,7 +560,6 @@ abstract class APage extends \BLW\Type\AWrapper implements \BLW\Type\HTTP\Browse
      *            Label of property to set.
      * @param mixed $value
      *            Value of property.
-     * @return bool Returns a <code>IDataMapper</code> status code.
      */
     public function __set($name, $value)
     {
@@ -636,7 +635,6 @@ abstract class APage extends \BLW\Type\AWrapper implements \BLW\Type\HTTP\Browse
      *
      * @param string $name
      *            Label of dynamic property. (case sensitive)
-     * @return bool Returns a <code>TRUE</code> if property exists. <code>FALSE</code> otherwise.
      */
     public function __unset($name)
     {

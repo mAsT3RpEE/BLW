@@ -19,21 +19,25 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Type\IDataMapper;
+
+
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
-    
+
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
         header("$_SERVER[SERVER_PROTOCOL] 404 Not Found");
         header('Status: 404 Not Found');
-        
+
         $_SERVER['REDIRECT_STATUS'] = 404;
-        
+
         echo "<html>\r\n<head><title>404 Not Found</title></head><body bgcolor=\"white\">\r\n<center><h1>404 Not Found</h1></center>\r\n<hr>\r\n<center>nginx/1.5.9</center>\r\n</body>\r\n</html>\r\n";
         exit();
     }
-    
+
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Header class for Connection.
@@ -41,7 +45,7 @@ if (! defined('BLW')) {
  * <h3>RFC2616</h3>
  *
  * <pre>
- * Connection := "Connection" ":" connection-token
+ * Connection       := "Connection" ":" connection-token
  * connection-token := token
  * </pre>
  *
@@ -59,27 +63,26 @@ final class Connection extends \BLW\Type\MIME\AHeader
      * Constructor
      *
      * @throws \BLW\Model\InvalidArgumentException If <code>$Connection[x]</code> is not a string.
-     *        
+     *
      * @param string $Connection
      *            Accept types separated by a comma (,).
-     * @return void
      */
     public function __construct($Connection)
     {
         // 1. Header type
         $this->_Type = 'Connection';
-        
+
         // 2. Header value
-        
+
         // Validate $Connection
         if (is_string($Connection) ?  : is_callable(array(
             $Connection,
             '__toString'
         ))) {
-            
+
             // Type
             $this->_Value = $this->parseConnection($Connection);
-        }         
+        }
 
         // Invalid $Connection
         else
@@ -90,9 +93,8 @@ final class Connection extends \BLW\Type\MIME\AHeader
      * Parse a string for connection-token.
      *
      * @api BLW
-     * 
      * @since 1.0.0
-     *       
+     *
      * @param string $Test
      *            String to search.
      * @return string Returns empty string in case of error.
@@ -101,12 +103,12 @@ final class Connection extends \BLW\Type\MIME\AHeader
     {
         // Connection Regex
         $Connection = self::TOKEN;
-        
+
         // Match Regex `acceptable-ranges`
         if (preg_match("!$Connection!", @strtolower($Test), $m))
             return $m[0];
-            
-            // Default
+
+        // Default
         return '';
     }
 }

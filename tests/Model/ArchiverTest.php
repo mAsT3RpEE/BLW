@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model;
+namespace BLW\Model;
 
 use ReflectionProperty;
 use ReflectionMethod;
@@ -32,7 +32,7 @@ use BLW\Model\Mediator\Symfony as Mediator;
 /**
  * Test for BLW Archiver
  * @package BLW\Core
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Archiver
  */

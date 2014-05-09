@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\Command;
+namespace BLW\Model\Command;
 
 use ReflectionProperty;
 use ReflectionMethod;
@@ -35,9 +35,9 @@ use BLW\Model\Mediator\Symfony as SymfonyMediator;
 /**
  * Test for BLW ShellCommand object
  * @package BLW\Command
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Model\Command\Shell
+ * @coversDefaultClass \BLW\Model\Command\WindowsShell
  */
 class WindowsShellTest extends \PHPUnit_Framework_TestCase
 {
@@ -90,7 +90,7 @@ class WindowsShellTest extends \PHPUnit_Framework_TestCase
 
         $this->Command = new Command('php', $this->Config, $this->Mediator, 'ShellCommand');
 
-        $this->Input->Options[] = new GenericOption('l', true);
+        $this->Input->Options[] = new GenericOption('r', "sleep(10); print 'foo'; exit;");
     }
 
     protected function tearDown()
@@ -104,12 +104,13 @@ class WindowsShellTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::getFactoryMethods
+     * @covers ::createCommandLine
      */
     public function test_createCommandLine()
     {
-        $Expected = 'cmd /V:ON /E:ON /C "(php -l foo.php)"';
+        $Expected = 'cmd /V:ON /E:ON /C "(php -x foo foo.php)"';
 
+        $this->Input->Options[0]  = new GenericOption('x', 'foo');
         $this->Input->Arguments[] = new GenericArgument('foo.php');
 
         $this->assertEquals($Expected, $this->Command->createCommandLine('php', $this->Input), 'ShellCommand::createCommandLine() returned an invalid result');
@@ -130,9 +131,9 @@ class WindowsShellTest extends \PHPUnit_Framework_TestCase
     public function test_doRun()
     {
         // Only Windows
-        if (DIRECTORY_SEPARATOR != '\\') return;
+        if (DIRECTORY_SEPARATOR != '\\') return true;
 
-        $Expected = "No syntax errors detected in -\n";
+        $Expected = 'foo';
 
         $this->assertEquals(0, $this->Command->run($this->Input, $this->Output), 'ShellCommand::run() returned an invalid result');
         $this->assertEquals($Expected, $this->Output->stdOut->getContents(), 'ShellCommand::doRun() Failed to process command output');

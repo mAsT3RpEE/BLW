@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\Serializer;
+namespace BLW\Model\Serializer;
 
 use BLW\Type\ISerializer;
 use BLW\Model\Serializer\PHP as Serializer;
@@ -24,9 +24,9 @@ use BLW\Type\ASerializable;
 /**
  * Tests BLW Library object serializer.
  * @package BLW\Core
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Type\ISerializer
+ * @coversDefaultClass \BLW\Model\Serializer\PHP
  */
 class PHPTest extends \PHPUnit_Framework_TestCase
 {
@@ -123,7 +123,10 @@ class PHPTest extends \PHPUnit_Framework_TestCase
             $this->Serializable->Child3->GrandChild6->clearParent();
         }
 
-        $this->assertTrue($this->Serializer->decode($Serialized, $this->Serializer->encode($this->Serializable)), 'ISerializer::decode() should return true');
+        $this->assertTrue($this->Serializer->decode($Serialized, $this->Serializer->encode($this->Serializable)), 'ISerializer::decode() should return TRUE');
         $this->assertEquals($this->Serializable, $Serialized, 'ISerializer::decode($Object, ISerializer::encocode()) Does not create an exact copy of the object');
+
+        # Invalid data
+        $this->assertFalse($this->Serializer->decode($Serialized, serialize(100)), 'ISerializer::decode() should return FALSE');
     }
 }

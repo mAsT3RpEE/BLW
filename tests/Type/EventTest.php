@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Type;
+namespace BLW\Type;
 
 use ReflectionProperty;
 
@@ -23,14 +23,14 @@ use ReflectionProperty;
 /**
  * Tests BLW Library Adaptor type.
  * @package BLW\Core
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  *  @coversDefaultClass \BLW\Type\AEvent
  */
 class EventTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \BLW\Type\IEvent
+     * @var \BLW\Type\AEvent
      */
     protected $Event = NULL;
 
@@ -42,11 +42,17 @@ class EventTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->Event   = $this->getMockForAbstractClass('\\BLW\\Type\\AEvent');
-        $this->Subject = new ReflectionProperty($this->Event, '_Subject');
-        $this->Context = new ReflectionProperty($this->Event, '_Context');
+        $this->Subject = (object) array('foo' => 1, 'bar' => 1);
 
-        $this->Subject->setAccessible(true);
-        $this->Context->setAccessible(true);
+        $Property = new ReflectionProperty($this->Event, '_Subject');
+
+        $Property->setAccessible(true);
+        $Property->setValue($this->Event, $this->Subject);
+
+        $Property = new ReflectionProperty($this->Event, '_Context');
+
+        $Property->setAccessible(true);
+        $Property->setValue($this->Event, array('foo' => 'test'));
     }
 
     protected function tearDown()
@@ -88,16 +94,11 @@ class EventTest extends \PHPUnit_Framework_TestCase
     */
     public function test_get()
     {
-        # Test
-        $Subject = (object) array('foo' => 1, 'bar' => 1);
-        $this->Subject->setValue($this->Event, $Subject);
-        $this->Context->setValue($this->Event, array('foo' => 'test'));
-
         # Subject
-        $this->assertSame($Subject, $this->Event->Subject, 'IEvent::__get(Subject) returned an invalid value');
+        $this->assertAttributeSame($this->Event->Subject, '_Subject', $this->Event, 'IEvent::$Subject should equal $_Subject');
 
         # Context
-        $this->assertEquals('test', $this->Event->foo, 'IEvent::__get(foo) returned an invalid value');
+        $this->assertEquals('test', $this->Event->foo, 'IEvent::$foo should equal IEvent::$foo[foo] returned an invalid value');
 
         # Undefiened
         try {
@@ -108,23 +109,17 @@ class EventTest extends \PHPUnit_Framework_TestCase
         catch(\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Undefined property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
-   }
+
+        $this->assertNull(@$this->Event->undefined, 'IEvent::$undefined should be NULL');
+    }
 
    /**
     * @covers ::__isset
     */
     public function test_isset()
     {
-        # Test
-        $Subject = new \DOMElement('span', 'test');
-        $this->Context->setValue($this->Event, array('foo' => 'test'));
-
         # Subject
-        $this->assertFalse(isset($this->Event->Subject), 'IEvent::$Subject should not exist');
-
-        $this->Subject->setValue($this->Event, $Subject);
-
-        $this->assertTrue(isset($this->Event->Subject), 'IEvent::$Subject should exist');
+        $this->assertTrue(isset($this->Event->Subject), 'IEvent::$Subject should not exist');
 
         # Context
         $this->assertTrue(isset($this->Event->foo), 'IEvent::$foo should exist');
@@ -139,10 +134,6 @@ class EventTest extends \PHPUnit_Framework_TestCase
     */
     public function test_set()
     {
-        # Test
-        $Subject = new \DOMElement('span', 'test');
-        $this->Context->setValue($this->Event, array('foo' => 'test'));
-
         # Subject
         try {
             $this->Event->Subject = NULL;
@@ -153,12 +144,16 @@ class EventTest extends \PHPUnit_Framework_TestCase
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
+        @$this->Event->Subject = NULL;
+
         #Context
         $this->Event->foo2 = 'test2';
-        $this->Event->foo3 = NULL;
 
-        $this->assertEquals('test2', $this->Event->foo2, 'IEvent::__get(foo2) returned an invalid value');
-        $this->assertEquals(NULL, $this->Event->foo3, 'IEvent::__get(foo3) returned an invalid value');
+        $this->assertEquals('test2', $this->Event->foo2, 'IEvent::$foo2 failed to update IEvent');
+
+        # Undefined
+        $this->Event->undefined = 1;
+        $this->assertEquals(1, $this->Event->undefined, 'IEvent::$undefined failed to update IEvent');
     }
 
     /**
@@ -167,10 +162,6 @@ class EventTest extends \PHPUnit_Framework_TestCase
      */
     public function test_unset()
     {
-        # Test
-        $Subject = new \DOMElement('span', 'test');
-        $this->Context->setValue($this->Event, array('foo' => 'test'));
-
         # Subject
         try {
             unset($this->Event->Subject);
@@ -181,8 +172,11 @@ class EventTest extends \PHPUnit_Framework_TestCase
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
+        @$this->Event->__unset('Subject');
+
         # Context
         unset($this->Event->foo);
+
         $this->assertFalse(isset($this->Event->foo), 'IEvent::$foo should not exist');
 
         # Undefined

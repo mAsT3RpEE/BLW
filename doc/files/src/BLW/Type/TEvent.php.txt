@@ -143,7 +143,7 @@ trait TEvent
 
         // Context
         elseif (array_key_exists($name, $this->_Context))
-        return $this->_Context[$name];
+            return $this->_Context[$name];
 
         // Undefined
         trigger_error(sprintf('Undefined property %s::$%s', get_class($this), $name), E_USER_NOTICE);
@@ -169,7 +169,7 @@ trait TEvent
 
         // Context
         elseif (isset($this->_Context[$name]))
-        return true;
+            return true;
 
         // Undefined
         return false;
@@ -182,7 +182,6 @@ trait TEvent
      *            Label of property to set.
      * @param mixed $value
      *            Value of property.
-     * @return bool Returns a <code>IDataMapper</code> status code.
      */
     public function __set($name, $value)
     {
@@ -200,7 +199,6 @@ trait TEvent
      *
      * @param string $name
      *            Label of dynamic property. (case sensitive)
-     * @return bool Returns a <code>TRUE</code> if property exists. <code>FALSE</code> otherwise.
      */
     public function __unset($name)
     {

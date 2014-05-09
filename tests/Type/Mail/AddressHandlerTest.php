@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Type\Mail;
+namespace BLW\Type\Mail;
 
 use BLW\Type\IDataMapper;
 
@@ -25,7 +25,7 @@ use BLW\Model\GenericEmailAddress;
 /**
  * Tests BLW Library AddressHandler type.
  * @package BLW\Core
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  *  @coversDefaultClass \BLW\Type\Mail\AAddressHandler
  */
@@ -36,15 +36,11 @@ class AddressHandlerTest extends \PHPUnit_Framework_TestCase
      */
     protected $AddressHandler = NULL;
 
-    /**
-     * @var \ReflectionProperty[]
-     */
-    protected $Properties = NULL;
-
     protected function setUp()
     {
         $this->AddressHandler = $this->getMockForAbstractClass('\\BLW\\Type\\Mail\\AAddressHandler');
-        $this->Properties     = array(
+
+        $Properties     = array(
         	'To'       => new \ReflectionProperty($this->AddressHandler, '_To')
         	,'From'    => new \ReflectionProperty($this->AddressHandler, '_From')
         	,'ReplyTo' => new \ReflectionProperty($this->AddressHandler, '_ReplyTo')
@@ -52,21 +48,20 @@ class AddressHandlerTest extends \PHPUnit_Framework_TestCase
             ,'BCC'     => new \ReflectionProperty($this->AddressHandler, '_BCC')
         );
 
-        $this->Properties['To']->setAccessible(true);
-        $this->Properties['To']->setValue($this->AddressHandler, new \BLW\Model\GenericContainer());
-        $this->Properties['From']->setAccessible(true);
-        $this->Properties['From']->setValue($this->AddressHandler, new \BLW\Model\GenericContainer());
-        $this->Properties['ReplyTo']->setAccessible(true);
-        $this->Properties['ReplyTo']->setValue($this->AddressHandler, new \BLW\Model\GenericContainer());
-        $this->Properties['CC']->setAccessible(true);
-        $this->Properties['CC']->setValue($this->AddressHandler, new \BLW\Model\GenericContainer());
-        $this->Properties['BCC']->setAccessible(true);
-        $this->Properties['BCC']->setValue($this->AddressHandler, new \BLW\Model\GenericContainer());
+        $Properties['To']->setAccessible(true);
+        $Properties['To']->setValue($this->AddressHandler, new \BLW\Model\GenericContainer());
+        $Properties['From']->setAccessible(true);
+        $Properties['From']->setValue($this->AddressHandler, new \BLW\Model\GenericContainer());
+        $Properties['ReplyTo']->setAccessible(true);
+        $Properties['ReplyTo']->setValue($this->AddressHandler, new \BLW\Model\GenericContainer());
+        $Properties['CC']->setAccessible(true);
+        $Properties['CC']->setValue($this->AddressHandler, new \BLW\Model\GenericContainer());
+        $Properties['BCC']->setAccessible(true);
+        $Properties['BCC']->setValue($this->AddressHandler, new \BLW\Model\GenericContainer());
     }
 
     protected function tearDown()
     {
-        $this->Properties     = NULL;
         $this->AddressHandler = NULL;
     }
 
@@ -79,7 +74,7 @@ class AddressHandlerTest extends \PHPUnit_Framework_TestCase
 
         # Valid Email
         $this->assertEquals(IDataMapper::UPDATED, $this->AddressHandler->addTo($Expected), 'IAddressHandler::addTo() should return IDataMapper::UPDATED');
-        $this->assertSame($Expected, $this->Properties['To']->getValue($this->AddressHandler)->offsetGet(0), 'IAddressHandler::$_To was not updated by IAddressHandler::AddTo()');
+        $this->assertSame($Expected, $this->readAttribute($this->AddressHandler, '_To')->offsetGet(0), 'IAddressHandler::$_To was not updated by IAddressHandler::AddTo()');
 
         # Invalid Email
         $this->assertEquals(IDataMapper::INVALID, $this->AddressHandler->addTo(new GenericEmailAddress('Invalid')), 'IAddressHandler::addTo() should return IDataMapper::INVALID');
@@ -109,7 +104,7 @@ class AddressHandlerTest extends \PHPUnit_Framework_TestCase
 
         # Valid Email
         $this->assertEquals(IDataMapper::UPDATED, $this->AddressHandler->addFrom($Expected), 'IAddressHandler::addFrom() should return IDataMapper::UPDATED');
-        $this->assertSame($Expected, $this->Properties['From']->getValue($this->AddressHandler)->offsetGet(0), 'IAddressHandler::$_From was not updated by IAddressHandler::AddFrom()');
+        $this->assertSame($Expected, $this->readAttribute($this->AddressHandler, '_From')->offsetGet(0), 'IAddressHandler::$_From was not updated by IAddressHandler::AddFrom()');
 
         # Invalid Email
         $this->assertEquals(IDataMapper::INVALID, $this->AddressHandler->addFrom(new GenericEmailAddress('Invalid')), 'IAddressHandler::addFrom() should return IDataMapper::INVALID');
@@ -139,7 +134,7 @@ class AddressHandlerTest extends \PHPUnit_Framework_TestCase
 
         # Valid Email
         $this->assertEquals(IDataMapper::UPDATED, $this->AddressHandler->addReplyTo($Expected), 'IAddressHandler::addReplyTo() should return IDataMapper::UPDATED');
-        $this->assertSame($Expected, $this->Properties['ReplyTo']->getValue($this->AddressHandler)->offsetGet(0), 'IAddressHandler::$_ReplyTo was not updated by IAddressHandler::AddReplyTo()');
+        $this->assertSame($Expected, $this->readAttribute($this->AddressHandler, '_ReplyTo')->offsetGet(0), 'IAddressHandler::$_ReplyTo was not updated by IAddressHandler::AddReplyTo()');
 
         # Invalid Email
         $this->assertEquals(IDataMapper::INVALID, $this->AddressHandler->addReplyTo(new GenericEmailAddress('Invalid')), 'IAddressHandler::addReplyTo() should return IDataMapper::INVALID');
@@ -169,7 +164,7 @@ class AddressHandlerTest extends \PHPUnit_Framework_TestCase
 
         # Valid Email
         $this->assertEquals(IDataMapper::UPDATED, $this->AddressHandler->addCC($Expected), 'IAddressHandler::addCC() should return IDataMapper::UPDATED');
-        $this->assertSame($Expected, $this->Properties['CC']->getValue($this->AddressHandler)->offsetGet(0), 'IAddressHandler::$_CC was not updated by IAddressHandler::AddCC()');
+        $this->assertSame($Expected, $this->readAttribute($this->AddressHandler, '_CC')->offsetGet(0), 'IAddressHandler::$_CC was not updated by IAddressHandler::AddCC()');
 
         # Invalid Email
         $this->assertEquals(IDataMapper::INVALID, $this->AddressHandler->addCC(new GenericEmailAddress('Invalid')), 'IAddressHandler::addCC() should return IDataMapper::INVALID');
@@ -199,7 +194,7 @@ class AddressHandlerTest extends \PHPUnit_Framework_TestCase
 
         # Valid Email
         $this->assertEquals(IDataMapper::UPDATED, $this->AddressHandler->addBCC($Expected), 'IAddressHandler::addBCC() should return IDataMapper::UPDATED');
-        $this->assertSame($Expected, $this->Properties['BCC']->getValue($this->AddressHandler)->offsetGet(0), 'IAddressHandler::$_BCC was not updated by IAddressHandler::AddBCC()');
+        $this->assertSame($Expected, $this->readAttribute($this->AddressHandler, '_BCC')->offsetGet(0), 'IAddressHandler::$_BCC was not updated by IAddressHandler::AddBCC()');
 
         # Invalid Email
         $this->assertEquals(IDataMapper::INVALID, $this->AddressHandler->addBCC(new GenericEmailAddress('Invalid')), 'IAddressHandler::addBCC() should return IDataMapper::INVALID');
@@ -219,5 +214,4 @@ class AddressHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\\BLW\\Type\\IContainer', $this->AddressHandler->getBCC(), 'IAddressHandler::getBCC() should return an instance of IContainer');
         $this->assertEquals($Expected, $this->AddressHandler->getBCC(), 'IAddressHandler::getBCC() returned an invalid IContainer');
     }
-
 }

@@ -22,12 +22,7 @@ use ReflectionMethod;
 use DOMNode;
 use DOMDocument;
 use DOMXPath;
-use OutOfBoundsException;
-use UnexpectedValueException;
-use IteratorIterator;
 
-use BLW\Type\IDataMapper;
-use BLW\Type\ISerializer;
 use BLW\Type\DOM\IElement;
 use BLW\Type\DOM\IDocument;
 

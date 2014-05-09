@@ -1,0 +1,87 @@
+<?php
+/**
+ * IHead.php | Mar 20, 2014
+ *
+ * @filesource
+ * @license MIT
+ * @copyright Copyright (c) 2013-2018, mAsT3RpEE's Zone
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+/**
+ *
+ * @package BLW\MIME
+ * @version GIT: 0.2.0
+ * @author  Walter Otsyula <wotsyula@mast3rpee.tk>
+ */
+namespace BLW\Type\MIME;
+
+use BLW\Type\MIME\IHeader;
+
+// @codeCoverageIgnoreStart
+if (! defined('BLW')) {
+
+    if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
+        header("$_SERVER[SERVER_PROTOCOL] 404 Not Found");
+        header('Status: 404 Not Found');
+
+        $_SERVER['REDIRECT_STATUS'] = 404;
+
+        echo "<html>\r\n<head><title>404 Not Found</title></head><body bgcolor=\"white\">\r\n<center><h1>404 Not Found</h1></center>\r\n<hr>\r\n<center>nginx/1.5.9</center>\r\n</body>\r\n</html>\r\n";
+        exit();
+    }
+
+    return false;
+}
+// @codeCoverageIgnoreEnd
+
+
+/**
+ * <h3>Summary</h3>
+ *
+ * <pre>
+ * +---------------------------------------------------+      +-------------+       +-----------------+
+ * | HEAD                                              |<-----| CONTAINER   |<--+---| ArrayObject     |
+ * +---------------------------------------------------+      | =========== |   |   +-----------------+
+ * | _CRLF:  "\r\n"                                    |      | IHeader     |   +---| SERIALIZABLE    |
+ * +---------------------------------------------------+      | String      |   |   | =============== |
+ * | getHeader(): IHeader|false                        |      +-------------+   |   | Serializable    |
+ * |                                                   |                        |   +-----------------+
+ * | $Type:  string                                    |                        +---| ITERABLE        |
+ * +---------------------------------------------------+                            +-----------------+
+ * </pre>
+ *
+ * <hr>
+ *
+ * @package BLW\MIME
+ * @api BLW
+ * @since   1.0.0
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
+ *
+ * @property string $_CRLF [protected] "\r\n"
+ */
+interface IHead extends \BLW\Type\IContainer
+{
+
+    const HEADER = '\\BLW\\Type\\MIME\\IHeader';
+
+    /**
+     * Search head for a perticular Header.
+     *
+     * @api BLW
+     * @since   1.0.0
+     *
+     * @throws \BLW\Model\InvalidArgumentException If <code>$Type</code> is not a string.
+     *
+     * @param string $Type
+     *            Header label to seach for.
+     * @return \BLW\Type\MIME\IHeader Found header. <code>FALSE</code> otherwise.
+     */
+    public function getHeader($Type);
+}
+
+// @codeCoverageIgnoreStart
+return true;
+// @codeCoverageIgnoreEnd

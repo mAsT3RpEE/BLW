@@ -99,7 +99,7 @@ abstract class ATransport extends \BLW\Type\AMediatable implements \BLW\Type\Mai
     /**
      * Parse an instance of IMessage for receipients
      *
-     * @param \BLW\Model\Mail\IMessage $Message
+     * @param \BLW\Type\Mail\IMessage $Message
      *            Message to parse.
      * @return \BLW\Type\IContainer Parsed receipients.
      */
@@ -122,9 +122,9 @@ abstract class ATransport extends \BLW\Type\AMediatable implements \BLW\Type\Mai
     /**
      * Prepares a message for transport informs mediators and calls doSend().
      *
-     * @uses \BLW\Model\Mail\Transport\ITransport::doSend()
+     * @uses \BLW\Type\Mail\ITransport::doSend() ITransport::doSend()
      *
-     * @param \BLW\Model\MIME\Message $Message
+     * @param \BLW\Type\Mail\IMessage $Message
      *            Message to send.
      * @param int $flags
      *            ITransport::MAIL_FLAGS
@@ -151,7 +151,7 @@ abstract class ATransport extends \BLW\Type\AMediatable implements \BLW\Type\Mai
     /**
      * Does the actual work of sending the message.
      *
-     * @param \BLW\Model\MIME\Message $Message
+     * @param \BLW\Type\Mail\IMessage $Message
      *            Message to send.
      * @return int ITransport::RESULT_FLAGS
      */

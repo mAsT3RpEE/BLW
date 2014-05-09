@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\MIME;
+namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
 use BLW\Model\MIME\Accept;
@@ -24,7 +24,7 @@ use BLW\Model\MIME\Accept;
 /**
  * Tests BLW Library MIME Contetn-Type header.
  * @package BLW\MIME
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Mime\Accept
  */
@@ -42,7 +42,7 @@ class AcceptTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->Header      = new Accept('*/*; q=1');
+        $this->Header      = new Accept(', image/*; q=0.5, , */*; q=1');
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
         	,'Value' => new \ReflectionProperty($this->Header, '_Value')
@@ -102,6 +102,7 @@ class AcceptTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends test_parseType
      * @covers ::__construct
+     * @covers ::_combine
      */
     public function test_construct()
     {
@@ -122,6 +123,14 @@ class AcceptTest extends \PHPUnit_Framework_TestCase
         # No parameters
         $this->Header = new Accept('text/plain,text/html,image/*; q=0.8');
         $this->assertEquals('text/plain, text/html, image/*; q=0.8', $this->Properties['Value']->getValue($this->Header), 'Accept::__construct() failed to set $_Value');
+
+        # Invalid property
+        try {
+            new Accept('*/*', array('???' => '???'));
+            $this->fail('Failed to generate notice with invalid arguments');
+        }
+
+        catch (\PHPUnit_Framework_Error_Notice $e) {}
     }
 
     /**
@@ -129,6 +138,6 @@ class AcceptTest extends \PHPUnit_Framework_TestCase
      */
     public function test_toString()
     {
-        $this->assertEquals("Accept: */*; q=1\r\n", @strval($this->Header), 'Accept::__toSting() returned an invalid format');
+        $this->assertEquals("Accept: */*, image/*; q=0.5, */*, */*; q=1\r\n", @strval($this->Header), 'Accept::__toSting() returned an invalid format');
     }
 }

@@ -15,13 +15,13 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Type\HTTP;
+namespace BLW\Type\HTTP;
 
-use ReflectionProperty;
 use ReflectionMethod;
 
 use BLW\Model\InvalidArgumentException;
 
+use BLW\Model\Mediator\Symfony as Mediator;
 use BLW\Model\HTTP\Request\Generic as Request;
 use BLW\Model\HTTP\Response\Generic as Response;
 use BLW\Model\GenericURI;
@@ -31,7 +31,7 @@ use BLW\Model\GenericFile;
 /**
  * Test for base HTTP client class
  * @package BLW\HTTP
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Type\HTTP\AClient
  */
@@ -59,6 +59,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->Response = new Response;
         $this->Client   = $this->getMockForAbstractClass('\\BLW\\Type\\HTTP\\AClient');
 
+        $this->Client->setMediator(new Mediator);
+
         $this->Request->setURI(new GenericURI('http://example.com'));
 
         $this->Client->attach($this->Request, $this->Response);
@@ -73,8 +75,29 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     public function generateInvalidRequests()
     {
+        // No timeout
+        $NoTimeout        = new Request;
+        $NoTimeout->URI   = new GenericURI('http://example.com');
+
+        unset($NoTimeout->Config['Timeout']);
+
+        // No redirects
+        $NoRedirects      = new Request;
+        $NoRedirects->URI = new GenericURI('http://example.com');
+
+        unset($NoRedirects->Config['MaxRedirects']);
+
+        // No cookies
+        $NoCookies        = new Request;
+        $NoCookies->URI   = new GenericURI('http://example.com');
+
+        unset($NoCookies->Config['EnableCookies']);
+
         return array(
         	 array(new Request)
+            ,array($NoTimeout)
+            ,array($NoRedirects)
+            ,array($NoCookies)
             ,array('foo')
             ,array(false)
             ,array(NULL)
@@ -102,9 +125,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     public function generateInvalid()
     {
-        $Request = new Request;
-
-        $this->Request->setURI(new GenericURI('http://example.com'));
+        $Request      = new Request;
+        $Request->URI = new GenericURI('http://example.com');
 
         return array(
              array(new Request, new Response)
@@ -125,17 +147,24 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function test_attach()
     {
-        # Valid arguments
-        $Request  = new Request;
-        $Response = new Response;
+        $Called   = 0;
 
-        $Request->setURI(new GenericURI('http://example.com'));
+        $this->Client->_on('Request.New', function() use(&$Called)
+        {
+            $Called++;
+        });
+
+        # Valid arguments
+        $Request      = new Request;
+        $Response     = new Response;
+        $Request->URI = new GenericURI('http://example.com');
 
         $this->assertCount(1, $this->Client, 'IClient should have 1 request');
 
         $this->Client->attach($Request, $Response);
 
-        $this->assertCount(2, $this->Client, 'IClient should have 2 requests');
+        $this->assertCount(2, $this->Client, 'IClient::attach() Failed to que request');
+        $this->assertSame(1, $Called, 'IClient::attach() Failed to generate `Request.New` event');
 
         # Invalid arguments
         foreach ($this->generateInvalid() as $Arguments) {
@@ -157,9 +186,17 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function test_detach()
     {
+        $Called = 0;
+
+        $this->Client->_on('Request.Remove', function() use(&$Called)
+        {
+            $Called++;
+        });
+
         # Valid arguments
         $this->Client->detach($this->Request);
         $this->assertCount(0, $this->Client, 'IClient should be empty');
+        $this->assertSame(1, $Called, 'IClient::detach() Failed to generate `Request.Remove` Event');
 
         $this->Client->detach($this->Request);
         $this->assertCount(0, $this->Client, 'IClient should be empty');
@@ -168,6 +205,15 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->Client->attach($this->Request, $this->Response);
         $this->Client->detach(new \stdClass);
         $this->assertCount(1, $this->Client, 'IClient should have 1 request');
+    }
+
+    /**
+     * @covers ::getFactoryMethods
+     */
+    public function test_getFactoryMethods()
+    {
+        $this->assertNotEmpty($this->Client->getFactoryMethods(), 'IClient::getFactoryMethods() Returned an invalid value');
+        $this->assertContainsOnlyInstancesOf('ReflectionMethod', $this->Client->getFactoryMethods(), 'IClient::getFactoryMethods() Returned an invalid value');
     }
 
     public function generateValidTempDirs()
@@ -292,7 +338,16 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         catch (InvalidArgumentException $e) {}
 
-        $this->assertCount(7, $this->Client, 'IClient Should contain 4 items');
+        $this->assertCount(7, $this->Client, 'IClient Should contain 7 items');
+
+        try {
+            $this->Client->sendAll(NULL);
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch (InvalidArgumentException $e) {}
+
+        $this->assertCount(7, $this->Client, 'IClient Should contain 7 items');
     }
 
     /**

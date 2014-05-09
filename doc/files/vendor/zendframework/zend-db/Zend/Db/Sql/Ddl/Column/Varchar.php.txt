@@ -23,7 +23,7 @@ class Varchar extends Column
 
     /**
      * @param null|string $name
-     * @param int $length
+     * @param integer $length
      */
     public function __construct($name, $length)
     {

@@ -343,7 +343,7 @@ class Select extends AbstractSql implements SqlInterface, PreparableSqlInterface
     }
 
     /**
-     * @param int $limit
+     * @param integer $limit
      * @return Select
      */
     public function limit($limit)
@@ -361,7 +361,7 @@ class Select extends AbstractSql implements SqlInterface, PreparableSqlInterface
     }
 
     /**
-     * @param int $offset
+     * @param integer $offset
      * @return Select
      */
     public function offset($offset)

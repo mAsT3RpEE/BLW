@@ -1,0 +1,266 @@
+<?php
+/**
+ * Message.php | Jan 20, 2013
+ *
+ * @filesource
+ * @license MIT
+ * @copyright Copyright (c) 2013-2018, mAsT3RpEE's Zone
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+/**
+ *
+ * @package BLW\Mail
+ * @version GIT: 0.2.0
+ * @author  Walter Otsyula <wotsyula@mast3rpee.tk>
+ */
+namespace BLW\Model\Mail\MIME;
+
+use ReflectionMethod;
+use BLW\Type\MIME\IMessage;
+use BLW\Model\GenericContainer;
+use BLW\Model\GenericEmailAddress;
+use BLW\Model\InvalidArgumentException;
+use BLW\Model\MIME\MIMEVersion;
+use BLW\Model\MIME\Section;
+use BLW\Model\MIME\Head\RFC822 as Head;
+use BLW\Model\MIME\Body\RFC822 as Body;
+use BLW\Type\AEmailAddress;
+
+// @codeCoverageIgnoreStart
+if (! defined('BLW')) {
+
+    if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
+        header("$_SERVER[SERVER_PROTOCOL] 404 Not Found");
+        header('Status: 404 Not Found');
+
+        $_SERVER['REDIRECT_STATUS'] = 404;
+
+        echo "<html>\r\n<head><title>404 Not Found</title></head><body bgcolor=\"white\">\r\n<center><h1>404 Not Found</h1></center>\r\n<hr>\r\n<center>nginx/1.5.9</center>\r\n</body>\r\n</html>\r\n";
+        exit();
+    }
+
+    return false;
+}
+// @codeCoverageIgnoreEnd
+
+
+/**
+ * RFC822 MIME formated Email Message.
+ *
+ * <h3>Summary</h3>
+ *
+ * <pre>
+ * +---------------------------------------------------+       +---------------------+
+ * | Message                                           |<------| FACTORY             |
+ * +---------------------------------------------------+       | =================== |
+ * | _Head                                             |       | createMessage       |
+ * | _Body                                             |       | createFromString    |
+ * +---------------------------------------------------+       | createAddressHeader |
+ * | createMessage(): Mail\IMessage                    |       +---------------------+
+ * +---------------------------------------------------+
+ * | createFromString(): IMessage                      |
+ * +---------------------------------------------------+
+ * | createAddressHeader(): MIME\IHeader               |
+ * |                                                   |
+ * | $Type:   string                                   |
+ * | $Value:  string                                   |
+ * +---------------------------------------------------+
+ * | getHeader(): IHead                                |
+ * +---------------------------------------------------+
+ * | getBody(): IBody                                  |
+ * +---------------------------------------------------+
+ * | __toString(): string                              |
+ * +---------------------------------------------------+
+ * </pre>
+ *
+ * <hr>
+ *
+ * @package BLW\Mail
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
+ */
+final class Message extends \BLW\Type\MIME\AMessage
+{
+
+#############################################################################################
+# Factory Trait
+#############################################################################################
+
+    /**
+     * Return an array of factory methods associated with the class.
+     *
+     * @return \ReflectionMethod[] Array of factory methods.
+     */
+    public static function getFactoryMethods()
+    {
+        return array(
+            new ReflectionMethod(get_called_class(), 'createMessage'),
+            new ReflectionMethod(get_called_class(), 'createFromString')
+        );
+    }
+
+    /**
+     * Generate a \BLW\Mail\GenericMessage object from current class.
+     *
+     * @api BLW
+     * @since   1.0.0
+     * @todo Everything.
+     *
+     * @return \BLW\Type\Mail\IMessage Generated message.
+     */
+    public function createMessage()
+    {
+        throw new \RuntimeException('Not supported yet');
+    }
+
+    /**
+     * Parse an address header into its corresponding Mime\Header.
+     *
+     * @uses \BLW\Model\GenericEmailAddess GenericEmailAddess
+     * @uses \BLW\Model\GenericContainer GenericContainer
+     *
+     * @param string $Type
+     *            Header Type (To | From | Reply-To | CC | BCC).
+     * @param string $Value
+     *            RFC822 formated email address list.
+     * @return \BLW\Model\MIME\IHeader Generated Header.
+     */
+    public static function createAddressHeader($Type, $Value)
+    {
+        // Header class
+        $Class       = "\\BLW\\Model\\MIME\\$Type";
+        $AddressList = new GenericContainer(IMessage::EMAIL);
+
+        if (! class_exists($Class, true)) {
+            throw new InvalidArgumentException(0);
+
+        } elseif (! is_string($Value) && ! is_callable(array(
+            $Value,
+            '__toString'
+        ))) {
+            throw new InvalidArgumentException(0);
+
+        }
+
+        // Parse addresses
+        foreach (imap_rfc822_parse_adrlist($Value, 'localhost') as $Mail) {
+
+            $Email = GenericEmailAddress::createEmailString(array(
+                'Local'  => isset($Mail->mailbox) ? $Mail->mailbox : '',
+                'Domain' => isset($Mail->host) ? $Mail->host : '',
+            ));
+
+            $Personal = isset($Mail->personal) ? $Mail->personal : '';
+            $AddressList[] = new GenericEmailAddress($Email, $Personal);
+        }
+
+        // Create to MIME header
+        return new $Class($AddressList);
+    }
+
+    /**
+     * Creates a MIME header.
+     *
+     * @ignore
+     * @param string $Type
+     * @param string $Values
+     */
+    private static function _createHeader($Message, $Type, $Values)
+    {
+        $index = count($Values)
+            ? $Type
+            : null;
+
+        switch ($Type)
+        {
+            case 'To':
+            case 'From':
+            case 'Reply-To':
+            case 'Cc':
+            case 'Bcc':
+
+                // Loop through each header
+                foreach ($Values as $Value) {
+                    // AddressList
+                    $Message->getHeader()->offsetSet($index, self::createAddressHeader($Type, $Value));
+                }
+
+                // Done
+                break;
+
+            default:
+
+                // Loop through each header
+                foreach ($Values as $Value) {
+                    // Header
+                    $Message->getHeader()->offsetSet($index, self::createHeader($Type, $Value));
+                }
+        }
+    }
+
+    /**
+     * Convert a string to a MimeMessage
+     *
+     * @todo Parse mime body.
+     * @uses \BLW\Type\AEmailAddress::createEmailString() AEmailAddress::createEmailString()
+     * @link http://www.php.net/manual/en/function.imap-rfc822-parse-addrlist.php imap_rfc833_parse_addrlist()
+     *
+     * @param string $String
+     *            String version of message.
+     * @return \BLW\Model\MIMEMessage Genereted message.
+     */
+    public static function createFromString($String)
+    {
+        $DefaultHost = @$_SERVER['HTTP_HOST'] ?: @$_SERVER['SERVER_NAME'] ?: @$_SERVER['SERVER_ADDR'] ?: '0.0.0.0';
+        $Message     = new Message('1.0');
+
+        // Is $string valid?
+        if (! is_string($String) && ! is_callable(array(
+            $String,
+            '__toString'
+        ))) {
+            throw new InvalidArgumentException(0);
+
+        }
+
+        // Parse Header
+        self::parseParts($String, $Header, $Body);
+
+        foreach ($Header as $Type => $Values) {
+            self::_createHeader($Message, $Type, $Values);
+        }
+
+        // Parse body
+        throw new \RuntimeException('Not supported yet');
+
+        // Done
+        return $Message;
+    }
+
+#############################################################################################
+# MimeMessage Trait
+#############################################################################################
+
+    /**
+     * Constructor
+     *
+     * @param string $Version
+     *            Mime version.
+     * @param string $Section
+     *            Content-Type of body (multipart/mixed, multipart/alternative).
+     */
+    public function __construct($Version, $Section = 'multipart/mixed')
+    {
+        // Header
+        $this->_Head = new Head(new MIMEVersion($Version), new Section($Section));
+
+        // Body
+        $this->_Body = new Body($this->_Head->getSection());
+    }
+}
+
+// @codeCoverageIgnoreStart
+return true;
+// @codeCoverageIgnoreEnd

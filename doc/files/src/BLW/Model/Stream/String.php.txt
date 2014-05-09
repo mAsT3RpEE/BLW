@@ -21,7 +21,6 @@ namespace BLW\Model\Stream;
 use BLW\Type\IFile;
 use BLW\Type\IDataMapper;
 
-use BLW\Model\FileException;
 use BLW\Model\InvalidArgumentException;
 
 

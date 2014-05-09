@@ -19,20 +19,25 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
+
+
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
-    
+
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
         header("$_SERVER[SERVER_PROTOCOL] 404 Not Found");
         header('Status: 404 Not Found');
-        
+
         $_SERVER['REDIRECT_STATUS'] = 404;
-        
+
         echo "<html>\r\n<head><title>404 Not Found</title></head><body bgcolor=\"white\">\r\n<center><h1>404 Not Found</h1></center>\r\n<hr>\r\n<center>nginx/1.5.9</center>\r\n</body>\r\n</html>\r\n";
         exit();
     }
-    
+
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Header class for Content-MD5.
@@ -59,27 +64,26 @@ final class ContentMD5 extends \BLW\Type\MIME\AHeader
      * Constructor
      *
      * @throws \BLW\Model\InvalidArgumentException If <code>$MD5</code> is not a string.
-     *        
+     *
      * @param string $MD5
      *            Value of Content-Transfer-MD5 header.
-     * @return void
      */
     public function __construct($MD5)
     {
         // 1. Header type
         $this->_Type = 'Content-MD5';
-        
+
         // 2. Header value
-        
+
         // Validate $MD5
         if (is_string($MD5) ?  : is_callable(array(
             $MD5,
             '__toString'
         ))) {
-            
+
             // Type
             $this->_Value = $this->parseMD5($MD5);
-        }         
+        }
 
         // Invalid $Type
         else
@@ -90,9 +94,8 @@ final class ContentMD5 extends \BLW\Type\MIME\AHeader
      * Parse a string for md5-digest.
      *
      * @api BLW
-     * 
      * @since 1.0.0
-     *       
+     *
      * @param string $Test
      *            String to search.
      * @return string Returns `d41d8cd98f00b204e9800998ecf8427e` in case of error.
@@ -101,12 +104,12 @@ final class ContentMD5 extends \BLW\Type\MIME\AHeader
     {
         // Type Regex
         $MD5 = self::MD5;
-        
+
         // Match Regex `md5-digest`
         if (preg_match("!$MD5!", @strtolower($Test), $m))
             return $m[0];
-            
-            // Default
+
+        // Default
         return 'd41d8cd98f00b204e9800998ecf8427e';
     }
 }

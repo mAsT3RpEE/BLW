@@ -185,7 +185,7 @@ interface IBrowser extends \BLW\Type\IWrapper, \BLW\Type\IFactory, \Psr\Log\Logg
      *            Request that produced response.
      * @param \BLW\Type\HTTP\IResponse $Response
      *            Response associated with request.
-     * @return \BLW\Type\HTTP\IPage Generated Page.
+     * @return \BLW\Type\HTTP\Browser\IPage Generated Page.
      */
     public function createPage(IRequest $Request, IResponse $Response);
 
@@ -199,7 +199,7 @@ interface IBrowser extends \BLW\Type\IWrapper, \BLW\Type\IFactory, \Psr\Log\Logg
      *            Request that produced response.
      * @param \BLW\Type\HTTP\IResponse $Response
      *            Response associated with request.
-     * @return \BLW\Type\HTTP\IPage Generated Page.
+     * @return \BLW\Type\HTTP\Browser\IPage Generated Page.
      */
     public function createStatusPage(IRequest $Request, IResponse $Response);
 
@@ -211,7 +211,7 @@ interface IBrowser extends \BLW\Type\IWrapper, \BLW\Type\IFactory, \Psr\Log\Logg
      *
      * @param \BLW\Type\HTTP\IRequest $Request
      *            Request that produced timeout.
-     * @return \BLW\Type\HTTP\IPage Generated Page.
+     * @return \BLW\Type\HTTP\Browser\IPage Generated Page.
      */
     public function createTimeoutPage(IRequest $Request);
 
@@ -223,7 +223,7 @@ interface IBrowser extends \BLW\Type\IWrapper, \BLW\Type\IFactory, \Psr\Log\Logg
      *
      * @param \BLW\Type\HTTP\IRequest $Request
      *            [optional] Request that produced timeout.
-     * @return \BLW\Type\HTTP\IPage Generated Page.
+     * @return \BLW\Type\HTTP\Browser\IPage Generated Page.
      */
     public function createUnknownPage(IRequest $Request = null);
 

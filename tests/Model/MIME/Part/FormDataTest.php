@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\MIME\Part;
+namespace BLW\Model\MIME\Part;
 
 use BLW\Model\InvalidArgumentException;
 use BLW\Model\MIME\Part\FormData;
@@ -25,7 +25,7 @@ use BLW\Model\MIME\Part\FormField;
 /**
  * Tests BLW Library MIME Part object.
  * @package BLW\MIME
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\MIME\Part\FormData
  */
@@ -67,6 +67,14 @@ class FormDataTest extends \PHPUnit_Framework_TestCase
         $Expected = http_build_query(array('field1' => self::TEXT, 'field2' => self::HTML));
 
         $this->assertSame($Expected, $this->FormData->format($this->Fields, 76), 'FormData::format() did not create valid quoted-printable string');
+
+        # Invalid arguments
+        try {
+            $this->FormData->format(null, 50);
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -113,5 +121,10 @@ EOT;
         catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
+
+        @$this->FormData['Content'] = 'foo';
+
+        # Undefined
+        $this->FormData['undefined'] = 'foo';
     }
 }

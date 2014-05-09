@@ -15,11 +15,10 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\Cron\Handler;
+namespace BLW\Model\Cron\Handler;
 
+use DateTime;
 use DateInterval;
-use ReflectionProperty;
-use ReflectionMethod;
 
 use Psr\Log\NullLogger;
 
@@ -38,7 +37,7 @@ use BLW\Model\Cron\Handler\Generic as Handler;
 /**
  * Tests Generic cron handler
  * @package BLW\Cron
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Cron\Handler\Generic
  */
@@ -46,6 +45,16 @@ class GenericTest  extends \PHPUnit_Framework_TestCase
 {
     const INPUT  = 'data:text/plain,test input';
     const OUTPUT = 'php://memory';
+
+    /**
+     * @var \BLW\Type\IMediator
+     */
+    protected $Mediator = NULL;
+
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    protected $Logger = NULL;
 
     /**
      * @var \BLW\Model\Cron\Handler\Generic
@@ -67,7 +76,25 @@ class GenericTest  extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::__construct
+     */
+    public function test_construct()
+    {
+        # Valid arguments
+        $Handler = new Handler($this->Mediator, $this->Logger, true);
+
+        $this->assertSame($this->Mediator, $Handler->getMediator(), '_Mediator', $Handler, 'Generic::__construct() Failed to set $_Mediator');
+        $this->assertAttributeSame($this->Logger, 'logger', $Handler, 'Generic::__construct() Failed to set $logger');
+        $this->assertAttributeSame(true, '_isThreadCompatible', $Handler, 'Generic::__construct() Failed to set $_isThreadCompatible');
+
+        # Invalid arguents
+    }
+
+    /**
+     * @depends test_construct
      * @covers ::run
+     * @covers ::_die
+     * @covers ::_dispatch
      */
     public function test_run()
     {
@@ -80,11 +107,11 @@ class GenericTest  extends \PHPUnit_Framework_TestCase
 
         }, new GenericConfig(array('Timeout' => 10)));
 
-        $Job     = new Job($Command, new DateInterval('PT15M'));
+        $Job = new Job($Command, new DateInterval('PT15M'));
 
         # No Jobs test
         $this->assertSame(0, $this->Handler->run($Input, $Output), 'IHandler::run() Failed to execute AlreadyRunning command');
-        $this->assertStringStartsWith('No jobs.', $Output->stdOut->getContents(), 'IHandler::run() Failed to execute Waiting command');
+        $this->assertStringStartsWith('No jobs. Waiting', $Output->stdOut->getContents(), 'IHandler::run() Failed to execute Waiting command');
 
         # Locked cron file test
         ftruncate($Output->stdOut->fp, 0);
@@ -100,27 +127,33 @@ class GenericTest  extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(0, $this->Handler->run($Input, $Output), 'IHandler::run() Failed to execute AlreadyRunning command');
         $this->assertStringStartsWith('foo', $Output->stdOut->getContents(), 'IHandler::run() Failed to execute Waiting command');
+
+        # Waiting for jobs test
+        ftruncate($Output->stdOut->fp, 0);
+        $this->assertSame(0, $this->Handler->run($Input, $Output), 'IHandler::run() Failed to execute AlreadyRunning command');
+        $this->assertStringStartsWith('No jobs. Waiting', $Output->stdOut->getContents(), 'IHandler::run() Failed to execute Waiting command');
     }
 
     /**
      * @depends test_run
      * @coversNothing
-     *
-     * Succeeds if ran alone.
-     * Fails when run with other tests
      */
-    public function serialize()
+    public function test_serialize()
     {
-        $Input   = new Input(new ResourceStream(fopen(self::INPUT, 'r')));
-        $Output  = new Output(new ResourceStream(fopen(self::OUTPUT, 'w')), new ResourceStream(fopen(self::OUTPUT, 'w')));
-        $Command = new CallbackCommand(function ($Input, $Output) {
+        global $BLW_Serializer;
+
+        $BLW_Serializer = new \BLW\Model\Serializer\Mock;
+
+        $Input          = new Input(new ResourceStream(fopen(self::INPUT, 'r')));
+        $Output         = new Output(new ResourceStream(fopen(self::OUTPUT, 'w')), new ResourceStream(fopen(self::OUTPUT, 'w')));
+        $Command        = new CallbackCommand(function ($Input, $Output) {
 
             $Output->write('foo');
             return 0;
 
         }, new GenericConfig(array('Timeout' => 10)));
 
-        $Job    = new Job($Command, new DateInterval('PT15M'));
+        $Job = new Job($Command, new DateInterval('PT15M'));
 
         $this->Handler->attach($Job);
 

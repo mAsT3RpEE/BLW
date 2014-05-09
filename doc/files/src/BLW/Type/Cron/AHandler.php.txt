@@ -20,7 +20,6 @@ namespace BLW\Type\Cron;
 
 use DateTime;
 
-use BLW\Type\IObjectStorage;
 use BLW\Type\IDataMapper;
 use BLW\Type\IEvent;
 use BLW\Type\Command\IOutput;
@@ -98,7 +97,7 @@ abstract class AHandler extends \BLW\Type\AObjectStorage implements \BLW\Type\Cr
     /**
      * Pointer to current mediator.
      *
-     * @var \BLW\Type\IMediatable $_Mediator
+     * @var \BLW\Type\IMediator $_Mediator
      */
     protected $_Mediator = null;
 

@@ -1,0 +1,168 @@
+<?php
+/**
+ * IStream.php | Jan 30, 2014
+ *
+ * @filesource
+ * @license MIT
+ * @copyright Copyright (c) 2013-2018, mAsT3RpEE's Zone
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+/**
+ *
+ * @package BLW\Core
+ * @version GIT: 0.2.0
+ * @author  Walter Otsyula <wotsyula@mast3rpee.tk>
+ */
+namespace BLW\Type;
+
+// @codeCoverageIgnoreStart
+if (! defined('BLW')) {
+
+    if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
+        header("$_SERVER[SERVER_PROTOCOL] 404 Not Found");
+        header('Status: 404 Not Found');
+
+        $_SERVER['REDIRECT_STATUS'] = 404;
+
+        echo "<html>\r\n<head><title>404 Not Found</title></head><body bgcolor=\"white\">\r\n<center><h1>404 Not Found</h1></center>\r\n<hr>\r\n<center>nginx/1.5.9</center>\r\n</body>\r\n</html>\r\n";
+        exit();
+    }
+
+    return false;
+}
+// @codeCoverageIgnoreEnd
+
+
+/**
+ * Interface for all streams.
+ *
+ * <h3>Summary</h3>
+ *
+ * <pre>
+ * +---------------------------------------------------+       +-------------------+
+ * | Stream                                            |<------| SERIALIZABLE      |
+ * +---------------------------------------------------+       | ================= |
+ * | _fd:  resource                                    |       | Serializable      |
+ * | #fd:  _fd                                         |       +-------------------+
+ * +---------------------------------------------------+<------| ITERABLE          |
+ * | addFilter(): resource                             |       +-------------------+
+ * |                                                   |
+ * | $FilterName:  string                              |
+ * | $Mode:        int                                 |
+ * | $Params:      mixed                               |
+ * +---------------------------------------------------+
+ * | remFilter(): bool                                 |
+ * |                                                   |
+ * | $Resource:  resource                              |
+ * +---------------------------------------------------+
+ * | getContents(): string                             |
+ * |                                                   |
+ * | $MaxLength:  int                                  |
+ * | $Offset:     int                                  |
+ * +---------------------------------------------------+
+ * | putContents(): int                                |
+ * |                                                   |
+ * | $Data:       string|stream|array                  |
+ * | $MaxLength:  int                                  |
+ * | $Offset:     int                                  |
+ * +---------------------------------------------------+
+ * | __toString(): string                              |
+ * +---------------------------------------------------+
+ * </pre>
+ *
+ * <hr>
+ *
+ * @package BLW\Core
+ * @api     BLW
+ * @since   1.0.0
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
+ *
+ * @property resouce $_fp Stream / File resource.
+ * @property resource $fp [readonly] $_fp
+ */
+interface IStream extends \BLW\Type\ISerializable, \BLW\Type\IIterable
+{
+
+    /**
+     * Adds a filter to the stream.
+     *
+     * @api BLW
+     * @since   1.0.0
+     * @link http://www.php.net/manual/en/function.stream-filter-append.php stream_filter_append()
+     *
+     * @throws \BLW\Model\InvalidArgumentException If <code>$FilterName</code> is not a valid filter.
+     *
+     * @param string $FilterName
+     *            Filter to add.
+     * @param integer $Mode
+     *            Filter mode. (STREAM_FILTER_READ, STREAM_FILTER_WRITE, STREAM_FILTER_ALL)
+     * @param mixed $Params
+     *            Filter will be added with the specified params to the end of the list and will therefore be called last during stream operations
+     * @return resource Filter resource.
+     */
+    public function addFilter($FilterName, $Mode = STREAM_FILTER_WRITE, $Params = array());
+
+    /**
+     * Removes a filter from a stream.
+     *
+     * @api BLW
+     * @since   1.0.0
+     *
+     * @throws \BLW\Model\InvalidArgumentException If <code>$Resource</code> is not a valid resource.
+     *
+     * @param resource $Resource
+     *            Filter resource to remove.
+     * @return boolean Returns <code>TRUE</code> on success. <code>FALSE</code> otherwise.
+     */
+    public static function remFilter($Resource);
+
+    /**
+     * Reads entire stream into a string.
+     *
+     * @api BLW
+     * @since   1.0.0
+     * @link http://www.php.net/manual/en/function.stream-get-contents.php stream_get_contents()
+     *
+     * @param integer $MaxLength
+     *            The maximum bytes to read. Defaults to -1 (read all the remaining buffer). .
+     * @param integer $Offset
+     *            Seek to the specified offset before reading. If this number is negative, no seeking will occur and reading will start from the current position.
+     * @return string Returns a string or <code>FALSE</code> on failure.
+     */
+    public function getContents($MaxLength = -1, $Offset = -1);
+
+    /**
+     * Write a string / stream to a stream.
+     *
+     * @api BLW
+     * @since   1.0.0
+     * @link http://us1.php.net/manual/en/function.file-put-contents.php file_put_contents()
+     *
+     * @param string|resource|\BLW\Type\IStream $Data
+     *            The data to write. Can be either a string, a file resource, a stream resource or IStream object.
+     * @param integer $MaxLength
+     *            The maximum bytes to read. Defaults to -1 (read all the remaining buffer). .
+     * @param integer $Offset
+     *            Seek to the specified offset before reading. If this number is negative, no seeking will occur and reading will start from the current position.
+     * @return integer Returns the number of bytes actually written.
+     */
+    public function putContents($Data, $MaxLength = -1, $Offset = -1);
+
+    /**
+     * All objects must have a string representation.
+     *
+     * @api BLW
+     * @since   1.0.0
+     *
+     * @return string String value of object.
+     */
+    public function __toString();
+}
+
+// @codeCoverageIgnoreStart
+return true;
+// @codeCoverageIgnoreEnd
+

@@ -311,7 +311,7 @@ trait TEmailAddress
      *
      * @throws InvalidArgumentException If <code>$Address</code> / <code>$Personal</code> are not a strings
      *
-     * @param string|IEmailAddress $Address
+     * @param string|\BLW\Type\IEmailAddress $Address
      *            Email address.
      * @param string $Personal
      *            Name of email address owner.

@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model;
+namespace BLW\Model;
 
 use ReflectionProperty;
 use ReflectionMethod;
@@ -32,7 +32,7 @@ use BLW\Model\Mediator\Symfony as Mediator;
 /**
  * Test for BLW Compiler
  * @package BLW\Core
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Compiler
  */
@@ -75,16 +75,16 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
     {
         return array(
         	array(NULL, NULL, NULL),
-            array(__DIR__, __DIR__, __DIR__),
-            array(array(), new GenericFile(__DIR__), new GenericFile(__DIR__)),
-            array(new GenericFile(__DIR__), array(), new GenericFile(__DIR__)),
-            array(new GenericFile(__DIR__), new GenericFile(__DIR__), array()),
-            array(new GenericFile(__FILE__), new GenericFile(__DIR__), new GenericFile(__DIR__)),
-            array(new GenericFile(__DIR__), new GenericFile(__FILE__), new GenericFile(__DIR__)),
-            array(new GenericFile(__DIR__), new GenericFile(__DIR__), new GenericFile(__FILE__)),
-            array(new GenericFile('z:\\undefined\\'), new GenericFile(__DIR__), new GenericFile(__DIR__)),
-            array(new GenericFile(__DIR__), new GenericFile('z:\\undefined\\'), new GenericFile(__DIR__)),
-            array(new GenericFile(__DIR__), new GenericFile(__DIR__), new GenericFile('z:\\undefined\\')),
+            array(sys_get_temp_dir(), sys_get_temp_dir(), sys_get_temp_dir()),
+            array(array(), new GenericFile(sys_get_temp_dir()), new GenericFile(sys_get_temp_dir())),
+            array(new GenericFile(sys_get_temp_dir()), array(), new GenericFile(sys_get_temp_dir())),
+            array(new GenericFile(sys_get_temp_dir()), new GenericFile(sys_get_temp_dir()), array()),
+            array(new GenericFile(__FILE__), new GenericFile(sys_get_temp_dir()), new GenericFile(sys_get_temp_dir())),
+            array(new GenericFile(sys_get_temp_dir()), new GenericFile(__FILE__), new GenericFile(sys_get_temp_dir())),
+            array(new GenericFile(sys_get_temp_dir()), new GenericFile(sys_get_temp_dir()), new GenericFile(__FILE__)),
+            array(new GenericFile('z:\\undefined\\'), new GenericFile(sys_get_temp_dir()), new GenericFile(sys_get_temp_dir())),
+            array(new GenericFile(sys_get_temp_dir()), new GenericFile('z:\\undefined\\'), new GenericFile(sys_get_temp_dir())),
+            array(new GenericFile(sys_get_temp_dir()), new GenericFile(sys_get_temp_dir()), new GenericFile('z:\\undefined\\')),
         );
     }
 
@@ -146,7 +146,7 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
         });
 
         # Valid arguments
-        $this->assertTrue($this->Compiler->doAdvance(-1), 'Compiler::doAdvance() Returnen an invalid value');
+        $this->Compiler->doAdvance(-1);
         $this->assertEquals(1, $Called, 'Compiler::doAdvance() Failed to trigger callback');
         $this->assertNotEmpty($Arguments, 'Compiler::doAdvance() Caused an exceptional behaviour');
         $this->assertInstanceOf('\\BLW\\Type\\IEvent', $Arguments[0], 'Compiler::doAdvance() Created and invalid event');
@@ -159,6 +159,10 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
         }
 
         catch (InvalidArgumentException $e) {}
+
+        # No mediator
+        $this->Compiler->clearMediator();
+        $this->Compiler->doAdvance(- 1);
     }
 
     /**
@@ -167,9 +171,9 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
      */
     public function test_onAdvance()
     {
-            // Set up monitors
+        // Set up monitors
         $Called = 0;
-        $Steps = 0;
+        $Steps  = 0;
 
         // Valid arguments
         $this->Compiler->onAdvance(function ($Event) use(&$Called, &$Steps)
@@ -178,10 +182,10 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
             $Steps = $Event->Steps;
         });
 
-        $this->Compiler->doAdvance(- 1);
+        $this->Compiler->doAdvance(-1);
 
         $this->assertEquals(1, $Called, 'Compiler::onAdvance() Failed to register callback');
-        $this->assertEquals(- 1, $Steps, 'Compiler::onAdvance() Failed to register callback');
+        $this->assertEquals(-1, $Steps, 'Compiler::onAdvance() Failed to register callback');
 
         // Invalid arguments
         try {
@@ -190,6 +194,12 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
         }
 
         catch (InvalidArgumentException $e) {}
+
+        // No mediator
+        $this->Compiler->clearMediator();
+
+        $this->Compiler->onAdvance(function(){});
+        $this->assertEquals(1, $Called, 'Compiler::onAdvance() Failed to register callback');
     }
 
     public function generateOptimizations()
@@ -197,9 +207,9 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
         $Config = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Config' . DIRECTORY_SEPARATOR;
 
         return array(
-        	array(__FILE__, 0.7),
-            array("{$Config}jquery.fancybox.js", 0.7),
-        	array("{$Config}style.css", 0.8),
+        	array(__FILE__, 0.75),
+            array("{$Config}jquery.fancybox.js", 0.75),
+        	array("{$Config}style.css", 0.85),
         );
     }
 
@@ -228,6 +238,9 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
         }
 
         catch (FileException $e) {}
+
+        // Unoptimmizable file
+        $this->Compiler->optimize(BLW_DIR . DIRECTORY_SEPARATOR . 'LICENSE.md');
     }
 
     /**
@@ -286,6 +299,7 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends test_construct
      * @covers ::addDir
+     * @covers ::_extractExctentionRegex
      */
     public function test_addDir()
     {
@@ -317,6 +331,12 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
 
             $this->assertTrue($Test, 'Compiler::addFiles Added an illegal file');
         }
+
+        // Excluded items
+        $Old = count($Files);
+
+        $this->assertFalse($this->Compiler->addDir(new GenericFile(dirname(dirname(__DIR__)) . '/tests'), 'php', 'txt', 'js', 'css', 'tar.gz'), 'Compiler::addFiles() should return FALSE');
+        $this->assertSame($Old, count($getFiles($this->Compiler)));
 
         // Invalid arguments
         foreach ($this->getInvalidDirs() as $Arguments) {

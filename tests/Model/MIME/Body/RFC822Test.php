@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\MIME\Body;
+namespace BLW\Model\MIME\Body;
 
 use ReflectionMethod;
 use ReflectionProperty;
@@ -34,7 +34,7 @@ use BLW\Model\MIME\Part\QuotedPrintable;
 /**
  * Tests BLW Library MIME Body header.
  * @package BLW\MIME
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Mime\Body\RFC822
  */
@@ -180,13 +180,14 @@ class RFC822Test extends \PHPUnit_Framework_TestCase
     public function test_toString()
     {
         $Expected = <<<EOT
-Mock Header: foo\r\nDirect String\r\nMock Header: foo\r\n--mixed-boundary\r\nContent-Type: multipart/alternative; boundary="alternative-boundary"\r\n\r\n--alternative-boundary\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nTest content\r\n\r\n--alternative-boundary--\r\n\r\n--mixed-boundary\r\nContent-Type: image/png; name=test.png\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=test.png\r\n\r\niVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0A\r\nAAAASUVORK5CYII=\r\n\r\n--mixed-boundary\r\nContent-Type: image/png; name=test.png\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=test.png\r\n\r\niVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0A\r\nAAAASUVORK5CYII=\r\n\r\n--mixed-boundary--\r\n
+Mock Header: foo\r\nDirect String\r\nMock Header: foo\r\n--mixed-boundary\r\nContent-Type: text/plain; boundary="foo-boundary"\r\n\r\n--foo-boundary\r\nContent-Type: multipart/alternative; boundary="alternative-boundary"\r\n\r\n--alternative-boundary\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nTest content\r\n\r\n--alternative-boundary--\r\n\r\n--foo-boundary\r\nContent-Type: image/png; name=test.png\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=test.png\r\n\r\niVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0A\r\nAAAASUVORK5CYII=\r\n\r\n--foo-boundary\r\nContent-Type: image/png; name=test.png\r\nContent-Transfer-Encoding: base64\r\nContent-Disposition: attachment; filename=test.png\r\n\r\niVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0A\r\nAAAASUVORK5CYII=\r\n\r\n--foo-boundary--\r\n\r\n--mixed-boundary--\r\n
 EOT;
 
         $this->Body[]           = $this->Header;
         $this->Body[]           = "Direct String\r\n";
         $this->Body[]           = $this->Header;
 
+        $this->Body->addSection(new Section('foo', 'foo-boundary'));
         $this->Body->addSection(new Section('multipart/alternative', 'alternative-boundary'));
         $this->Body->addPart($this->Part);
         $this->Body->endSection();

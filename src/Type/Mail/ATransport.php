@@ -1,0 +1,175 @@
+<?php
+/**
+ * ATransport.php | Mar 08, 2014
+ *
+ * @filesource
+ * @license MIT
+ * @copyright Copyright (c) 2013-2018, mAsT3RpEE's Zone
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+/**
+ *
+ * @package BLW\Mail
+ * @version GIT: 0.2.0
+ * @author  Walter Otsyula <wotsyula@mast3rpee.tk>
+ */
+namespace BLW\Type\Mail;
+
+use BLW\Type\IMediator;
+use BLW\Type\IEmailAddress;
+use BLW\Model\GenericContainer;
+use BLW\Model\GenericEvent;
+
+// @codeCoverageIgnoreStart
+if (! defined('BLW')) {
+
+    if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
+        header("$_SERVER[SERVER_PROTOCOL] 404 Not Found");
+        header('Status: 404 Not Found');
+
+        $_SERVER['REDIRECT_STATUS'] = 404;
+
+        echo "<html>\r\n<head><title>404 Not Found</title></head><body bgcolor=\"white\">\r\n<center><h1>404 Not Found</h1></center>\r\n<hr>\r\n<center>nginx/1.5.9</center>\r\n</body>\r\n</html>\r\n";
+        exit();
+    }
+
+    return false;
+}
+// @codeCoverageIgnoreEnd
+
+
+/**
+ * Standard interface for objects that handle email Addresses.
+ *
+ * <h3>Summary</h3>
+ *
+ * <pre>
+ * +---------------------------------------------------+       +--------------+
+ * | TRANSPORT                                         |<------| MEDIATABLE   |
+ * +---------------------------------------------------+       +--------------+
+ * | SUCCESS                                           |
+ * | ERROR                                             |
+ * | NO_CONNECTION                                     |
+ * | INVALID_RECIPIENT                                 |
+ * +---------------------------------------------------+
+ * | parseRecipients(): IContainer                     |
+ * |                                                   |
+ * | $Message:  IMessage                               |
+ * +---------------------------------------------------+
+ * | send(): ITransport::doSend()                      |
+ * |                                                   |
+ * | $Message:  IMessage                               |
+ * | $flags:    ITransport::MAIL_FLAGS                 |
+ * +---------------------------------------------------+
+ * | doSend(): ITransport::RESULT_FLAGS                |
+ * |                                                   |
+ * | $Message:  IMessage                               |
+ * +---------------------------------------------------+
+ * | __toString(): string                              |
+ * +---------------------------------------------------+
+ * </pre>
+ *
+ * <hr>
+ *
+ * @package BLW\Core
+ * @api     BLW
+ * @since   1.0.0
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
+ */
+abstract class ATransport extends \BLW\Type\AMediatable implements \BLW\Type\Mail\ITransport
+{
+
+    /**
+     * Constructor
+     *
+     * @param \BLW\Type\IMediator $Mediator
+     *            Transport Mediator.
+     */
+    public function __construct(IMediator $Mediator = null)
+    {
+        // Mediator
+        if ($Mediator) {
+            $this->setMediator($Mediator);
+        }
+    }
+
+    /**
+     * Parse an instance of IMessage for receipients
+     *
+     * @param \BLW\Type\Mail\IMessage $Message
+     *            Message to parse.
+     * @return \BLW\Type\IContainer Parsed receipients.
+     */
+    public static function parseRecipients(IMessage $Message)
+    {
+        // Return value
+        $Receipients = new GenericContainer(IMessage::EMAIL);
+
+        // Add receipients 1 by 1
+        $Iterator = array_merge(iterator_to_array($Message->To), iterator_to_array($Message->CC), iterator_to_array($Message->BCC));
+
+        foreach ($Iterator as $Address) {
+            if ($Address instanceof IEmailAddress) {
+                $Receipients->append($Address);
+            }
+        }
+
+        // Done
+        return $Receipients;
+    }
+
+    /**
+     * Prepares a message for transport informs mediators and calls doSend().
+     *
+     * @uses \BLW\Type\Mail\ITransport::doSend() ITransport::doSend()
+     *
+     * @param \BLW\Type\Mail\IMessage $Message
+     *            Message to send.
+     * @param integer $flags
+     *            ITransport::MAIL_FLAGS
+     * @return integer ITransport::doSend()
+     */
+    public function send(IMessage $Message, $flags = ITransport::MAIL_FLAGS)
+    {
+        // Inform mediators
+        if ($this->_Mediator) {
+            $this->_do('Send', new GenericEvent($this, array(
+                'Message' => &$Message,
+                'Flags' => &$flags
+            )));
+        }
+
+        // Format message
+
+        // .....
+
+        // Send message
+        return $this->doSend($Message);
+    }
+
+    /**
+     * Does the actual work of sending the message.
+     *
+     * @param \BLW\Type\Mail\IMessage $Message
+     *            Message to send.
+     * @return integer ITransport::RESULT_FLAGS
+     */
+    abstract public function doSend(IMessage $Message);
+
+    /**
+     * All objects must have a string representation.
+     *
+     * @return string $this
+     */
+    public function __toString()
+    {
+        return sprintf('[Mail\\Transport:%s]', basename(get_class($this)));
+    }
+}
+
+// @codeCoverageIgnoreStart
+return true;
+// @codeCoverageIgnoreEnd

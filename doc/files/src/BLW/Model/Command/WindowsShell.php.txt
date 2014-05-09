@@ -18,12 +18,12 @@
  */
 namespace BLW\Model\Command;
 
-use ReflectionMethod;
 use ArrayObject;
 
 use BLW\Type\IConfig;
 use BLW\Type\IMediator;
 use BLW\Type\Command\IInput;
+
 
 // @codeCoverageIgnoreStart
 if (! defined('BLW')) {

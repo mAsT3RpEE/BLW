@@ -19,20 +19,25 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
+
+
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
-    
+
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
         header("$_SERVER[SERVER_PROTOCOL] 404 Not Found");
         header('Status: 404 Not Found');
-        
+
         $_SERVER['REDIRECT_STATUS'] = 404;
-        
+
         echo "<html>\r\n<head><title>404 Not Found</title></head><body bgcolor=\"white\">\r\n<center><h1>404 Not Found</h1></center>\r\n<hr>\r\n<center>nginx/1.5.9</center>\r\n</body>\r\n</html>\r\n";
         exit();
     }
-    
+
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Header class for Content-Description.
@@ -59,7 +64,7 @@ final class ContentDescription extends \BLW\Type\MIME\AHeader
      * Constructor
      *
      * @throws \BLW\Model\InvalidArgumentException If <code>$Description</code> is not a string.
-     *        
+     *
      * @param string $Description
      *            Value of Content-Desctiption header
      * @return void
@@ -68,18 +73,18 @@ final class ContentDescription extends \BLW\Type\MIME\AHeader
     {
         // 1. Header type
         $this->_Type = 'Content-Description';
-        
+
         // 2. Header value
-        
+
         // Validate $Description
         if (is_string($Description) ?  : is_callable(array(
             $Description,
             '__toString'
         ))) {
-            
+
             // Description
             $this->_Value = $this->parseDescription($Description);
-        }         
+        }
 
         // Invalid $Description
         else
@@ -90,9 +95,9 @@ final class ContentDescription extends \BLW\Type\MIME\AHeader
      * Parse a string for description.
      *
      * @api BLW
-     * 
+     *
      * @since 1.0.0
-     *       
+     *
      * @param string $Test
      *            String to search.
      * @return string Returns empty string in case of error.
@@ -101,13 +106,17 @@ final class ContentDescription extends \BLW\Type\MIME\AHeader
     {
         // Type Regex
         $Description = self::TEXT;
-        
+
         // Match Regex `type/subtype`
         if (preg_match("!$Description!", @strval($Test), $m))
             return $m[0];
-            
+
             // Default
         return '';
     }
 }
+
+// @codeCoverageIgnoreStart
+return true;
+// @codeCoverageIgnoreEnd
 

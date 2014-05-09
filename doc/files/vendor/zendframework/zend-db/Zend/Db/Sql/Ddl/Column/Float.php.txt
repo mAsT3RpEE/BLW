@@ -28,8 +28,8 @@ class Float extends Column
 
     /**
      * @param null|string $name
-     * @param int $digits
-     * @param int $decimal
+     * @param integer $digits
+     * @param integer $decimal
      */
     public function __construct($name, $digits, $decimal)
     {

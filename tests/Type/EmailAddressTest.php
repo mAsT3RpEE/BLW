@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Type;
+namespace BLW\Type;
 
 use ReflectionMethod;
 use BLW\Model\InvalidArgumentException;
@@ -24,11 +24,11 @@ use BLW\Model\InvalidArgumentException;
 /**
  * Tests BLW Library Iterator type.
  * @package BLW\Core
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  *  @coversDefaultClass \BLW\Type\AEmailAddress
  */
-class EmailAddressTest extends \PHPUnit_Framework_TestCase
+class EmailAddressTest extends \BLW\Type\IterableTest
 {
     /**
      * @var \BLW\Type\IEmailAddress $Email
@@ -37,13 +37,15 @@ class EmailAddressTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->Email = $this->getMockForAbstractClass('\\BLW\\Type\\AEmailAddress', array('test@example.com', 'Test User'));
+        $this->Email    = $this->getMockForAbstractClass('\\BLW\\Type\\AEmailAddress', array('test@example.com', 'Test User'));
+        $this->Iterable = $this->Email;
 
     }
 
     public function tearDown()
     {
-        $this->Email = NULL;
+        $this->Email    = NULL;
+        $this->Iterable = NULL;
     }
 
     /**
@@ -51,11 +53,8 @@ class EmailAddressTest extends \PHPUnit_Framework_TestCase
      */
     public function test_getFactoryMethods()
     {
-        $Expected = array(
-                new ReflectionMethod($this->Email, 'createEmailString')
-        );
-
-        $this->assertEquals($Expected, $this->Email->getFactoryMethods(), 'IURI::getFactoryMethods() returned invalid method list');
+        $this->assertNotEmpty($this->Email->getFactoryMethods(), 'IEmailAddress::getFactoryMethods() Returned an invalid value');
+        $this->assertContainsOnlyInstancesOf('ReflectionMethod', $this->Email->getFactoryMethods(), 'IEmailAddress::getFactoryMethods() Returned and invalid value');
     }
 
     public function generateParts()
@@ -94,6 +93,10 @@ class EmailAddressTest extends \PHPUnit_Framework_TestCase
             ,array('!#$%&\'*+-/=?^_`{}|~@example.org', '!#$%&\'*+-/=?^_`{}|~@example.org')
             ,array('üסמחרני@example.com', 'üסמחרני@example.com')
             ,array('üסמחרני@üסמחרני.com', 'üסמחרני@üסמחרני.com')
+            ,array('test@[192.168.20.1]', 'test@[192.168.20.1]')
+            ,array('test@[IPv6:2001:db8:85a3:8d3:1319:8a2e:370:7348]', 'test@[IPv6:2001:db8:85a3:8d3:1319:8a2e:370:7348]')
+            ,array('test@[IPv6:0:0:0:0:0:1:127.0.0.1]', 'test@[IPv6:0:0:0:0:0:1:127.0.0.1]')
+            ,array('test@[IPv6:::1:127.0.0.1]', 'test@[IPv6:::1:127.0.0.1]')
 
             # Unimplemented
 //          ,array('postbox@com', 'postbox@com')
@@ -113,10 +116,75 @@ class EmailAddressTest extends \PHPUnit_Framework_TestCase
             ,array('" "@example.org', '')
             ,array('"()<>[]:,;@\\\"!#$%&\'*+-/=?^_`{}| ~.a"@example.org', '')
             ,array('email@brazil.b', 'email@brazil.b')
+            ,array('test@a.c', 'test@a.c')
+            ,array('test@'.str_repeat('a', 64).'.com', 'test@'.str_repeat('a', 64).'.com')
+            ,array('test@foo.'.str_repeat('c', 64) . '.uk', 'test@foo.'.str_repeat('c', 64) . '.uk')
+            ,array(str_repeat('a', 64) . '@example.com', str_repeat('a', 64) . '@example.com')
+            ,array('test@'. str_repeat('a', 255) . '.com', 'test@'. str_repeat('a', 255) . '.com')
+            ,array('test@foo-.com', 'test@foo-.com')
+            ,array('test@[127.0.0.256]', 'test@[127.0.0.256]')
+            ,array('test@[IPv6:0:0:0:0:0:100:127.0.0.256]', 'test@[IPv6:0:0:0:0:0:100:127.0.0.256]')
+            ,array('test@[IPv6:0:0:0::0:0:100:127.0.0.256]', 'test@[IPv6:0:0:0::0:0:100:127.0.0.256]')
+            ,array('test@[2001:db8:85a3:8d3:1319:8a2e:370:7348]', 'test@[2001:db8:85a3:8d3:1319:8a2e:370:7348]')
+            ,array('test@[IPv6:2001:db8:85a3:8d3::1319:8a2e:370:7348:8334]', 'test@[IPv6:2001:db8:85a3:8d3::1319:8a2e:370:7348:8334]')
+        );
+    }
+
+    public function generateRegexs()
+    {
+        return array(
+             array('addr-spec')
+            ,array('local-part')
+            ,array('domain')
+            ,array('dot-atom')
+            ,array('quoted-string')
+            ,array('obs-local-part')
+            ,array('domain-literal')
+            ,array('obs-domain')
+            ,array('atom')
+            ,array('word')
+            ,array('comment')
         );
     }
 
     /**
+     * @covers ::getRegex
+     */
+    public function test_getRegex()
+    {
+        foreach($this->generateRegexs() as $Arguments) {
+
+            list($Regex) = $Arguments;
+
+            $this->assertNotEmpty($this->Email->getRegex($Regex), 'IEmailAddress::getRegex('.$Regex.') should not be empty');
+        }
+    }
+
+    /**
+     * @depends test_getRegex
+     * @covers ::parse
+     */
+    public function test_parse()
+    {
+        $Test  = array(
+             'Personal'      => 'Test User'
+            ,'Local'         => 'test'
+            ,'Domain'        => 'example.co.uk'
+            ,'TLD'           => 'co.uk'
+            ,'LocalAtom'     => 'test'
+            ,'LocalQuoted'   => ''
+            ,'LocalObs'      => ''
+            ,'DomainAtom'    => 'example.co.uk'
+            ,'DomainLiteral' => ''
+            ,'DomainObs'     => ''
+            ,'Address'       => 'test@example.co.uk'
+        );
+
+        $this->assertEquals($Test, $this->Email->parse('test@example.co.uk', 'Test User'), 'IEmailAddress::buildParts() returned an invalid value');
+    }
+
+    /**
+     * @depends test_parse
      * @covers ::__construct
      */
     public function test_construct()
@@ -138,6 +206,9 @@ class EmailAddressTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($this->Email, $Email2, 'IEmailAddress::__construct(IEmailAddress) should create an equivalient object');
 
+        # Test object personal
+        $this->Email->__construct('foo@example.com', new \SplFileInfo(__FILE__));
+
         # Test invalid Email
         try {
             $this->Email->__construct(NULL);
@@ -145,36 +216,14 @@ class EmailAddressTest extends \PHPUnit_Framework_TestCase
         }
 
         catch (InvalidArgumentException $e) {}
-    }
 
-    /**
-     * @covers ::getRegex
-     */
-    public function test_getRegex()
-    {
-        $this->assertNotEmpty($this->Email->getRegex(), 'IEmailAddress::getRegex() should not be empty');
-    }
+        # Test invalid Personal
+        try {
+            $this->Email->__construct('test@foo.com', array());
+            $this->fail('Failed to generate exception on invalid parameter');
+        }
 
-    /**
-     * @covers ::parse
-     */
-    public function test_parse()
-    {
-        $Test  = array(
-             'Personal'      => 'Test User'
-            ,'Local'         => 'test'
-            ,'Domain'        => 'example.co.uk'
-            ,'TLD'           => 'co.uk'
-            ,'LocalAtom'     => 'test'
-            ,'LocalQuoted'   => ''
-            ,'LocalObs'      => ''
-            ,'DomainAtom'    => 'example.co.uk'
-            ,'DomainLiteral' => ''
-            ,'DomainObs'     => ''
-            ,'Address'       => 'test@example.co.uk'
-        );
-
-        $this->assertEquals($Test, $this->Email->parse('test@example.co.uk', 'Test User'), 'IEmailAddress::buildParts() returned an invalid value');
+        catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -246,8 +295,18 @@ class EmailAddressTest extends \PHPUnit_Framework_TestCase
         $Email = $this->getMockForAbstractClass('\\BLW\\Type\\AEmailAddress', array($Input));
 
         foreach($this->Email->parse($Input) as $k => $v) {
-            $this->assertSame($v, $Email->offsetGet($k), sprintf('IEmailAddress[%s] should equal `%s`', $k, @strval($v)));
+            $this->assertSame($v, $Email[$k], sprintf('IEmailAddress[%s] should equal `%s`', $k, @strval($v)));
         }
+
+        # Undefined offset
+        try {
+            $this->Email['undefined'];
+            $this->fail('Failed to generate notice with undefined offset');
+        }
+
+        catch (\PHPUnit_Framework_Error_Notice $e) {}
+
+        @$this->Email['undefined'];
     }
 
     /**
@@ -261,7 +320,7 @@ class EmailAddressTest extends \PHPUnit_Framework_TestCase
         $Email = $this->getMockForAbstractClass('\\BLW\\Type\\AEmailAddress', array($Input));
 
         foreach($this->Email->parse($Input) as $k => $v) {
-            $this->assertTrue($Email->offsetExists($k), sprintf('IEmailAddress[%s] should exist', $k));
+            $this->assertArrayHasKey($k, $Email, sprintf('IEmailAddress[%s] should exist', $k));
         }
     }
 
@@ -272,13 +331,15 @@ class EmailAddressTest extends \PHPUnit_Framework_TestCase
     public function test_offsetSet()
     {
         try {
-            $this->Email->offsetSet('foo', 'bar');
+            $this->Email['Personal'] = 'Test User';
             $this->fail('Failed to generate notice on readonly offset');
         }
 
         catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify', $e->getMessage(), 'Invalid Notice: '. $e->getMessage());
         }
+
+        @$this->Email->offsetSet('Personal', 'Test User');
     }
 
 
@@ -289,12 +350,40 @@ class EmailAddressTest extends \PHPUnit_Framework_TestCase
     public function test_offsetUnset()
     {
         try {
-            $this->Email->offsetSet('foo', 'bar');
+            unset($this->Email['Personal']);
             $this->fail('Failed to generate notice on readonly offset');
         }
 
         catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify', $e->getMessage(), 'Invalid Notice: '. $e->getMessage());
         }
+
+        @$this->Email->offsetUnset('Personal');
+    }
+
+    /**
+     * @depends test_construct
+     * @covers ::count
+     */
+    public function test_count()
+    {
+        $this->assertInternalType('integer', $this->Email->count(), 'IEmailAddress::count() Returned an invalid value');
+        $this->assertGreaterThan(1, $this->Email->count(), 'IEmailAddress::count() Returned an invalid value');
+    }
+
+    /**
+     * @depends test_construct
+     * @covers ::getIterator
+     */
+    public function test_getIterator()
+    {
+        $count = 0;
+
+        $this->assertInstanceOf('Traversable', $this->Email->getIterator(), 'IEmailAddress::getIterator() Returned an invalid result');
+
+        foreach($this->Email as $v)
+            $count++;
+
+        $this->assertSame(count($this->Email), $count, 'IEmailAddress::getIterator() Returned an invalid result');
     }
 }

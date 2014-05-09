@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\MIME;
+namespace BLW\Model\MIME;
 
 use DateTime;
 use BLW\Model\InvalidArgumentException;
@@ -25,7 +25,7 @@ use BLW\Model\MIME\Date;
 /**
  * Tests BLW Library MIME Date header.
  * @package BLW\MIME
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Mime\Date
  */
@@ -40,27 +40,14 @@ class DateTest extends \PHPUnit_Framework_TestCase
      */
     protected $Header = NULL;
 
-    /**
-     * @var \ReflectionProperty[]
-     */
-    protected $Properties = array();
-
     protected function setUp()
     {
-        $this->Date        = new DateTime;
-        $this->Header      = new Date($this->Date);
-        $this->Properties  = array(
-             'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
-        );
-
-        $this->Properties['Type']->setAccessible(true);
-        $this->Properties['Value']->setAccessible(true);
+        $this->Date       = new DateTime;
+        $this->Header     = new Date($this->Date);
     }
 
     protected function tearDown()
     {
-        $this->Properties = NULL;
         $this->Header     = NULL;
         $this->Date       = NULL;
     }
@@ -80,8 +67,8 @@ class DateTest extends \PHPUnit_Framework_TestCase
     public function test_construct()
     {
         # Check params
-        $this->assertEquals('Date', $this->Properties['Type']->getValue($this->Header), 'Date::__construct() failed to set $_Type');
-        $this->assertSame($this->Date->format(Date::FORMAT), $this->Properties['Value']->getValue($this->Header), 'Date::__construct() failed to set $_Value');
+        $this->assertAttributeEquals('Date', '_Type', $this->Header, 'Date::__construct() failed to set $_Type');
+        $this->assertAttributeSame($this->Date->format(Date::FORMAT), '_Value', $this->Header, 'Date::__construct() failed to set $_Value');
 
         # Valid arguments
         foreach($this->generateValidDates() as $Arguments) {
@@ -89,8 +76,14 @@ class DateTest extends \PHPUnit_Framework_TestCase
 
             $this->Header = new Date($Date);
 
-            $this->assertEquals($Date->format(Date::FORMAT), $this->Properties['Value']->getValue($this->Header), 'Date::__construct() failed to set $_Value');
+            $this->assertAttributeEquals($Date->format(Date::FORMAT), '_Value', $this->Header, 'Date::__construct() failed to set $_Value');
         }
+
+        # NULL Date
+        $this->Header = new Date;
+        $Expected     = new DateTime;
+
+        $this->assertAttributeContains($Expected->format(substr(LastModified::FORMAT, 0, -5)), '_Value', $this->Header, 'IfModifiedSince::__construct() failed to set $_Value');
 
         # Invalid arguments
     }

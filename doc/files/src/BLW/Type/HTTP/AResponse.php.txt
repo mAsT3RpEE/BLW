@@ -766,7 +766,6 @@ abstract class AResponse extends \BLW\Type\MIME\AMessage implements \BLW\Type\HT
      *            Label of property to set.
      * @param mixed $value
      *            Value of property.
-     * @return bool Returns a <code>IDataMapper</code> status code.
      */
     public function __set($name, $value)
     {
@@ -814,7 +813,6 @@ abstract class AResponse extends \BLW\Type\MIME\AMessage implements \BLW\Type\HT
      *
      * @param string $name
      *            Label of dynamic property. (case sensitive)
-     * @return bool Returns a <code>TRUE</code> if property exists. <code>FALSE</code> otherwise.
      */
     public function __unset($name)
     {

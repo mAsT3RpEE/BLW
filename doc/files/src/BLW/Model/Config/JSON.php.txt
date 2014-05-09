@@ -80,7 +80,10 @@ class JSON extends \BLW\Type\AConfig
             $input = $Config->getContents();
             $input = substr($input, strpos($input, '{'), strrpos($input, '}') + 1);
             $input = $input
-                ? json_decode($input, true, 20, $Options)
+                ? (version_compare(PHP_VERSION, '5.4.0', '>=')
+                    ? json_decode($input, true, 20, $Options)
+                    : json_decode($input, true, 20)
+                )
                 : array();
         }
 

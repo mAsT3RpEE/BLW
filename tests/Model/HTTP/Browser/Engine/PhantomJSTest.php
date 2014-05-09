@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\HTTP\Browser\Engine;
+namespace BLW\Model\HTTP\Browser\Engine;
 
 use ReflectionProperty;
 use ReflectionMethod;
@@ -24,16 +24,19 @@ use BLW\Model\GenericFile;
 use BLW\Model\InvalidArgumentException;
 use BLW\Model\GenericURI;
 use BLW\Model\Config\Generic as Config;
-use BLW\Model\Event\Generic as Event;
+use BLW\Model\GenericEvent as Event;
 
-use BLW\Model\HTTP\Client\cURL;
+use BLW\Model\HTTP\Client\CURL;
 use BLW\Model\HTTP\Browser\Nexus;
 use BLW\Model\HTTP\Browser\Engine\PhantomJS as Engine;
+use BLW\Model\HTTP\Request\Generic as Request;
+use BLW\Type\HTTP\IRequest;
+
 
 /**
  * Tests PhantomJS HTTP Browser engine
  * @package BLW\HTTP
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\HTTP\Browser\Engine\PhantomJS
  */
@@ -72,9 +75,11 @@ class PhantomJSTest extends \PHPUnit_Framework_TestCase
 
         list(list($Executable, $ConfigFile, $Config)) = $this->generateValidArgs();
         $this->Engine           = new Engine($Executable, $ConfigFile, $Config);
-        $this->Browser          = new Nexus(new cURL, new Config(array(
+        $this->Browser          = new Nexus(new CURL, new Config(array(
             'MaxHistory' => 10
         )));
+
+        $this->Browser->Mediator->remSubscriber($this->Browser);
 
         $this->Browser->Engines['PhantomJS'] = $this->Engine;
     }
@@ -83,6 +88,15 @@ class PhantomJSTest extends \PHPUnit_Framework_TestCase
     {
         $this->Browser = NULL;
         $this->Engine  = NULL;
+    }
+
+    /**
+     * @covers ::getSubscribedEvents
+     */
+    public function test_getSubscribedEvents()
+    {
+        foreach($this->Engine->getSubscribedEvents() as $Event)
+            $this->assertTrue(is_callable(array($this->Engine, $Event[0])), 'PhantomJS::getSubscribedEvents() Returned an invalid event');
     }
 
     /**
@@ -118,6 +132,7 @@ class PhantomJSTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends test_phantomStart
      * @covers ::phantomRestart
+     * @covers ::phantomStart
      */
     public function test_phantomRestart()
     {
@@ -152,6 +167,7 @@ class PhantomJSTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends test_phantomStart
      * @covers ::phantomStop
+     * @covers ::phantomStart
      */
     public function test_phantomStop()
     {
@@ -172,6 +188,8 @@ class PhantomJSTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends test_phantomStart
      * @covers ::phantom
+     * @covers ::phantomStart
+     * @covers ::_sendJSON
      */
     public function test_phantom()
     {
@@ -188,6 +206,90 @@ class PhantomJSTest extends \PHPUnit_Framework_TestCase
         }
 
         catch (InvalidArgumentException $e) {}
+    }
+
+    /**
+     * @depeds test_phantom
+     * @covers ::parseResults
+     */
+    public function test_parseResults()
+    {
+        static $JSON = <<<EOT
+{
+    "status": "ok",
+    "log": {
+        "version": "1.2",
+        "creator": {
+            "name": "BLW",
+            "version": "1.0.0",
+            "comment": ""
+        },
+        "browser": {
+            "name": "PhantomJS",
+            "version": "1.9.2",
+            "comment": ""
+        },
+        "pages": [
+            {
+                "startedDateTime": "2014-05-19T14:53:25.120Z",
+                "id": "about:blank",
+                "title": "",
+                "pageTimings": {
+                    "ononContentLoad": -1,
+                    "onLoad": 4003,
+                    "comment": ""
+                },
+                "comment": "",
+                "url": "about:blank",
+                "html": "<html><head></head><body></body></html>"
+            }
+        ],
+        "entries": [
+			{
+            	"request": {
+                	"url": "about:blank"
+            	},
+            	"response": {
+                	"redirectURL": "about:none"
+            	}
+        	},
+        	{
+            	"request": {
+                	"url": "about:none"
+            	},
+            	"response": {
+	                "redirectURL": null,
+    	            "httpVersion": "HTTP/1.1",
+        	        "status": 200,
+					"headers": [
+						{"name": "User-Agent", "value": "foo"},
+						{"name": "Setcookie", "value": "bar1=1"},
+						{"name": "Setcookie", "value": "bar2=1"}
+					],
+                	"content": {
+                    	"mimeType": "text/html"
+                	}
+				}
+        	}
+		]
+    }
+}
+EOT;
+        $results = json_decode($JSON);
+
+        $this->assertInstanceOf('\\BLW\\Type\\HTTP\\IResponse', $this->Engine->parseResults($results), 'PhantomJS::parseResults() should return an instance of IResponse');
+
+        # Incomplete har
+        $results->log->pages[0]->url = 'about:invalid';
+
+        # Invalid results
+        $this->assertFalse($this->Engine->parseResults($results), 'PhantomJS::parseResults() should return false');
+
+        # Invalid results
+        $this->assertFalse($this->Engine->parseResults(null), 'PhantomJS::parseResults() should return false');
+
+        # Error status
+        $this->assertFalse($this->Engine->parseResults((object) array('status' => 'foo')), 'PhantomJS::parseResults() should  return false');
     }
 
     public function generateInvalidArgs()
@@ -217,6 +319,7 @@ class PhantomJSTest extends \PHPUnit_Framework_TestCase
      * @depends test_phantomStart
      * @depends test_phantom
      * @covers ::__construct
+     * @covers ::_sendJSON
      */
     public function test_construct()
     {
@@ -265,11 +368,22 @@ class PhantomJSTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('string', $Data['data'], 'PhantomJS::translate() Produced an invalid data');
         $this->assertNotEmpty($Data['headers'], 'PhantomJS::translate() Produced an invalid headers');
         $this->assertInternalType('array', $Data['headers'], 'PhantomJS::translate() Produced an invalid headers');
+
+        # Invalid type
+        try {
+            $this->Engine->translate(new Request(IRequest::CONNECT));
+            $this->fail('Failed to generate exception with invalid type');
+
+        } catch (InvalidArgumentException $e) {
+
+        }
     }
 
     /**
      * @depends test_translate
      * @covers ::send
+     * @covers ::_sendJSON
+     * @covers ::parseResults
      */
     public function test_send()
     {
@@ -308,6 +422,7 @@ class PhantomJSTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends test_phantom
      * @covers ::doPhantomCommand
+     * @covers ::_sendJSON
      */
     public function test_doPhantomCommand()
     {
@@ -333,12 +448,26 @@ class PhantomJSTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends test_send
      * @covers ::doPageDownload
+     * @covers ::_sendJSON
      */
     public function test_doPageDownload()
     {
+        $this->Browser->_on('go', array($this->Browser, 'doGo'));
+
         $this->Browser->go('about:blank');
 
         $this->assertInstanceOf('DOMNode', $this->Browser->filter('body')->offsetGet(0), 'PhantomJS.doPageDownload() Failed to update IBrowser');
+
+        # Invalid request
+        $called = 0;
+
+        $this->Browser->_on('exception', function () use (&$called) {$called++;});
+
+        $this->Engine->doPageDownload(new Event($this->Browser, array(
+            'Request' => null
+        )));
+
+        $this->assertSame(1, $called, 'Failed to generate exception with invalid request');
     }
 
     /**
@@ -363,6 +492,7 @@ class PhantomJSTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends test_phantom
      * @covers ::doEvaluateNode
+     * @covers ::_sendJSON
      */
     public function test_doEvaluateNode()
     {
@@ -407,6 +537,7 @@ class PhantomJSTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends test_phantom
      * @covers ::doEvaluateXPath
+     * @covers ::_sendJSON
      */
     public function test_doEvaluateXPath()
     {
@@ -457,6 +588,7 @@ class PhantomJSTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends test_phantom
      * @covers ::doEvaluateCSS
+     * @covers ::_sendJSON
      */
     public function test_doEvaluateCSS()
     {
@@ -499,6 +631,7 @@ class PhantomJSTest extends \PHPUnit_Framework_TestCase
      * @depends test_doEvaluateXPath
      * @depends test_doEvaluateCSS
      * @covers ::wait
+     * @covers ::_sendJSON
      */
     public function test_wait()
     {
@@ -512,6 +645,7 @@ class PhantomJSTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends test_wait
      * @covers ::doWait
+     * @covers ::_sendJSON
      */
     public function test_doWait()
     {

@@ -15,21 +15,22 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Type;
+namespace BLW\Type;
 
-use ArrayObject;
-use PHPUnit_Framework_Error_Notice;
-use BadMethodCallException;
 use DOMElement;
+use ArrayObject;
+use BadMethodCallException;
+
+use BLW\Model\InvalidArgumentException;
 
 /**
  * Tests BLW Library IConfig type.
  * @package BLW\Core
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Type\AConfig
  */
-class ConfigTest extends \PHPUnit_Framework_TestCase
+class ConfigTest extends \BLW\Type\SerializableTest
 {
     /**
      * @var \BLW\Type\IConfig
@@ -43,11 +44,37 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             ,'bar'    => 1
             ,'object' => new ArrayObject(array('foo' => 1))
         )));
+
+        $this->Serializable = $this->Config;
+        $this->Serializer   = new \BLW\Model\Serializer\Mock;
     }
 
     protected function tearDown()
     {
-        $this->Config = NULL;
+        global $BLW_Serializer;
+
+        $this->Config       = NULL;
+        $this->Serializer   = NULL;
+        $this->Serializable = NULL;
+    }
+
+    /**
+     * @covers ::__construct
+     */
+    public function test_construct()
+    {
+        # Valid argumetns
+        $Array  = array('foo' => 1);
+        $Config = $this->getMockForAbstractClass('\\BLW\\Type\\AConfig', array($Array));
+        $Config = $this->getMockForAbstractClass('\\BLW\\Type\\AConfig', array(new ArrayObject($Array)));
+
+        # InvalidArgumetns
+        try {
+            $this->getMockForAbstractClass('\\BLW\\Type\\AConfig', array(null));
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch (InvalidArgumentException $e) {}
     }
 
     /**

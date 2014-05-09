@@ -25,7 +25,6 @@ use BLW\Type\IConfig;
 use BLW\Type\IURI;
 use BLW\Type\IEvent;
 use BLW\Type\IDataMapper;
-use BLW\Type\IObjectStorage;
 use BLW\Type\IFile;
 use BLW\Type\IStream;
 use BLW\Type\IMediator;
@@ -207,7 +206,7 @@ abstract class AClient extends \BLW\Type\AObjectStorage implements \BLW\Type\HTT
     /**
      * Pointer to current mediator.
      *
-     * @var \BLW\Type\IMediatable $_Mediator
+     * @var \BLW\Type\IMediator $_Mediator
      */
     protected $_Mediator = null;
 
@@ -434,9 +433,9 @@ abstract class AClient extends \BLW\Type\AObjectStorage implements \BLW\Type\HTT
      *
      * @event Request.New
      *
-     * @param object $object
+     * @param \BLW\Type\HTTP\IRequest $object
      *            The object to add.
-     * @param mixed $data
+     * @param \BLW\Type\HTTP\IResponse $data
      *            [optional] The data to associate with the object.
      */
     public function attach($object, $data = null)

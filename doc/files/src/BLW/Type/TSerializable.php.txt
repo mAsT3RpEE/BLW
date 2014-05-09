@@ -109,7 +109,7 @@ trait TSerializable
      *
      * <hr>
      *
-     * @return \BLW\Type\Serializer $this->Serializer
+     * @return \BLW\Type\ISerializer $this->Serializer
      */
     public function getSerializer()
     {

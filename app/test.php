@@ -29,7 +29,7 @@ Application::run(function (BLW\Type\Command\IInput $Input, BLW\Type\Command\IOut
     $Print = function($Message) use(&$Output, &$Command)
     {
         $Output->write("$Message\r\n");
-        $Command['Logger']->debug($Message);
+        $Command->Config['Logger']->debug($Message);
     };
 
     // #####################

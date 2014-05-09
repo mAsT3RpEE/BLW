@@ -15,17 +15,21 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Type;
+namespace BLW\Type;
+
+use ReflectionProperty;
 
 use BLW\Type\IDataMapper;
 use BLW\Type\ISerializer;
+
+use BLW\Model\InvalidArgumentException;
 use BLW\Model\Serializer\Mock;
 
 
 /**
  * Tests BLW Library Adaptor type.
  * @package BLW\Core
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  *  @coversDefaultClass \BLW\Type\ASerializable
  */
@@ -41,83 +45,156 @@ class SerializableTest extends \PHPUnit_Framework_TestCase
      */
     protected $Serializer   = NULL;
 
+	final public static function setUpBeforeClass()
+	{
+	    global $BLW_Serializer;
+
+	    $BLW_Serializer = new \BLW\Model\Serializer\Mock;
+	}
+
     protected function setUp()
     {
         global $BLW_Serializer;
 
-        $this->Serializer   = new \BLW\Model\Serializer\Mock;
         $this->Serializable = $this->getMockForAbstractClass('\\BLW\\Type\\ASerializable');
-        $BLW_Serializer     = $this->Serializer;
-
-        $this->Serializable
-            ->expects($this->any())
-            ->method('getSerializer')
-            ->will($this->returnValue($this->Serializer));
+        $this->Serializer   = new \BLW\Model\Serializer\Mock;
     }
 
     protected function tearDown()
     {
-        global $BLW_Serializer;
-
         $this->Serializer   = NULL;
         $this->Serializable = NULL;
-        $BLW_Serializer     = NULL;
     }
 
     /**
-     * @covers ::serialize
+     * @covers ::getSerializer
+     * @covers \BLW\Type\ASerializable::getSerializer
      */
-    public function test_serialize()
+    public function test_getSerializer()
     {
-        $this->Serializable->foo = 1;
-        $this->Serializable->bar = 1;
-        $this->Serializable->pie = 1;
-        $Hash                    = spl_object_hash($this->Serializable);
-        $Serialized              = $this->Serializable->serializeWith($this->Serializer, -1);
-
-        $this->assertEquals($Hash, $Serialized, 'ISerializable::serializeWith(MockSerializer) should return spl_object_hash() of object.');
-        $this->assertEquals(-1, $this->Serializer->flags);
+        $this->assertInstanceOf('\\BLW\\Type\\ISerializer', $this->Serializable->getSerializer(), 'ISerializer::getSerializer() Should return an instance of ISerializer');
     }
 
     /**
-     * @covers ::unserialize
+     * @covers ::clearStatus
+     * @covers \BLW\Type\ASerializable::clearStatus
      */
-    public function test_unserialize()
+    public function test_clearStatus()
     {
-        $this->Serializable->foo = 1;
-        $this->Serializable->bar = 1;
-        $this->Serializable->pie = 1;
-        $Serialized              = unserialize(serialize($this->Serializable));
+        $this->assertEquals(IDataMapper::UPDATED, $this->Serializable->clearStatus(), 'ISerializer::clearStatus() Should return IDataMapper::UPDATED');
 
-        $this->assertEquals($this->Serializable, $Serialized, 'unserialize(serialize(ISerializable)) !== ISerializable spl_object_hash() of object.');
+        $Property = new ReflectionProperty($this->Serializable, '_Status');
+
+        $Property->setAccessible(true);
+        $this->assertSame(0, $Property->getValue($this->Serializable), 'ISerializer::clearStatus() Failed to reset $_Status');
     }
 
     /**
      * @covers ::serializeWith
+     * @covers \BLW\Type\ASerializable::serializeWith
      */
     public function test_serializeWith()
     {
-        $Hash       = spl_object_hash($this->Serializable);
-        $Serialized = $this->Serializable->serializeWith($this->Serializer, -1);
+        @$this->Serializable->foo = 1;
+        @$this->Serializable->bar = 1;
+        @$this->Serializable->pie = 1;
+        $Serialized               = $this->Serializable->serializeWith($this->Serializer, -1);
 
-        $this->assertEquals($Hash, $Serialized, 'ISerializable::serializeWith(MockSerializer) should return spl_object_hash() of object.');
-        $this->assertEquals(-1, $this->Serializer->flags);
+        $this->assertEquals(spl_object_hash($this->Serializable), $Serialized, 'ISerializable::serializeWith(MockSerializer) should return spl_object_hash() of object.');
+        $this->assertEquals(-1, $this->Serializer->flags, 'ISerializable::serializeWith(MockSeraializer) failed to pass serializer flags to serializer');
     }
 
     /**
      * @covers ::unserializeWith
+     * @covers \BLW\Type\ASerializable::unserializeWith
      */
     public function test_unserializeWith()
     {
-        $Unserialized            = clone $this->Serializable;
-        $this->Serializable->foo = 1;
-        $this->Serializable->bar = 1;
-        $this->Serializable->pie = 1;
-        $Serialized              = $this->Serializable->serializeWith($this->Serializer, 0);
+        $Unserialized             = clone $this->Serializable;
+        @$this->Serializable->foo = 1;
+        @$this->Serializable->bar = 1;
+        @$this->Serializable->pie = 1;
+        $Serialized               = $this->Serializable->serializeWith($this->Serializer);
 
-        $this->assertNotEquals($this->Serializable, $Unserialized, '$Unserialized should not equal $this->Serializable');
         $this->assertTrue($Unserialized->unserializeWith($this->Serializer, $Serialized, -1));
-        $this->assertEquals($this->Serializable, $Unserialized, '$Unserialized should equal $this->Serializable');
-        $this->assertEquals(-1, $this->Serializer->flags);
+        $this->assertEquals($this->Serializable, $Unserialized, 'ISerializable::unserializeWith(MockSerializer) should equal $this->Serializable');
+        $this->assertEquals(-1, $this->Serializer->flags, 'ISerailizer::unserializeWith(MockSerializer) failed to pass serializer flags to serializer');
+
+        # Invalid args
+        $this->assertFalse($this->Serializable->unserializewith($this->Serializer, ''), 'ISerializable::unserializeWith() should return false');
+
+        try {
+            $this->Serializable->unserializewith($this->Serializer, null);
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch (InvalidArgumentException $e) {}
+
+        try {
+            $this->Serializable->unserializewith($this->Serializer, new \SplFileInfo(__FILE__));
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch (InvalidArgumentException $e) {}
+    }
+
+    /**
+     * @covers ::serialize
+     * @covers \BLW\Type\ASerializable::serialize
+     */
+    public function test_serialize()
+    {
+        @$this->Serializable->foo = 1;
+        @$this->Serializable->bar = 1;
+        @$this->Serializable->pie = 1;
+        $Start                    = sprintf('C:%d:"%s":', strlen(get_class($this->Serializable)), get_class($this->Serializable));
+        $Serialized               = serialize($this->Serializable);
+
+        $this->assertStringStartsWith($Start, $Serialized, 'serialize(ISerializable) returned an invalid value');
+        $this->assertStringEndsWith('}', $Serialized, 'serialize(ISerializable) returned an invalid value');
+    }
+
+    /**
+     * @covers ::unserialize
+     * @covers \BLW\Type\ASerializable::unserialize
+     */
+    public function test_unserialize()
+    {
+        @$this->Serializable->foo = 1;
+        @$this->Serializable->bar = 1;
+        @$this->Serializable->pie = 1;
+        $Serialized               = unserialize(serialize($this->Serializable));
+
+        $this->assertEquals($this->Serializable, $Serialized, 'unserialize(serialize(ISerializable)) !== ISerializable spl_object_hash() of object.');
+
+        # Invalid String
+        $Data = sprintf('C:%d:"%s":0:{}', strlen(get_class($this->Serializable)), get_class($this->Serializable));
+
+        try {
+            $this->assertFalse($this->Serializable->unserialize(''), 'ISerializer::unserialize(invalid) Should return false');
+        }
+
+        catch (\UnexpectedValueException $e) {}
+        catch (\RuntimeException $e) {}
+    }
+
+    /**
+     * @covers ::doSerialize
+     * @covers \BLW\Type\ASerializable::doSerialize
+     */
+    public function test_doSerialize()
+    {
+        # Nothing to check simply call function and see if an error is generated
+        $this->Serializable->doSerialize();
+    }
+
+    /**
+     * @covers ::doUnserialize
+     * @covers \BLW\Type\ASerializable::doUnserialize
+     */
+    public function test_doUnserialize()
+    {
+        # Nothing to check simply call function and see if an error is generated
+        $this->Serializable->doUnSerialize();
     }
 }

@@ -1,0 +1,162 @@
+<?php
+/**
+ * FormData.php | Apr 10, 2014
+ *
+ * @filesource
+ * @license MIT
+ * @copyright Copyright (c) 2013-2018, mAsT3RpEE's Zone
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+/**
+ *
+ * @package BLW\MIME
+ * @version GIT: 0.2.0
+ * @author  Walter Otsyula <wotsyula@mast3rpee.tk>
+ */
+namespace BLW\Model\MIME\Part;
+
+use BLW\Type\MIME\IPart;
+use BLW\Model\InvalidArgumentException;
+
+// @codeCoverageIgnoreStart
+if (! defined('BLW')) {
+
+    if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
+        header("$_SERVER[SERVER_PROTOCOL] 404 Not Found");
+        header('Status: 404 Not Found');
+
+        $_SERVER['REDIRECT_STATUS'] = 404;
+
+        echo "<html>\r\n<head><title>404 Not Found</title></head><body bgcolor=\"white\">\r\n<center><h1>404 Not Found</h1></center>\r\n<hr>\r\n<center>nginx/1.5.9</center>\r\n</body>\r\n</html>\r\n";
+        exit();
+    }
+
+    return false;
+}
+// @codeCoverageIgnoreEnd
+
+
+/**
+ * Formats fields as `application/raw-url-encoded` body.
+ *
+ * @package BLW\MIME
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
+ */
+class FormData extends \BLW\Type\AContainer implements \BLW\Type\MIME\IPart
+{
+
+    const CHUNKLEN = 76;
+
+    /**
+     * "\r\n"
+     *
+     * @var string $_CRLF
+     */
+    protected $_CRLF = "\r\n";
+
+    /**
+     * Constructor
+     *
+     * @param \BLW\Model\MIME\Part\FormField[] $Fields
+     *            Form fields.
+     */
+    public function __construct(array $Fields)
+    {
+        // IContainer constructor
+        parent::__construct('string');
+
+        // Part content
+        parent::offsetSet('Content', $this->format($Fields, self::CHUNKLEN) . $this->_CRLF);
+    }
+
+    /**
+     * Format a part body.
+     *
+     * @throws \BLW\Model\InvalidArgumentException If <code>$Content</code> is not a string.
+     *
+     * @param \BLW\Model\MIME\Part\FormField[] $Fields
+     *            String to encode
+     * @param integer $Chunklen
+     *            Maximum line length of formatted body
+     * @return string Formated string. Returns `invalid` on error.
+     */
+    public static function format($Fields, $Chunklen)
+    {
+        // Ensure Is $Fields an array?
+        if (! is_array($Fields) && ! $Fields instanceof \Traversable) {
+            throw new InvalidArgumentException(0);
+
+        } else {
+
+            $Content = array();
+
+            // Loop through fields
+            foreach ($Fields as $Field) {
+                if ($Field instanceof FormField) {
+                    // Get field label and value
+                    $Content[$Field->getField()] = quoted_printable_decode(trim($Field['Content']));
+                }
+            }
+
+            // Build query
+            return http_build_query($Content) ?: 'invalid';
+        }
+    }
+
+    /**
+     * All objects must have a string representation.
+     *
+     * @return string $this
+     */
+    public function __toString()
+    {
+        // String value
+        $return = '';
+
+        // Add body
+        foreach ($this as $line) {
+            $return .= $line;
+        }
+
+        if ($return) {
+            $return .= $this->_CRLF;
+        }
+
+        // Done
+        return $return;
+    }
+
+    /**
+     * Sets the value at the specified index to newval
+     *
+     * @link http://www.php.net/manual/en/arrayaccess.offsetset.php ArrayAccess::offsetSet()
+     *
+     * @param mixed $index
+     *            The index being set.
+     * @param mixed $newval
+     *            The new value for the index.
+     */
+    public function offsetSet($index, $newval)
+    {
+        // Check index
+        switch ($index) {
+            // Readonly
+            case 'Content':
+
+                trigger_error(sprintf('Cannot modify readonly offset %s[%s]', get_class($this), $index), E_USER_WARNING);
+                break;
+
+            // IContainer
+            default:
+
+                parent::offsetSet($index, $newval);
+        }
+    }
+}
+
+// @codeCoverageIgnoreStart
+return true;
+// @codeCoverageIgnoreEnd

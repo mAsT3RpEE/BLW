@@ -24,15 +24,17 @@ use RuntimeException;
 use BLW\Type\IConfig;
 use BLW\Type\IFile;
 use BLW\Type\IEvent;
-use BLW\Type\IMediator;
 use BLW\Type\MIME\IHeader;
 use BLW\Type\HTTP\IRequest;
 use BLW\Type\HTTP\IBrowser;
 
 use BLW\Model\InvalidArgumentException;
+use BLW\Model\GenericFile;
+use BLW\Model\GenericURI;
+use BLW\Model\MIME\ContentType;
 use BLW\Model\Stream\String as StringStream;
-use BLW\Model\Config\Generic as GenericConfig;
 use BLW\Model\Mediator\Symfony as Mediator;
+use BLW\Model\HTTP\RequestFactory;
 use BLW\Model\HTTP\Event;
 use BLW\Model\HTTP\Response\Generic as Response;
 use BLW\Model\Command\Exception as CommandException;
@@ -41,10 +43,6 @@ use BLW\Model\Command\Input\Generic as CommandInput;
 use BLW\Model\Command\Output\Generic as CommandOutput;
 use BLW\Model\Command\Option\Generic as Option;
 use BLW\Model\Command\Argument\Generic as Argument;
-use BLW\Model\GenericFile;
-use BLW\Model\GenericURI;
-use BLW\Model\MIME\ContentType;
-use BLW\Model\HTTP\RequestFactory;
 
 
 if (! defined('BLW')) {
@@ -863,11 +861,11 @@ EOT;
      *
      * @param array $Command
      *            Command to send
-     * @param real $Timeout
+     * @param int $Timeout
      *            Timeout for reads / writes to process.
      * @return string Output of command. <code>FALSE</code> on error.
      */
-    private function _sendJSON(array $Command, $Timeout = 1)
+    private function _sendJSON(array $Command, $Timeout = 10)
     {
         static $onOutput, $Mediator;
 
@@ -963,7 +961,7 @@ EOT;
      *            Time in seconds to wait for execution of command.
      * @return \stdClass JSON decoded response. <code>FALSE</code> in case of error.
      */
-    public function phantom($Command, $Timeout = 0.1)
+    public function phantom($Command, $Timeout = 10)
     {
         // Is $Command a string?
         if (is_string($Command) ?: is_callable(array(
@@ -1040,11 +1038,11 @@ EOT;
 
                 // Blank page
                 return array(
-                    'action' => 'send',
-                    'type' => 'get',
+                    'action'  => 'send',
+                    'type'    => 'get',
                     'address' => 'about:blank',
                     'headers' => array(),
-                    'data' => null
+                    'data'    => null
                 );
         }
 
@@ -1146,7 +1144,7 @@ EOT;
     public function send(IRequest $Request)
     {
         // Send request
-        $Result = $this->_sendJSON($this->translate($Request), $Request->Config['Timeout']);
+        $Result = $this->_sendJSON($this->translate($Request), max(floor(2*$Request->Config['Timeout']), $Request->Config['Timeout']));
         $Result = $Result
             ? json_decode($Result)
             : false;
@@ -1188,7 +1186,7 @@ EOT;
         // Send request
         $Result = $this->_sendJSON(array(
             'action' => 'wait'
-        ));
+        ), 600);
 
         $Result = $Result ? json_decode($Result) : false;
 

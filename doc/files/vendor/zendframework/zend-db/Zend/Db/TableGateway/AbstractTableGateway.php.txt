@@ -23,7 +23,7 @@ use Zend\Db\Sql\Where;
 /**
  *
  * @property AdapterInterface $adapter
- * @property int $lastInsertValue
+ * @property integer $lastInsertValue
  * @property string $table
  */
 abstract class AbstractTableGateway implements TableGatewayInterface

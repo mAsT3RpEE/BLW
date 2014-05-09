@@ -15,17 +15,18 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\MIME\Part;
+namespace BLW\Model\MIME\Part;
 
 use BLW\Model\InvalidArgumentException;
 use BLW\Model\MIME\Part\InlineAttachment;
 use BLW\Model\GenericFile;
+use BLW\Model\FileException;
 
 
 /**
  * Tests BLW Library MIME InlineAttachment header.
  * @package BLW\MIME
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\MIME\Part\InlineAttachment
  */
@@ -50,6 +51,26 @@ class InlineAttachmentTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::format
+     */
+    public function test_format()
+    {
+        $Excpected = substr(base64_encode(__FILE__), 0, 50);
+
+        $this->assertStringStartsWith($Excpected, $this->InlineAttachment->format(__FILE__, 50), 'InlineAttachment::format() Returned an invalid value');
+        $this->assertStringStartsWith($Excpected, $this->InlineAttachment->format(new \SplFileInfo(__FILE__), 50), 'InlineAttachment::format() Returned an invalid value');
+
+        # Invalid arguments
+        try {
+            $this->InlineAttachment->format(0, 50);
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch (InvalidArgumentException $e) {}
+    }
+
+    /**
+     * @depends test_format
      * @covers ::__construct
      */
     public function test_construct()
@@ -72,9 +93,16 @@ class InlineAttachmentTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(self::BASE64 . "\r\n", $this->InlineAttachment['Content'], 'InlineAttachment::__construct() set invalid Content');
 
         # Invalid arguments
+        try {
+            new InlineAttachment(new GenericFile('z:\\undefined\\!!!'), 'Test.png', 'image/png-test');
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch (FileException $e) {}
     }
 
     /**
+     * @depends test_construct
      * @covers ::__toString
      */
     public function test_toString()
@@ -87,6 +115,7 @@ EOT;
     }
 
     /**
+     * @depends test_construct
      * @covers ::offsetSet
      */
     public function test_offsetSet()
@@ -101,6 +130,8 @@ EOT;
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
+        @$this->InlineAttachment['Content-Type'] = 'foo';
+
         # Content-Transfer-Encoding
         try {
             $this->InlineAttachment['Content-Transfer-Encoding'] = 'foo';
@@ -110,6 +141,8 @@ EOT;
         catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
+
+        @$this->InlineAttachment['Content-Transfer-Encoding'] = 'foo';
 
         # Content-Disposition
         try {
@@ -121,6 +154,8 @@ EOT;
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
+        @$this->InlineAttachment['Content-Disposition'] = 'foo';
+
         # Content-ID
         try {
             $this->InlineAttachment['Content-ID'] = 'foo';
@@ -131,7 +166,9 @@ EOT;
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
-            # Content-Location
+        @$this->InlineAttachment['Content-ID'] = 'foo';
+
+        # Content-Location
         try {
             $this->InlineAttachment['Content-Location'] = 'foo';
             $this->fail('Failed generating warning on readonly offset');
@@ -141,7 +178,9 @@ EOT;
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
-            # Content-Base
+        @$this->InlineAttachment['Content-Location'] = 'foo';
+
+        # Content-Base
         try {
             $this->InlineAttachment['Content-Base'] = 'foo';
             $this->fail('Failed generating warning on readonly offset');
@@ -150,6 +189,8 @@ EOT;
         catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
+
+        @$this->InlineAttachment['Content-Base'] = 'foo';
 
         # Content
         try {
@@ -160,5 +201,10 @@ EOT;
         catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
+
+        @$this->InlineAttachment['Content'] = 'foo';
+
+        # Undefined
+        $this->InlineAttachment['undefined'] = 'foo';
     }
 }

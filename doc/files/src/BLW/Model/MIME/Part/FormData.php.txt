@@ -22,10 +22,6 @@ use BLW\Type\MIME\IHeader;
 use BLW\Type\MIME\IPart;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\Stream\String as StringStream;
-use BLW\Model\MIME\ContentType;
-use BLW\Model\MIME\ContentDisposition;
-use BLW\Model\MIME\ContentTransferEncoding;
 
 
 // @codeCoverageIgnoreStart
@@ -84,7 +80,7 @@ class FormData extends \BLW\Type\AContainer implements \BLW\Type\MIME\IPart
      *
      * @throws \BLW\Model\InvalidArgumentException If <code>$Content</code> is not a string.
      *
-     * @param array|\Traversable $Fields
+     * @param \BLW\Model\MIME\Part\FormField[] $Fields
      *            String to encode
      * @param int $Chunklen
      *            Maximum line length of formatted body

@@ -186,7 +186,6 @@ abstract class AComponentMapable implements \BLW\Type\IComponentMapable
      *            Label of property to set.
      * @param mixed $value
      *            Value of property.
-     * @return bool Returns a <code>IDataMapper</code> status code.
      */
     public function __set($name, $value)
     {
@@ -217,6 +216,17 @@ abstract class AComponentMapable implements \BLW\Type\IComponentMapable
                 trigger_error(sprintf('Tried to modify non-existant property: %s::$%s', get_class($this), $name), E_USER_ERROR);
                 break;
         }
+    }
+
+    /**
+     * Import component properties.
+     *
+     * @param string $name
+     *            Label of property to set.
+     */
+    public function __unset($name)
+    {
+        unset($this->_Component->{$name});
     }
 
 #############################################################################################

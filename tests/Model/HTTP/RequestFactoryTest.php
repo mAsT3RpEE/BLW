@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\HTTP;
+namespace BLW\Model\HTTP;
 
 use ReflectionProperty;
 use ReflectionMethod;
@@ -34,12 +34,14 @@ use BLW\Model\GenericURI;
 use BLW\Type\HTTP\IRequest;
 use BLW\Model\GenericFile;
 use BLW\Model\MIME\Part\FormField;
+use BLW\Model\MIME\Part\FormFieldTest;
+use BLW\Model\MIME\Part\FormFile;
 
 
 /**
  * Test for Request Factory object
  * @package BLW\HTTP
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\HTTP\RequestFactory
  */
@@ -64,7 +66,8 @@ class RequestFactoryTest  extends \PHPUnit_Framework_TestCase
         $this->Headers[] = new Accept('text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8');
         $this->Headers[] = new AcceptLanguage('en-US,en;q=0.5');
         $this->Headers[] = new AcceptEncoding('gzip, deflate');
-        $this->Headers[] = new Generic('Test', 'foo');
+        $this->Headers[] = new Generic('Test', 'foo1');
+        $this->Headers[] = new Generic('Test', 'foo2');
     }
 
     protected function tearDown()
@@ -88,17 +91,14 @@ class RequestFactoryTest  extends \PHPUnit_Framework_TestCase
      */
     public function test_construct()
     {
-        $Expected = '\\BLW\\Model\\HTTP\\Request\\Generic';
-        $Property = new ReflectionProperty($this->Factory, '_RequestClass');
-
-        $Property->setAccessible(true);
+        $Expected = 'BLW\\Model\\HTTP\\Request\\Generic';
 
         # Valid arguments
         $this->Factory = new RequestFactory($Expected);
 
-        $this->assertEquals($Expected, $Property->getValue($this->Factory), 'IFactory::__construct() Failed to set $_RequestClass');
+        $this->assertAttributeSame($Expected, '_RequestClass', $this->Factory, 'IFactory::__construct() Failed to set $_RequestClass');
 
-        for($args=$this->generateInvalidArgs();list($k,list($Input)) = each($args);) {
+        for($args=$this->generateInvalidArgs(); list($k, list($Input)) = each($args);) {
 
             try {
                 new RequestFactory($Input);
@@ -128,11 +128,12 @@ class RequestFactoryTest  extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers ::createGET
+     * @covers ::_addHeaders
      */
     public function test_createGet()
     {
         $Expected = <<<EOT
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0\r\nAccept: text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8\r\nAccept-Language: en-us, en;q=0.5\r\nAccept-Encoding: gzip, deflate\r\nTest: foo\r\n\r\n
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0\r\nAccept: text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8\r\nAccept-Language: en-us, en;q=0.5\r\nAccept-Encoding: gzip, deflate\r\nTest: foo1\r\nTest: foo2\r\n\r\n
 EOT;
 
         # Valid Arguments
@@ -157,11 +158,12 @@ EOT;
 
     /**
      * @covers ::createHEAD
+     * @covers ::_addHeaders
      */
     public function test_createHEAD()
     {
         $Expected = <<<EOT
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0\r\nAccept: text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8\r\nAccept-Language: en-us, en;q=0.5\r\nAccept-Encoding: gzip, deflate\r\nTest: foo\r\n\r\n
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:28.0) Gecko/20100101 Firefox/28.0\r\nAccept: text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8\r\nAccept-Language: en-us, en;q=0.5\r\nAccept-Encoding: gzip, deflate\r\nTest: foo1\r\nTest: foo2\r\n\r\n
 EOT;
 
         # Valid Arguments
@@ -196,6 +198,9 @@ EOT;
 
     /**
      * @covers ::createPOST
+     * @covers ::_addHeaders
+     * @covers ::_addMultipartFields
+     * @covers ::_addUrlEncodedFields
      */
     public function test_createPOST()
     {
@@ -203,20 +208,21 @@ EOT;
         $URI   = new GenericURI('http://example.com');
         $Image = new GenericFile(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'Config' . DIRECTORY_SEPARATOR . '1x1.png');
         $Data  = array(
-             'int'      => 1
-            ,'float'    => 1.1
-            ,'string'   => 'foo'
-            ,'array'    => array(1,2)
-            ,'object1'  => new \stdClass
-            ,'object2'  => new \SplFileInfo(sys_get_temp_dir())
-            ,'file'     => $Image
-            ,'Field'    => new FormField('field', 'text/plain', 'foo')
+             'int'       => 1
+            ,'float'     => 1.1
+            ,'string'    => 'foo'
+            ,'array'     => array(1,2)
+            ,'object1'   => new \stdClass
+            ,'object2'   => new \SplFileInfo(sys_get_temp_dir())
+            ,'file'      => $Image
+            ,'FormField' => new FormField('field', 'text/plain', 'foo')
+            ,'FormFile'  => new FormFile('FormFile', $Image)
         );
 
         # File multipart/form-data
         $Request     = $this->Factory->createPOST($URI, $URI, $Data, $this->Headers);
-        $File = dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'Config' . DIRECTORY_SEPARATOR . 'request-multipart.form-data.txt';
-        $Boundary = preg_match('!boundary\s*=\s*"(.*)"!', $Request->Header['Content-Type'], $m)
+        $File        = dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'Config' . DIRECTORY_SEPARATOR . 'request-multipart.form-data.txt';
+        $Boundary    = preg_match('!boundary\s*=\s*"(.*)"!', $Request->Header['Content-Type'], $m)
             ? $m[1]
             : '';
         $Expected    = sprintf(preg_replace('!\r*\n!', "\r\n", file_get_contents($File)), $Boundary, sys_get_temp_dir(), file_get_contents($Image));
@@ -230,6 +236,7 @@ EOT;
 
         # No file application/x-www-form-urlencoded
         unset($Data['file']);
+        unset($Data['FormFile']);
 
         $Request     = $this->Factory->createPOST($URI, $URI, $Data, $this->Headers);
         $File        = dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'Config' . DIRECTORY_SEPARATOR . 'request-application.x-www-form-urlencoded.txt';

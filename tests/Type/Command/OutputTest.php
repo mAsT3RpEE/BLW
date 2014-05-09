@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Type\Command;
+namespace BLW\Type\Command;
 
 use ReflectionProperty;
 use ReflectionMethod;
@@ -33,7 +33,7 @@ use BLW\Type\Command\IOutput;
 /**
  * Test for command output base class
  * @package BLW\Command
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Type\Command\AOutput
  */
@@ -89,20 +89,6 @@ class OutputTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \BLW\Type\AMediatable::setMediator
-     */
-    public function test_setMediator ()
-    {
-        $Property = new ReflectionProperty($this->Output, '_Mediator');
-
-        $Property->setAccessible(true);
-
-        $this->Output->setMediator($this->Mediator);
-
-        $this->assertInstanceOf('\BLW\Type\IMediator', $Property->getValue($this->Output), 'IOutput::setMediator() Failed to set $_Mediator');
-    }
-
-    /**
      * @covers ::setMediatorID
      */
     public function test_setMediatorID ()
@@ -111,9 +97,15 @@ class OutputTest extends \PHPUnit_Framework_TestCase
 
         $Property->setAccessible(true);
 
-        $this->Output->setMediatorID('MockOutput');
+        $this->assertSame(IDataMapper::UPDATED, $this->Output->setMediatorID('MockOutput'), 'IOutput::setMediatorID() Should return IDataMapper::UPDATED');
 
         $this->assertSame('MockOutput', $Property->getValue($this->Output), 'IOutput::setMediatorID() Failed to set $_MediatorID');
+
+        $this->assertSame(IDataMapper::UPDATED, $this->Output->setMediatorID(new \SplFileInfo(__FILE__)), 'IOutput::setMediatorID() Should return IDataMapper::UPDATED');
+        $this->assertSame(__FILE__, $Property->getValue($this->Output), 'IOutput::setMediatorID() Failed to set $_MediatorID');
+
+        # Invalid arguments
+        $this->assertSame(IDataMapper::INVALID, $this->Output->setMediatorID(NULL), 'IInput::setMediatorID() Should return IDataMapper::INVALID');
     }
 
     /**
@@ -124,13 +116,6 @@ class OutputTest extends \PHPUnit_Framework_TestCase
         $Test           = "Test line 1\r\nTest line 2\r\n";
         $Output         = 0;
         $Error          = 0;
-        $LastLineLength = function($Output) {
-            $Property   = new ReflectionProperty('\\BLW\\Type\\Command\\AOutput', '_LastLineLength');
-
-            $Property->setAccessible(true);
-
-            return $Property->getValue($Output);
-        };
 
         $this->Output->_on('Output', function() use(&$Output) {$Output++;});
         $this->Output->_on('Error', function() use(&$Error) {$Error++;});
@@ -138,7 +123,7 @@ class OutputTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(strlen($Test), $this->Output->write($Test, IOutput::STDOUT), 'IOutput::write() returned an invalid value');
         $this->assertSame(1, $Output, 'IOutput::write() failed to call onOutput hook');
         $this->assertSame($Test, $this->stdOut->getContents(), 'IOutput::write() Failed to update output stream');
-        $this->assertSame(11, $LastLineLength($this->Output), 'IOutput::write() Failed to update $_LastLineLength');
+        $this->assertSame(11, $this->readAttribute($this->Output, '_LastLineLength'), 'IOutput::write() Failed to update $_LastLineLength');
 
         $this->assertSame(strlen($Test), $this->Output->write($Test, IOutput::STDERR), 'IOutput::write() returned an invalid value');
         $this->assertSame(1, $Error, 'IOutput::write() failed to call onError hook');
@@ -149,6 +134,14 @@ class OutputTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(2, $Error, 'IOutput::write() failed to call onError hook');
         $this->assertSame($Test.$Test, $this->stdOut->getContents(), 'IOutput::write() Failed to update output stream');
         $this->assertSame($Test.$Test, $this->stdErr->getContents(), 'IOutput::write() Failed to update error stream');
+
+        # Invalid argument
+        try {
+            $this->Output->write(NULL, IOutput::STDOUT);
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -198,6 +191,8 @@ class OutputTest extends \PHPUnit_Framework_TestCase
         }
 
         catch (\PHPUnit_Framework_Error_Notice $e) {}
+
+        $this->assertNull(@$this->Output->undefined, 'IOutput::$undefined Should be NULL');
     }
 
 
@@ -224,7 +219,6 @@ class OutputTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends test_get
-     * @depends test_setMediator
      * @depends test_setMediatorID
      * @covers ::__set
      */
@@ -245,6 +239,8 @@ class OutputTest extends \PHPUnit_Framework_TestCase
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
+        @$this->Output->Mediator = NULL;
+
         # MediatorID
         $Expected = 'MediatorID';
 
@@ -260,6 +256,8 @@ class OutputTest extends \PHPUnit_Framework_TestCase
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
+        @$this->Output->MediatorID = NULL;
+
         # stdOut
         try {
             $this->Output->stdOut = NULL;
@@ -269,6 +267,8 @@ class OutputTest extends \PHPUnit_Framework_TestCase
         catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
+
+        @$this->Output->stdOut = NULL;
 
         # stdErr
         try {
@@ -280,6 +280,8 @@ class OutputTest extends \PHPUnit_Framework_TestCase
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
+        @$this->Output->stdErr = NULL;
+
         # Undefined
         try {
             $this->Output->undefined = '';
@@ -289,6 +291,8 @@ class OutputTest extends \PHPUnit_Framework_TestCase
         catch (\PHPUnit_Framework_Error $e) {
             $this->assertContains('non-existant property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
+
+        @$this->Output->undefined = '';
     }
 
     /**
@@ -315,6 +319,8 @@ class OutputTest extends \PHPUnit_Framework_TestCase
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
+        @$this->Output->__unset('stdOut');
+
         # stdErr
         try {
             unset($this->Output->stdErr);
@@ -324,6 +330,8 @@ class OutputTest extends \PHPUnit_Framework_TestCase
         catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
+
+        @$this->Output->__unset('stdErr');
 
         # Undefined
         unset($this->Output->undefined);

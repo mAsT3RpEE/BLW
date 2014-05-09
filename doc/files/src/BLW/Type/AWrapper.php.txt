@@ -245,8 +245,7 @@ abstract class AWrapper extends \BLW\Type\ASerializable implements \BLW\Type\IWr
      *
      * @param mixed $Argument
      *            [optional] Constructor argument.
-     * @param
-     *            ...
+     * @param ...
      * @return \BLW\Type\IWrapper Returns a new instance of the class.
      */
     public static function getInstance()
@@ -340,7 +339,6 @@ abstract class AWrapper extends \BLW\Type\ASerializable implements \BLW\Type\IWr
      *            Label of property to set.
      * @param mixed $value
      *            Value of property.
-     * @return bool Returns a <code>IDataMapper</code> status code.
      */
     public function __set($name, $value)
     {
@@ -396,7 +394,6 @@ abstract class AWrapper extends \BLW\Type\ASerializable implements \BLW\Type\IWr
      *
      * @param string $name
      *            Label of dynamic property. (case sensitive)
-     * @return bool Returns a <code>TRUE</code> if property exists. <code>FALSE</code> otherwise.
      */
     public function __unset($name)
     {

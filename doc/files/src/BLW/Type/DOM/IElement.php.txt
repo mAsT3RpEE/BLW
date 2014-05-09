@@ -200,7 +200,7 @@ interface IElement extends \BLW\Type\IIterable, \BLW\Type\IFactory, \IteratorAgg
      * @since 0.2.0
      * @link http://www.php.net/manual/en/iteratoraggregate.getiterator.php IteratorAggregate::getIterator()
      *
-     * @return \RecursiveArrayIterator An instance implementing <code>Iterator</code>.
+     * @return \IteratorIterator An instance implementing <code>Iterator</code>.
      */
     public function getIterator();
 

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="TestRunTest" project="BLW" tests="472" started="1" failures="0" errors="1" ignored="0">
+  <testsuite name="C:\xampp\htdocs\BLW\tests\Type" time="0.937">
+    <testsuite name="BLW\Tests\Type\Command\ArgumentTest" time="0.937">
+      <testcase name="test_getFactoryMethods" classname="BLW\Tests\Type\Command\ArgumentTest" time="0.937">
+        <error>Fatal error: Call to undefined method BLW\Tests\Type\Command\ArgumentTest::assertContainsOnlyInstancesOf() in C:\xampp\htdocs\BLW\tests\Type\Command\ArgumentTest.php on line 58</error>
+      </testcase>
+    </testsuite>
+  </testsuite>
+</testrun>

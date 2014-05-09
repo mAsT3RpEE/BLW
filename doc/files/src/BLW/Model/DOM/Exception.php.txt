@@ -69,7 +69,7 @@ final class Exception extends \BLW\Type\ARuntimeException
      * @param \Exception $previous
      *            Previous Exception.
      */
-    public function __construct($Error, $message = null, $code = 0,\Exception $previous = null)
+    public function __construct($Error, $message = null, $code = 0, \Exception $previous = null)
     {
         if (is_null($message)) {
             $message = '%header% DOM Error: %message%.';

@@ -24,7 +24,6 @@ use BLW\Type\MIME\IPart;
 
 use BLW\Model\FileException;
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\Stream\String as StringStream;
 use BLW\Model\MIME\ContentType;
 use BLW\Model\MIME\ContentTransferEncoding;
 use BLW\Model\MIME\ContentDisposition;
@@ -71,7 +70,7 @@ class FormFile extends \BLW\Type\AContainer implements \BLW\Type\MIME\IPart
      *
      * @param string $Field
      *            Label of field.
-     * @param \BLW\Type\File $File
+     * @param \BLW\Type\IFile $File
      *            File to attatch.
      * @param string $Name
      *            File name (basename).

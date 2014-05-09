@@ -76,7 +76,7 @@ abstract class AMediatableObject extends \BLW\Type\AObject implements \BLW\Type\
     /**
      * Pointer to current mediator.
      *
-     * @var \BLW\Type\IMediatable $_Mediator
+     * @var \BLW\Type\IMediator $_Mediator
      */
     protected $_Mediator = null;
 

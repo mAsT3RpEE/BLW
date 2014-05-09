@@ -79,31 +79,37 @@ class Section extends \BLW\Type\AContainer implements \BLW\Type\MIME\ISection
 {
 
 #############################################################################################
-    // Section Trait
+# Section Trait
 #############################################################################################
 
     /**
+     * "\r\n"
      *
-     * @var string $_CRLF [protected] "\r\n"
+     * @var string $_CRLF
      */
     protected $_CRLF = "\r\n";
 
     /**
+     * Content-Type
      *
-     * @var string $_Type [protected] Content type.
+     * @var string $_Type
      */
     protected $_Type = 'multipart/mixed';
 
     /**
+     * MIME boundary
      *
-     * @var string $_Boundary [protected] MIME boundary.
+     * @var string $_Boundary
      */
     protected $_Boundary = null;
 
 #############################################################################################
 
+
+
+
 #############################################################################################
-    // Factory Trait
+# Factory Trait
 #############################################################################################
 
     /**
@@ -153,7 +159,7 @@ class Section extends \BLW\Type\AContainer implements \BLW\Type\MIME\ISection
     }
 
 #############################################################################################
-    // Section Trait
+# Section Trait
 #############################################################################################
 
     /**
@@ -170,14 +176,13 @@ class Section extends \BLW\Type\AContainer implements \BLW\Type\MIME\ISection
 	 *
      * @param string $Boundary
      *            [optional] MIME boundary
-     * @return void
      */
     public function __construct($Type = null, $Boundary = null)
     {
         // IContainer constructor
         parent::__construct('object', 'string');
 
-        $this->_Type = strval($Type) ?  : $this->_Type;
+        $this->_Type = strval($Type) ?: $this->_Type;
         $this->_Boundary = strval($Boundary) ?  : $this->buildBoundary();
 
         // Check boundary / type

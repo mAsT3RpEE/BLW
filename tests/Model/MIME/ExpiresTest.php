@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\MIME;
+namespace BLW\Model\MIME;
 
 use DateTime;
 use BLW\Model\InvalidArgumentException;
@@ -25,7 +25,7 @@ use BLW\Model\MIME\Expires;
 /**
  * Tests BLW Library MIME Expires header.
  * @package BLW\MIME
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Mime\Expires
  */
@@ -40,27 +40,14 @@ class ExpiresTest extends \PHPUnit_Framework_TestCase
      */
     protected $Header = NULL;
 
-    /**
-     * @var \ReflectionProperty[]
-     */
-    protected $Properties = array();
-
     protected function setUp()
     {
-        $this->Expires        = new DateTime;
-        $this->Header      = new Expires($this->Expires);
-        $this->Properties  = array(
-             'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
-        );
-
-        $this->Properties['Type']->setAccessible(true);
-        $this->Properties['Value']->setAccessible(true);
+        $this->Expires    = new DateTime;
+        $this->Header     = new Expires($this->Expires);
     }
 
     protected function tearDown()
     {
-        $this->Properties = NULL;
         $this->Header     = NULL;
         $this->Expires    = NULL;
     }
@@ -80,8 +67,8 @@ class ExpiresTest extends \PHPUnit_Framework_TestCase
     public function test_construct()
     {
         # Check params
-        $this->assertEquals('Expires', $this->Properties['Type']->getValue($this->Header), 'Expires::__construct() failed to set $_Type');
-        $this->assertSame($this->Expires->format(Expires::FORMAT), $this->Properties['Value']->getValue($this->Header), 'Expires::__construct() failed to set $_Value');
+        $this->assertAttributeEquals('Expires', '_Type', $this->Header, 'Expires::__construct() failed to set $_Type');
+        $this->assertAttributeSame($this->Expires->format(Expires::FORMAT), '_Value', $this->Header, 'Expires::__construct() failed to set $_Value');
 
         # Valid arguments
         foreach($this->generateValidDates() as $Arguments) {
@@ -89,8 +76,14 @@ class ExpiresTest extends \PHPUnit_Framework_TestCase
 
             $this->Header = new Expires($Expires);
 
-            $this->assertEquals($Expires->format(Expires::FORMAT), $this->Properties['Value']->getValue($this->Header), 'Expires::__construct() failed to set $_Value');
+            $this->assertAttributeEquals($Expires->format(Expires::FORMAT), '_Value', $this->Header, 'Expires::__construct() failed to set $_Value');
         }
+
+        # NULL Date
+        $this->Header = new Expires;
+        $Expected     = new DateTime;
+
+        $this->assertAttributeContains($Expected->format(substr(LastModified::FORMAT, 0, -5)), '_Value', $this->Header, 'IfModifiedSince::__construct() failed to set $_Value');
 
         # Invalid arguments
     }

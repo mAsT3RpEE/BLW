@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\HTTP\Response;
+namespace BLW\Model\HTTP\Response;
 
 use ReflectionProperty;
 use ReflectionMethod;
@@ -30,7 +30,7 @@ use BLW\Model\HTTP\Response\Generic as Response;
 /**
  * Test for BLW Response base class
  * @package BLW\HTTP
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Type\HTTP\AResponse
  */

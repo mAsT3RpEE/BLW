@@ -15,22 +15,24 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Type\MIME;
+namespace BLW\Type\MIME;
 
 use BLW\Model\InvalidArgumentException;
+use BLW\Model\GenericContainer;
+use BLW\Model\GenericEmailAddress;
 
 
 /**
  * Tests BLW Library MIME header type.
  * @package BLW\MIME
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Type\MIME\AHeader
  */
 class HeaderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \BLW\Model\MIME\IHeader
+     * @var \BLW\Type\MIME\IHeader
      */
     protected $Header = NULL;
 
@@ -84,6 +86,10 @@ class HeaderTest extends \PHPUnit_Framework_TestCase
         	 array('name', 'image.gif', '; name=image.gif')
         	,array('foo', '1', '; foo=1')
         	,array('Charset', 'utf-8', '; charset=utf-8')
+        	,array('Charset', '"utf-8"', '; charset="utf-8"')
+            ,array('Charset', 'utf-8 with spaces', '; charset="utf-8 with spaces"')
+            ,array('Charset', 'utf-8"" with quotes ""', '; charset="utf-8   with quotes"')
+            ,array('CapitalInWord', '    ', '; capitalinword=""')
         );
     }
 
@@ -122,6 +128,30 @@ class HeaderTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @covers ::parseAddressList
+     */
+    public function test_parseAddressList()
+    {
+        // Valid arguments
+        $Expected    = "test@admin.com, Administrator <admin@test.com>, Test Name's Nam-e <test2@admin.com>";
+        $Container   = new GenericContainer('string', 'int', 'object', 'array');
+        $Container[] = new GenericEmailAddress('test@admin.com');
+        $Container[] = new GenericEmailAddress('admin@test.com', 'Administrator');
+        $Container[] = new GenericEmailAddress('test2@admin.com', "Test Name's Nam-e");
+
+        $this->assertSame($Expected, $this->Header->parseAddressList($Container), 'IHeader::parseAddressList() Returned an invalid value');
+
+        // Invalid arguments
+        $Container   = new GenericContainer('string', 'integer', 'object', 'array');
+        $Container[] = new \stdClass();
+        $Container[] = array();
+        $Container[] = 100;
+        $Container[] = 'me@mydomain.com';
+
+        $this->assertFalse($this->Header->parseAddressList($Container), 'IHeader::parseAddressList() Returned an invalid value');
+    }
+
    /**
     * @depends test_getType
     * @depends test_getValue
@@ -149,5 +179,14 @@ class HeaderTest extends \PHPUnit_Framework_TestCase
         $this->Properties['Value']->setValue($this->Header, 'test');
 
         $this->assertEquals("test: test\r\n", @strval($this->Header), '(string) IHeader is in an unexpected format');
+
+        # Remove Type
+        $this->Properties['Type']->setValue($this->Header, null);
+
+        @strval($this->Header);
+
+        $e = error_get_last();
+
+        $this->assertContains('Type or Value', $e['message'], 'Failed to generate warning on (string) IHeader');
    }
 }

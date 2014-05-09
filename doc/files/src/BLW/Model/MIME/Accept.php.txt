@@ -18,8 +18,6 @@
  */
 namespace BLW\Model\MIME;
 
-use BLW\Type\IDataMapper;
-
 use BLW\Model\InvalidArgumentException;
 
 
@@ -122,7 +120,7 @@ final class Accept extends \BLW\Type\MIME\AHeader
                 $this->_Value = array_reduce($Types, function ($v, $i)
                 {
 
-                    $Type = $this->parseType($i);
+                    $Type = Accept::parseType($i);
 
                     if ($v && $Type)
                         return "$v, $Type";

@@ -58,11 +58,11 @@ class Generic extends \BLW\Type\Command\AInput
      * Constructor
      *
      * @param \BLW\Type\IStream $InStream
-     *              stdIn
+     *              Input stream.
      * @param \BLW\Type\IContainer $Arguments
-     *              Input arguments
+     *              Input arguments.
      * @param \BLW\Type\IContainer $Options
-     *              Input options
+     *              Input options.
      */
     public function __construct(IStream $InStream, IContainer $Arguments = null, IContainer $Options = null)
     {

@@ -15,7 +15,7 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\Cron\Job;
+namespace BLW\Model\Cron\Job;
 
 use DateInterval;
 use ReflectionProperty;
@@ -30,14 +30,15 @@ use BLW\Model\Stream\Handle as ResourceStream;
 use BLW\Model\Command\Input\Generic as Input;
 use BLW\Model\Command\Output\Generic as Output;
 use BLW\Model\Command\Callback as CallbackCommand;
+use BLW\Model\Serializer\Mock;
 
 
 /**
- * Tests Generic Cron job class
+ * Tests Generic Cron handler class
  * @package BLW\Cron
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
- * @coversDefaultClass \BLW\Model\Cron\Generic
+ * @coversDefaultClass \BLW\Model\Cron\Job\Generic
  */
 class GenericTest extends \PHPUnit_Framework_TestCase
 {
@@ -55,7 +56,7 @@ class GenericTest extends \PHPUnit_Framework_TestCase
     protected $Command = NULL;
 
     /**
-     * @var \BLW\Model\Cron\Generic
+     * @var \BLW\Model\Cron\Job\Generic
      */
     protected $Job = NULL;
 
@@ -80,12 +81,15 @@ class GenericTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \BLW\Type\Cron\AJob::__construct
+     * @covers ::__construct
      */
     public function test_construct()
     {
         # Valid arguments
-        $this->Job = new Job($this->Command, $this->Interval);
+        $Job = new Job($this->Command, $this->Interval);
+
+        $this->assertAttributeSame($this->Command, '_Component', $Job, 'Generic::__create() Failed to set $_Command');
+        $this->assertAttributeSame($this->Interval, '_Interval', $Job, 'Generic::__create() Failed to set $_Interval');
 
         # Invalid arguments
         try {
@@ -99,15 +103,15 @@ class GenericTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends test_construct
      * @coversNothing
-     *
-     * Succeeds if ran alone.
-     * Fails when run with other tests
      */
-    public function serialize()
+    public function test_serialize()
     {
-        $Input      = new Input(new ResourceStream(fopen(self::INPUT, 'r')));
-        $Output     = new Output(new ResourceStream(fopen(self::OUTPUT, 'w')), new ResourceStream(fopen(self::OUTPUT, 'w')));
-        $Serialized = unserialize(serialize($this->Job));
+        global $BLW_Serializer;
+
+        $BLW_Serailizer = new \BLW\Model\Serializer\Mock;
+        $Input          = new Input(new ResourceStream(fopen(self::INPUT, 'r')));
+        $Output         = new Output(new ResourceStream(fopen(self::OUTPUT, 'w')), new ResourceStream(fopen(self::OUTPUT, 'w')));
+        $Serialized     = unserialize(serialize($this->Job));
 
         $this->assertSame(0, $Serialized->run($Input, $Output), 'IHandler::run() Failed to execute AlreadyRunning command');
         $this->assertStringStartsWith('foo', $Output->stdOut->getContents(), 'IHandler::run() Failed to execute Waiting command');

@@ -15,18 +15,18 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Type\Cron;
+namespace BLW\Type\Cron;
 
-use ReflectionProperty;
 use ReflectionMethod;
 
 use Psr\Log\NullLogger;
+use BLW\Type\IDataMapper;
 
 
 /**
  * Tests BLW Library Cron Handler base class
  * @package BLW\Cron
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Type\Cron\AHandler
  */
@@ -51,11 +51,42 @@ class HandlerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::_lockfile
+     */
+    public function test_lockfile()
+    {
+        $lockfile = function ($Handler)
+        {
+            $Method = new ReflectionMethod($Handler, '_lockfile');
+            $Args   = func_get_args();
+            $Args   = array_splice($Args, 1);
+
+            $Method->setAccessible(true);
+            return $Method->invokeArgs($Handler, $Args);
+        };
+
+        $this->assertNotEmpty($lockfile($this->Handler), 'IHandler::_lockfile() Returned an invalid value');
+        $this->assertContains('.lock', $lockfile($this->Handler), 'IHandler::_lockfile() Returned an invalid value');
+    }
+
+    /**
+     * @depends test_lockfile
      * @covers ::enterMutex
      */
     public function test_enterMutex()
     {
+        $lockfile = function ($Handler)
+        {
+            $Method = new ReflectionMethod($Handler, '_lockfile');
+            $Args   = func_get_args();
+            $Args   = array_splice($Args, 1);
+
+            $Method->setAccessible(true);
+            return $Method->invokeArgs($Handler, $Args);
+        };
+
         $this->assertTrue($this->Handler->enterMutex(), 'IHandler::enterMutex() Should return true');
+        $this->assertFileExists($lockfile($this->Handler), 'IHandler::enterMutex() Did not create lockfile');
         $this->assertFalse($this->Handler->enterMutex(), 'IHandler::enterMutex() Should return false');
     }
 
@@ -68,5 +99,52 @@ class HandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->Handler->enterMutex(), 'IHandler::enterMutex() Should return true');
         $this->assertTrue($this->Handler->exitMutex(), 'IHandler::exitMutex() Should return true');
         $this->assertFalse($this->Handler->exitMutex(), 'IHandler::exitMutex() Should return false');
+    }
+
+    /**
+     * @depends test_enterMutex
+     * @depends test_exitMutex
+     * @covers ::__destruct
+     */
+    public function test_destruct()
+    {
+        $lockfile = function ($Handler)
+        {
+            $Method = new ReflectionMethod($Handler, '_lockfile');
+            $Args   = func_get_args();
+            $Args   = array_splice($Args, 1);
+
+            $Method->setAccessible(true);
+            return $Method->invokeArgs($Handler, $Args);
+        };
+
+        $this->assertTrue($this->Handler->enterMutex(), 'IHandler::enterMutex() Should return true');
+        $this->assertFileExists($File = $lockfile($this->Handler), 'IHandler::enterMutex() Did not create lockfile');
+
+        $this->Handler->__destruct();
+
+        $this->assertFileNotExists($File, 'IHandler::__destruct() Failed to delete lockfile');
+    }
+
+    /**
+     * @covers ::setLogger
+     */
+    public function test_setLogger()
+    {
+        $Expected = new NullLogger;
+
+        # Valid arguments
+        $this->assertEquals(IDataMapper::UPDATED, $this->Handler->setLogger($Expected), 'IJob::setLogger() Should return IDataMapper::UPDATED');
+        $this->assertAttributeSame($Expected, 'logger', $this->Handler, 'IJob::setLogger() Failed to update $logger');
+
+        # Invalid arguments
+        try {
+            $this->Handler->setLogger(NULL);
+            $this->fail('Failed to generate error with invalid arguments');
+        }
+
+        catch(\PHPUnit_Framework_Error $e) {}
+
+        unset($Property);
     }
 }

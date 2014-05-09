@@ -18,7 +18,6 @@
  */
 namespace BLW\Type\DOM;
 
-use ReflectionMethod;
 use DOMDocument;
 use DOMNode;
 use DOMAttr;
@@ -34,7 +33,6 @@ use BLW\Type\DOM\IElement;
 use BLW\Type\IDataMapper;
 
 use BLW\Model\DOM\Exception;
-use BLW\Model\InvalidArgumentException;
 
 
 // @codeCoverageIgnoreStart
@@ -255,7 +253,7 @@ abstract class AElement extends \DOMElement implements \BLW\Type\DOM\IElement
         if (is_numeric($index)) {
 
             // Is index less than child nodes
-            return intval($index) < $this->childNodes->length;
+            return intval($index) >= 0 && intval($index) < $this->childNodes->length;
         }
 
         // Invalid $index
@@ -275,7 +273,7 @@ abstract class AElement extends \DOMElement implements \BLW\Type\DOM\IElement
      *
      * @param mixed $index
      *            The index with the value.
-     * @return mixed The value at the specified index or <code>FALSE</code>.
+     * @return \DOMNode|null The value at the specified index or <code>FALSE</code>.
      */
     final public function offsetGet($index)
     {
@@ -428,7 +426,7 @@ abstract class AElement extends \DOMElement implements \BLW\Type\DOM\IElement
      *
      * @link http://www.php.net/manual/en/iteratoraggregate.getiterator.php IteratorAggregate::getIterator()
      *
-     * @return \RecursiveArrayIterator An instance implementing <code>Iterator</code>.
+     * @return \IteratorIterator An instance implementing <code>Iterator</code>.
      */
     public function getIterator()
     {
@@ -550,7 +548,6 @@ abstract class AElement extends \DOMElement implements \BLW\Type\DOM\IElement
      *            Label of property to set.
      * @param mixed $value
      *            Value of property.
-     * @return bool Returns a <code>IDataMapper</code> status code.
      */
     public function __set($name, $value)
     {
@@ -601,7 +598,6 @@ abstract class AElement extends \DOMElement implements \BLW\Type\DOM\IElement
      *
      * @param string $name
      *            Label of dynamic property. (case sensitive)
-     * @return bool Returns a <code>TRUE</code> if property exists. <code>FALSE</code> otherwise.
      */
     public function __unset($name)
     {

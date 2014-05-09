@@ -266,7 +266,7 @@ abstract class ARequest extends \BLW\Type\MIME\AMessage implements \BLW\Type\HTT
      * <li><b>CONNECT</b>: <i>'CONNECT'</i></li>
      * <li><b>DELETE</b>: <i>'DELETE'</i></li>
 	 * </ul>
-	 * 
+	 *
      * @return int Returns a <code>DataMapper</code> status code.
      */
     public function setType($Type)
@@ -453,7 +453,6 @@ abstract class ARequest extends \BLW\Type\MIME\AMessage implements \BLW\Type\HTT
      *            Label of property to set.
      * @param mixed $value
      *            Value of property.
-     * @return bool Returns a <code>IDataMapper</code> status code.
      */
     public function __set($name, $value)
     {
@@ -502,7 +501,6 @@ abstract class ARequest extends \BLW\Type\MIME\AMessage implements \BLW\Type\HTT
      *
      * @param string $name
      *            Label of dynamic property. (case sensitive)
-     * @return bool Returns a <code>TRUE</code> if property exists. <code>FALSE</code> otherwise.
      */
     public function __unset($name)
     {

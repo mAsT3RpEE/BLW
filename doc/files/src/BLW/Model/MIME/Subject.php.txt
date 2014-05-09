@@ -115,3 +115,7 @@ final class Subject extends \BLW\Type\MIME\AHeader
     }
 }
 
+// @codeCoverageIgnoreStart
+return true;
+// @codeCoverageIgnoreEnd
+

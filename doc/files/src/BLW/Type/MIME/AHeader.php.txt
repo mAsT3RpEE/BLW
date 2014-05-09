@@ -242,7 +242,7 @@ abstract class AHeader implements \BLW\Type\MIME\IHeader
     /**
      * Compiles container containing email addresses into rfc email address list.
      *
-     * @param \BLT\Type\IContainer $Container
+     * @param \BLW\Type\IContainer $Container
      *            Container to extract email addresses from.
      * @return string Formated address list. Returns <code>FALSE</code> on error.
      */

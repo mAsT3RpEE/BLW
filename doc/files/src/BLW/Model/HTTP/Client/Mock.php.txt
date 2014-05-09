@@ -18,16 +18,11 @@
  */
 namespace BLW\Model\HTTP\Client;
 
-use DateTime;
-
 use BLW\Type\IStream;
-use BLW\Type\IFile;
-use BLW\Type\IMediator;
 use BLW\Type\HTTP\IRequest;
 use BLW\Type\HTTP\IResponse;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\Event\Generic as Event;
 use BLW\Model\HTTP\Response\Generic as Response;
 use BLW\Model\HTTP\Request\Generic as Request;
 

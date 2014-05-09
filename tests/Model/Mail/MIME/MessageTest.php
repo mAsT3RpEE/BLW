@@ -15,13 +15,19 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Model\Mail\MIME;
+namespace BLW\Model\Mail\MIME;
 
 use ReflectionProperty;
 use ReflectionMethod;
 
 use BLW\Model\InvalidArgumentException;
 
+use BLW\Type\MIME\IMessage;
+
+use BLW\Model\GenericContainer;
+use BLW\Model\GenericEmailAddress;
+use BLW\Model\MIME\Generic;
+use BLW\Model\MIME\CC;
 use BLW\Model\Mail\GenericMessage;
 use BLW\Model\Mail\MIME\Message;
 
@@ -29,14 +35,14 @@ use BLW\Model\Mail\MIME\Message;
 /**
  * Tests MimeMessage Module type.
  * @package BLW\Mail
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Model\Mail\MIME\Message
  */
 class MessageTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \BLW\Model\MIMEMessage
+     * @var \BLW\Model\Mail\MIME\Message
      */
     protected $MimeMessage = NULL;
 
@@ -133,7 +139,38 @@ class MessageTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * covers ::createAddressHeader
+     */
+    public function test_createAddressHeader()
+    {
+        if (!is_callable('imap_rfc822_parse_adrlist')) return true;
+
+        $Container   = new GenericContainer(IMessage::EMAIL);
+        $Container[] = new GenericEmailAddress('test@example.com', 'Test User');
+        $Container[] = new GenericEmailAddress('admin@example.com');
+        $Expected    = new CC($Container);
+
+        $this->assertEquals($Expected, $this->MimeMessage->createAddressHeader('CC', 'Test User <test@example.com>, admin@example.com'), 'MimeMessage::createAddressHeader() Returned an invalid value');
+
+        # Invalid arguments
+        try {
+            $this->MimeMessage->createAddressHeader(null, 'test@example.com');
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch (InvalidArgumentException $e) {}
+
+        try {
+            $this->MimeMessage->createAddressHeader('To', null);
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch (InvalidArgumentException $e) {}
+    }
+
+    /**
      * @depends test_construct
+     * @depends test_createAddressHeader
      * @covers ::createMessage
      */
     public function test_createMessage()
@@ -149,11 +186,19 @@ class MessageTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends test_toString
      * @depends test_construct
-     * @covers ::createMessage
+     * @covers ::createFromString
+     * @covers ::_createHeader
      */
     public function test_createFromString()
     {
         if (!is_callable('imap_rfc822_parse_headers')) return;
+
+        $Container   = new GenericContainer('object');
+        $Container[] = new GenericEmailAddress('foo@example.com');
+
+        $this->MimeMessage->getHeader()->append(new Generic('Foo', 'bar1'));
+        $this->MimeMessage->getHeader()->append(new Generic('Foo', 'bar2'));
+        $this->MimeMessage->getHeader()->offsetSet('CC', new CC($Container));
 
         # Unimplemented
         try {
@@ -161,5 +206,13 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         }
 
         catch (\RuntimeException $e) {}
+
+        # Invalid values
+        try {
+            $this->MimeMessage->createFromString(null);
+            $this->fail('Failed to generate exception with invalid arguments');
+        }
+
+        catch (InvalidArgumentException $e) {}
     }
 }

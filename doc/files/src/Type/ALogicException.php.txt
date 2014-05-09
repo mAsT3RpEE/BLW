@@ -1,0 +1,96 @@
+<?php
+/**
+ * ALogicException.php | Dec 28, 2013
+ *
+ * @filesource
+ * @license MIT
+ * @copyright Copyright (c) 2013-2018, mAsT3RpEE's Zone
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+/**
+ *
+ * @package BLW\Core
+ * @version GIT: 0.2.0
+ * @author  Walter Otsyula <wotsyula@mast3rpee.tk>
+ */
+namespace BLW\Type;
+
+// @codeCoverageIgnoreStart
+if (! defined('BLW')) {
+
+    if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
+        header("$_SERVER[SERVER_PROTOCOL] 404 Not Found");
+        header('Status: 404 Not Found');
+
+        $_SERVER['REDIRECT_STATUS'] = 404;
+
+        echo "<html>\r\n<head><title>404 Not Found</title></head><body bgcolor=\"white\">\r\n<center><h1>404 Not Found</h1></center>\r\n<hr>\r\n<center>nginx/1.5.9</center>\r\n</body>\r\n</html>\r\n";
+        exit();
+    }
+
+    return false;
+}
+// @codeCoverageIgnoreEnd
+
+
+/**
+ * Core exception class for Logic Exceptions.
+ *
+ * @package BLW\Core
+ * @api     BLW
+ * @since 0.1.0
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @link http://mast3rpee.tk/projects/BLW/ BLW Library
+ */
+abstract class ALogicException extends \LogicException implements \BLW\Type\IException
+{
+
+    /**
+     * Generates fields to replace in messege string.
+     *
+     * @return array Array of fields to replace in messege text.
+     */
+    public function getFields()
+    {
+        $Trace     = $this->getTrace();
+        $Arguments = array();
+
+        foreach (@$Trace[0]['args'] as $a) {
+
+            // Argument is scalar
+            if (is_scalar($a)) {
+                $export      = var_export($a, true);
+                $Arguments[] = strlen($export) > 255
+                    ? substr($export, 0, 64) . '...' . substr($export, -64)
+                    : $export;
+
+            // Argument is an bject
+            } elseif (is_object($a)) {
+                $Arguments[] = get_class($a);
+
+            // Default
+            } else {
+                $Arguments[] = gettype($a);
+            }
+        }
+
+        // Done
+        $Arguments = implode(', ', $Arguments);
+
+        return array(
+            '%header%' => '%class%::%func%(%args%):',
+            '%args%'   => $Arguments,
+            '%class%'  => strval(@$Trace[0]['class']),
+            '%func%'   => strval(@$Trace[0]['function']),
+            '%caused%' => sprintf(' Caused by %s on line %d.', $this->getFile(), $this->getLine())
+        );
+    }
+}
+
+// @codeCoverageIgnoreStart
+return true;
+// @codeCoverageIgnoreEnd
+

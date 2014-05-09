@@ -20,20 +20,25 @@ namespace BLW\Model\MIME;
 
 use DateTime;
 use BLW\Model\InvalidArgumentException;
+
+
+// @codeCoverageIgnoreStart
 if (! defined('BLW')) {
-    
+
     if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
         header("$_SERVER[SERVER_PROTOCOL] 404 Not Found");
         header('Status: 404 Not Found');
-        
+
         $_SERVER['REDIRECT_STATUS'] = 404;
-        
+
         echo "<html>\r\n<head><title>404 Not Found</title></head><body bgcolor=\"white\">\r\n<center><h1>404 Not Found</h1></center>\r\n<hr>\r\n<center>nginx/1.5.9</center>\r\n</body>\r\n</html>\r\n";
         exit();
     }
-    
+
     return false;
 }
+// @codeCoverageIgnoreEnd
+
 
 /**
  * Header class for Content-Description.
@@ -61,17 +66,15 @@ final class Expires extends \BLW\Type\MIME\AHeader
      *
      * @param \DateTime $DateTime
      *            [optional] Time associated with header
-     * @return void
      */
     public function __construct(DateTime $Time = null)
     {
         // Default value for DateTime
         if (! $Time instanceof DateTime)
             $Time = new DateTime();
-            
-            // 1. Header type
+
         $this->_Type = 'Expires';
-        
+
         // 2. Header value
         $this->_Value = $Time->format(self::FORMAT);
     }

@@ -15,33 +15,28 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Type;
+namespace BLW\Type;
 
+use ReflectionProperty;
 use BLW\Type\IDataMapper;
 
 
 /**
  * Tests BLW Library Adaptor type.
  * @package BLW\Core
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  *  @coversDefaultClass \BLW\Type\AIterable
  */
 class IterableTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \BLW\Type\IIterable
+     * @var \BLW\Type\AIterable
      */
     protected $Iterable = NULL;
 
-    /**
-     * @var \BLW\Type\IObject
-     */
-    protected $Object   = NULL;
-
     protected function setUp()
     {
-        $this->Object   = $this->getMockForAbstractClass('\\BLW\\Type\\IObject', array(), '', false);
         $this->Iterable = $this->getMockForAbstractClass('\\BLW\\Type\\AIterable');
 
         $this->Iterable
@@ -52,47 +47,66 @@ class IterableTest extends \PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
-        $this->Object   = NULL;
         $this->Iterable = NULL;
     }
 
     /**
      * @covers ::getParent
+     * @covers \BLW\Type\AIterable::getParent
      */
     public function test_getParent()
     {
-        $this->assertNull($this->Iterable->getParent(), 'getParent() should initially be NULL.');
+        $Expected = $this->getMockForAbstractClass('\\BLW\\Type\\IObject');
+        $Property = new ReflectionProperty($this->Iterable, '_Parent');
+
+        $Property->setAccessible(true);
+        $Property->setValue($this->Iterable, $Expected);
+
+        $this->assertSame($Expected, $this->Iterable->getParent(), 'IIterable::getParent() should equal $_Parent.');
     }
 
     /**
      * @covers ::setParent
+     * @covers \BLW\Type\AIterable::setParent
      */
     public function test_setParent()
     {
-        $this->assertEquals(IDataMapper::UPDATED, $this->Iterable->setParent($this->Object), 'setParent did not return IDataMapper::UPDATED');
-        $this->assertEquals(IDataMapper::ONESHOT, $this->Iterable->setParent($this->Object), 'setParent did not return IDataMapper::ONESHOT');
+        $Expected = $this->getMockForAbstractClass('\\BLW\\Type\\IObject');
 
-        $this->assertSame($this->Object, $this->Iterable->getParent(), '$this->Object !=== getParent()');
+        // Valid arguments
+        $this->assertEquals(IDataMapper::UPDATED, $this->Iterable->setParent($Expected), 'IIterable::setParent() did not return IDataMapper::UPDATED');
+        $this->assertEquals(IDataMapper::ONESHOT, $this->Iterable->setParent($Expected), 'IIterable::setParent() should return IDataMapper::ONESHOT');
+
+        $this->assertSame($Expected, $this->Iterable->getParent(), 'IIterable::setParent() Failed to update $_Parent');
+
+        // Invalid arguments
+        $this->assertEquals(IDataMapper::INVALID, $this->Iterable->setParent($this->Iterable), 'IIterable::setParent() should return IDataMapper::INVALID');
+        $this->assertEquals(IDataMapper::INVALID, $this->Iterable->setParent(null), 'IIterable::setParent() should return IDataMapper::ONESHOT');
    }
 
    /**
     * @depends test_setParent
     * @covers ::clearParent
+    * @covers \BLW\Type\AIterable::clearParent
     */
     public function test_clearParent()
     {
-        $this->assertEquals(IDataMapper::UPDATED, $this->Iterable->clearParent($this->Object), 'clearParent did not return IDataMapper::UPDATED');
-        $this->assertEquals(IDataMapper::UPDATED, $this->Iterable->setParent($this->Object), 'setParent did not return IDataMapper::UPDATED');
-        $this->assertEquals(IDataMapper::UPDATED, $this->Iterable->clearParent($this->Object), 'clearParent did not return IDataMapper::UPDATED');
+        $Parent = $this->getMockForAbstractClass('\\BLW\\Type\\IObject');
+
+        $this->assertEquals(IDataMapper::UPDATED, $this->Iterable->clearParent($Parent), 'clearParent did not return IDataMapper::UPDATED');
+        $this->assertEquals(IDataMapper::UPDATED, $this->Iterable->setParent($Parent), 'setParent did not return IDataMapper::UPDATED');
+        $this->assertEquals(IDataMapper::UPDATED, $this->Iterable->clearParent($Parent), 'clearParent did not return IDataMapper::UPDATED');
         $this->assertNull($this->Iterable->getParent(), 'getParent() should return NULL.');
-        $this->assertEquals(IDataMapper::UPDATED, $this->Iterable->setParent($this->Object), 'setParent did not return IDataMapper::UPDATED');
+        $this->assertEquals(IDataMapper::UPDATED, $this->Iterable->setParent($Parent), 'setParent did not return IDataMapper::UPDATED');
    }
 
    /**
     * @covers ::getID
+    * @covers \BLW\Type\AIterable::getID
     */
     public function test_getID()
     {
-        $this->assertEquals('TestIterable', $this->Iterable->getID(), 'getID did not return `TestIterable`');
+        $this->assertNotEmpty($this->Iterable->getID(), 'IIterable::getID() Returned an invalid value');
+        $this->assertInternalType('string', $this->Iterable->getID(), 'IIterable::getID() returned an invalid value');
    }
 }

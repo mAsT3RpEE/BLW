@@ -15,23 +15,35 @@
  * @version 1.0.0
  * @author Walter Otsyula <wotsyula@mast3rpee.tk>
  */
-namespace BLW\Tests\Type\MIME;
+namespace BLW\Type\MIME;
 
 use ReflectionProperty;
 use ReflectionMethod;
 
 use BLW\Model\InvalidArgumentException;
+use BLW\Model\GenericURI;
 
 
 /**
  * Tests Message Module type.
  * @package BLW\MIME
- * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @coversDefaultClass \BLW\Type\MIME\AMessage
  */
 class MessageTest extends \PHPUnit_Framework_TestCase
 {
+    const RAW = <<<EOT
+Header: value
+foo: bar1
+foo: bar2
+
+line1
+
+line2
+
+EOT;
+
     /**
      * @var \BLW\Type\MIME\IMessage
      */
@@ -108,15 +120,46 @@ class MessageTest extends \PHPUnit_Framework_TestCase
     public function generateValidHeaders()
     {
         return array(
-        	 array('Content-Type', 'text/html; charset="UTF-8"', '\\BLW\\Model\\MIME\\Generic')
+             array('Accept', '*/*;q=0.8', '\\BLW\\Model\\MIME\\Accept')
             ,array('accept-charset', 'iso-8859-5, unicode-1-1;q=0.8', '\\BLW\\Model\\MIME\\AcceptCharset')
-            ,array('CONTENT-BASE', 'http://google.com', '\\BLW\\Model\\MIME\\ContentBase')
-            ,array('Last-Modified', 'Wed, 15 Nov 1995 04:58:08 GMT', '\\BLW\\Model\\MIME\\LastModified')
+            ,array('ACCEPT-ENCODING', 'gzip deflate', '\\BLW\\Model\\MIME\\AcceptEncoding')
+            ,array(new \SplFileInfo('foo.txt'), 'foo', '\\BLW\\Model\\MIME\\Generic')
+            ,array('Accept-Language', 'en-us;q=0.8', '\\BLW\\Model\\MIME\\AcceptLanguage')
+            ,array('Accept-Ranges', '0-*', '\\BLW\\Model\\MIME\\AcceptRanges')
+            ,array('Age', '1000', '\\BLW\\Model\\MIME\\Age')
+            ,array('Allow', 'GET', '\\BLW\\Model\\MIME\\Allow')
+            ,array('Cache-Control', 'no-cache', '\\BLW\\Model\\MIME\\CacheControl')
+            ,array('Connection', 'keep-alive', '\\BLW\\Model\\MIME\\Connection')
+            ,array('Content-Base', 'http://google.com', '\\BLW\\Model\\MIME\\ContentBase')
+            ,array('Content-Description', 'foo', '\\BLW\\Model\\MIME\\ContentDescription')
+            ,array('Content-Disposition', 'inline', '\\BLW\\Model\\MIME\\ContentDisposition')
+            ,array('Content-Encoding', 'gzip', '\\BLW\\Model\\MIME\\ContentEncoding')
+            ,array('Content-ID', 'id@domain.com', '\\BLW\\Model\\MIME\\ContentID')
+            ,array('Content-Language', 'en-us', '\\BLW\\Model\\MIME\\ContentLanguage')
+            ,array('Content-Length', '1000', '\\BLW\\Model\\MIME\\ContentLength')
+            ,array('Content-Location', 'http://foo.com/', '\\BLW\\Model\\MIME\\ContentLocation')
+            ,array('Content-Transfer-Encoding', 'base64', '\\BLW\\Model\\MIME\\ContentTransferEncoding')
+            ,array('Content-MD5', md5('foo'), '\\BLW\\Model\\MIME\\ContentMD5')
+            ,array('Content-Range', '0-*/100', '\\BLW\\Model\\MIME\\ContentRange')
+            ,array('Date', date('c'), '\\BLW\\Model\\MIME\\Date')
+            ,array('Expires', date('c'), '\\BLW\\Model\\MIME\\Expires')
+            ,array('If-Modified-Since', date('c'), '\\BLW\\Model\\MIME\\IfModifiedSince')
+            ,array('Last-Modified', date('c'), '\\BLW\\Model\\MIME\\LastModified')
+            ,array('Location', 'http://foo.com', '\\BLW\\Model\\MIME\\Location')
+            ,array('Message-ID', 'id@hostc.com', '\\BLW\\Model\\MIME\\MessageID')
+            ,array('MIME-Version', '1.0', '\\BLW\\Model\\MIME\\MIMEVersion')
+            ,array('Pragma', 'no-cache', '\\BLW\\Model\\MIME\\Pragma')
+            ,array('Range', '0-*', '\\BLW\\Model\\MIME\\Range')
+            ,array('Referer', 'http://foo.com', '\\BLW\\Model\\MIME\\Referer')
+            ,array('Subject', 'foo', '\\BLW\\Model\\MIME\\Subject')
+            ,array('Trailer', 'foo', '\\BLW\\Model\\MIME\\Trailer')
+            ,array('Vary', 'Content-Type', '\\BLW\\Model\\MIME\\Vary')
+            ,array('Via', '1.0 fred', '\\BLW\\Model\\MIME\\Via')
         );
     }
 
     /**
-     * @cover ::createHeader
+     * @covers ::createHeader
      */
     public function test_createHeader()
     {
@@ -141,11 +184,50 @@ class MessageTest extends \PHPUnit_Framework_TestCase
 
         catch (InvalidArgumentException $e) {}
 
-            try {
+        try {
             $this->Message->createHeader('foo', NULL);
             $this->fail('Failed to generate exception with invalid arguments');
         }
 
         catch (InvalidArgumentException $e) {}
+    }
+
+    public function generateHeaders()
+    {
+        return array(
+             array('Content-Type', 'Content-Type')
+            ,array('CONTENT-TYPE', 'Content-Type')
+            ,array('content-type', 'Content-Type')
+            ,array('content-md5',  'Content-MD5')
+            ,array('content-id',   'Content-ID')
+            ,array('Mime-Version', 'MIME-Version')
+        );
+    }
+
+    /**
+     * @covers ::normalizeHeaderType
+     */
+    public function test_normalizeHeaderType()
+    {
+        foreach ($this->generateHeaders() as $Arguments) {
+
+            list ($Raw, $Sanitized) = $Arguments;
+
+            $this->assertSame($Sanitized, $this->Message->normalizeHeaderType($Raw), 'IMessage::normalizeHeader() Returned an invalid value');
+        }
+    }
+
+    /**
+     * @depends test_normalizeHeaderType
+     * @covers ::parseParts
+     */
+    public function test_parseParts()
+    {
+        $this->Message->parseParts(self::RAW, $Header, $Body);
+
+        $this->assertCount(2, $Header, 'IMessage::parseParts() Failed to parse headers');
+        $this->assertArrayHasKey('Header', $Header, 'IMessage::parseParts failed to parse headers');
+        $this->assertArrayHasKey('Foo', $Header, 'IMessage::parseParts failed to parse headers');
+        $this->assertGreaterThan(2, $Body, 'IMessage::parseParts() Failed to parse body');
     }
 }

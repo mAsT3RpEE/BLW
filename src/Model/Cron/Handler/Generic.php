@@ -1,0 +1,242 @@
+<?php
+/**
+ * Generic.php | Apr 8, 2014
+ *
+ * @filesource
+ * @license MIT
+ * @copyright Copyright (c) 2013-2018, mAsT3RpEE's Zone
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+/**
+ *
+ * @package BLW\Cron
+ * @version GIT: 0.2.0
+ * @author  Walter Otsyula <wotsyula@mast3rpee.tk>
+ */
+namespace BLW\Model\Cron\Handler;
+
+use DateTime;
+use BLW\Type\IMediator;
+use BLW\Type\Command\IInput;
+use BLW\Type\Command\IOutput;
+use BLW\Type\Command\ICommand;
+use BLW\Type\Cron\IJob;
+use BLW\Model\Config\Generic as GenericConfig;
+use BLW\Model\Command\Callback as CallbackCommand;
+use Psr\Log\LoggerInterface;
+
+// @codeCoverageIgnoreStart
+if (! defined('BLW')) {
+
+    if (strstr($_SERVER['PHP_SELF'], basename(__FILE__))) {
+        header("$_SERVER[SERVER_PROTOCOL] 404 Not Found");
+        header('Status: 404 Not Found');
+
+        $_SERVER['REDIRECT_STATUS'] = 404;
+
+        echo "<html>\r\n<head><title>404 Not Found</title></head><body bgcolor=\"white\">\r\n<center><h1>404 Not Found</h1></center>\r\n<hr>\r\n<center>nginx/1.5.9</center>\r\n</body>\r\n</html>\r\n";
+        exit();
+    }
+
+    return false;
+}
+// @codeCoverageIgnoreEnd
+
+
+/**
+ * Generic cron handler
+ *
+ * @package BLW\Cron
+ * @api BLW
+ * @since   1.0.0
+ * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
+ */
+class Generic extends \BLW\Type\Cron\AHandler
+{
+
+    /**
+     * Constructor
+     *
+     * @param \BLW\Type\IMediator $Mediator
+     *            Cron mediator.
+     * @param \Psr\Log\LoggerInterface $Logger
+     *            Cron logger.
+     * @param boolean $isThreadCompatible
+     *            Whether multiple instances of cron should run at the same time.
+     */
+    public function __construct(IMediator $Mediator, LoggerInterface $Logger, $isThreadCompatible = false)
+    {
+        // Properties
+        $this->_isThreadCompatible = (bool) $isThreadCompatible;
+
+        // Mediator
+        $this->setMediator($Mediator);
+
+        // Logger
+        $this->setLogger($Logger);
+    }
+
+    /**
+     * Prints a message to output.
+     *
+     * @param string $Message
+     * @param \BLW\Type\Command\IInput $Input
+     *            Input object to read data from.
+     * @param \BLW\Type\Command\IOutput $Output
+     *            Output object to write data to.
+     * @param integer $flags
+     *            Flags used to run commands.
+     * @return int Exit code (0)
+     */
+    private function _die($Message, IInput $Input, IOutput $Output, $flags)
+    {
+        // Cron already running
+        $Command = new CallbackCommand(function ($Input, $Output) use ($Message) {
+            // Output notice
+            $Output->write($Message);
+
+            // Done
+            return 0;
+
+        }, new GenericConfig(array(
+            'Timeout' => 10
+        )));
+
+        return $Command->run($Input, $Output, $flags);
+    }
+
+    /**
+     * Dispatches next cron job.
+     *
+     * @param \DateTime $Now
+     *            Current time.
+     * @param \BLW\Type\Command\IInput $Input
+     *            Input object to read data from.
+     * @param \BLW\Type\Command\IOutput $Output
+     *            Output object to write data to.
+     * @param integer $flags
+     *            Flags used to run commands.
+     * @param \DateTime $Next
+     *            Calculated next run.
+     * @return int Exit code (0)
+     */
+    private function _dispatch(DateTime $Now, IInput $Input, IOutput $Output, $flags, DateTime &$Next = null)
+    {
+        // Default next run
+        $Next = new DateTime('next year');
+
+        // Search for an active job
+        foreach ($this as $Job) {
+            if ($Job instanceof IJob) {
+
+                // Is job due to run
+                if ($Job->isExpired($Now)) {
+
+                    // Mediator exists?
+                    if ($this->_Mediator instanceof IMediator) {
+                        // Set mediator of job
+                        $Job->setMediator($this->_Mediator);
+                    }
+
+                    // Run the job
+                    $return = $Job->run($Input, $Output, $flags);
+
+                    // Clear mediator of job
+                    $Job->clearMediator();
+
+                    // Done
+                    return $return;
+                }
+
+                // Save closest next run
+                elseif ($Next > $Job->NextRun) {
+                    $Next = $Job->NextRun;
+                }
+            }
+        }
+
+        // No active jobs
+        return -1;
+    }
+
+    /**
+     * Runs cron handler.
+     *
+     * <h4>Note</h4>
+     *
+     * <p>If <code>IJob</code> passed to handler is not fully
+     * serializable, errors will be generated when handler is
+     * serialized.</p>
+     *
+     * <p>Cron handler uses <code>$Now</code> to select a cron job
+     * and execute the 1st job that has expired.</p>
+     *
+     * <p>Currently we only support running 1 job at a time since
+     * BLW library has to run on all servers which requires all our
+     * code to run as efficiently as possible. Which is quite
+     * hypocritical frankly.</p>
+     *
+     * <p>If a job takes too long to run that it expires before it
+     * finishes executing it will be scheduled endlessly preventing
+     * other jobs from running.</p>
+     *
+     * <hr>
+     *
+     * @see \BLW\Type\Command\ICommand::run() ICommand::run()
+     *
+     * @param \BLW\Type\Command\IInput $Input
+     *            Input object to read data from.
+     * @param \BLW\Type\Command\IOutput $Output
+     *            Output object to write data to.
+     * @param \DateTime $Now
+     *            Expected time of execution. Pass <code>null</code> for current time.
+     * @param integer $flags
+     *            Flags used to run commands.
+     * @return mixed The result of <code>IJob::run()</code>
+     */
+    public function run(IInput $Input, IOutput $Output, DateTime $Now = null, $flags = ICommand::RUN_FLAGS)
+    {
+        // Now
+        $Now  = $Now ?: new DateTime();
+
+        // Is cron not thread safe?
+        if (! $this->_isThreadCompatible) {
+            // Enter mutex
+            if (! $this->enterMutex()) {
+                return $this->_die("Cron already running. Exiting.\r\n", $Input, $Output, $flags);
+            }
+        }
+
+        // Dispatch job
+        $return = $this->_dispatch($Now, $Input, $Output, $flags, $Next);
+
+        // No jobs dispatched?
+        if ($return < 0) {
+
+            // Waiting command
+            $return = $this->_die(
+                $Next->diff($Now, true)->format("No jobs. Waiting %D days, %H hours %I minutes and %S seconds\r\n"),
+                $Input,
+                $Output,
+                $flags
+            );
+
+        }
+
+        // Is cron not thread safe?
+        if (! $this->_isThreadCompatible) {
+            // Exit mutex
+            $this->exitMutex();
+        }
+
+        // Done
+        return $return;
+    }
+}
+
+// @codeCoverageIgnoreStart
+return true;
+// @codeCoverageIgnoreEnd

@@ -18,7 +18,6 @@
  */
 namespace BLW\Model\HTTP\Client;
 
-use DateTime;
 use RuntimeException;
 
 use BLW\Type\IStream;

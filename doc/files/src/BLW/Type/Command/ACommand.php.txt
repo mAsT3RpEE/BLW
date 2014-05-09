@@ -166,7 +166,7 @@ abstract class ACommand extends \BLW\Type\AObject implements \BLW\Type\Command\I
     /**
      * Pointer to current mediator.
      *
-     * @var \BLW\Type\IMediatable $_Mediator
+     * @var \BLW\Type\IMediator $_Mediator
      */
     protected $_Mediator = null;
 
@@ -585,8 +585,11 @@ abstract class ACommand extends \BLW\Type\AObject implements \BLW\Type\Command\I
     /**
      * Registers a callback to execute on command read from input.
      *
+     * @throws \BLW\Model\InvalidArgumentException If <code>$Callback</code> is not callable.
+     *
      * @param callable $Callback
      *            Callback to invoke.
+     * @return bool <code>TRUE</code> on success. <code>FALSE</code> otherwise.
      */
     public function onInput($Callback)
     {
@@ -614,8 +617,11 @@ abstract class ACommand extends \BLW\Type\AObject implements \BLW\Type\Command\I
     /**
      * Registers a callback to execute on command write to output.
      *
+     * @throws \BLW\Model\InvalidArgumentException If <code>$Callback</code> is not callable.
+     *
      * @param callable $Callback
      *            Callback to invoke.
+     * @return bool <code>TRUE</code> on success. <code>FALSE</code> otherwise.
      */
     public function onOutput($Callback)
     {
@@ -643,9 +649,11 @@ abstract class ACommand extends \BLW\Type\AObject implements \BLW\Type\Command\I
     /**
      * Registers a callback to execute on command write to error.
      *
+     * @throws \BLW\Model\InvalidArgumentException If <code>$Callback</code> is not callable.
+     *
      * @param callable $Callback
      *            Callback to invoke.
-     * @return void
+     * @return bool <code>TRUE</code> on success. <code>FALSE</code> otherwise.
      */
     public function onError($Callback)
     {

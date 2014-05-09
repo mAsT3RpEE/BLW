@@ -22,7 +22,6 @@ use BLW\Type\IFile;
 use BLW\Type\IDataMapper;
 
 use BLW\Model\FileException;
-use BLW\Model\InvalidArgumentException;
 
 
 // @codeCoverageIgnoreStart
@@ -51,7 +50,8 @@ if (! defined('BLW')) {
  * @author mAsT3RpEE <wotsyula@mast3rpee.tk>
  *
  * @property \BLW\Type\IFile $File File used in object creation.
- * @property resource $Context Stream context.
+ * @property int $Flags File open flags.
+ * @property array $Options Stream context.
  */
 class File extends \BLW\Type\AStream
 {
@@ -64,14 +64,24 @@ class File extends \BLW\Type\AStream
     protected $_File;
 
     /**
-     * Stream context.
+     * Open flags
      *
-     * @var resource $_Context
+     * @var int
      */
-    protected $_Context;
+    protected $_Flags = IFile::FILE_FLAGS;
+
+    /**
+     * Stream context options.
+     *
+     * @link http://jp2.php.net/manual/en/function.stream-context-create.php stream_context_create()
+     * @var array $_Options
+     */
+    protected $_Options;
 
     /**
      * Creates a stream from a file.
+     *
+     * @link http://jp2.php.net/manual/en/function.stream-context-create.php stream_context_create()
      *
      * @throws \BLW\Model\FileException If there is a problem opening the file.
      *
@@ -79,14 +89,15 @@ class File extends \BLW\Type\AStream
      *            File to turn into a stream.
      * @param int $flags
      *            Open flags.
-     * @param resource $context
-     *            Stream context.
+     * @param array $options
+     *            Stream context options.
      */
-    public function __construct(IFile $File, $flags = IFile::FILE_FLAGS, $context = array())
+    public function __construct(IFile $File, $flags = IFile::FILE_FLAGS, array $options = array())
     {
         $this->_File    = $File;
-        $this->_Context = $context;
-        $this->_fp      = $File->createResource($flags, $context);
+        $this->_Flags   = intval($flags);
+        $this->_Options = $options;
+        $this->_fp      = $File->createResource($this->_Flags, stream_context_create($options));
     }
 
     /**
@@ -96,6 +107,29 @@ class File extends \BLW\Type\AStream
     {
         // Close file handle
         @fclose($this->_fp);
+    }
+
+    /**
+     * Hook that is called just before an object is serialized.
+     */
+    public function doSerialize()
+    {
+        // Resources don't serialize well
+        $this->_fp = @ftell($this->_fp);
+    }
+
+    /**
+     * Hook that is called just after an object is unserialized.
+     */
+    public function doUnSerialize()
+    {
+        // Recreate fp
+        $pos       = $this->_fp;
+        $this->_fp = createResource($this->_Flags, stream_context_create($this->_Options));
+
+        // Restore fp
+        if ($pos && ($this->_Flags & IFile::APPEND == 0))
+            fseek($this->_fp, $pos);
     }
 
     /**
@@ -124,8 +158,10 @@ class File extends \BLW\Type\AStream
             // IFileStream
             case 'File':
                 return $this->_File;
-            case 'Context':
-                return $this->_Context;
+            case 'Flags':
+                return $this->_Flags;
+            case 'Options':
+                return $this->_Options;
 
             default:
                 trigger_error(sprintf('Undefined property: %s::$%s', get_class($this), $name), E_USER_NOTICE);
@@ -159,8 +195,10 @@ class File extends \BLW\Type\AStream
             // IFileStream
             case 'File':
                 return $this->_File !== null;
-            case 'Context':
-                return $this->_Context !== null;
+            case 'Flags':
+                return $this->_Flags !== null;
+            case 'Options':
+                return $this->_Options !== null;
             // Undefined
             default:
                 return false;
@@ -193,7 +231,8 @@ class File extends \BLW\Type\AStream
             case 'fp':
             // IFileStream
             case 'File':
-            case 'Context':
+            case 'Flags':
+            case 'Options':
                 $result = IDataMapper::READONLY;
                 break;
             default:
@@ -220,6 +259,30 @@ class File extends \BLW\Type\AStream
         }
 
         return $result;
+    }
+
+    /**
+     * Dynamic properties.
+     *
+     * @param string $name
+     *            Label of property to unset.
+     */
+    public function __unset($name)
+    {
+        // Try to unset property
+        switch ($name) {
+            // ISerializable
+            case 'Status':
+                $result = $this->clearStatus();
+                break;
+            // IIterable
+            case 'Parent':
+                $result = $this->clearParent();
+                break;
+            // Undefined
+            default:
+                $result = IDataMapper::UNDEFINED;
+        }
     }
 }
 

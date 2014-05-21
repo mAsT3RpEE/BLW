@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\UserAgent;
 
 
 /**
@@ -45,7 +44,7 @@ class UserAgentTest extends \PHPUnit_Framework_TestCase
         $this->Header      = new UserAgent('Test UserAgent');
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -61,9 +60,9 @@ class UserAgentTest extends \PHPUnit_Framework_TestCase
     public function generateValidUserAgents()
     {
         return array(
-        	 array('test', 'test')
-        	,array('test with space', 'test with space')
-        	,array('`~!@#$%^&*()-_=+[{]}\\|;:\',<.>/?', '`~!@#$%^&*()-_=+[{]}\\|;:\',<.>/?')
+             array('test', 'test')
+            ,array('test with space', 'test with space')
+            ,array('`~!@#$%^&*()-_=+[{]}\\|;:\',<.>/?', '`~!@#$%^&*()-_=+[{]}\\|;:\',<.>/?')
             ,array('"""""still okay"""""""', 'still okay')
         );
     }
@@ -71,9 +70,9 @@ class UserAgentTest extends \PHPUnit_Framework_TestCase
     public function generateInvalidUserAgents()
     {
         return array(
-        	 array('', '')
+             array('', '')
             ,array('"""', '')
-        	,array(false, '')
+            ,array(false, '')
         );
     }
 
@@ -83,14 +82,14 @@ class UserAgentTest extends \PHPUnit_Framework_TestCase
     public function test_parseUserAgent()
     {
         # Valid UserAgent
-        foreach($this->generateValidUserAgents() as $Parameters) {
+        foreach ($this->generateValidUserAgents() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseUserAgent($Original), 'UserAgent::parseUserAgent() returned an invalid format');
         }
 
         # Invalid UserAgent
-        foreach($this->generateInvalidUserAgents() as $Parameters) {
+        foreach ($this->generateInvalidUserAgents() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseUserAgent($Original), 'UserAgent::parseUserAgent() returned an invalid format');
@@ -111,9 +110,7 @@ class UserAgentTest extends \PHPUnit_Framework_TestCase
         try {
             new UserAgent(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\ContentLanguage;
 
 
 /**
@@ -45,7 +44,7 @@ class ContentLanguageTest extends \PHPUnit_Framework_TestCase
         $this->Header      = new ContentLanguage('en, en-gb');
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -61,18 +60,18 @@ class ContentLanguageTest extends \PHPUnit_Framework_TestCase
     public function generateValidLanguages()
     {
         return array(
-        	 array('en-gb', 'en-gb')
-        	,array('en-gb;q=0', 'en-gb')
+             array('en-gb', 'en-gb')
+            ,array('en-gb;q=0', 'en-gb')
             ,array(';;en-gb, ;;; da;;', 'en-gb')
-        	,array('"en-gb"', 'en-gb')
+            ,array('"en-gb"', 'en-gb')
         );
     }
 
     public function generateInvalidLanguages()
     {
         return array(
-        	 array(false, 'en')
-        	,array(new \stdClass, 'en')
+             array(false, 'en')
+            ,array(new \stdClass, 'en')
             ,array(array(), 'en')
         );
     }
@@ -83,14 +82,14 @@ class ContentLanguageTest extends \PHPUnit_Framework_TestCase
     public function test_parseLanguage()
     {
         # Valid type
-        foreach($this->generateValidLanguages() as $Parameters) {
+        foreach ($this->generateValidLanguages() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseLanguage($Original), 'ContentLanguage::parseLanguage() returned an invalid format');
         }
 
         # Invalid type
-        foreach($this->generateInvalidLanguages() as $Parameters) {
+        foreach ($this->generateInvalidLanguages() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseLanguage($Original), 'ContentLanguage::parseLanguage() returned an invalid format');
@@ -114,9 +113,7 @@ class ContentLanguageTest extends \PHPUnit_Framework_TestCase
         try {
             new ContentLanguage(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

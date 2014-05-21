@@ -77,9 +77,7 @@ class YAMLTest extends \PHPUnit_Framework_TestCase
         try {
             new Config(new GenericFile('z:\\undefined'));
             $this->fail('Failed to generate error with invalid arguments');
-        }
-
-        catch (FileException $e) {}
+        } catch (FileException $e) {}
     }
 
     /**

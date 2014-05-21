@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\AcceptEncoding;
 
 
 /**
@@ -45,7 +44,7 @@ class AcceptEncodingTest extends \PHPUnit_Framework_TestCase
         $this->Header      = new AcceptEncoding('compress, gzip; q=0.5');
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -61,17 +60,17 @@ class AcceptEncodingTest extends \PHPUnit_Framework_TestCase
     public function generateValidTypes()
     {
         return array(
-        	 array('gzip', 'gzip')
-        	,array(';;gzip, ;;; unicode-1-1;;', 'gzip')
-        	,array('"gzip"', 'gzip')
+             array('gzip', 'gzip')
+            ,array(';;gzip, ;;; unicode-1-1;;', 'gzip')
+            ,array('"gzip"', 'gzip')
         );
     }
 
     public function generateInvalidTypes()
     {
         return array(
-        	 array(false, '*')
-        	,array(new \stdClass, '*')
+             array(false, '*')
+            ,array(new \stdClass, '*')
             ,array(array(), '*')
         );
     }
@@ -82,14 +81,14 @@ class AcceptEncodingTest extends \PHPUnit_Framework_TestCase
     public function test_parseEncoding()
     {
         # Valid type
-        foreach($this->generateValidTypes() as $Parameters) {
+        foreach ($this->generateValidTypes() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseEncoding($Original), 'AcceptEncoding::parseEncoding() returned an invalid format');
         }
 
         # Invalid type
-        foreach($this->generateInvalidTypes() as $Parameters) {
+        foreach ($this->generateInvalidTypes() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseEncoding($Original), 'AcceptEncoding::parseEncoding() returned an invalid format');
@@ -113,9 +112,7 @@ class AcceptEncodingTest extends \PHPUnit_Framework_TestCase
         try {
             new AcceptEncoding(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

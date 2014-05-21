@@ -95,6 +95,7 @@ final class MIMEVersion extends \BLW\Type\MIME\AHeader
 
         } else {
             trigger_error('Type or Value not set', E_USER_WARNING);
+
             return '';
         }
     }

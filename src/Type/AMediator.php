@@ -162,6 +162,7 @@ abstract class AMediator extends \BLW\Type\ASerializable implements \BLW\Type\IM
 
             // Update parent
             $this->_Parent = $Parent;
+
             return IDataMapper::UPDATED;
         }
 
@@ -182,6 +183,7 @@ abstract class AMediator extends \BLW\Type\ASerializable implements \BLW\Type\IM
     final public function clearParent()
     {
         $this->_Parent = null;
+
         return IDataMapper::UPDATED;
     }
 

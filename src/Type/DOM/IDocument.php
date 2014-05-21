@@ -87,7 +87,7 @@ interface IDocument extends \BLW\Type\ISerializable, \BLW\Type\IIterable
      *            [optional] The version number of the document as part of the XML declaration.
      * @param string $encoding
      *            [optional] The encoding of the document as part of the XML declaration.
-     * @param sring $element
+     * @param string $element
      *            [optional] Class used to create elements in the document. Must extend <code>DOMElement</code>.
      * @return void
      */

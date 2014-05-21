@@ -20,8 +20,6 @@ namespace BLW\Type\Command;
 
 use BLW\Type\IConfig;
 use BLW\Type\IMediator;
-use BLW\Type\Command\IInput;
-use BLW\Type\Command\IOutput;
 
 // @codeCoverageIgnoreStart
 if (! defined('BLW')) {
@@ -165,14 +163,14 @@ interface ICommand extends \BLW\Type\IObject, \BLW\Type\IMediatable
      *
      * @param integer $Type
      *            Type of notification:
-	 *
+     *
      * <ul>
      * <li><b>GENERAL</b>: Gerenic notification.</li>
      * <li><b>RUN</b>: Triggered just before command run.</li>
      * <li><b>SHUTDOWN</b>: Triggered after command run.</li>
      * <li><b>ERROR</b>: Triggered on command error.</li>
      * </ul>
-	 *
+     *
      * @param array $Info
      *            Event context.
      * @return void

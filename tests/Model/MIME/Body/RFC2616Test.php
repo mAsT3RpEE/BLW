@@ -17,18 +17,12 @@
  */
 namespace BLW\Model\MIME\Body;
 
-use ReflectionMethod;
-use ReflectionProperty;
 
 use BLW\Type\MIME\IHeader;
 
-use BLW\Model\InvalidArgumentException;
-use BLW\Model\GenericFile;
 
 use BLW\Model\MIME\Body\RFC2616 as Body;
 use BLW\Model\MIME\Section;
-use BLW\Model\MIME\Part\Attachment;
-use BLW\Model\MIME\Part\QuotedPrintable;
 use BLW\Model\MIME\Part\FormField;
 use BLW\Model\MIME\Part\FormData;
 
@@ -172,9 +166,7 @@ class RFC2616Test extends \PHPUnit_Framework_TestCase
         try {
             $this->Body->addPart(NULL);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (\PHPUnit_Framework_Error $e) {}
+        } catch (\PHPUnit_Framework_Error $e) {}
 
         # Empty sections
         $this->assertTrue($this->Body->endSection(), 'RFC2616::endSection() should return true');

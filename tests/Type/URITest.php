@@ -61,8 +61,8 @@ class URITest extends \BLW\Type\IterableTest
     {
         return array(
              array(array(), '')
-        	,array(array('scheme' => 'http', 'host' => 'www.example.com', 'userinfo' => 'user:pass', 'query' => array('foo' => 'bar'), 'fragment' => 'fragment'), 'http://user:pass@www.example.com?foo=bar#fragment')
-        	,array(array('scheme' => 'http', 'host' => 'www.example.com', 'query' => false, 'fragment' => 'fragment'), 'http://www.example.com#fragment')
+            ,array(array('scheme' => 'http', 'host' => 'www.example.com', 'userinfo' => 'user:pass', 'query' => array('foo' => 'bar'), 'fragment' => 'fragment'), 'http://user:pass@www.example.com?foo=bar#fragment')
+            ,array(array('scheme' => 'http', 'host' => 'www.example.com', 'query' => false, 'fragment' => 'fragment'), 'http://www.example.com#fragment')
             ,array(parse_url('http://user:pass@www.example.com/path/to/file?foo=bar#fragment'), 'http://user:pass@www.example.com/path/to/file?foo=bar#fragment')
             ,array(parse_url('http://user@www.example.com?foo=bar#fragment'), 'http://user@www.example.com?foo=bar#fragment')
             ,array(parse_url('http://www.example.com?foo=bar#fragment') + array('pass' => 'pass'), 'http://anonymous:pass@www.example.com?foo=bar#fragment')
@@ -75,7 +75,7 @@ class URITest extends \BLW\Type\IterableTest
      */
     public function test_createURIString()
     {
-        for($i = $this->generateParts(); list($k,list($Input, $Expected)) = each($i);) {
+        for ($i = $this->generateParts(); list($k,list($Input, $Expected)) = each($i);) {
             $this->assertSame($Expected, $this->URI->createURIString($Input), 'IURI::createURIString() returned and invalid value');
         }
     }
@@ -84,7 +84,7 @@ class URITest extends \BLW\Type\IterableTest
     {
         return array(
              array('http://www.example.com', 'http://www.example.com')
-        	,array('ftp://ftp.is.co.za/rfc/rfc1808.txt', 'ftp://ftp.is.co.za/rfc/rfc1808.txt')
+            ,array('ftp://ftp.is.co.za/rfc/rfc1808.txt', 'ftp://ftp.is.co.za/rfc/rfc1808.txt')
             ,array('http://www.ietf.org/rfc/rfc2396.txt', 'http://www.ietf.org/rfc/rfc2396.txt')
             ,array('ldap://[2001:db8::7]/c=GB?objectClass?one', 'ldap://[2001:db8::7]/c=GB?objectClass%3Fone=')
             ,array('mailto:John.Doe@example.com', 'mailto:John.Doe@example.com')
@@ -106,13 +106,11 @@ class URITest extends \BLW\Type\IterableTest
     public function test_construct()
     {
         # Vald URI's
-        foreach($this->generateValidURIs() as $Params) {
+        foreach ($this->generateValidURIs() as $Params) {
 
             list($Input) = $Params;
 
-            try { $URI = $this->getMockForAbstractClass('\\BLW\\Type\\AURI', array($Input)); }
-
-            catch (\Exception $e) {
+            try { $URI = $this->getMockForAbstractClass('\\BLW\\Type\\AURI', array($Input)); } catch (\Exception $e) {
                 $this->fail(sprintf('Failded constructing URI with input (%s): %s', $Input, $e->getMessage()));
             }
         }
@@ -136,9 +134,7 @@ class URITest extends \BLW\Type\IterableTest
         try {
             $this->URI->__construct(NULL);
             $this->fail('Failed to generate exception on invalid parameter');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -153,7 +149,7 @@ class URITest extends \BLW\Type\IterableTest
     {
         return array(
              array('', '')
-        	,array('a/b/c/././g', 'a/b/c/g')
+            ,array('a/b/c/././g', 'a/b/c/g')
             ,array('/a/b/c/././g', '/a/b/c/g')
             ,array('a/b/c/././g/', 'a/b/c/g/')
             ,array('/a/b/c/././g/', '/a/b/c/g/')
@@ -173,7 +169,7 @@ class URITest extends \BLW\Type\IterableTest
     public function test_removeDotSegments()
     {
         # Valid input
-        foreach($this->generatePaths() as $Arguments) {
+        foreach ($this->generatePaths() as $Arguments) {
 
             list($Input, $Expected) = $Arguments;
 
@@ -184,19 +180,17 @@ class URITest extends \BLW\Type\IterableTest
         try {
             $this->URI->removeDotSegments(NULL);
             $this->fail('Failed to generate error on invalid arguments');
-        }
-
-        catch(InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     public function generateTLDs()
     {
         return array(
-        	 array('www.example.co.uk', 'co.uk')
-        	,array('www.example.tk', 'tk')
-        	,array('www.example.com.info', 'com.info')
-        	,array('www.example.biz.mobi', 'biz.mobi')
-        	,array('www.example.com.sa', 'com.sa')
+             array('www.example.co.uk', 'co.uk')
+            ,array('www.example.tk', 'tk')
+            ,array('www.example.com.info', 'com.info')
+            ,array('www.example.biz.mobi', 'biz.mobi')
+            ,array('www.example.com.sa', 'com.sa')
         );
     }
 
@@ -206,7 +200,7 @@ class URITest extends \BLW\Type\IterableTest
     public function test_parseTLD()
     {
         # Valid input
-        foreach($this->generateTLDs() as $Arguments) {
+        foreach ($this->generateTLDs() as $Arguments) {
 
             list($Input, $Expected) = $Arguments;
 
@@ -219,9 +213,7 @@ class URITest extends \BLW\Type\IterableTest
         try {
             $this->assertSame(false, $this->URI->parseTLD(array()), 'IURI::parseTLD(array()) returned an invalid value');
             $this->fail('Failed to generate warning with invalid parameter');
-        }
-
-        catch(\PHPUnit_Framework_Error_Warning $e) {}
+        } catch (\PHPUnit_Framework_Error_Warning $e) {}
     }
 
     /**
@@ -286,16 +278,12 @@ class URITest extends \BLW\Type\IterableTest
         try {
             $this->URI->parse('http://www.example.co.uk/path/file?query=1#fragment', array());
             $this->fail('Failed to generate exception with invalid argument');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
 
         try {
             $this->URI->parse(NULL);
             $this->fail('Failed to generate exception with invalid argument');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     public function generateRelativePaths()
@@ -314,7 +302,7 @@ class URITest extends \BLW\Type\IterableTest
         );
 
         return array(
-        	 array('g:h', 'g:h', array('scheme' => 'g', 'host' => '', 'path' => 'h') + $default)
+             array('g:h', 'g:h', array('scheme' => 'g', 'host' => '', 'path' => 'h') + $default)
             ,array('g', 'http://a/b/c/g', array('path' => '/b/c/g') + $default)
             ,array('./g', 'http://a/b/c/g', array('path' => '/b/c/g') + $default)
             ,array('g/', 'http://a/b/c/g/', array('path' => '/b/c/g/') + $default)
@@ -361,9 +349,7 @@ class URITest extends \BLW\Type\IterableTest
         try {
             $this->URI->resolve('', 0);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     public function generateInvalidURIs()
@@ -385,7 +371,7 @@ class URITest extends \BLW\Type\IterableTest
     public function test_isValid()
     {
         # Vald URI's
-        foreach($this->generateValidURIs() as $Params) {
+        foreach ($this->generateValidURIs() as $Params) {
 
             list($Input) = $Params;
 
@@ -395,7 +381,7 @@ class URITest extends \BLW\Type\IterableTest
         }
 
         # Invalld URI's
-        foreach($this->generateInvalidURIs() as $Params) {
+        foreach ($this->generateInvalidURIs() as $Params) {
 
             list($Input) = $Params;
 
@@ -428,7 +414,7 @@ class URITest extends \BLW\Type\IterableTest
     public function test_toString()
     {
         # Valid URI's
-        foreach($this->generateValidURIs() as $Params) {
+        foreach ($this->generateValidURIs() as $Params) {
 
             list($Input, $Expected) = $Params;
 
@@ -465,9 +451,7 @@ class URITest extends \BLW\Type\IterableTest
         try {
             $URI['undefined'];
             $this->fail('Failed to generate notice with undefined value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
         @$URI['undefined'];
     }
@@ -504,9 +488,7 @@ class URITest extends \BLW\Type\IterableTest
         try {
             $this->URI->offsetSet('undfined', 'bar');
             $this->fail('Failed to generate notice on readonly offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify', $e->getMessage(), 'Invalid Notice: '. $e->getMessage());
         }
 
@@ -523,9 +505,7 @@ class URITest extends \BLW\Type\IterableTest
         try {
             unset($this->URI['host']);
             $this->fail('Failed to generate notice on readonly offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify', $e->getMessage(), 'Invalid Notice: '. $e->getMessage());
         }
 

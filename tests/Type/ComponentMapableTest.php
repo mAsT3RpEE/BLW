@@ -17,11 +17,9 @@
  */
 namespace BLW\Type;
 
-use DOMDocument;
 use ReflectionProperty;
 use BadMethodCallException;
 
-use BLW\Type\IDataMapper;
 
 class MockComponent1089
 {
@@ -84,9 +82,7 @@ class ComponentMapableTest extends \PHPUnit_Framework_TestCase
         try {
             $this->ComponentMapable->undefined();
             $this->fail('Unable to raise exception on undefined function');
-        }
-
-        catch (BadMethodCallException $e) {}
+        } catch (BadMethodCallException $e) {}
     }
 
     /**
@@ -101,9 +97,7 @@ class ComponentMapableTest extends \PHPUnit_Framework_TestCase
         try {
             $this->ComponentMapable->undefined;
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Undefined property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -135,9 +129,7 @@ class ComponentMapableTest extends \PHPUnit_Framework_TestCase
         try {
             $this->ComponentMapable->undefined = 1;
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {}
+        } catch (\PHPUnit_Framework_Error_Warning $e) {}
 
         @$this->ComponentMapable->undefined = 1;
     }

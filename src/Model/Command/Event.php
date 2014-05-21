@@ -58,7 +58,7 @@ class Event extends \BLW\Type\AEvent
      *            The subject of the event, usually an object.
      * @param integer $Type
      *            Type of command event:
-	 *
+     *
      * <ul>
      * <li><b>GENERAL</b>: Gerenic notification.</li>
      * <li><b>RUN</b>: Triggered just before command run.</li>
@@ -68,7 +68,7 @@ class Event extends \BLW\Type\AEvent
      * <li><b>STDOUT</b>: Triggered on command output read.</li>
      * <li><b>STDERR</b>: Triggered on command error read.</li>
      * </ul>
-	 *
+     *
      * @param array $Context
      *            Arguments to store in the event.
      */

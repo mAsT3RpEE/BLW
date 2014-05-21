@@ -43,8 +43,6 @@ class HandleTest  extends \PHPUnit_Framework_TestCase
         try {
             new Stream(null);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 }

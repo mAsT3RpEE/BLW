@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\Subject;
 
 
 /**
@@ -45,7 +44,7 @@ class SubjectTest extends \PHPUnit_Framework_TestCase
         $this->Header      = new Subject('Test subject');
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -61,9 +60,9 @@ class SubjectTest extends \PHPUnit_Framework_TestCase
     public function generateValidSubjects()
     {
         return array(
-        	 array('test', 'test')
-        	,array('test with space', 'test with space')
-        	,array('`~!@#$%^&*()-_=+[{]}\\|;:\',<.>/?', '`~!@#$%^&*()-_=+[{]}\\|;:\',<.>/?')
+             array('test', 'test')
+            ,array('test with space', 'test with space')
+            ,array('`~!@#$%^&*()-_=+[{]}\\|;:\',<.>/?', '`~!@#$%^&*()-_=+[{]}\\|;:\',<.>/?')
             ,array('"""""still okay"""""""', 'still okay')
         );
     }
@@ -71,9 +70,9 @@ class SubjectTest extends \PHPUnit_Framework_TestCase
     public function generateInvalidSubjects()
     {
         return array(
-        	 array('', '')
+             array('', '')
             ,array('"""', '')
-        	,array(false, '')
+            ,array(false, '')
         );
     }
 
@@ -83,14 +82,14 @@ class SubjectTest extends \PHPUnit_Framework_TestCase
     public function test_parseSubject()
     {
         # Valid Subject
-        foreach($this->generateValidSubjects() as $Parameters) {
+        foreach ($this->generateValidSubjects() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseSubject($Original), 'Subject::parseSubject() returned an invalid format');
         }
 
         # Invalid Subject
-        foreach($this->generateInvalidSubjects() as $Parameters) {
+        foreach ($this->generateInvalidSubjects() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseSubject($Original), 'Subject::parseSubject() returned an invalid format');
@@ -111,9 +110,7 @@ class SubjectTest extends \PHPUnit_Framework_TestCase
         try {
             new Subject(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

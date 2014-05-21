@@ -1,9 +1,15 @@
+# Eclipse files
 /.settings
 /.buildpath
 /.project
 /.classpath
 /.metadata
+
+# Composer files
+/vendor/*
 /composer.lock
 /phpunit.phar
-/vendor/*
-/vendor/
+
+# Keep temp folder empty
+/temp/*
+!/temp/.keep

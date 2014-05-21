@@ -136,6 +136,7 @@ abstract class AMediatable implements \BLW\Type\IMediatable
         // Is mediator valid
         if ($Mediator instanceof IMediator) {
             $this->_Mediator = $Mediator;
+
             return IDataMapper::UPDATED;
 
         } else {
@@ -212,9 +213,7 @@ abstract class AMediatable implements \BLW\Type\IMediatable
 
             if ($Mediator instanceof IMediator) {
                 $Mediator->register("$ID.$EventName", $Callback, @intval($Priority));
-            }
-
-            else {
+            } else {
                 trigger_error(sprintf('Mediator not set with %s::setMediator()', get_class($this)), E_USER_NOTICE);
             }
         }

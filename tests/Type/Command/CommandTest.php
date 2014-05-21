@@ -17,9 +17,7 @@
  */
 namespace BLW\Type\Command;
 
-use ReflectionMethod;
 
-use BLW\Type\Command\IOutput;
 
 use BLW\Model\Config\Generic as GenericConfig;
 
@@ -135,9 +133,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         try {
             $this->getMockForAbstractClass('\\BLW\\Type\\Command\\ACommand', array($this->Action, $this->Config, $this->Mediator, array()));
             $this->fail('Failed to generate error with invalid $ID');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
         # Invalid config
         try {
@@ -157,7 +153,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $Called    = 0;
         $Arguments = array();
 
-        $this->Command->_on('Notify', function() use (&$Called, &$Arguments) {
+        $this->Command->_on('Notify', function () use (&$Called, &$Arguments) {
             $Called++;
             $Arguments = func_get_args();
         });
@@ -178,9 +174,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Command->doNotify(NULL);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch(InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -192,7 +186,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $Called = 0;
         $Type   = 0;
 
-        $this->Command->onNotify(function($Event) use (&$Called, &$Type) {$Called++; $Type = $Event->Type;});
+        $this->Command->onNotify(function ($Event) use (&$Called, &$Type) {$Called++; $Type = $Event->Type;});
         $this->Command->doNotify(-1);
 
         $this->assertEquals(1, $Called, 'ICommand::onNotify() Failed to register callback');
@@ -200,15 +194,13 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
         # No mediator
         $this->Command->clearMediator();
-        $this->assertFalse($this->Command->onNotify(function(){}), 'ICommand::doNotify() Should return false');
+        $this->assertFalse($this->Command->onNotify(function () {}), 'ICommand::doNotify() Should return false');
 
         # Invalid arguments
         try {
             $this->Command->onNotify(NULL);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch(InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -228,22 +220,20 @@ class CommandTest extends \PHPUnit_Framework_TestCase
     {
         $Called = 0;
 
-        $this->Command->onInput(function() use (&$Called) {$Called++;});
+        $this->Command->onInput(function () use (&$Called) {$Called++;});
         $this->Command->run($this->Input, $this->Output);
 
         $this->assertEquals(1, $Called, 'ICommand::onInput() Failed to register callback');
 
         # No mediator
         $this->Command->clearMediator();
-        $this->assertFalse($this->Command->onInput(function(){}), 'ICommand::doNotify() Should return false');
+        $this->assertFalse($this->Command->onInput(function () {}), 'ICommand::doNotify() Should return false');
 
         # Invalid arguments
         try {
             $this->Command->onInput(NULL);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch(InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
 
@@ -255,22 +245,20 @@ class CommandTest extends \PHPUnit_Framework_TestCase
     {
         $Called = 0;
 
-        $this->Command->onOutput(function() use (&$Called) {$Called++;});
+        $this->Command->onOutput(function () use (&$Called) {$Called++;});
         $this->Command->run($this->Input, $this->Output);
 
         $this->assertEquals(1, $Called, 'ICommand::onInput() Failed to register callback');
 
         # No mediator
         $this->Command->clearMediator();
-        $this->assertFalse($this->Command->onOutput(function(){}), 'ICommand::doNotify() Should return false');
+        $this->assertFalse($this->Command->onOutput(function () {}), 'ICommand::doNotify() Should return false');
 
         # Invalid arguments
         try {
             $this->Command->onOutput(NULL);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch(InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -281,22 +269,20 @@ class CommandTest extends \PHPUnit_Framework_TestCase
     {
         $Called = 0;
 
-        $this->Command->onError(function() use (&$Called) {$Called++;});
+        $this->Command->onError(function () use (&$Called) {$Called++;});
         $this->Command->run($this->Input, $this->Output);
 
         $this->assertEquals(1, $Called, 'ICommand::onInput() Failed to register callback');
 
         # No mediator
         $this->Command->clearMediator();
-        $this->assertFalse($this->Command->onError(function(){}), 'ICommand::doNotify() Should return false');
+        $this->assertFalse($this->Command->onError(function () {}), 'ICommand::doNotify() Should return false');
 
         # Invalid arguments
         try {
             $this->Command->onError(NULL);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch(InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -314,13 +300,13 @@ class CommandTest extends \PHPUnit_Framework_TestCase
      */
     public function test_get()
     {
-	    # Status
+        # Status
         $this->assertSame($this->readAttribute($this->Command, '_Status'), $this->Command->Status, 'ICommand::$Status should equal ICommand::_Status');
 
-	    # Serializer
-	    $this->assertSame($this->Command->getSerializer(), $this->Command->Serializer, 'ICommand::$Serializer should equal ICommand::getSerializer()');
+        # Serializer
+        $this->assertSame($this->Command->getSerializer(), $this->Command->Serializer, 'ICommand::$Serializer should equal ICommand::getSerializer()');
 
-	    # Parent
+        # Parent
         $this->assertSame($this->Command->getParent(), $this->Command->Parent, 'ICommand::$Parent should equal ICommand::getParent()');
 
         # ID
@@ -345,9 +331,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Command->undefined;
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
         $this->assertNull(@$this->Command->undefined, 'ICommand::$undefined should be NULL');
     }
@@ -362,13 +346,13 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         # Status
        $this->assertTrue(isset($this->Command->Serializer), 'ICommand::$Status should exist');
 
-	    # Serializer
-	    $this->assertTrue(isset($this->Command->Serializer), 'ICommand::$Serializer should exist');
+        # Serializer
+        $this->assertTrue(isset($this->Command->Serializer), 'ICommand::$Serializer should exist');
 
-	    # Parent
+        # Parent
         $this->assertFalse(isset($this->Command->Parent), 'ICommand::$Parent should not exist');
 
-	    # ID
+        # ID
         $this->assertTrue(isset($this->Command->ID), 'ICommand::$ID should exist');
 
         # Mediator
@@ -400,9 +384,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Command->Status = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -412,9 +394,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Command->Serializer = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -429,9 +409,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Command->Parent = null;
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -440,9 +418,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Command->Parent = $Parent;
             $this->fail('Failed to generate notice with oneshot value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -454,9 +430,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Command->ID = null;
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -471,9 +445,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Command->Mediator = null;
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -483,9 +455,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Command->MediatorID = 'foo';
             $this->fail('Failed to generate notice with readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -495,9 +465,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Command->Command = null;
             $this->fail('Failed to generate notice with readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -507,9 +475,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Command->Config = null;
             $this->fail('Failed to generate notice with readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -519,9 +485,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Command->Default = null;
             $this->fail('Failed to generate notice with readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -531,9 +495,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Command->undefined = '';
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error $e) {
+        } catch (\PHPUnit_Framework_Error $e) {
             $this->assertContains('non-existant property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 

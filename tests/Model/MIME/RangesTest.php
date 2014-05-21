@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\Range;
 
 
 /**
@@ -28,7 +27,7 @@ use BLW\Model\MIME\Range;
  *
  * @coversDefaultClass \BLW\Model\Mime\Range
  */
-class RangeTest extends \PHPUnit_Framework_TestCase
+class RangesTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \BLW\Model\MIME\Range
@@ -45,7 +44,7 @@ class RangeTest extends \PHPUnit_Framework_TestCase
         $this->Header      = new Range('bytes=0-500');
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -61,21 +60,21 @@ class RangeTest extends \PHPUnit_Framework_TestCase
     public function generateValidTypes()
     {
         return array(
-        	 array('token=0-500', 'token=0-500')
-        	,array(';;token=0-500;;;', 'token=0-500')
-        	,array('"token=0-500"', 'token=0-500')
-        	,array('token=-500', 'token=-500')
-        	,array('token=0-', 'token=0-')
-        	,array('token=500-1000,', 'token=500-1000')
-        	,array('token=0-500,500-1000', 'token=0-500,500-1000')
+             array('token=0-500', 'token=0-500')
+            ,array(';;token=0-500;;;', 'token=0-500')
+            ,array('"token=0-500"', 'token=0-500')
+            ,array('token=-500', 'token=-500')
+            ,array('token=0-', 'token=0-')
+            ,array('token=500-1000,', 'token=500-1000')
+            ,array('token=0-500,500-1000', 'token=0-500,500-1000')
         );
     }
 
     public function generateInvalidTypes()
     {
         return array(
-        	 array(false, 'bytes=0-0')
-        	,array(new \stdClass, 'bytes=0-0')
+             array(false, 'bytes=0-0')
+            ,array(new \stdClass, 'bytes=0-0')
             ,array(array(), 'bytes=0-0')
         );
     }
@@ -86,14 +85,14 @@ class RangeTest extends \PHPUnit_Framework_TestCase
     public function test_parseRanges()
     {
         # Valid type
-        foreach($this->generateValidTypes() as $Parameters) {
+        foreach ($this->generateValidTypes() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseRanges($Original), 'Range::parseRanges() returned an invalid format');
         }
 
         # Invalid type
-        foreach($this->generateInvalidTypes() as $Parameters) {
+        foreach ($this->generateInvalidTypes() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseRanges($Original), 'Range::parseRanges() returned an invalid format');
@@ -116,9 +115,7 @@ class RangeTest extends \PHPUnit_Framework_TestCase
         try {
             new Range(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

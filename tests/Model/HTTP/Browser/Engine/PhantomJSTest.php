@@ -18,7 +18,6 @@
 namespace BLW\Model\HTTP\Browser\Engine;
 
 use ReflectionProperty;
-use ReflectionMethod;
 
 use BLW\Model\GenericFile;
 use BLW\Model\InvalidArgumentException;
@@ -57,16 +56,16 @@ class PhantomJSTest extends \PHPUnit_Framework_TestCase
         $JSONConfig = dirname(dirname(dirname(dirname(__DIR__)))) . DIRECTORY_SEPARATOR . 'Config' . DIRECTORY_SEPARATOR;
 
         return array(
-        	array(
-    	         new GenericFile('phantomjs')
-    	        ,new GenericFile("{$JSONConfig}phantomjs.json")
-    	        ,new Config(array(
-                	 'Timeout'     => 10
+            array(
+                 new GenericFile('phantomjs')
+                ,new GenericFile("{$JSONConfig}phantomjs.json")
+                ,new Config(array(
+                     'Timeout'     => 10
                     ,'CWD'         => NULL
                     ,'Environment' => NULL
                     ,'Extras'      => array()
                 ))
-	        )
+            )
         );
     }
 
@@ -104,18 +103,20 @@ class PhantomJSTest extends \PHPUnit_Framework_TestCase
      */
     public function test_phantomStart()
     {
-        $Process = function($Engine) {
+        $Process = function ($Engine) {
             $Property = new ReflectionProperty($Engine, '_Process');
             $Property->setAccessible(true);
+
             return $Property->getValue($Engine);
         };
 
-        $fp = function($Engine) {
+        $fp = function ($Engine) {
             $Property = new ReflectionProperty($Engine, '_Process');
             $Property->setAccessible(true);
             $Process  = $Property->getValue($Engine);
             $Property = new ReflectionProperty($Process, '_fp');
             $Property->setAccessible(true);
+
             return $Property->getValue($Process);
         };
 
@@ -136,18 +137,20 @@ class PhantomJSTest extends \PHPUnit_Framework_TestCase
      */
     public function test_phantomRestart()
     {
-        $Process = function($Engine) {
+        $Process = function ($Engine) {
             $Property = new ReflectionProperty($Engine, '_Process');
             $Property->setAccessible(true);
+
             return $Property->getValue($Engine);
         };
 
-        $fp = function($Engine) {
+        $fp = function ($Engine) {
             $Property = new ReflectionProperty($Engine, '_Process');
             $Property->setAccessible(true);
             $Process  = $Property->getValue($Engine);
             $Property = new ReflectionProperty($Process, '_fp');
             $Property->setAccessible(true);
+
             return $Property->getValue($Process);
         };
 
@@ -171,12 +174,13 @@ class PhantomJSTest extends \PHPUnit_Framework_TestCase
      */
     public function test_phantomStop()
     {
-        $fp = function($Engine) {
+        $fp = function ($Engine) {
             $Property = new ReflectionProperty($Engine, '_Process');
             $Property->setAccessible(true);
             $Process  = $Property->getValue($Engine);
             $Property = new ReflectionProperty($Process, '_fp');
             $Property->setAccessible(true);
+
             return $Property->getValue($Process);
         };
 
@@ -201,11 +205,9 @@ class PhantomJSTest extends \PHPUnit_Framework_TestCase
 
         # Invalid args
         try {
-        	$this->Engine->phantom(NULL);
-        	$this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+            $this->Engine->phantom(NULL);
+            $this->fail('Failed to generate exception with invalid arguments');
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -245,33 +247,33 @@ class PhantomJSTest extends \PHPUnit_Framework_TestCase
             }
         ],
         "entries": [
-			{
-            	"request": {
-                	"url": "about:blank"
-            	},
-            	"response": {
-                	"redirectURL": "about:none"
-            	}
-        	},
-        	{
-            	"request": {
-                	"url": "about:none"
-            	},
-            	"response": {
-	                "redirectURL": null,
-    	            "httpVersion": "HTTP/1.1",
-        	        "status": 200,
-					"headers": [
-						{"name": "User-Agent", "value": "foo"},
-						{"name": "Setcookie", "value": "bar1=1"},
-						{"name": "Setcookie", "value": "bar2=1"}
-					],
-                	"content": {
-                    	"mimeType": "text/html"
-                	}
-				}
-        	}
-		]
+            {
+                "request": {
+                    "url": "about:blank"
+                },
+                "response": {
+                    "redirectURL": "about:none"
+                }
+            },
+            {
+                "request": {
+                    "url": "about:none"
+                },
+                "response": {
+                    "redirectURL": null,
+                    "httpVersion": "HTTP/1.1",
+                    "status": 200,
+                    "headers": [
+                        {"name": "User-Agent", "value": "foo"},
+                        {"name": "Setcookie", "value": "bar1=1"},
+                        {"name": "Setcookie", "value": "bar2=1"}
+                    ],
+                    "content": {
+                        "mimeType": "text/html"
+                    }
+                }
+            }
+        ]
     }
 }
 EOT;
@@ -297,7 +299,7 @@ EOT;
         $Executable  = NULL;
         $ConfigFile  = NULL;
         $self        = $this;
-        $ConfigMinus = function($k = NULL) use ($self, &$Executable, &$ConfigFile) {
+        $ConfigMinus = function ($k = NULL) use ($self, &$Executable, &$ConfigFile) {
             list(list($Executable, $ConfigFile, $Config)) = $self->generateValidArgs();
 
             if(isset($k)) unset($Config[$k]);
@@ -307,11 +309,11 @@ EOT;
         $ConfigMinus();
 
         return array(
-        	 array($Executable, $ConfigFile, $ConfigMinus('Timeout'))
-        	,array($Executable, $ConfigFile, $ConfigMinus('CWD'))
-        	,array($Executable, $ConfigFile, $ConfigMinus('Environment'))
-        	,array($Executable, $ConfigFile, $ConfigMinus('Extras'))
-        	,array($Executable, new GenericFile('1:undefined.c'), $ConfigMinus())
+             array($Executable, $ConfigFile, $ConfigMinus('Timeout'))
+            ,array($Executable, $ConfigFile, $ConfigMinus('CWD'))
+            ,array($Executable, $ConfigFile, $ConfigMinus('Environment'))
+            ,array($Executable, $ConfigFile, $ConfigMinus('Extras'))
+            ,array($Executable, new GenericFile('1:undefined.c'), $ConfigMinus())
         );
     }
 
@@ -329,14 +331,12 @@ EOT;
         $this->Engine = new Engine($Executable, $ConfigFile, $Config);
 
         # Invalid arguments
-        for($args=$this->generateInvalidArgs(); list($k,list($Executable, $ConfigFile, $Config)) = each($args);) {
+        for ($args=$this->generateInvalidArgs(); list($k,list($Executable, $ConfigFile, $Config)) = each($args);) {
 
             try {
                 new Engine($Executable, $ConfigFile, $Config);
                 $this->fail('Failed generating exception with invalid arguments');
-            }
-
-            catch (InvalidArgumentException $e) {}
+            } catch (InvalidArgumentException $e) {}
         }
     }
 
@@ -349,7 +349,7 @@ EOT;
         $URI     = new GenericURI('about:blank');
         $Referer = new GenericURI('about:blank');
         $Data    = array(
-        	 'foo'    => 1
+             'foo'    => 1
             ,'bar'    => 'trololololo'
             ,'upload' => new GenericFile(__FILE__)
         );
@@ -439,10 +439,8 @@ EOT;
             $Event->Command = NULL;
 
             $this->Browser->_do('Phantom.Command', $Event);
-        	$this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (\RuntimeException $e) {}
+            $this->fail('Failed to generate exception with invalid arguments');
+        } catch (\RuntimeException $e) {}
     }
 
     /**
@@ -485,7 +483,7 @@ EOT;
         return array(
              array()
             ,array($Node)
-        	,array($Node, NULL)
+            ,array($Node, NULL)
             ,array(NULL, 'console.log(this);')
         );
     }
@@ -508,19 +506,15 @@ EOT;
         try {
             $this->Browser->evaluateNode($Node, '____undefined____');
             $this->fail('Failed to generate exception with invalid JavaScript');
-        }
-
-        catch (\RuntimeException $e) {}
+        } catch (\RuntimeException $e) {}
 
         # Invalid arguments
-        foreach($this->generateInvalidNodeArgs() as $Arguments) {
+        foreach ($this->generateInvalidNodeArgs() as $Arguments) {
 
             try {
                 call_user_func_array(array($this->Browser, 'evaluateNode'), $Arguments);
                 $this->fail('Failed to generate exception with invalid arguments');
-            }
-
-            catch(\RuntimeException $e) {}
+            } catch (\RuntimeException $e) {}
         }
     }
 
@@ -529,7 +523,7 @@ EOT;
         return array(
              array()
             ,array('/html/body')
-        	,array('/html/body', NULL)
+            ,array('/html/body', NULL)
             ,array(NULL, 'console.log(this);')
         );
     }
@@ -551,27 +545,21 @@ EOT;
         try {
             $this->Browser->evaluateXPath('/html/body', '____undefined____');
             $this->fail('Failed to generate exception with invalid JavaScript');
-        }
-
-        catch (\RuntimeException $e) {}
+        } catch (\RuntimeException $e) {}
 
         # Invalid xpath
         try {
             $this->Browser->evaluateXPath('\\html\\body', 'console.log(this);');
             $this->fail('Failed to generate exception with invalid XPath');
-        }
-
-        catch (\RuntimeException $e) {}
+        } catch (\RuntimeException $e) {}
 
         # Invalid arguments
-        foreach($this->generateInvalidXPathArgs() as $Arguments) {
+        foreach ($this->generateInvalidXPathArgs() as $Arguments) {
 
             try {
                 call_user_func_array(array($this->Browser, 'evaluateXPath'), $Arguments);
                 $this->fail('Failed to generate exception with invalid arguments');
-            }
-
-            catch(\RuntimeException $e) {}
+            } catch (\RuntimeException $e) {}
         }
     }
 
@@ -580,7 +568,7 @@ EOT;
         return array(
              array()
             ,array('html > body')
-        	,array('html > body', NULL)
+            ,array('html > body', NULL)
             ,array(NULL, 'console.log(this);')
         );
     }
@@ -602,27 +590,21 @@ EOT;
         try {
             $this->Browser->evaluateCSS('html > body', '____undefined____');
             $this->fail('Failed to generate exception with invalid JavaScript');
-        }
-
-        catch (\RuntimeException $e) {}
+        } catch (\RuntimeException $e) {}
 
         # Invalid CSS Selector
         try {
             $this->Browser->evaluateCSS('html <> body', 'console.log(this);');
             $this->fail('Failed to generate exception with invalid Selector');
-        }
-
-        catch (\RuntimeException $e) {}
+        } catch (\RuntimeException $e) {}
 
         # Invalid arguments
-        foreach($this->generateInvalidSelectorArgs() as $Arguments) {
+        foreach ($this->generateInvalidSelectorArgs() as $Arguments) {
 
             try {
                 call_user_func_array(array($this->Browser, 'evaluateCSS'), $Arguments);
                 $this->fail('Failed to generate exception with invalid arguments');
-            }
-
-            catch(\RuntimeException $e) {}
+            } catch (\RuntimeException $e) {}
         }
     }
 

@@ -46,7 +46,7 @@ class HeaderTest extends \PHPUnit_Framework_TestCase
         $this->Header      = $this->getMockForAbstractClass('\\BLW\\Type\\MIME\\AHeader');
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -83,10 +83,10 @@ class HeaderTest extends \PHPUnit_Framework_TestCase
     public function generateValidParameters()
     {
         return array(
-        	 array('name', 'image.gif', '; name=image.gif')
-        	,array('foo', '1', '; foo=1')
-        	,array('Charset', 'utf-8', '; charset=utf-8')
-        	,array('Charset', '"utf-8"', '; charset="utf-8"')
+             array('name', 'image.gif', '; name=image.gif')
+            ,array('foo', '1', '; foo=1')
+            ,array('Charset', 'utf-8', '; charset=utf-8')
+            ,array('Charset', '"utf-8"', '; charset="utf-8"')
             ,array('Charset', 'utf-8 with spaces', '; charset="utf-8 with spaces"')
             ,array('Charset', 'utf-8"" with quotes ""', '; charset="utf-8   with quotes"')
             ,array('CapitalInWord', '    ', '; capitalinword=""')
@@ -96,7 +96,7 @@ class HeaderTest extends \PHPUnit_Framework_TestCase
     public function generateInvalidParameters()
     {
         return array(
-        	 array('pre-;-post', 'test')
+             array('pre-;-post', 'test')
             ,array('pre-?-post', 'test')
             ,array('pre-(-post', 'test')
             ,array('pre-)-post', 'test')
@@ -109,22 +109,20 @@ class HeaderTest extends \PHPUnit_Framework_TestCase
    public function test_parseParameter()
    {
         # Valid parameter
-        foreach($this->generateValidParameters() as $Parameters) {
+        foreach ($this->generateValidParameters() as $Parameters) {
             list($Argument, $Value, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseParameter($Argument, $Value), 'ContentType::parseParameter() returned an invalid format');
         }
 
         # Invalid parameter
-        foreach($this->generateInvalidParameters() as $Parameters) {
+        foreach ($this->generateInvalidParameters() as $Parameters) {
             list($Argument, $Value) = $Parameters;
 
             try {
                 $this->Header->parseParameter($Argument, $Value);
                 $this->fail('Failed to generate exception with invalid parameter');
-            }
-
-            catch (InvalidArgumentException $e) {}
+            } catch (InvalidArgumentException $e) {}
         }
     }
 

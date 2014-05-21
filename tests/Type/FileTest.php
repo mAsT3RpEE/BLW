@@ -19,7 +19,6 @@ namespace BLW\Type;
 
 use SplFileObject;
 
-use BLW\Type\IFile;
 use BLW\Model\InvalidArgumentException;
 use BLW\Model\FileException;
 
@@ -89,9 +88,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         try {
             $this->getMockForAbstractClass('\\BLW\\Type\\AFile', array(NULL));
             $this->fail('Failed to generate exception with invalid argument');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -103,7 +100,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
         # With context
         $Context = stream_context_create(array(), array(
-        'notification' => function(){}
+        'notification' => function () {}
         ));
 
         $this->assertEquals(file_get_contents(__FILE__), $this->File->getContents(IFile::FILE_FLAGS, $Context), 'IFile::getContents() should equal file_get_contents(__FILE__)');
@@ -125,7 +122,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
         # With context
         $Context = stream_context_create(array(), array(
-            'notification' => function(){}
+            'notification' => function () {}
         ));
 
         $File->putContents($Test, $Context);
@@ -136,9 +133,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         try {
             $this->File->putContents(NULL);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch(InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     public function generateFlags()
@@ -265,9 +260,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         try {
             $File->valid();
             $this->fail('Failed to generate warning with closed file');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
         @$File->valid();
 
@@ -286,9 +279,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         try {
             $File->current();
             $this->fail('Failed to generate warning with closed file');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
         @$File->current();
 
@@ -307,9 +298,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         try {
             $File->key();
             $this->fail('Failed to generate warning with closed file');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
         @$File->key();
 
@@ -332,9 +321,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         try {
             $File->next();
             $this->fail('Failed to generate warning with closed file');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
         @$File->next();
 
@@ -360,9 +347,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         try {
             $File->rewind();
             $this->fail('Failed to generate warning with closed file');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
         @$File->rewind();
 
@@ -387,9 +372,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         try {
             $File->getChildren();
             $this->fail('Failed to generate warning with closed file');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
         @$File->getChildren();
 
@@ -408,9 +391,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         try {
             $File->hasChildren();
             $this->fail('Failed to generate warning with closed file');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
         @$File->hasChildren();
 
@@ -429,9 +410,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         try {
             $File->seek(2);
             $this->fail('Failed to generate warning with closed file');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
         @$File->seek(2);
 

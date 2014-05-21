@@ -17,7 +17,6 @@
  */
 namespace BLW\Model\Stream;
 
-use BLW\Type\IFile;
 use BLW\Type\IStream;
 use BLW\Model\Stream\File as Stream;
 use BLW\Model\InvalidArgumentException;
@@ -77,9 +76,7 @@ class StreamTest extends \BLW\Type\IterableTest
         try {
             $this->Stream->getContents();
             $this->fail('Failed to generate notice with invalid $_fp');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('invalid resource', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -99,7 +96,7 @@ class StreamTest extends \BLW\Type\IterableTest
         $fp->setAccessible(false);
 
         return array(
-        	 array($TestString, $TestString)
+             array($TestString, $TestString)
             ,array($TestString, fopen("data://text/plain,$TestString", 'r'))
             ,array($TestString, $Stream)
         );
@@ -124,9 +121,7 @@ class StreamTest extends \BLW\Type\IterableTest
         try {
             $this->Stream->putContents(null);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
 
         # Invalid stream
         $Property = new \ReflectionProperty($this->Stream, '_fp');
@@ -137,9 +132,7 @@ class StreamTest extends \BLW\Type\IterableTest
         try {
             $this->Stream->putContents('foo');
             $this->fail('Failed to generate notice with invalid $_fp');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('invalid resource', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -163,9 +156,7 @@ class StreamTest extends \BLW\Type\IterableTest
         try {
             $this->Stream->addFilter('invalid.filter', STREAM_FILTER_WRITE);
             $this->fail('IStream::addFilter() should throw an exception');
-        }
-
-        catch(InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
 
         # Invalid stream
         $Property = new \ReflectionProperty($this->Stream, '_fp');
@@ -176,9 +167,7 @@ class StreamTest extends \BLW\Type\IterableTest
         try {
             $this->Stream->addFilter('string.rot13');
             $this->fail('Failed to generate notice with invalid $_fp');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('invalid resource', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -208,9 +197,7 @@ class StreamTest extends \BLW\Type\IterableTest
         try {
             $this->Stream->remFilter($Filter);
             $this->fail('IStream::remFilter() should throw an exception');
-        }
-
-        catch(InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -248,9 +235,7 @@ class StreamTest extends \BLW\Type\IterableTest
         try {
             $this->Stream->undefined;
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
         $this->assertNull(@$this->Stream->undefined, 'IStream::$undefined should be NULL');
     }
@@ -290,9 +275,7 @@ class StreamTest extends \BLW\Type\IterableTest
         try {
             $this->Stream->Status = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -302,9 +285,7 @@ class StreamTest extends \BLW\Type\IterableTest
         try {
             $this->Stream->Serializer = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -319,9 +300,7 @@ class StreamTest extends \BLW\Type\IterableTest
         try {
             $this->Stream->Parent = null;
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -330,9 +309,7 @@ class StreamTest extends \BLW\Type\IterableTest
         try {
             $this->Stream->Parent = $Parent;
             $this->fail('Failed to generate notice with oneshot value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -340,9 +317,7 @@ class StreamTest extends \BLW\Type\IterableTest
         try {
             $this->Stream->ID = 'foo';
             $this->fail('Failed to generate notice with redonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -352,9 +327,7 @@ class StreamTest extends \BLW\Type\IterableTest
         try {
             $this->Stream->fp = null;
             $this->fail('Failed to generate notice with readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -364,9 +337,7 @@ class StreamTest extends \BLW\Type\IterableTest
         try {
             $this->Stream->undefined = '';
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error $e) {
+        } catch (\PHPUnit_Framework_Error $e) {
             $this->assertContains('non-existant property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 

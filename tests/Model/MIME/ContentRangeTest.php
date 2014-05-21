@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\ContentRange;
 
 
 /**
@@ -45,7 +44,7 @@ class ContentRangeTest extends \PHPUnit_Framework_TestCase
         $this->Header      = new ContentRange('bytes 0-500/500');
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -61,7 +60,7 @@ class ContentRangeTest extends \PHPUnit_Framework_TestCase
     public function generateValidRanges()
     {
         return array(
-        	 array('bytes 0-500/1024', 'bytes 0-500/1024')
+             array('bytes 0-500/1024', 'bytes 0-500/1024')
             ,array('bytes 0-500/*', 'bytes 0-500/*')
         );
     }
@@ -69,8 +68,8 @@ class ContentRangeTest extends \PHPUnit_Framework_TestCase
     public function generateInvalidRanges()
     {
         return array(
-        	 array('foo', 'invalid')
-        	,array(false, 'invalid')
+             array('foo', 'invalid')
+            ,array(false, 'invalid')
             ,array(new \stdClass, 'invalid')
             ,array(array(), 'invalid')
         );
@@ -82,14 +81,14 @@ class ContentRangeTest extends \PHPUnit_Framework_TestCase
     public function test_parseRange()
     {
         # Valid Range
-        foreach($this->generateValidRanges() as $Parameters) {
+        foreach ($this->generateValidRanges() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseRange($Original), 'ContentRange::parseRange() returned an invalid format');
         }
 
         # Invalid Range
-        foreach($this->generateInvalidRanges() as $Parameters) {
+        foreach ($this->generateInvalidRanges() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseRange($Original), 'ContentRange::parseRange() returned an invalid format');
@@ -112,9 +111,7 @@ class ContentRangeTest extends \PHPUnit_Framework_TestCase
         try {
             new ContentRange(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

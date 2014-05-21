@@ -22,9 +22,6 @@ use BLW\Type\IEventSubscriber;
 use BLW\Type\IEvent;
 use BLW\Model\Mediator\Symfony as Mediator;
 
-use ReflectionObject;
-use PHPUnit_Framework_Error_Notice;
-use PHPUnit_Framework_Error;
 use BLW\Model\GenericEvent;
 
 class CallableClass
@@ -152,7 +149,7 @@ class SymfonyTest extends \PHPUnit_Framework_TestCase
         # Register Listener
         $this->assertTrue($this->Mediator->register('pre.foo',  array($this->Listener, 'preFoo')), 'IMediator::register() should return true');
         $this->assertTrue($this->Mediator->register('post.foo', array($this->Listener, 'postFoo')), 'IMediator::register() should return true');
-        $this->assertTrue($this->Mediator->register('post.foo', function() {}), 'IMediator::register() should return true');
+        $this->assertTrue($this->Mediator->register('post.foo', function () {}), 'IMediator::register() should return true');
     }
 
     /**
@@ -385,7 +382,7 @@ class SymfonyTest extends \PHPUnit_Framework_TestCase
         $Event = new GenericEvent;
 
         $this->Mediator->register('foo', array($Test, 'foo'));
-        $this->Mediator->register('foo', function($Event) {$Event->stopPropagation();}, -100);
+        $this->Mediator->register('foo', function ($Event) {$Event->stopPropagation();}, -100);
         $this->Mediator->trigger('foo', $Event);
 
         $this->assertSame($Event, $Test->Event, 'IMediator::trigger() did not pass event object to registered callback');

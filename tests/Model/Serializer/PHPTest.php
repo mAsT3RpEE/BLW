@@ -19,7 +19,6 @@ namespace BLW\Model\Serializer;
 
 use BLW\Type\ISerializer;
 use BLW\Model\Serializer\PHP as Serializer;
-use BLW\Type\ASerializable;
 
 /**
  * Tests BLW Library object serializer.

@@ -21,9 +21,6 @@ if (!class_exists('\\BLW\\Tests\\Type\\IterableTest'))
     include_once 'IterableTest.php';
 
 
-use BLW\Type\IDataMapper;
-use BLW\Type\ISerializer;
-use BLW\Type\ISerializable;
 
 
 /**
@@ -142,25 +139,23 @@ class SerializerTest extends \BLW\Type\IterableTest
      */
     public function test_get()
     {
-	    # Status
+        # Status
         $this->assertAttributeSame($this->Serializer->Status, '_Status', $this->Serializer, 'ISerializer::$Status should equal ISerializer::_Status');
 
-	    # Serializer
-	    $this->assertSame($this->Serializer->getSerializer(), $this->Serializer->Serializer, 'ISerializer::$Serializer should equal ISerializer::getSerializer()');
+        # Serializer
+        $this->assertSame($this->Serializer->getSerializer(), $this->Serializer->Serializer, 'ISerializer::$Serializer should equal ISerializer::getSerializer()');
 
-	    # Parent
+        # Parent
         $this->assertNULL($this->Serializer->Parent, 'ISerializer::$Parent should initially be NULL');
 
         # ID
         $this->assertSame($this->Serializer->ID, $this->Serializer->getID(), 'ISerializer::$ID should equal ISerializer::getID()');
 
-	    # Test undefined property
+        # Test undefined property
         try {
             $this->Serializer->undefined;
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Undefined property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -175,13 +170,13 @@ class SerializerTest extends \BLW\Type\IterableTest
         # Status
        $this->assertTrue(isset($this->Serializer->Serializer), 'ISerializer::$Status should exist');
 
-	    # Serializer
-	    $this->assertTrue(isset($this->Serializer->Serializer), 'ISerializer::$Serializer should exist');
+        # Serializer
+        $this->assertTrue(isset($this->Serializer->Serializer), 'ISerializer::$Serializer should exist');
 
-	    # Parent
+        # Parent
         $this->assertFalse(isset($this->Serializer->Parent), 'ISerializer::$Parent should not exist');
 
-	    # ID
+        # ID
         $this->assertTrue(isset($this->Serializer->ID), 'ISerializer::$ID should exist');
 
         # Test undefined property
@@ -197,9 +192,7 @@ class SerializerTest extends \BLW\Type\IterableTest
         try {
             $this->Serializer->Status = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -209,9 +202,7 @@ class SerializerTest extends \BLW\Type\IterableTest
         try {
             $this->Serializer->Serializer = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -226,9 +217,7 @@ class SerializerTest extends \BLW\Type\IterableTest
         try {
             $this->Serializer->Parent = null;
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -237,9 +226,7 @@ class SerializerTest extends \BLW\Type\IterableTest
         try {
             $this->Serializer->Parent = $Parent;
             $this->fail('Failed to generate notice with oneshot value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -247,9 +234,7 @@ class SerializerTest extends \BLW\Type\IterableTest
         try {
             $this->Serializer->ID = 'foo';
             $this->fail('Failed to generate notice with readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -259,9 +244,7 @@ class SerializerTest extends \BLW\Type\IterableTest
         try {
             $this->Serializer->undefined = '';
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error $e) {
+        } catch (\PHPUnit_Framework_Error $e) {
             $this->assertContains('non-existant property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 

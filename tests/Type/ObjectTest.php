@@ -17,9 +17,7 @@
  */
 namespace BLW\Type;
 
-use ArrayObject;
 use ReflectionProperty;
-use BLW\Type\IDataMapper;
 use BLW\Model\InvalidArgumentException;
 
 
@@ -61,13 +59,13 @@ class ObjectTest extends \BLW\Type\IterableTest
         $this->DataMapper
             ->expects($this->any())
             ->method('offsetGet')
-            ->will($this->returnCallback(function($name){
+            ->will($this->returnCallback(function ($name) {
 
                 if ($name == 'foo')
                     return 1;
 
                 elseif ($name == 'callable')
-                    return function(){return -1;};
+                    return function () {return -1;};
 
                 else
                     trigger_error('Undefined property '. $name);
@@ -76,7 +74,7 @@ class ObjectTest extends \BLW\Type\IterableTest
         $this->DataMapper
             ->expects($this->any())
             ->method('offsetExists')
-            ->will($this->returnCallback(function($name){
+            ->will($this->returnCallback(function ($name) {
 
                 if ($name == 'foo' || $name == 'callable')
                     return true;
@@ -87,10 +85,9 @@ class ObjectTest extends \BLW\Type\IterableTest
         $this->DataMapper
             ->expects($this->any())
             ->method('offsetSet')
-            ->will($this->returnCallback(function($name){
+            ->will($this->returnCallback(function ($name) {
 
-                switch($name)
-                {
+                switch ($name) {
                     case 'foo':
                         return IDataMapper::UPDATED;
                     case 'readonly':
@@ -126,7 +123,7 @@ class ObjectTest extends \BLW\Type\IterableTest
     }
 
     /**
-	 * @dataProvider generateInputs
+     * @dataProvider generateInputs
      * @covers ::createID
      */
     public function test_createID($Input)
@@ -140,9 +137,7 @@ class ObjectTest extends \BLW\Type\IterableTest
         try {
             $this->Object->createID(array());
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -164,68 +159,64 @@ class ObjectTest extends \BLW\Type\IterableTest
         try {
             $foo = $this->getMockForAbstractClass('\\BLW\\Type\\AObject', array($this->DataMapper, array()));
             $this->fail('Unable to generate exception on invalid $ID');
-        }
-
-        catch(InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
-	/**
-	 * @depends test_construct
+    /**
+     * @depends test_construct
      * @covers ::getInstance
-	 */
-	public function test_getInstance()
-	{
-	    $class = get_class($this->Object);
+     */
+    public function test_getInstance()
+    {
+        $class = get_class($this->Object);
 
-	    $this->assertInstanceOf('\\BLW\\Type\\IObject', $class::getInstance($this->DataMapper), '$this->Object should be an instance of IObject');
-	}
+        $this->assertInstanceOf('\\BLW\\Type\\IObject', $class::getInstance($this->DataMapper), '$this->Object should be an instance of IObject');
+    }
 
-	public function generateIDs()
-	{
-	    return array(
-	    	 array(1,       NULL)
+    public function generateIDs()
+    {
+        return array(
+             array(1,       NULL)
             ,array(1.0,     array())
             ,array('bar',   new \DOMNode)
             ,array(true,    NULL)
             ,array(false,   NULL)
             ,array(new \SplFileInfo(__FILE__), NULL)
-	    );
-	}
+        );
+    }
 
-	/**
-	 * @dataProvider generateIDs
+    /**
+     * @dataProvider generateIDs
      * @covers ::setID
-	 */
-	public function test_setID($Valid, $Invalid)
-	{
-	    $this->assertNotEquals($Valid, $this->Object->getID(), 'ID should not initially equal $ID');
-	    $this->assertEquals(IDataMapper::UPDATED, $this->Object->setID($Valid), 'setID should return IDataMapper::UPDATED');
-	    $this->assertEquals($Valid, $this->Object->getID(), 'ID should now equal $ID');
+     */
+    public function test_setID($Valid, $Invalid)
+    {
+        $this->assertNotEquals($Valid, $this->Object->getID(), 'ID should not initially equal $ID');
+        $this->assertEquals(IDataMapper::UPDATED, $this->Object->setID($Valid), 'setID should return IDataMapper::UPDATED');
+        $this->assertEquals($Valid, $this->Object->getID(), 'ID should now equal $ID');
 
-	    # Test invalid ID
-	    $this->assertEquals(IDataMapper::INVALID, $this->Object->setID($Invalid), 'setID should return IDataMapper::INVALID');
-	}
+        # Test invalid ID
+        $this->assertEquals(IDataMapper::INVALID, $this->Object->setID($Invalid), 'setID should return IDataMapper::INVALID');
+    }
 
-	/**
-	 * @covers ::__call
-	 */
-	public function test_call()
-	{
-	    # Variable functions
-	    $this->assertSame(-1, $this->Object->callable(), 'IObject::__call() Failed to convert variable function');
+    /**
+     * @covers ::__call
+     */
+    public function test_call()
+    {
+        # Variable functions
+        $this->assertSame(-1, $this->Object->callable(), 'IObject::__call() Failed to convert variable function');
 
-	    # Undefined
-	    try {
-	        $this->Object->undefined();
-	        $this->fail('Failed to generate warning with undefined method');
-	    }
-
-	    catch (\PHPUnit_Framework_Error_Warning $e) {
-	        $this->assertContains('non-existant method', $e->getMessage(), 'Invalid warning: '. $e->getMessage());
-	    }
+        # Undefined
+        try {
+            $this->Object->undefined();
+            $this->fail('Failed to generate warning with undefined method');
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
+            $this->assertContains('non-existant method', $e->getMessage(), 'Invalid warning: '. $e->getMessage());
+        }
 
         @$this->Object->undefined();
-	}
+    }
 
     /**
      * @depends test_construct
@@ -233,13 +224,13 @@ class ObjectTest extends \BLW\Type\IterableTest
      */
     public function test_get()
     {
-	    # Status
+        # Status
         $this->assertSame($this->readAttribute($this->Object, '_Status'), $this->Object->Status, 'IObject::$Status should equal IObject::_Status');
 
-	    # Serializer
-	    $this->assertSame($this->Object->getSerializer(), $this->Object->Serializer, 'IObject::$Serializer should equal IObject::getSerializer()');
+        # Serializer
+        $this->assertSame($this->Object->getSerializer(), $this->Object->Serializer, 'IObject::$Serializer should equal IObject::getSerializer()');
 
-	    # Parent
+        # Parent
         $this->assertSame($this->Object->getParent(), $this->Object->Parent, 'IObject::$Parent should equal IObject::getParent()');
 
         # ID
@@ -252,9 +243,7 @@ class ObjectTest extends \BLW\Type\IterableTest
         try {
             $this->Object->undefined;
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
         $this->assertNull(@$this->Object->undefined, 'IObject::$undefined should be NULL');
     }
@@ -268,13 +257,13 @@ class ObjectTest extends \BLW\Type\IterableTest
         # Status
        $this->assertTrue(isset($this->Object->Serializer), 'IObject::$Status should exist');
 
-	    # Serializer
-	    $this->assertTrue(isset($this->Object->Serializer), 'IObject::$Serializer should exist');
+        # Serializer
+        $this->assertTrue(isset($this->Object->Serializer), 'IObject::$Serializer should exist');
 
-	    # Parent
+        # Parent
         $this->assertFalse(isset($this->Object->Parent), 'IObject::$Parent should not exist');
 
-	    # ID
+        # ID
         $this->assertTrue(isset($this->Object->ID), 'IObject::$ID should exist');
 
         # DataMapped
@@ -294,9 +283,7 @@ class ObjectTest extends \BLW\Type\IterableTest
         try {
             $this->Object->Status = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -306,9 +293,7 @@ class ObjectTest extends \BLW\Type\IterableTest
         try {
             $this->Object->Serializer = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -323,9 +308,7 @@ class ObjectTest extends \BLW\Type\IterableTest
         try {
             $this->Object->Parent = null;
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -334,9 +317,7 @@ class ObjectTest extends \BLW\Type\IterableTest
         try {
             $this->Object->Parent = $Parent;
             $this->fail('Failed to generate notice with oneshot value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -348,9 +329,7 @@ class ObjectTest extends \BLW\Type\IterableTest
         try {
             $this->Object->ID = null;
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -360,9 +339,7 @@ class ObjectTest extends \BLW\Type\IterableTest
         try {
             $this->Object->undefined= null;
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('non-existant property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -372,9 +349,7 @@ class ObjectTest extends \BLW\Type\IterableTest
         try {
             $this->Object->readonly= null;
             $this->fail('Failed to generate notice with readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -384,9 +359,7 @@ class ObjectTest extends \BLW\Type\IterableTest
         try {
             $this->Object->invalid = null;
             $this->fail('Failed to generate notice with readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -419,13 +392,13 @@ class ObjectTest extends \BLW\Type\IterableTest
     /**
      * @covers ::__toString
      */
-	public function test__toString()
-	{
+    public function test__toString()
+    {
         global $BLW_Serializer;
 
         $BLW_Serializer = new \BLW\Model\Serializer\Mock;
 
         $this->assertNotEmpty(strval($this->Object), '(string) IObject should not be empty');
-	    $this->assertInternalType('string', $this->Object->__toString(), 'IObject::__toString() Returned an invalid value');
-	}
+        $this->assertInternalType('string', $this->Object->__toString(), 'IObject::__toString() Returned an invalid value');
+    }
 }

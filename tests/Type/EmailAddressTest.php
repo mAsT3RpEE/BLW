@@ -78,7 +78,7 @@ class EmailAddressTest extends \BLW\Type\IterableTest
     public function generateValidAddresses()
     {
         return array(
-        	 array('niceandsimple@example.com', 'niceandsimple@example.com')
+             array('niceandsimple@example.com', 'niceandsimple@example.com')
 
             # Valid addressses
             ,array('very.common@example.com', 'very.common@example.com')
@@ -152,7 +152,7 @@ class EmailAddressTest extends \BLW\Type\IterableTest
      */
     public function test_getRegex()
     {
-        foreach($this->generateRegexs() as $Arguments) {
+        foreach ($this->generateRegexs() as $Arguments) {
 
             list($Regex) = $Arguments;
 
@@ -190,13 +190,11 @@ class EmailAddressTest extends \BLW\Type\IterableTest
     public function test_construct()
     {
         # Vald Adresses
-        foreach($this->generateValidAddresses() as $Params) {
+        foreach ($this->generateValidAddresses() as $Params) {
 
             list($Input) = $Params;
 
-            try { $Email = $this->getMockForAbstractClass('\\BLW\\Type\\AEmailAddress', array($Input)); }
-
-            catch (\Exception $e) {
+            try { $Email = $this->getMockForAbstractClass('\\BLW\\Type\\AEmailAddress', array($Input)); } catch (\Exception $e) {
                 $this->fail(sprintf('Failded constructing EmailAddress with input (%s): %s', $Input, $e->getMessage()));
             }
         }
@@ -213,17 +211,13 @@ class EmailAddressTest extends \BLW\Type\IterableTest
         try {
             $this->Email->__construct(NULL);
             $this->fail('Failed to generate exception on invalid parameter');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
 
         # Test invalid Personal
         try {
             $this->Email->__construct('test@foo.com', array());
             $this->fail('Failed to generate exception on invalid parameter');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -233,7 +227,7 @@ class EmailAddressTest extends \BLW\Type\IterableTest
     public function test_isValid()
     {
         # Vald Addresses
-        foreach($this->generateValidAddresses() as $Params) {
+        foreach ($this->generateValidAddresses() as $Params) {
 
             list($Input) = $Params;
 
@@ -243,7 +237,7 @@ class EmailAddressTest extends \BLW\Type\IterableTest
         }
 
         # Invalld URI's
-        foreach($this->generateInvalidAddresses() as $Params) {
+        foreach ($this->generateInvalidAddresses() as $Params) {
 
             list($Input, $Expected) = $Params;
 
@@ -264,7 +258,7 @@ class EmailAddressTest extends \BLW\Type\IterableTest
         $this->AssertEquals('Test User <test@example.com>', strval($Email), '(string) IEmailAddress should equal `Test User <test@example.com>`');
 
         # Valid Addresses
-        foreach($this->generateValidAddresses() as $Params) {
+        foreach ($this->generateValidAddresses() as $Params) {
 
             list($Input, $Expected) = $Params;
 
@@ -274,7 +268,7 @@ class EmailAddressTest extends \BLW\Type\IterableTest
         }
 
         # Invalid Addresses
-        foreach($this->generateInvalidAddresses() as $Params) {
+        foreach ($this->generateInvalidAddresses() as $Params) {
 
             list($Input, $Expected) = $Params;
 
@@ -294,7 +288,7 @@ class EmailAddressTest extends \BLW\Type\IterableTest
     {
         $Email = $this->getMockForAbstractClass('\\BLW\\Type\\AEmailAddress', array($Input));
 
-        foreach($this->Email->parse($Input) as $k => $v) {
+        foreach ($this->Email->parse($Input) as $k => $v) {
             $this->assertSame($v, $Email[$k], sprintf('IEmailAddress[%s] should equal `%s`', $k, @strval($v)));
         }
 
@@ -302,9 +296,7 @@ class EmailAddressTest extends \BLW\Type\IterableTest
         try {
             $this->Email['undefined'];
             $this->fail('Failed to generate notice with undefined offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
         @$this->Email['undefined'];
     }
@@ -319,7 +311,7 @@ class EmailAddressTest extends \BLW\Type\IterableTest
     {
         $Email = $this->getMockForAbstractClass('\\BLW\\Type\\AEmailAddress', array($Input));
 
-        foreach($this->Email->parse($Input) as $k => $v) {
+        foreach ($this->Email->parse($Input) as $k => $v) {
             $this->assertArrayHasKey($k, $Email, sprintf('IEmailAddress[%s] should exist', $k));
         }
     }
@@ -333,9 +325,7 @@ class EmailAddressTest extends \BLW\Type\IterableTest
         try {
             $this->Email['Personal'] = 'Test User';
             $this->fail('Failed to generate notice on readonly offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify', $e->getMessage(), 'Invalid Notice: '. $e->getMessage());
         }
 
@@ -352,9 +342,7 @@ class EmailAddressTest extends \BLW\Type\IterableTest
         try {
             unset($this->Email['Personal']);
             $this->fail('Failed to generate notice on readonly offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify', $e->getMessage(), 'Invalid Notice: '. $e->getMessage());
         }
 

@@ -19,7 +19,6 @@ namespace BLW\Type\HTTP;
 
 use DateTime;
 use ReflectionProperty;
-use ReflectionMethod;
 
 use BLW\Type\IDataMapper;
 
@@ -63,7 +62,7 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
     /**
      * @var \BLW\Type\HTTP\IClient
      */
-    protected  $Client = NULL;
+    protected $Client = NULL;
     /**
      * @var \BLW\Type\IContainer
      */
@@ -345,7 +344,7 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         $called = 0;
 
         $this->Browser->_on('go', array($this->Browser, 'doGo'));
-        $this->Browser->_on('Page.Ready', function() use (&$called) {$called++;});
+        $this->Browser->_on('Page.Ready', function () use (&$called) {$called++;});
 
         # Normal browsing
         $this->Browser->go('http://example.com');
@@ -399,8 +398,8 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
 
         $this->Browser->_on('go', array($this->Browser, 'doGo'));
         $this->Browser->_on('back', array($this->Browser, 'doBack'));
-        $this->Browser->_on('notice', function($e) use(&$LastNotice) {$LastNotice = $e->Arguments[0];});
-        $this->Browser->_on('debug', function($e) use(&$LastDebug) {$LastDebug = $e->Arguments[0];});
+        $this->Browser->_on('notice', function ($e) use (&$LastNotice) {$LastNotice = $e->Arguments[0];});
+        $this->Browser->_on('debug', function ($e) use (&$LastDebug) {$LastDebug = $e->Arguments[0];});
 
         # Empty history
         $this->Browser->back();
@@ -454,8 +453,8 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         $this->Browser->_on('go', array($this->Browser, 'doGo'));
         $this->Browser->_on('back', array($this->Browser, 'doBack'));
         $this->Browser->_on('forward', array($this->Browser, 'doForward'));
-        $this->Browser->_on('notice', function($e) use(&$LastNotice) {$LastNotice = $e->Arguments[0];});
-        $this->Browser->_on('debug', function($e) use(&$LastDebug) {$LastDebug = $e->Arguments[0];});
+        $this->Browser->_on('notice', function ($e) use (&$LastNotice) {$LastNotice = $e->Arguments[0];});
+        $this->Browser->_on('debug', function ($e) use (&$LastDebug) {$LastDebug = $e->Arguments[0];});
 
         # Empty history
         $this->Browser->forward();
@@ -540,18 +539,14 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Browser->warning('test');
             $this->fail('IBrowser::doWarning() Failed to generate notice');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
         @$this->Browser->warning('test');
 
         try {
             $this->Browser->warning(new \SplFileInfo(__FILE__));
             $this->fail('IBrowser::doWarning() Failed to generate notice');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
         @$this->Browser->warning(new \SplFileInfo(__FILE__));
 
@@ -569,18 +564,14 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Browser->error('test');
             $this->fail('IBrowser::doError() Failed to generate warning');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {}
+        } catch (\PHPUnit_Framework_Error_Warning $e) {}
 
         @$this->Browser->error('test');
 
         try {
             $this->Browser->error(new \SplFileInfo(__FILE__));
             $this->fail('IBrowser::doError() Failed to generate warning');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {}
+        } catch (\PHPUnit_Framework_Error_Warning $e) {}
 
         @$this->Browser->error(new \SplFileInfo(__FILE__));
 
@@ -598,16 +589,12 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Browser->exception('test');
             $this->fail('IBrowser::doException() Failed to generate exception');
-        }
-
-        catch (\RuntimeException $e) {}
+        } catch (\RuntimeException $e) {}
 
         try {
             $this->Browser->exception(new \SplFileInfo(__FILE__));
             $this->fail('IBrowser::doException() Failed to generate exception');
-        }
-
-        catch (\RuntimeException $e) {}
+        } catch (\RuntimeException $e) {}
 
         $this->Browser->exception(null);
         $this->Browser->exception();
@@ -618,13 +605,13 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
      */
     public function test_get()
     {
-	    # Status
+        # Status
         $this->assertAttributeSame($this->Browser->Status, '_Status', $this->Browser, 'IBrowser::$Status should equal IBrowser::_Status');
 
-	    # Serializer
-	    $this->assertSame($this->Browser->Serializer, $this->Browser->getSerializer(), 'IBrowser::$Serializer should equal IBrowser::getSerializer()');
+        # Serializer
+        $this->assertSame($this->Browser->Serializer, $this->Browser->getSerializer(), 'IBrowser::$Serializer should equal IBrowser::getSerializer()');
 
-	    # Parent
+        # Parent
         $this->assertNULL($this->Browser->Parent, 'IBrowser::$Parent should initially be NULL');
 
         # ID
@@ -656,9 +643,7 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Browser->undefined;
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Undefined property', $e->getMessage(), 'IBrowser::$undefined is undefined and should raise a notice');
         }
 
@@ -673,13 +658,13 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         # Status
        $this->assertTrue(isset($this->Browser->Status), 'IBrowser::$Status should exist');
 
-	    # Serializer
-	    $this->assertTrue(isset($this->Browser->Serializer), 'IBrowser::$Serializer should exist');
+        # Serializer
+        $this->assertTrue(isset($this->Browser->Serializer), 'IBrowser::$Serializer should exist');
 
-	    # Parent
+        # Parent
         $this->assertFalse(isset($this->Browser->Parent), 'IBrowser::$Parent should not exist');
 
-	    # ID
+        # ID
         $this->assertEquals(isset($this->Browser->ID), $this->Browser->getID() !== NULL, 'IBrowser::$ID should exist');
 
         # Component
@@ -717,9 +702,7 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Browser->Status = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -729,9 +712,7 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Browser->Serializer = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -746,9 +727,7 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Browser->Parent = null;
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -757,9 +736,7 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Browser->Parent = $Parent;
             $this->fail('Failed to generate notice with oneshot value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -767,9 +744,7 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Browser->ID = 'foo';
             $this->fail('Failed to generate notice with readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -777,21 +752,17 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
 
         # Component
         try {
-        	$this->Browser->Component = $this->Component;
-        	$this->fail('Failed generating notice with readonly property');
-        }
+            $this->Browser->Component = $this->Component;
+            $this->fail('Failed generating notice with readonly property');
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        @$this->Browser->Component = $this->Component;
 
-    	@$this->Browser->Component = $this->Component;
-
-	    # Client
+        # Client
         try {
             $this->Browser->Client = 'foo';
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -801,9 +772,7 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Browser->RequestFactory = 'foo';
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -813,9 +782,7 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Browser->Engines = 'foo';
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -825,9 +792,7 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Browser->Plugins = 'foo';
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -840,9 +805,7 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Browser->UserAgent = null;
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 

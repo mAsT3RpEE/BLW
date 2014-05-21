@@ -18,7 +18,6 @@
 namespace BLW\Model\HTTP\Client\CURL;
 
 use DateTime;
-use BLW\Model\HTTP\Client\CURL\Helper;
 use BLW\Model\InvalidArgumentException;
 
 
@@ -61,9 +60,7 @@ class HelperTest  extends \PHPUnit_Framework_TestCase
         try {
             new Helper(null);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -114,9 +111,7 @@ class HelperTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Helper->freeHandle(null);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -190,17 +185,13 @@ class HelperTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Helper->execute(null, array());
             $this->fail('Failed to generate exeption with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
 
         # Invalid cURL options
         try {
             $this->Helper->execute($this->Helper->FreeHandles[3], array('foo' => 1));
             $this->fail('Failed to generate exception with invalid cURL options');
-        }
-
-        catch (\RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             $this->assertContains('Unable to set', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
     }

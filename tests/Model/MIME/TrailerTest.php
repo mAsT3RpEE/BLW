@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\Trailer;
 
 
 /**
@@ -45,7 +44,7 @@ class TrailerTest extends \PHPUnit_Framework_TestCase
         $this->Header      = new Trailer('Content-Type');
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -61,17 +60,17 @@ class TrailerTest extends \PHPUnit_Framework_TestCase
     public function generateValidFields()
     {
         return array(
-        	 array('token', 'token')
-        	,array(';;token, ;;; foo;;', 'token')
-        	,array('"token"', 'token')
+             array('token', 'token')
+            ,array(';;token, ;;; foo;;', 'token')
+            ,array('"token"', 'token')
         );
     }
 
     public function generateInvalidFields()
     {
         return array(
-        	 array(false, '')
-        	,array(new \stdClass, '')
+             array(false, '')
+            ,array(new \stdClass, '')
             ,array(array(), '')
         );
     }
@@ -82,14 +81,14 @@ class TrailerTest extends \PHPUnit_Framework_TestCase
     public function test_parseFieldName()
     {
         # Valid type
-        foreach($this->generateValidFields() as $Parameters) {
+        foreach ($this->generateValidFields() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseFieldName($Original), 'Trailer::parseFieldName() returned an invalid format');
         }
 
         # Invalid type
-        foreach($this->generateInvalidFields() as $Parameters) {
+        foreach ($this->generateInvalidFields() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseFieldName($Original), 'Trailer::parseFieldName() returned an invalid format');
@@ -113,9 +112,7 @@ class TrailerTest extends \PHPUnit_Framework_TestCase
         try {
             new Trailer(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

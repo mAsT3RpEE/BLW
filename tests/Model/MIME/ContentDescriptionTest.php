@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\ContentDescription;
 
 
 /**
@@ -45,7 +44,7 @@ class ContentDescriptionTest extends \PHPUnit_Framework_TestCase
         $this->Header      = new ContentDescription('Test description');
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -61,9 +60,9 @@ class ContentDescriptionTest extends \PHPUnit_Framework_TestCase
     public function generateValidDescriptions()
     {
         return array(
-        	 array('test', 'test')
-        	,array('test with space', 'test with space')
-        	,array('`~!@#$%^&*()-_=+[{]}\\|;:\',<.>/?', '`~!@#$%^&*()-_=+[{]}\\|;:\',<.>/?')
+             array('test', 'test')
+            ,array('test with space', 'test with space')
+            ,array('`~!@#$%^&*()-_=+[{]}\\|;:\',<.>/?', '`~!@#$%^&*()-_=+[{]}\\|;:\',<.>/?')
             ,array('"""""still okay"""""""', 'still okay')
         );
     }
@@ -71,9 +70,9 @@ class ContentDescriptionTest extends \PHPUnit_Framework_TestCase
     public function generateInvalidDescriptions()
     {
         return array(
-        	 array('', '')
+             array('', '')
             ,array('"""', '')
-        	,array(false, '')
+            ,array(false, '')
         );
     }
 
@@ -83,14 +82,14 @@ class ContentDescriptionTest extends \PHPUnit_Framework_TestCase
     public function test_parseDescription()
     {
         # Valid Description
-        foreach($this->generateValidDescriptions() as $Parameters) {
+        foreach ($this->generateValidDescriptions() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseDescription($Original), 'ContentDescription::parseDescription() returned an invalid format');
         }
 
         # Invalid Description
-        foreach($this->generateInvalidDescriptions() as $Parameters) {
+        foreach ($this->generateInvalidDescriptions() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseDescription($Original), 'ContentDescription::parseDescription() returned an invalid format');
@@ -111,9 +110,7 @@ class ContentDescriptionTest extends \PHPUnit_Framework_TestCase
         try {
             new ContentDescription(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

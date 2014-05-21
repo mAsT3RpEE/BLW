@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\ContentType;
 
 
 /**
@@ -45,7 +44,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->Header      = new ContentType('text/plain', array('charset' => 'utf-8'));
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -61,9 +60,9 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
     public function generateValidTypes()
     {
         return array(
-        	 array('image/gif', 'image/gif')
-        	,array(';;image/gif;;', 'image/gif')
-        	,array('"image/gif"', 'image/gif')
+             array('image/gif', 'image/gif')
+            ,array(';;image/gif;;', 'image/gif')
+            ,array('"image/gif"', 'image/gif')
             ,array('x-test/x-test', 'x-test/x-test')
         );
     }
@@ -71,10 +70,10 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
     public function generateInvalidTypes()
     {
         return array(
-        	 array('foo', 'text/plain')
+             array('foo', 'text/plain')
             ,array('image / gif', 'text/plain')
-        	,array(false, 'text/plain')
-        	,array('test/plain', 'text/plain')
+            ,array(false, 'text/plain')
+            ,array('test/plain', 'text/plain')
         );
     }
 
@@ -84,14 +83,14 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
     public function test_parseType()
     {
         # Valid type
-        foreach($this->generateValidTypes() as $Parameters) {
+        foreach ($this->generateValidTypes() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseType($Original), 'ContentType::parseType() returned an invalid format');
         }
 
         # Invalid type
-        foreach($this->generateInvalidTypes() as $Parameters) {
+        foreach ($this->generateInvalidTypes() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseType($Original), 'ContentType::parseType() returned an invalid format');
@@ -112,9 +111,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         try {
             new ContentType(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
 
         # No parameters
         $this->Header = new ContentType('text/plain');
@@ -124,9 +121,7 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
         try {
             new ContentType('text/plain', array('???' => '???'));
             $this->fail('Failed to generate notice with invalid arguments');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
     }
 
     /**

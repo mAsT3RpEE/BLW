@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\ContentEncoding;
 
 
 /**
@@ -48,17 +47,17 @@ class ContentEncodingTest extends \PHPUnit_Framework_TestCase
     public function generateValidEncodings()
     {
         return array(
-        	 array('gzip', 'gzip')
-        	,array(';;gzip, ;;; unicode-1-1;;', 'gzip')
-        	,array('"gzip"', 'gzip')
+             array('gzip', 'gzip')
+            ,array(';;gzip, ;;; unicode-1-1;;', 'gzip')
+            ,array('"gzip"', 'gzip')
         );
     }
 
     public function generateInvalidEncodings()
     {
         return array(
-        	 array(false, '')
-        	,array(new \stdClass, '')
+             array(false, '')
+            ,array(new \stdClass, '')
             ,array(array(), '')
         );
     }
@@ -69,14 +68,14 @@ class ContentEncodingTest extends \PHPUnit_Framework_TestCase
     public function test_parseEncoding()
     {
         # Valid type
-        foreach($this->generateValidEncodings() as $Parameters) {
+        foreach ($this->generateValidEncodings() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseEncoding($Original), 'ContentEncoding::parseEncoding() returned an invalid format');
         }
 
         # Invalid type
-        foreach($this->generateInvalidEncodings() as $Parameters) {
+        foreach ($this->generateInvalidEncodings() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseEncoding($Original), 'ContentEncoding::parseEncoding() returned an invalid format');
@@ -100,9 +99,7 @@ class ContentEncodingTest extends \PHPUnit_Framework_TestCase
         try {
             new ContentEncoding(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

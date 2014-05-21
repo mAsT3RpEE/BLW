@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\Boundary;
 
 
 /**
@@ -45,7 +44,7 @@ class BoundaryTest extends \PHPUnit_Framework_TestCase
         $this->Header      = new Boundary('0-00000:=000000', true);
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -61,9 +60,9 @@ class BoundaryTest extends \PHPUnit_Framework_TestCase
     public function generateValidIDs()
     {
         return array(
-        	 array('abcdefgh@example.com', 'abcdefgh@example.com')
-        	,array('12345678@example.com', '12345678@example.com')
-        	,array('"abcd.1234"@example.com', '"abcd.1234"@example.com')
+             array('abcdefgh@example.com', 'abcdefgh@example.com')
+            ,array('12345678@example.com', '12345678@example.com')
+            ,array('"abcd.1234"@example.com', '"abcd.1234"@example.com')
             ,array(';;;ab_cd.12-34@exam-pl_e.co.uk;;;', 'ab_cd.12-34@exam-pl_e.co.uk')
         );
     }
@@ -71,18 +70,18 @@ class BoundaryTest extends \PHPUnit_Framework_TestCase
     public function generateInvalidIDs()
     {
         return array(
-        	 array('', self::CONTENT_ID)
+             array('', self::CONTENT_ID)
             ,array('root', self::CONTENT_ID)
             ,array('1234567', self::CONTENT_ID)
-        	,array(false, self::CONTENT_ID)
-        	,array(NULL, self::CONTENT_ID)
+            ,array(false, self::CONTENT_ID)
+            ,array(NULL, self::CONTENT_ID)
         );
     }
     public function generateValidBoundarys()
     {
         return array(
-        	 array('test', 'test')
-        	,array('test with space', 'test')
+             array('test', 'test')
+            ,array('test with space', 'test')
             ,array('"""""st-ill_okay:="""""""', 'st-ill_okay:=')
         );
     }
@@ -90,9 +89,9 @@ class BoundaryTest extends \PHPUnit_Framework_TestCase
     public function generateInvalidBoundarys()
     {
         return array(
-        	 array('', '')
+             array('', '')
             ,array('"""', '')
-        	,array(false, '')
+            ,array(false, '')
         );
     }
 
@@ -102,14 +101,14 @@ class BoundaryTest extends \PHPUnit_Framework_TestCase
     public function test_parseBoundary()
     {
         # Valid Boundary
-        foreach($this->generateValidBoundarys() as $Parameters) {
+        foreach ($this->generateValidBoundarys() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseBoundary($Original), 'Boundary::parseBoundary() returned an invalid format');
         }
 
         # Invalid Boundary
-        foreach($this->generateInvalidBoundarys() as $Parameters) {
+        foreach ($this->generateInvalidBoundarys() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseBoundary($Original), 'Boundary::parseBoundary() returned an invalid format');
@@ -130,16 +129,12 @@ class BoundaryTest extends \PHPUnit_Framework_TestCase
         try {
             new Boundary(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
 
         try {
             new Boundary('a');
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

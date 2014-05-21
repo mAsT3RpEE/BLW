@@ -24,10 +24,8 @@ use BLW\Model\Stream\Handle;
 
 Application::configure();
 
-Application::run(function (BLW\Type\Command\IInput $Input, BLW\Type\Command\IOutput $Output, BLW\Type\Command\ICommand $Command)
-{
-    $Print = function($Message) use(&$Output, &$Command)
-    {
+Application::run(function (BLW\Type\Command\IInput $Input, BLW\Type\Command\IOutput $Output, BLW\Type\Command\ICommand $Command) {
+    $Print = function ($Message) use (&$Output, &$Command) {
         $Output->write("$Message\r\n");
         $Command->Config['Logger']->debug($Message);
     };
@@ -43,7 +41,7 @@ Application::run(function (BLW\Type\Command\IInput $Input, BLW\Type\Command\IOut
     $ShellInput->Options[] = new Option('testsuite', 'Types');
     $ShellInput->Options[] = new Option('coverage-php', 'temp/coverage-types.serialized');
     $PHPUnit               = new ShellCommand('phpunit', new Config(array(
-    	'Timeout'       => 60,
+        'Timeout'       => 60,
         'CWD'           => dirname(__DIR__),
         'Environment'   => null,
         'Extras'        => array(),

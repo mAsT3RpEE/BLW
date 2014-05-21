@@ -18,8 +18,6 @@
 namespace BLW\Model\Cron\Job;
 
 use DateInterval;
-use ReflectionProperty;
-use ReflectionMethod;
 
 use BLW\Model\InvalidArgumentException;
 
@@ -66,6 +64,7 @@ class GenericTest extends \PHPUnit_Framework_TestCase
         $this->Command      = new CallbackCommand(function ($Input, $Output) {
 
             $Output->write('foo');
+
             return 0;
 
         }, new GenericConfig(array('Timeout' => 10)));
@@ -95,9 +94,7 @@ class GenericTest extends \PHPUnit_Framework_TestCase
         try {
             new Job($this->Command, new DateInterval('PT1S'));
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

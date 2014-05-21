@@ -20,7 +20,6 @@ namespace BLW\Model\MIME;
 use BLW\Model\InvalidArgumentException;
 use BLW\Model\GenericContainer;
 use BLW\Model\GenericEmailAddress;
-use BLW\Model\MIME\ReplyTo;
 
 
 /**
@@ -60,7 +59,7 @@ class ReplyToTest extends \PHPUnit_Framework_TestCase
         $this->Field         = new ReplyTo($this->AddressList);
         $this->Properties     = array(
              'Type'  => new \ReflectionProperty($this->Field, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Field, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Field, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -86,9 +85,7 @@ class ReplyToTest extends \PHPUnit_Framework_TestCase
         try {
             new ReplyTo(new GenericContainer);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

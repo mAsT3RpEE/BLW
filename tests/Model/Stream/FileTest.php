@@ -100,7 +100,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         $fp->setAccessible(false);
 
         return array(
-        	 array($TestString, $TestString)
+             array($TestString, $TestString)
             ,array($TestString, fopen("data://text/plain,$TestString", 'r'))
             ,array($TestString, $Stream)
         );
@@ -122,13 +122,13 @@ class FileTest extends \PHPUnit_Framework_TestCase
      */
     public function test_get()
     {
-	    # Status
+        # Status
         $this->assertAttributeSame($this->Stream->Status, '_Status', $this->Stream, 'IObject::$Status should equal IObject::_Status');
 
-	    # Serializer
-	    $this->assertSame($this->Stream->Serializer, $this->Stream->getSerializer(), 'IObject::$Serializer should equal IObject::getSerializer()');
+        # Serializer
+        $this->assertSame($this->Stream->Serializer, $this->Stream->getSerializer(), 'IObject::$Serializer should equal IObject::getSerializer()');
 
-	    # Parent
+        # Parent
         $this->assertNULL($this->Stream->Parent, 'IObject::$Parent should initially be NULL');
 
         # ID
@@ -150,9 +150,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Stream->undefined;
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Undefined property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -167,13 +165,13 @@ class FileTest extends \PHPUnit_Framework_TestCase
         # Status
         $this->assertTrue(isset($this->Stream->Serializer), 'IObject::$Status should exist');
 
-	    # Serializer
-	    $this->assertTrue(isset($this->Stream->Serializer), 'IObject::$Serializer should exist');
+        # Serializer
+        $this->assertTrue(isset($this->Stream->Serializer), 'IObject::$Serializer should exist');
 
-	    # Parent
+        # Parent
         $this->assertFalse(isset($this->Stream->Parent), 'IObject::$Parent should not exist');
 
-	    # ID
+        # ID
         $this->assertTrue(isset($this->Stream->ID), 'IObject::$ID should exist');
 
         # fp
@@ -201,9 +199,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Stream->Status = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -213,9 +209,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Stream->Serializer = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -230,9 +224,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Stream->Parent = null;
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -241,9 +233,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Stream->Parent = $Parent;
             $this->fail('Failed to generate notice with oneshot value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -251,21 +241,17 @@ class FileTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Stream->ID = 'foo';
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
         @$this->Stream->ID = 'foo';
 
-	    # fp
+        # fp
         try {
             $this->Stream->fp = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -275,9 +261,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Stream->File = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -287,9 +271,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Stream->Flags = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -299,9 +281,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Stream->Options = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -311,9 +291,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Stream->undefined = 0;
             $this->fail('Failed to generate warning on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('non-existant', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 

@@ -104,9 +104,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Event->undefined;
             $this->fail('Failed to generate notice on undefined property');
-        }
-
-        catch(\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Undefined property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -138,9 +136,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Event->Subject = NULL;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -166,9 +162,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
         try {
             unset($this->Event->Subject);
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 

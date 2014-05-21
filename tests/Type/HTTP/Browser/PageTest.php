@@ -19,7 +19,6 @@ namespace BLW\Type\HTTP\Browser;
 
 use DateTime;
 use ReflectionProperty;
-use ReflectionMethod;
 
 use BLW\Type\IDataMapper;
 
@@ -86,7 +85,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     public function generateInvalidDates()
     {
         return array(
-        	 array(NULL)
+             array(NULL)
             ,array('foo')
             ,array(array())
             ,array(new \stdClass)
@@ -172,7 +171,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     {
         $Called = 0;
 
-        $this->Page->_on('test', function() use(&$Called) {$Called++;});
+        $this->Page->_on('test', function () use (&$Called) {$Called++;});
 
         # Component function
         $this->assertTrue($this->Page->loadHTML('<div>foo</div>'), 'IPage::validate() Should return true');
@@ -191,7 +190,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(2, $Called, 'IPage::test() Generated event.');
 
         # Variable function
-        $this->Page->foo = function() use(&$Called) {$Called++;};
+        $this->Page->foo = function () use (&$Called) {$Called++;};
 
         $this->Page->foo();
 
@@ -206,10 +205,10 @@ class PageTest extends \PHPUnit_Framework_TestCase
         # Status
         $this->assertAttributeSame($this->Page->Status, '_Status', $this->Page, 'IPage::$Status should equal IPage::_Status');
 
-	    # Serializer
+        # Serializer
         $this->assertSame($this->Page->getSerializer(), $this->Page->Serializer, 'IPage::$Serializer should equal IPage::getSerializer()');
 
-	    # Parent
+        # Parent
         $this->assertNULL($this->Page->Parent, 'IPage::$Parent should initially be NULL');
 
         # ID
@@ -252,9 +251,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Page->undefined;
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Undefined property', $e->getMessage(), 'Invalid notice: ' . $e->getMessage());
         }
 
@@ -327,9 +324,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Page->Status = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -339,9 +334,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Page->Serializer = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -356,9 +349,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Page->Parent = null;
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -367,9 +358,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Page->Parent = $Parent;
             $this->fail('Failed to generate notice with oneshot value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -377,9 +366,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Page->ID = 'foo';
             $this->fail('Failed to generate notice with readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -394,9 +381,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Page->Mediator = null;
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -406,9 +391,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Page->MediatorID = 'foo';
             $this->fail('Failed to generate notice with readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -416,35 +399,29 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         # Component
         try {
-        	$this->Page->Component = $this->Component;
-        	$this->fail('Failed generating notice with readonly property');
-        }
+            $this->Page->Component = $this->Component;
+            $this->fail('Failed generating notice with readonly property');
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        @$this->Page->Component = $this->Component;
 
-    	@$this->Page->Component = $this->Component;
-
-    	# RequestHead
+        # RequestHead
         try {
-        	$this->Page->RequestHead = new Request;
-        	$this->fail('Failed generating notice with readonly property');
-        }
+            $this->Page->RequestHead = new Request;
+            $this->fail('Failed generating notice with readonly property');
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        @$this->Page->RequestHead = new Request;
 
-    	@$this->Page->RequestHead = new Request;
-
-    	# ResponseHead
+        # ResponseHead
         try {
-        	$this->Page->ResponseHead = new Response;
-        	$this->fail('Failed generating notice with readonly property');
-        }
+            $this->Page->ResponseHead = new Response;
+            $this->fail('Failed generating notice with readonly property');
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        @$this->Page->ResponseHead = new Response;
 
-    	@$this->Page->ResponseHead = new Response;
-
-    	# Created
+        # Created
         $Date                = new DateTime;
         $this->Page->Created = $Date;
 
@@ -453,9 +430,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Page->Created = null;
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -469,9 +444,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Page->Modified = null;
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -479,21 +452,19 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         # Document
         try {
-        	$this->Page->Document = $this->Component;
-        	$this->fail('Failed generating notice with readonly property');
-        }
+            $this->Page->Document = $this->Component;
+            $this->fail('Failed generating notice with readonly property');
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
-
-    	@$this->Page->Document = $this->Component;
+        @$this->Page->Document = $this->Component;
 
         # Test dynamic property
         $this->Page->resolveExternals = true;
         $this->assertEquals(true, $this->Page->resolveExternals, 'IPage::$resolveExternals should equal true.');
 
         # Undefined property
-    	$this->Page->undefined = 1;
-    	$this->assertEquals(1, $this->Page->undefined, 'IPage::$undefined was not created');
+        $this->Page->undefined = 1;
+        $this->assertEquals(1, $this->Page->undefined, 'IPage::$undefined was not created');
     }
 
     /**

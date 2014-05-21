@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\Allow;
 
 
 /**
@@ -45,7 +44,7 @@ class AllowTest extends \PHPUnit_Framework_TestCase
         $this->Header      = new Allow('GET, PUT, HEAD');
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -61,17 +60,17 @@ class AllowTest extends \PHPUnit_Framework_TestCase
     public function generateValidTypes()
     {
         return array(
-        	 array('PUT', 'PUT')
-        	,array(';;PUT,:::POST ;;; HEAD;;', 'PUT')
-        	,array('"PUT"', 'PUT')
+             array('PUT', 'PUT')
+            ,array(';;PUT,:::POST ;;; HEAD;;', 'PUT')
+            ,array('"PUT"', 'PUT')
         );
     }
 
     public function generateInvalidTypes()
     {
         return array(
-        	 array(false, 'GET')
-        	,array(new \stdClass, 'GET')
+             array(false, 'GET')
+            ,array(new \stdClass, 'GET')
             ,array(array(), 'GET')
         );
     }
@@ -82,14 +81,14 @@ class AllowTest extends \PHPUnit_Framework_TestCase
     public function test_parseAllow()
     {
         # Valid type
-        foreach($this->generateValidTypes() as $Parameters) {
+        foreach ($this->generateValidTypes() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseAllow($Original), 'Allow::parseAllow() returned an invalid format');
         }
 
         # Invalid type
-        foreach($this->generateInvalidTypes() as $Parameters) {
+        foreach ($this->generateInvalidTypes() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseAllow($Original), 'Allow::parseAllow() returned an invalid format');
@@ -113,9 +112,7 @@ class AllowTest extends \PHPUnit_Framework_TestCase
         try {
             new Allow(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

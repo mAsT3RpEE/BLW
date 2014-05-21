@@ -28,8 +28,6 @@ use BLW\Model\GenericContainer;
 use BLW\Model\GenericEmailAddress;
 use BLW\Model\MIME\Generic;
 use BLW\Model\MIME\CC;
-use BLW\Model\Mail\GenericMessage;
-use BLW\Model\Mail\MIME\Message;
 
 
 /**
@@ -59,12 +57,12 @@ class MessageTest extends \PHPUnit_Framework_TestCase
     public function generateInvalidArguments()
     {
         return array(
-        	 array('foo',         'multipart/mixed')
+             array('foo',         'multipart/mixed')
             ,array('',            'multipart/mixed')
-        	,array(false,         'multipart/mixed')
-        	,array(NULL,          'multipart/mixed')
-        	,array(array(),       'multipart/mixed')
-        	,array(new \stdClass, 'multipart/mixed')
+            ,array(false,         'multipart/mixed')
+            ,array(NULL,          'multipart/mixed')
+            ,array(array(),       'multipart/mixed')
+            ,array(new \stdClass, 'multipart/mixed')
         );
     }
 
@@ -90,11 +88,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
             try {
                 new Message($Version, $Section);
                 $this->fail('Failed to generate error with invalid arguments:'. print_r($Arguments, true));
-            }
-
-            catch (InvalidArgumentException $e) {}
-
-            catch (\PHPUnit_Framework_Error $e) {}
+            } catch (InvalidArgumentException $e) {} catch (\PHPUnit_Framework_Error $e) {}
         }
     }
 
@@ -131,7 +125,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
     public function test_getFactoryMethods()
     {
         $Expected = array(
-        	 new ReflectionMethod($this->MimeMessage, 'createMessage')
+             new ReflectionMethod($this->MimeMessage, 'createMessage')
             ,new ReflectionMethod($this->MimeMessage, 'createFromString')
         );
 
@@ -156,16 +150,12 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         try {
             $this->MimeMessage->createAddressHeader(null, 'test@example.com');
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
 
         try {
             $this->MimeMessage->createAddressHeader('To', null);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -178,9 +168,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         # Unimplemented
         try {
             $this->MimeMessage->createMessage();
-        }
-
-        catch (\RuntimeException $e) {}
+        } catch (\RuntimeException $e) {}
     }
 
     /**
@@ -203,16 +191,12 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         # Unimplemented
         try {
             $this->assertEquals($this->MimeMessage, $this->MimeMessage->createFromString(strval($this->MimeMessage)), 'MimeMessage::createFromString((string) MimeMessage should equal MimeMessage');
-        }
-
-        catch (\RuntimeException $e) {}
+        } catch (\RuntimeException $e) {}
 
         # Invalid values
         try {
             $this->MimeMessage->createFromString(null);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 }

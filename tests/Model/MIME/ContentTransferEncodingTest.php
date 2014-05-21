@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\ContentTransferEncoding;
 
 
 /**
@@ -45,7 +44,7 @@ class ContentTransferEncodingTest extends \PHPUnit_Framework_TestCase
         $this->Header      = new ContentTransferEncoding('quoted-printable');
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -61,9 +60,9 @@ class ContentTransferEncodingTest extends \PHPUnit_Framework_TestCase
     public function generateValidEncodings()
     {
         return array(
-        	 array('7bit', '7bit')
-        	,array('8bit', '8bit')
-        	,array('binary', 'binary')
+             array('7bit', '7bit')
+            ,array('8bit', '8bit')
+            ,array('binary', 'binary')
             ,array('quoted-printable', 'quoted-printable')
             ,array('base64', 'base64')
             ,array(';;base64;;', 'base64')
@@ -73,9 +72,9 @@ class ContentTransferEncodingTest extends \PHPUnit_Framework_TestCase
     public function generateInvalidEncodings()
     {
         return array(
-        	 array('foo', 'binary')
+             array('foo', 'binary')
             ,array('9bit', 'binary')
-        	,array(false, 'binary')
+            ,array(false, 'binary')
         );
     }
 
@@ -85,14 +84,14 @@ class ContentTransferEncodingTest extends \PHPUnit_Framework_TestCase
     public function test_parseEncoding()
     {
         # Valid Encoding
-        foreach($this->generateValidEncodings() as $Parameters) {
+        foreach ($this->generateValidEncodings() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseEncoding($Original), 'ContentTransferEncoding::parseEncoding() returned an invalid format');
         }
 
         # Invalid Encoding
-        foreach($this->generateInvalidEncodings() as $Parameters) {
+        foreach ($this->generateInvalidEncodings() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseEncoding($Original), 'ContentTransferEncoding::parseEncoding() returned an invalid format');
@@ -113,9 +112,7 @@ class ContentTransferEncodingTest extends \PHPUnit_Framework_TestCase
         try {
             new ContentTransferEncoding(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

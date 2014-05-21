@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\Accept;
 
 
 /**
@@ -45,7 +44,7 @@ class AcceptTest extends \PHPUnit_Framework_TestCase
         $this->Header      = new Accept(', image/*; q=0.5, , */*; q=1');
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -61,9 +60,9 @@ class AcceptTest extends \PHPUnit_Framework_TestCase
     public function generateValidTypes()
     {
         return array(
-        	 array('image/*', 'image/*')
-        	,array(';;image/*, ;;; text/*;;', 'image/*')
-        	,array('"image/*"', 'image/*')
+             array('image/*', 'image/*')
+            ,array(';;image/*, ;;; text/*;;', 'image/*')
+            ,array('"image/*"', 'image/*')
             ,array('x-test/x-test', 'x-test/x-test')
         );
     }
@@ -71,10 +70,10 @@ class AcceptTest extends \PHPUnit_Framework_TestCase
     public function generateInvalidTypes()
     {
         return array(
-        	 array('foo', '*/*')
+             array('foo', '*/*')
             ,array('image / gif', '*/*')
-        	,array(false, '*/*')
-        	,array('test/plain', '*/*')
+            ,array(false, '*/*')
+            ,array('test/plain', '*/*')
             ,array(array(), '*/*')
         );
     }
@@ -85,14 +84,14 @@ class AcceptTest extends \PHPUnit_Framework_TestCase
     public function test_parseType()
     {
         # Valid type
-        foreach($this->generateValidTypes() as $Parameters) {
+        foreach ($this->generateValidTypes() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseType($Original), 'Accept::parseType() returned an invalid format');
         }
 
         # Invalid type
-        foreach($this->generateInvalidTypes() as $Parameters) {
+        foreach ($this->generateInvalidTypes() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseType($Original), 'Accept::parseType() returned an invalid format');
@@ -116,9 +115,7 @@ class AcceptTest extends \PHPUnit_Framework_TestCase
         try {
             new Accept(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
 
         # No parameters
         $this->Header = new Accept('text/plain,text/html,image/*; q=0.8');
@@ -128,9 +125,7 @@ class AcceptTest extends \PHPUnit_Framework_TestCase
         try {
             new Accept('*/*', array('???' => '???'));
             $this->fail('Failed to generate notice with invalid arguments');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
     }
 
     /**

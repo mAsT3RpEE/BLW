@@ -40,6 +40,7 @@ use BLW\Model\MIME\CC;
 use BLW\Model\MIME\BCC;
 use BLW\Model\MIME\Part\QuotedPrintable;
 use BLW\Model\MIME\Part\Attachment;
+use BLW\Model\MIME\Part\InlineAttachment;
 use BLW\Model\Mail\MIME\Message as MIMEMessage;
 use BLW\Type\ADataMapper;
 
@@ -442,7 +443,7 @@ class GenericMessage extends \BLW\Type\AMediatableObject implements \BLW\Type\Ma
 
         // Inline Attachments
         foreach ($this->_InlineAttachments as $File) {
-            $MimeMessage->getBody()->addPart(new inlineAttachment($File));
+            $MimeMessage->getBody()->addPart(new InlineAttachment($File));
         }
 
         // End multipart/related
@@ -848,8 +849,6 @@ class GenericMessage extends \BLW\Type\AMediatableObject implements \BLW\Type\Ma
             default:
                 return parent::__get($name);
         }
-
-        return null;
     }
 
     /**

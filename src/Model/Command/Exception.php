@@ -54,13 +54,13 @@ final class Exception extends \BLW\Type\ARuntimeException
      *
      * @param string $message
      *            Formatted message:
-	 *
+     *
      * <ul>
      * <li><b>%header%</b>: <code>class::function(arguments):</code>.</li>
      * <li><b>%args%</b>: All arguments as a string.</li>
      * <li><b>%class%</b>: Class of of function.</li>
      * </ul>
-	 *
+     *
      * @param integer $code
      *            Exception code.
      * @param \Exception $previous

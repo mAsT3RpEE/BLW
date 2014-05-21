@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\Pragma;
 
 
 /**
@@ -45,7 +44,7 @@ class PragmaTest extends \PHPUnit_Framework_TestCase
         $this->Header      = new Pragma('no-cache, token = "quoted string"');
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -61,9 +60,9 @@ class PragmaTest extends \PHPUnit_Framework_TestCase
     public function generateValidDirectives()
     {
         return array(
-        	 array('no-cache', 'no-cache')
-        	,array(';;no-cache, ;;; unicode-1-1;;', 'no-cache')
-        	,array('"no-cache"', 'no-cache')
+             array('no-cache', 'no-cache')
+            ,array(';;no-cache, ;;; unicode-1-1;;', 'no-cache')
+            ,array('"no-cache"', 'no-cache')
             ,array('token', 'token')
             ,array('token=token', 'token=token')
             ,array('token =token', 'token =token')
@@ -75,8 +74,8 @@ class PragmaTest extends \PHPUnit_Framework_TestCase
     public function generateInvalidDirectives()
     {
         return array(
-        	 array(false, 'no-cache')
-        	,array(new \stdClass, 'no-cache')
+             array(false, 'no-cache')
+            ,array(new \stdClass, 'no-cache')
             ,array(array(), 'no-cache')
         );
     }
@@ -87,14 +86,14 @@ class PragmaTest extends \PHPUnit_Framework_TestCase
     public function test_parseDirective()
     {
         # Valid type
-        foreach($this->generateValidDirectives() as $Parameters) {
+        foreach ($this->generateValidDirectives() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseDirective($Original), 'Pragma::parseDirective() returned an invalid format');
         }
 
         # Invalid type
-        foreach($this->generateInvalidDirectives() as $Parameters) {
+        foreach ($this->generateInvalidDirectives() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseDirective($Original), 'Pragma::parseDirective() returned an invalid format');
@@ -118,9 +117,7 @@ class PragmaTest extends \PHPUnit_Framework_TestCase
         try {
             new Pragma(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

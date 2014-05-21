@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\ContentLocation;
 
 
 /**
@@ -45,7 +44,7 @@ class ContentLocationTest extends \PHPUnit_Framework_TestCase
         $this->Header      = new ContentLocation($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('/test.png')));
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -61,16 +60,16 @@ class ContentLocationTest extends \PHPUnit_Framework_TestCase
     public function generateValidLocations()
     {
         return array(
-        	 array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('test.png')), 'test.png')
-        	,array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('http://www.example.com/test.png')), 'http://www.example.com/test.png')
-        	,array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('folder/test.png')), 'folder/test.png')
+             array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('test.png')), 'test.png')
+            ,array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('http://www.example.com/test.png')), 'http://www.example.com/test.png')
+            ,array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('folder/test.png')), 'folder/test.png')
         );
     }
 
     public function generateInvalidLocations()
     {
         return array(
-        	 array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('')), '')
+             array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('')), '')
             ,array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('"""')), '')
         );
     }
@@ -85,7 +84,7 @@ class ContentLocationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/test.png', $this->Properties['Value']->getValue($this->Header), 'ContentLocation::__construct() failed to set $_Value');
 
         # Valid Location
-        foreach($this->generateValidLocations() as $Parameters) {
+        foreach ($this->generateValidLocations() as $Parameters) {
             list($Input, $Expected) = $Parameters;
 
             $this->Header = new ContentLocation($Input);
@@ -94,15 +93,13 @@ class ContentLocationTest extends \PHPUnit_Framework_TestCase
         }
 
         # Invalid Location
-        foreach($this->generateInvalidLocations() as $Parameters) {
+        foreach ($this->generateInvalidLocations() as $Parameters) {
             list($Input, $Expected) = $Parameters;
 
             try {
                 new ContentLocation($Input);
                 $this->fail('Failed to generate exception with invalid parameters');
-            }
-
-            catch (InvalidArgumentException $e) {}
+            } catch (InvalidArgumentException $e) {}
         }
     }
 

@@ -18,7 +18,6 @@
 namespace BLW\Model\Command\Output;
 
 use BLW\Model\Command\Output\Generic as Output;
-use BLW\Model\GenericContainer;
 
 /**
  * Tests basic command input object

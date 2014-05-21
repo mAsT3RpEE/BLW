@@ -18,7 +18,6 @@
 namespace BLW\Type;
 
 use ReflectionProperty;
-use BLW\Type\IDataMapper;
 
 
 /**
@@ -44,9 +43,7 @@ class DataMapableTest extends \PHPUnit_Framework_TestCase
     {
         if ($name == 'foo' || $name = 'foo1') {
             return 1;
-        }
-
-        else trigger_error('Undefined property', E_USER_NOTICE);
+        } else trigger_error('Undefined property', E_USER_NOTICE);
 
         return NULL;
     }
@@ -62,13 +59,12 @@ class DataMapableTest extends \PHPUnit_Framework_TestCase
 
     public function mock_set($name, $value)
     {
-        switch($name)
-        {
-        	case 'foo1': return IDataMapper::UPDATED;
-        	case 'foo2': return IDataMapper::READONLY;
-        	case 'foo3': return IDataMapper::ONESHOT;
-        	case 'foo4': return IDataMapper::INVALID;
-        	case 'foo5': return IDataMapper::UNDEFINED;
+        switch ($name) {
+            case 'foo1': return IDataMapper::UPDATED;
+            case 'foo2': return IDataMapper::READONLY;
+            case 'foo3': return IDataMapper::ONESHOT;
+            case 'foo4': return IDataMapper::INVALID;
+            case 'foo5': return IDataMapper::UNDEFINED;
         }
     }
 
@@ -124,9 +120,7 @@ class DataMapableTest extends \PHPUnit_Framework_TestCase
         try {
             $this->DataMapable->undefined;
             $this->fail('Failed to generate exception with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Undefined property', $e->getMessage());
         }
 
@@ -157,9 +151,7 @@ class DataMapableTest extends \PHPUnit_Framework_TestCase
         try {
             $this->DataMapable->foo2 = 1;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -169,9 +161,7 @@ class DataMapableTest extends \PHPUnit_Framework_TestCase
         try {
             $this->DataMapable->foo3 = 1;
             $this->fail('Failed to generate warning on singleshot property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -181,9 +171,7 @@ class DataMapableTest extends \PHPUnit_Framework_TestCase
         try {
             $this->DataMapable->foo4 = 1;
             $this->fail('Failed to generate warning on invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -193,9 +181,7 @@ class DataMapableTest extends \PHPUnit_Framework_TestCase
         try {
             $this->DataMapable->foo5 = 1;
             $this->fail('Failed to generate notice on undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Tried to modify non-existant property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 

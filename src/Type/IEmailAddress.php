@@ -183,7 +183,7 @@ interface IEmailAddress extends \BLW\Type\ISerializable, \BLW\Type\IIterable, \B
      *
      * @param string $Name
      *            Name of regex:
-	 *
+     *
      * <ul>
      * <li><b>addr-spec</b>: Full email address regex</li>
      * <li><b>local-part</b>: mailbox</li>
@@ -197,7 +197,7 @@ interface IEmailAddress extends \BLW\Type\ISerializable, \BLW\Type\IIterable, \B
      * <li><b>word</b>: see rfc2882</li>
      * <li><b>comment</b>: see rfc2882</li>
      * </ul>
-	 *
+     *
      * @return string PCRE regex.
      */
     public static function getRegex($Name = 'addr-spec');

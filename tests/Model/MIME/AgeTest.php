@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\Age;
 
 
 /**
@@ -45,7 +44,7 @@ class AgeTest extends \PHPUnit_Framework_TestCase
         $this->Header      = new Age('100');
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -61,19 +60,19 @@ class AgeTest extends \PHPUnit_Framework_TestCase
     public function generateValidTypes()
     {
         return array(
-        	 array('100', '100')
-        	,array(';;100;;', '100')
-        	,array('"100"', '100')
+             array('100', '100')
+            ,array(';;100;;', '100')
+            ,array('"100"', '100')
         );
     }
 
     public function generateInvalidTypes()
     {
         return array(
-        	 array('foo', '2147483648')
-        	,array(false, '2147483648')
+             array('foo', '2147483648')
+            ,array(false, '2147483648')
             ,array(new \stdClass, '2147483648')
-        	,array(array(), '2147483648')
+            ,array(array(), '2147483648')
         );
     }
 
@@ -83,14 +82,14 @@ class AgeTest extends \PHPUnit_Framework_TestCase
     public function test_parseAge()
     {
         # Valid type
-        foreach($this->generateValidTypes() as $Parameters) {
+        foreach ($this->generateValidTypes() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseAge($Original), 'Age::parseAge() returned an invalid format');
         }
 
         # Invalid type
-        foreach($this->generateInvalidTypes() as $Parameters) {
+        foreach ($this->generateInvalidTypes() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseAge($Original), 'Age::parseAge() returned an invalid format');
@@ -113,9 +112,7 @@ class AgeTest extends \PHPUnit_Framework_TestCase
         try {
             new Age(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

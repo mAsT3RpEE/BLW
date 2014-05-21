@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME\Part;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\Part\Attachment;
 use BLW\Model\GenericFile;
 use BLW\Model\FileException;
 
@@ -30,7 +29,7 @@ use BLW\Model\FileException;
  *
  * @coversDefaultClass \BLW\Model\MIME\Part\Attachment
  */
-class AttachmentTest extends \PHPUnit_Framework_TestCase
+class AttatchmentTest extends \PHPUnit_Framework_TestCase
 {
     const FILE   = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII=';
     const BASE64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0A\r\nAAAASUVORK5CYII=";
@@ -64,9 +63,7 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Attachment->format(0, 50);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -90,9 +87,7 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
         try {
             new Attachment(new GenericFile('z:\\undefined\\!!!'), 'Test.png', 'image/png-test');
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (FileException $e) {}
+        } catch (FileException $e) {}
     }
 
     /**
@@ -118,9 +113,7 @@ EOT;
         try {
             $this->Attachment['Content-Type'] = 'foo';
             $this->fail('Failed generating warning on readonly offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
@@ -130,9 +123,7 @@ EOT;
         try {
             $this->Attachment['Content-Transfer-Encoding'] = 'foo';
             $this->fail('Failed generating warning on readonly offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
@@ -142,9 +133,7 @@ EOT;
         try {
             $this->Attachment['Content-Disposition'] = 'foo';
             $this->fail('Failed generating warning on readonly offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
@@ -154,9 +143,7 @@ EOT;
         try {
             $this->Attachment['Content'] = 'foo';
             $this->fail('Failed generating warning on readonly offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 

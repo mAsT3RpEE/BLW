@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\Generic;
 
 
 /**
@@ -48,9 +47,9 @@ class GenericTest extends \PHPUnit_Framework_TestCase
     public function generateValidTypes()
     {
         return array(
-        	 array('test', 'test')
-        	,array('test with space', 'test')
-        	,array('`~!@#$%^&*()-_=+[{]}\\|;:\',<.>/?', '!')
+             array('test', 'test')
+            ,array('test with space', 'test')
+            ,array('`~!@#$%^&*()-_=+[{]}\\|;:\',<.>/?', '!')
             ,array('"""""still okay"""""""', 'still')
         );
     }
@@ -58,9 +57,9 @@ class GenericTest extends \PHPUnit_Framework_TestCase
     public function generateInvalidTypes()
     {
         return array(
-        	 array('', 'X-Header')
+             array('', 'X-Header')
             ,array('"""', 'X-Header')
-        	,array(false, 'X-Header')
+            ,array(false, 'X-Header')
         );
     }
 
@@ -70,14 +69,14 @@ class GenericTest extends \PHPUnit_Framework_TestCase
     public function test_parseType()
     {
         # Valid Description
-        foreach($this->generateValidTypes() as $Parameters) {
+        foreach ($this->generateValidTypes() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseType($Original), 'Generic::parseType() returned an invalid format');
         }
 
         # Invalid Description
-        foreach($this->generateInvalidTypes() as $Parameters) {
+        foreach ($this->generateInvalidTypes() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseType($Original), 'Generic::parseType() returned an invalid format');
@@ -87,9 +86,9 @@ class GenericTest extends \PHPUnit_Framework_TestCase
     public function generateValidValues()
     {
         return array(
-        	 array('test', 'test')
-        	,array('test with space', 'test with space')
-        	,array('`~!@#$%^&*()-_=+[{]}\\|;:\',<.>/?', '`~!@#$%^&*()-_=+[{]}\\|;:\',<.>/?')
+             array('test', 'test')
+            ,array('test with space', 'test with space')
+            ,array('`~!@#$%^&*()-_=+[{]}\\|;:\',<.>/?', '`~!@#$%^&*()-_=+[{]}\\|;:\',<.>/?')
             ,array('"""""still okay"""""""', '"""""still okay"""""""')
         );
     }
@@ -97,7 +96,7 @@ class GenericTest extends \PHPUnit_Framework_TestCase
     public function generateInvalidValues()
     {
         return array(
-        	 array('', '')
+             array('', '')
             ,array("\n\n", '')
             ,array("\r\r", '')
             ,array(false, '')
@@ -110,14 +109,14 @@ class GenericTest extends \PHPUnit_Framework_TestCase
     public function test_parseValue()
     {
         # Valid Description
-        foreach($this->generateValidValues() as $Parameters) {
+        foreach ($this->generateValidValues() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseValue($Original), 'Generic::parseValue() returned an invalid format');
         }
 
         # Invalid Description
-        foreach($this->generateInvalidValues() as $Parameters) {
+        foreach ($this->generateInvalidValues() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseValue($Original), 'Generic::parseValue() returned an invalid format');
@@ -139,16 +138,12 @@ class GenericTest extends \PHPUnit_Framework_TestCase
         try {
             new Generic(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
 
         try {
             new Generic('Generic', null);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

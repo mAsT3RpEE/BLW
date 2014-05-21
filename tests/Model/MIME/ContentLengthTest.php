@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\ContentLength;
 
 
 /**
@@ -45,7 +44,7 @@ class ContentLengthTest extends \PHPUnit_Framework_TestCase
         $this->Header      = new ContentLength('1024');
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -61,7 +60,7 @@ class ContentLengthTest extends \PHPUnit_Framework_TestCase
     public function generateValidLengths()
     {
         return array(
-        	 array('1024', '1024')
+             array('1024', '1024')
             ,array('1024', '1024')
             ,array(';;1024;;', '1024')
         );
@@ -70,8 +69,8 @@ class ContentLengthTest extends \PHPUnit_Framework_TestCase
     public function generateInvalidLengths()
     {
         return array(
-        	 array('foo', '0')
-        	,array(false, '0')
+             array('foo', '0')
+            ,array(false, '0')
             ,array(new \stdClass, '0')
             ,array(array(), '0')
         );
@@ -83,14 +82,14 @@ class ContentLengthTest extends \PHPUnit_Framework_TestCase
     public function test_parseLength()
     {
         # Valid Length
-        foreach($this->generateValidLengths() as $Parameters) {
+        foreach ($this->generateValidLengths() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseLength($Original), 'ContentLength::parseLength() returned an invalid format');
         }
 
         # Invalid Length
-        foreach($this->generateInvalidLengths() as $Parameters) {
+        foreach ($this->generateInvalidLengths() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseLength($Original), 'ContentLength::parseLength() returned an invalid format');
@@ -111,9 +110,7 @@ class ContentLengthTest extends \PHPUnit_Framework_TestCase
         try {
             new ContentLength(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

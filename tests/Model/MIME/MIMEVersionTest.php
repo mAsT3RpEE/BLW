@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\MIMEVersion;
 
 
 /**
@@ -45,7 +44,7 @@ class MIMEVersionTest extends \PHPUnit_Framework_TestCase
         $this->Header      = new MIMEVersion('1.0');
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -61,9 +60,9 @@ class MIMEVersionTest extends \PHPUnit_Framework_TestCase
     public function generateValidVersions()
     {
         return array(
-        	 array('1.0')
-        	,array(1)
-        	,array(1.0)
+             array('1.0')
+            ,array(1)
+            ,array(1.0)
         );
     }
 
@@ -77,7 +76,7 @@ class MIMEVersionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(1.0, $this->Properties['Value']->getValue($this->Header), 'MIMEVersion::__construct() failed to set $_Value');
 
         # Valid arguments
-        foreach($this->generateValidVersions() as $Arguments) {
+        foreach ($this->generateValidVersions() as $Arguments) {
             list($Version) = $Arguments;
 
             $this->Header = new MIMEVersion($Version);
@@ -89,9 +88,7 @@ class MIMEVersionTest extends \PHPUnit_Framework_TestCase
         try {
             new MIMEVersion(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

@@ -19,7 +19,6 @@ namespace BLW\Model\DOM;
 
 use ArrayObject;
 use DOMElement;
-use BLW\Model\DOM\NodeList;
 
 
 /**

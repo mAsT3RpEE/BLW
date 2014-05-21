@@ -19,8 +19,6 @@ namespace BLW\Type;
 
 use ReflectionProperty;
 
-use BLW\Type\IDataMapper;
-use BLW\Type\ISerializer;
 
 use BLW\Model\InvalidArgumentException;
 use BLW\Model\Serializer\Mock;
@@ -45,12 +43,12 @@ class SerializableTest extends \PHPUnit_Framework_TestCase
      */
     protected $Serializer   = NULL;
 
-	final public static function setUpBeforeClass()
-	{
-	    global $BLW_Serializer;
+    final public static function setUpBeforeClass()
+    {
+        global $BLW_Serializer;
 
-	    $BLW_Serializer = new \BLW\Model\Serializer\Mock;
-	}
+        $BLW_Serializer = new \BLW\Model\Serializer\Mock;
+    }
 
     protected function setUp()
     {
@@ -126,16 +124,12 @@ class SerializableTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Serializable->unserializewith($this->Serializer, null);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
 
         try {
             $this->Serializable->unserializewith($this->Serializer, new \SplFileInfo(__FILE__));
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -172,10 +166,7 @@ class SerializableTest extends \PHPUnit_Framework_TestCase
 
         try {
             $this->assertFalse($this->Serializable->unserialize(''), 'ISerializer::unserialize(invalid) Should return false');
-        }
-
-        catch (\UnexpectedValueException $e) {}
-        catch (\RuntimeException $e) {}
+        } catch (\UnexpectedValueException $e) {} catch (\RuntimeException $e) {}
     }
 
     /**

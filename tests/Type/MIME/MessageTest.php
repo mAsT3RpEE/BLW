@@ -18,10 +18,8 @@
 namespace BLW\Type\MIME;
 
 use ReflectionProperty;
-use ReflectionMethod;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\GenericURI;
 
 
 /**
@@ -180,16 +178,12 @@ EOT;
         try {
             $this->Message->createHeader(NULL, 'foo');
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
 
         try {
             $this->Message->createHeader('foo', NULL);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     public function generateHeaders()

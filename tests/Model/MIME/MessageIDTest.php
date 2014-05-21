@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\MessageID;
 
 
 /**
@@ -47,7 +46,7 @@ class MessageIDTest extends \PHPUnit_Framework_TestCase
         $this->Header      = new MessageID;
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -63,9 +62,9 @@ class MessageIDTest extends \PHPUnit_Framework_TestCase
     public function generateValidIDs()
     {
         return array(
-        	 array('abcdefgh@example.com', 'abcdefgh@example.com')
-        	,array('12345678@example.com', '12345678@example.com')
-        	,array('"abcd.1234"@example.com', '"abcd.1234"@example.com')
+             array('abcdefgh@example.com', 'abcdefgh@example.com')
+            ,array('12345678@example.com', '12345678@example.com')
+            ,array('"abcd.1234"@example.com', '"abcd.1234"@example.com')
             ,array(';;;ab_cd.12-34@exam-pl_e.co.uk;;;', 'ab_cd.12-34@exam-pl_e.co.uk')
         );
     }
@@ -73,11 +72,11 @@ class MessageIDTest extends \PHPUnit_Framework_TestCase
     public function generateInvalidIDs()
     {
         return array(
-        	 array('', self::MESSAGE_ID)
+             array('', self::MESSAGE_ID)
             ,array('root', self::MESSAGE_ID)
             ,array('1234567', self::MESSAGE_ID)
-        	,array(false, self::MESSAGE_ID)
-        	,array(NULL, self::MESSAGE_ID)
+            ,array(false, self::MESSAGE_ID)
+            ,array(NULL, self::MESSAGE_ID)
         );
     }
 
@@ -87,14 +86,14 @@ class MessageIDTest extends \PHPUnit_Framework_TestCase
     public function test_parseID()
     {
         # Valid id
-        foreach($this->generateValidIDs() as $Parameters) {
+        foreach ($this->generateValidIDs() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseID($Original), 'MessageID::parseID() returned an invalid format');
         }
 
         # Invalid id
-        foreach($this->generateInvalidIDs() as $Parameters) {
+        foreach ($this->generateInvalidIDs() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertRegExp("!^$Expected$!", $this->Header->parseID($Original), 'MessageID::parseID() returned an invalid format');
@@ -138,9 +137,7 @@ class MessageIDTest extends \PHPUnit_Framework_TestCase
         try {
             new MessageID(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

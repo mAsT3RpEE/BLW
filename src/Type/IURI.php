@@ -229,7 +229,7 @@ interface IURI extends \BLW\Type\ISerializable, \BLW\Type\IIterable, \BLW\Type\I
      *
      * @param string $Name
      *            Name of regex:
-	 *
+     *
      * <ul>
      * <li><b>scheme</b>: URI scheme</li>
      * <li><b>hier-part</b>: absolute path and userinfo</li>
@@ -246,7 +246,7 @@ interface IURI extends \BLW\Type\ISerializable, \BLW\Type\IIterable, \BLW\Type\I
      * <li><b>ipv6address</b>: see rfc3986</li>
      * <li><b>ipv4address</b>: see rfc3986</li>
      * </ul>
-	 *
+     *
      * @return string PRCRE expression.
      */
     public static function getRegex($Name = 'uri-spec');
@@ -317,12 +317,12 @@ interface IURI extends \BLW\Type\ISerializable, \BLW\Type\IIterable, \BLW\Type\I
      *            URI to parse.
      * @param integer $flags
      *            Relove flags.
-	 *
+     *
      * <ul>
      * <li><b>IURI::AS_STRING</b>: Return a string of uri (IURI::createString())
      * <li><b>IURI::AS_ARRAY</b>: Return an array of uri parts (IURI::parse())
      * </ul>
-	 *
+     *
      * @return array string parts. Returns <code>null</code> in case of error.
      */
     public function resolve($URI, $flags = IURI::AS_STRING);

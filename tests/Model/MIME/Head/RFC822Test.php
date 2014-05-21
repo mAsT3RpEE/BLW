@@ -17,7 +17,6 @@
  */
 namespace BLW\Model\MIME\Head;
 
-use ReflectionMethod;
 use ReflectionProperty;
 
 use BLW\Model\InvalidArgumentException;
@@ -132,9 +131,7 @@ class RFC822Test extends \PHPUnit_Framework_TestCase
         try {
             $this->Head->getHeader(null);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

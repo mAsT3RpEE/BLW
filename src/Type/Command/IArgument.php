@@ -107,7 +107,7 @@ interface IArgument extends \BLW\Type\IFactory
      *
      * @throws \BLW\Model\InvalidArgumentException If <code>$Arguments</code> is not a <code>string</code>.
      *
-     * @param strig $Arguments
+     * @param string $Arguments
      *            String containing commandline.
      * @return \BLW\Type\IContainer Instance of <code>IContainer</code> containing parsed arguments.
      */

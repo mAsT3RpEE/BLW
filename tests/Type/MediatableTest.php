@@ -17,8 +17,6 @@
  */
 namespace BLW\Type;
 
-use BLW\Type\IDataMapper;
-use BLW\Type\IEvent;
 
 use BLW\Model\InvalidArgumentException;
 
@@ -147,15 +145,13 @@ class MediatableTest extends \PHPUnit_Framework_TestCase
     public function test_on()
     {
         $EventNames = array(1,1.0,'foo', new \SplFileInfo(__FILE__));
-        $Callback   = function(IEvent $Event) {};
+        $Callback   = function (IEvent $Event) {};
 
         # Test no mediator error.
         try {
             $this->Mediatable->_on('foo', $Callback);
             $this->fail('Failed generating no mediator notice.');
-        }
-
-        catch (PHPUnit_Framework_Error_Notice $e) {}
+        } catch (PHPUnit_Framework_Error_Notice $e) {}
 
         # Set mediator
         $this->assertEquals(IDataMapper::UPDATED, $this->Mediatable->setMediator($this->Mediator), 'IMediator::setMediator() did not return IDataMapper::UPDATED');
@@ -164,17 +160,13 @@ class MediatableTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Mediatable->_on(NULL, $Callback);
             $this->fail('Failed generating invalid EventName exception.');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
 
         # Test invalid callback exception.
         try {
             $this->Mediatable->_on('foo', NULL);
             $this->fail('Failed generating invalid callback exception.');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
 
         # Test valid EventNames
         foreach ($EventNames as $EventName) {
@@ -191,15 +183,13 @@ class MediatableTest extends \PHPUnit_Framework_TestCase
     {
         $EventNames = array(1,1.0,'foo', new \SplFileInfo(__FILE__));
         $Called     = false;
-        $Callback   = function(IEvent $Event) use (&$Called) {$Called = true;};
+        $Callback   = function (IEvent $Event) use (&$Called) {$Called = true;};
 
         # Test no mediator error.
         try {
             $this->Mediatable->_do('foo', $this->Event);
             $this->fail('Failed generating no mediator notice.');
-        }
-
-        catch (PHPUnit_Framework_Error_Notice $e) {}
+        } catch (PHPUnit_Framework_Error_Notice $e) {}
 
         # Set mediator
         $this->assertEquals(IDataMapper::UPDATED, $this->Mediatable->setMediator($this->Mediator), 'setMediator did not return IDataMapper::UPDATED');
@@ -208,9 +198,7 @@ class MediatableTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Mediatable->_do(NULL, $this->Event);
             $this->fail('Failed generating invalid EventName exception.');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
 
         # Test valid EventNames
         foreach ($EventNames as $EventName) {

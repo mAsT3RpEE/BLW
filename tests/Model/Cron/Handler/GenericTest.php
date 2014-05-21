@@ -17,7 +17,6 @@
  */
 namespace BLW\Model\Cron\Handler;
 
-use DateTime;
 use DateInterval;
 
 use Psr\Log\NullLogger;
@@ -103,6 +102,7 @@ class GenericTest  extends \PHPUnit_Framework_TestCase
         $Command = new CallbackCommand(function ($Input, $Output) {
 
             $Output->write('foo');
+
             return 0;
 
         }, new GenericConfig(array('Timeout' => 10)));
@@ -149,6 +149,7 @@ class GenericTest  extends \PHPUnit_Framework_TestCase
         $Command        = new CallbackCommand(function ($Input, $Output) {
 
             $Output->write('foo');
+
             return 0;
 
         }, new GenericConfig(array('Timeout' => 10)));

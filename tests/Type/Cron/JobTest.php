@@ -18,7 +18,6 @@
 namespace BLW\Type\Cron;
 
 use ReflectionProperty;
-use ReflectionMethod;
 use DateTime;
 use DateInterval;
 
@@ -29,9 +28,9 @@ class MockComponent
 {
     public $foo = 1;
 
-    public function run(){}
-    public function setMediator(){}
-    public function clearMediator(){}
+    public function run() {}
+    public function setMediator() {}
+    public function clearMediator() {}
     public function __set($name, $value) {throw new \Exception('undefined');}
 }
 
@@ -94,7 +93,7 @@ class JobTest  extends \PHPUnit_Framework_TestCase
     {
         $Now          = new DateTime;
         $Job          = $this->Job;
-        $setNextRun   = function ($Date) use($Job) {
+        $setNextRun   = function ($Date) use ($Job) {
             $Property = new ReflectionProperty($Job, '_NextRun');
 
             $Property->setAccessible(true);
@@ -128,9 +127,7 @@ class JobTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Job->setLogger(NULL);
             $this->fail('Failed to generate error with invalid arguments');
-        }
-
-        catch(\PHPUnit_Framework_Error $e) {}
+        } catch (\PHPUnit_Framework_Error $e) {}
 
         unset($Property);
     }
@@ -259,9 +256,7 @@ class JobTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Job->undefined;
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
         $this->assertNull(@$this->Job->undefined, 'IJob::$undefined should be NULL');
     }
@@ -316,9 +311,7 @@ class JobTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Job->Status = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -328,9 +321,7 @@ class JobTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Job->Serializer = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -345,9 +336,7 @@ class JobTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Job->Parent = null;
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -356,9 +345,7 @@ class JobTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Job->Parent = $Parent;
             $this->fail('Failed to generate notice with oneshot value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -366,9 +353,7 @@ class JobTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Job->ID = 'foo';
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -383,9 +368,7 @@ class JobTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Job->Mediator = null;
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -395,9 +378,7 @@ class JobTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Job->MediatorID = 'foo';
             $this->fail('Failed to generate notice with readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -412,18 +393,14 @@ class JobTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Job->Interval = null;
             $this->fail('Failed to generate notice with readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
         try {
             $this->Job->Interval = new DateInterval('PT30S');
             $this->fail('Failed to generate notice with readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -433,9 +410,7 @@ class JobTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Job->LastRun = null;
             $this->fail('Failed to generate notice with readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -450,9 +425,7 @@ class JobTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Job->NextRun = null;
             $this->fail('Failed to generate notice with readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -467,9 +440,7 @@ class JobTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Job->undefined = '';
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error $e) {
+        } catch (\PHPUnit_Framework_Error $e) {
             $this->assertContains('non-existant property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 

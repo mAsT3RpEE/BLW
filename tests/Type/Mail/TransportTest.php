@@ -18,14 +18,10 @@
 namespace BLW\Test\Type\Mail;
 
 
-use BLW\Type\IDataMapper;
 
 use BLW\Type\Mail\ITransport;
 
 use BLW\Model\GenericEmailAddress;
-use BLW\Model\GenericFile;
-use BLW\Model\GenericContainer;
-use BLW\Model\FileException;
 
 use BLW\Model\Mail\GenericMessage;
 

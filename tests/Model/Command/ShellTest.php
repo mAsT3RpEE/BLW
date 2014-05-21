@@ -82,7 +82,7 @@ class ShellTest extends \PHPUnit_Framework_TestCase
         $this->Output   = new GenericOutput(new HandleStream(fopen(self::OUTPUT, 'w')), new HandleStream(fopen(self::OUTPUT, 'w')));
         $this->Mediator = new SymfonyMediator;
         $this->Config   = new GenericConfig(array(
-        	 'Timeout'     => 60
+             'Timeout'     => 60
             ,'Callback'    => array($this, 'mock_Callback')
             ,'CWD'         => NULL
             ,'Environment' => NULL
@@ -132,10 +132,10 @@ class ShellTest extends \PHPUnit_Framework_TestCase
     public function test_createDescriptors()
     {
         $Expected = array(
-        	 Command::STDIN  => array('pipe', 'r')
-        	,Command::STDOUT => array('pipe', 'w')
-        	,Command::STDERR => array('pipe', 'w')
-	   );
+             Command::STDIN  => array('pipe', 'r')
+            ,Command::STDOUT => array('pipe', 'w')
+            ,Command::STDERR => array('pipe', 'w')
+       );
 
         $this->assertEquals($Expected, $this->Command->createDescriptors(), 'ShellCommand::createCommandLine() returned an invalid result');
     }
@@ -241,7 +241,7 @@ class ShellTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('test error', $this->Output->stdErr->getContents(), 'ShellCommand::_transferStreams() Failed to transfer STDERR');
         $this->assertEquals($this->Input->stdIn->getContents(), file_get_contents($Input), 'ShellCommand::_transferStreams() Failed to trasfer STDIN');
 
-        foreach($Pipes as $fp) {
+        foreach ($Pipes as $fp) {
             fclose($fp);
         }
 

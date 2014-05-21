@@ -18,8 +18,6 @@
 namespace BLW\Model\MIME;
 
 use DateTime;
-use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\Date;
 
 
 /**
@@ -55,9 +53,9 @@ class DateTest extends \PHPUnit_Framework_TestCase
     public function generateValidDates()
     {
         return array(
-        	 array(new DateTime('tomorrow'))
-        	,array(new DateTime('+1week'))
-        	,array(new DateTime('last year'))
+             array(new DateTime('tomorrow'))
+            ,array(new DateTime('+1week'))
+            ,array(new DateTime('last year'))
         );
     }
 
@@ -71,7 +69,7 @@ class DateTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeSame($this->Date->format(Date::FORMAT), '_Value', $this->Header, 'Date::__construct() failed to set $_Value');
 
         # Valid arguments
-        foreach($this->generateValidDates() as $Arguments) {
+        foreach ($this->generateValidDates() as $Arguments) {
             list($Date) = $Arguments;
 
             $this->Header = new Date($Date);

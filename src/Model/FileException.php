@@ -63,8 +63,8 @@ final class FileException extends \BLW\Type\ARuntimeException
      * @param string $File
      *            File exception is associated with.
      * @param string $message
-	 *            Fomratted exception message.
-	 *
+     *            Fomratted exception message.
+     *
      * <ul>
      * <li><b>%header%</b>: <code>class::function(arguments):</code>.</li>
      * <li><b>%file%</b>: File with error.</li>
@@ -73,7 +73,7 @@ final class FileException extends \BLW\Type\ARuntimeException
      * <li><b>%class%</b>: Class of of function.</li>
      * <li><b>%func%</b>: Function with invalid argument.</li>
      * </ul>
-	 *
+     *
      * @param integer $code
      *            Exception code.
      * @param \Exception $previous

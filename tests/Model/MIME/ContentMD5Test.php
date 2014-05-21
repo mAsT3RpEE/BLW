@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\ContentMD5;
 
 
 /**
@@ -48,7 +47,7 @@ class ContentMD5Test extends \PHPUnit_Framework_TestCase
     public function generateValidMD5s()
     {
         return array(
-        	 array('acbd18db4cc2f85cedef654fccc4a4d8', 'acbd18db4cc2f85cedef654fccc4a4d8')
+             array('acbd18db4cc2f85cedef654fccc4a4d8', 'acbd18db4cc2f85cedef654fccc4a4d8')
             ,array('37b51d194a7513e45b56f6524f2d51f2', '37b51d194a7513e45b56f6524f2d51f2')
         );
     }
@@ -56,8 +55,8 @@ class ContentMD5Test extends \PHPUnit_Framework_TestCase
     public function generateInvalidMD5s()
     {
         return array(
-        	 array('foo', 'd41d8cd98f00b204e9800998ecf8427e')
-        	,array(false, 'd41d8cd98f00b204e9800998ecf8427e')
+             array('foo', 'd41d8cd98f00b204e9800998ecf8427e')
+            ,array(false, 'd41d8cd98f00b204e9800998ecf8427e')
             ,array(new \stdClass, 'd41d8cd98f00b204e9800998ecf8427e')
             ,array(array(), 'd41d8cd98f00b204e9800998ecf8427e')
         );
@@ -69,14 +68,14 @@ class ContentMD5Test extends \PHPUnit_Framework_TestCase
     public function test_parseMD5()
     {
         # Valid MD5
-        foreach($this->generateValidMD5s() as $Parameters) {
+        foreach ($this->generateValidMD5s() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseMD5($Original), 'ContentMD5::parseMD5() returned an invalid format');
         }
 
         # Invalid MD5
-        foreach($this->generateInvalidMD5s() as $Parameters) {
+        foreach ($this->generateInvalidMD5s() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseMD5($Original), 'ContentMD5::parseMD5() returned an invalid format');
@@ -99,9 +98,7 @@ class ContentMD5Test extends \PHPUnit_Framework_TestCase
         try {
             new ContentMD5(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

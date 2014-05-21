@@ -55,13 +55,13 @@ class HandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function test_lockfile()
     {
-        $lockfile = function ($Handler)
-        {
+        $lockfile = function ($Handler) {
             $Method = new ReflectionMethod($Handler, '_lockfile');
             $Args   = func_get_args();
             $Args   = array_splice($Args, 1);
 
             $Method->setAccessible(true);
+
             return $Method->invokeArgs($Handler, $Args);
         };
 
@@ -75,13 +75,13 @@ class HandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function test_enterMutex()
     {
-        $lockfile = function ($Handler)
-        {
+        $lockfile = function ($Handler) {
             $Method = new ReflectionMethod($Handler, '_lockfile');
             $Args   = func_get_args();
             $Args   = array_splice($Args, 1);
 
             $Method->setAccessible(true);
+
             return $Method->invokeArgs($Handler, $Args);
         };
 
@@ -108,13 +108,13 @@ class HandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function test_destruct()
     {
-        $lockfile = function ($Handler)
-        {
+        $lockfile = function ($Handler) {
             $Method = new ReflectionMethod($Handler, '_lockfile');
             $Args   = func_get_args();
             $Args   = array_splice($Args, 1);
 
             $Method->setAccessible(true);
+
             return $Method->invokeArgs($Handler, $Args);
         };
 
@@ -141,9 +141,7 @@ class HandlerTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Handler->setLogger(NULL);
             $this->fail('Failed to generate error with invalid arguments');
-        }
-
-        catch(\PHPUnit_Framework_Error $e) {}
+        } catch (\PHPUnit_Framework_Error $e) {}
 
         unset($Property);
     }

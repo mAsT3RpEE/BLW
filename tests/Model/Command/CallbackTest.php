@@ -17,8 +17,6 @@
  */
 namespace BLW\Model\Command;
 
-use ReflectionProperty;
-use ReflectionMethod;
 
 use BLW\Type\Command\IOutput;
 use BLW\Type\Command\IInput;
@@ -30,8 +28,6 @@ use BLW\Model\Config\Generic as GenericConfig;
 use BLW\Model\Command\Callback as Command;
 use BLW\Model\Command\Input\Generic as GenericInput;
 use BLW\Model\Command\Output\Generic as GenericOutput;
-use BLW\Model\Command\Argument\Generic as GenericArgument;
-use BLW\Model\Command\Option\Generic as GenericOption;
 use BLW\Model\Stream\Handle as HandleStream;
 use BLW\Model\Mediator\Symfony as SymfonyMediator;
 
@@ -92,7 +88,7 @@ class CallbackTest extends \PHPUnit_Framework_TestCase
     {
         $this->Called   = 0;
         $Called         = &$this->Called;
-        $this->Action   = function(IInput $Input, IOutput $Output, ICommand $Command) use(&$Called) {$Called++; return -1;};
+        $this->Action   = function (IInput $Input, IOutput $Output, ICommand $Command) use (&$Called) {$Called++; return -1;};
         $this->Input    = new GenericInput(new HandleStream(fopen(self::INPUT, 'r')));
         $this->Output   = new GenericOutput(new HandleStream(fopen(self::OUTPUT, 'w')), new HandleStream(fopen(self::OUTPUT, 'w')));
         $this->Mediator = new SymfonyMediator;

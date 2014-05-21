@@ -18,13 +18,8 @@
 namespace BLW\Type;
 
 use ReflectionProperty;
-use ArrayObject;
-use BadMethodCallException;
 use DOMElement;
 
-use BLW\Type\IIterable;
-use BLW\Type\IDataMapper;
-use BLW\Type\IContainer;
 
 use BLW\Model\InvalidArgumentException;
 
@@ -159,9 +154,7 @@ class ContainerTest extends \BLW\Type\SerializableTest
         try {
             $this->Container['test'] = $Invalid;
             $this->fail('Unable to generate exception with invalid value');
-        }
-
-        catch(\UnexpectedValueException $e) {
+        } catch (\UnexpectedValueException $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid exception: '.$e->getMessage());
         }
     }
@@ -180,9 +173,7 @@ class ContainerTest extends \BLW\Type\SerializableTest
         try {
             $this->Container->append($Invalid);
             $this->fail('Unable to generate exception with invalid value');
-        }
-
-        catch(\UnexpectedValueException $e) {
+        } catch (\UnexpectedValueException $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid exception: '.$e->getMessage());
         }
     }
@@ -192,8 +183,8 @@ class ContainerTest extends \BLW\Type\SerializableTest
      */
     public function test_filter()
     {
-        $Test1 = function($v) {return $v instanceof \DOMNode;};
-        $Test2 = function($v) {return is_int($v);};
+        $Test1 = function ($v) {return $v instanceof \DOMNode;};
+        $Test2 = function ($v) {return is_int($v);};
 
         $Node                       = new \DOMElement('span', 'test');
         $this->Container['foo']     = 1;
@@ -202,15 +193,13 @@ class ContainerTest extends \BLW\Type\SerializableTest
         $this->Container['element'] = $Node;
 
         $this->assertSame(array($Node), @$this->Container->filter($Test1), 'IContainer::filter() should return 1 item (DOMNode)');
-        $this->assertSame(array(1,1), @$this->Container->filter($Test2), 'IContainer::filter() should return 1 item (int)');
+        $this->assertSame(array(1,1), @$this->Container->filter($Test2), 'IContainer::filter() should return 1 item (int) ');
 
         # Invalid value
         try {
             $this->Container->filter(null);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -218,7 +207,7 @@ class ContainerTest extends \BLW\Type\SerializableTest
      */
     public function test_each()
     {
-        $Test1 = function($v) {return is_int($v);};
+        $Test1 = function ($v) {return is_int($v);};
         $Test2 = array('foo' => true, 'bar' => true, 'test' => false, 'element' => false);
 
         $this->Container['foo']     = 1;
@@ -234,9 +223,7 @@ class ContainerTest extends \BLW\Type\SerializableTest
         try {
             $this->Container->each(null);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -244,7 +231,7 @@ class ContainerTest extends \BLW\Type\SerializableTest
      */
     public function test_walk()
     {
-        $Test1 = function($v) {return is_int($v);};
+        $Test1 = function ($v) {return is_int($v);};
         $Test2 = array('foo' => true, 'bar' => true, 'test' => false, 'element' => false, 'child' => array('foo' => true, 'self' => false), 'self' => false);
 
         $this->Container['foo']          = 1;
@@ -262,9 +249,7 @@ class ContainerTest extends \BLW\Type\SerializableTest
         try {
             $this->Container->walk(null);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

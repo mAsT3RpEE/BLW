@@ -17,7 +17,6 @@
  */
 namespace BLW\Type;
 
-use ReflectionMethod;
 use Exception;
 
 class MockLogicException1089 extends \BLW\Type\ALogicException {}
@@ -44,16 +43,13 @@ class LogicExceptionTest  extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->fp = fopen(__FILE__, 'r');
-        $throw    = function()
-        {
+        $throw    = function () {
             throw new MockLogicException1089('Test String', -1, new Exception('Previous'));
         };
 
         try {
             $throw(1, 1.5, 'string', array(), new \stdClass(), $this->fp, str_repeat('a', 512));
-        }
-
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             $this->Exception = $e;
         }
     }

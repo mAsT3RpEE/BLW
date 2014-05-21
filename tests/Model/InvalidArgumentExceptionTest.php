@@ -17,7 +17,6 @@
  */
 namespace BLW\Model;
 
-use BLW\Model\InvalidArgumentException;
 
 
 /**
@@ -27,7 +26,7 @@ use BLW\Model\InvalidArgumentException;
  *
  * @coversDefaultClass \BLW\Model\InvalidArgumentException
  */
-class InvalidArgumentTest extends \PHPUnit_Framework_TestCase
+class InvalidArgumentExceptionTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \BLW\Model\InvalidArgumentException
@@ -38,9 +37,7 @@ class InvalidArgumentTest extends \PHPUnit_Framework_TestCase
     {
         try {
             throw new InvalidArgumentException(100);
-        }
-
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             $this->Exception = $e;
         }
 

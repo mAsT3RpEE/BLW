@@ -17,7 +17,6 @@
  */
 namespace BLW\Model\HTTP\Client;
 
-use ReflectionProperty;
 use ReflectionMethod;
 
 use BLW\Type\HTTP\IClient;
@@ -42,7 +41,7 @@ use BLW\Model\InvalidArgumentException;
  *
  * @coversDefaultClass \BLW\Model\HTTP\Client\CURL
  */
-class cURLTest extends \PHPUnit_Framework_TestCase
+class CURLTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \BLW\Type\HTTP\IRequest
@@ -159,9 +158,9 @@ class cURLTest extends \PHPUnit_Framework_TestCase
         $Finished = 0;
         $Updated  = 0;
 
-        $this->Client->_on('Request.New', function() use (&$New) {$New++;});
-        $this->Client->_on('Request.Finished', function() use (&$Finished) {$Finished++;});
-        $this->Client->_on('Request.Update', function() use (&$Updated) {$Updated++;});
+        $this->Client->_on('Request.New', function () use (&$New) {$New++;});
+        $this->Client->_on('Request.Finished', function () use (&$Finished) {$Finished++;});
+        $this->Client->_on('Request.Update', function () use (&$Updated) {$Updated++;});
 
         for($i=0; $i<9; $i++) $this->Client->send(clone $this->Request);
 

@@ -20,7 +20,6 @@ namespace BLW\Type;
 use ReflectionProperty;
 use stdClass;
 use DOMElement;
-use BLW\Type\IDataMapper;
 
 /**
  * Tests BLW Library Adaptor type.
@@ -148,9 +147,7 @@ class ObjectStorageTest extends \BLW\Type\SerializableTest
         try {
             $this->ObjectStorage->undefined;
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
         $this->assertNull(@$this->ObjectStorage->undefined, 'IObjectStorage::$undefined should be NULL');
     }
@@ -186,9 +183,7 @@ class ObjectStorageTest extends \BLW\Type\SerializableTest
         try {
             $this->ObjectStorage->Status = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -198,9 +193,7 @@ class ObjectStorageTest extends \BLW\Type\SerializableTest
         try {
             $this->ObjectStorage->Serializer = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -215,9 +208,7 @@ class ObjectStorageTest extends \BLW\Type\SerializableTest
         try {
             $this->ObjectStorage->Parent = null;
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -226,9 +217,7 @@ class ObjectStorageTest extends \BLW\Type\SerializableTest
         try {
             $this->ObjectStorage->Parent = $Parent;
             $this->fail('Failed to generate notice with oneshot value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -236,9 +225,7 @@ class ObjectStorageTest extends \BLW\Type\SerializableTest
         try {
             $this->ObjectStorage->ID = 'foo';
             $this->fail('Failed to generate notice with readonly value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -248,9 +235,7 @@ class ObjectStorageTest extends \BLW\Type\SerializableTest
         try {
             $this->ObjectStorage->undefined = '';
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error $e) {
+        } catch (\PHPUnit_Framework_Error $e) {
             $this->assertContains('non-existant property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 

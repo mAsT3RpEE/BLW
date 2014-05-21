@@ -18,9 +18,7 @@
 namespace BLW\Model\DOM;
 
 use ReflectionProperty;
-use ReflectionMethod;
 
-use BLW\Model\DOM\Document;
 use BLW\Type\IDataMapper;
 
 

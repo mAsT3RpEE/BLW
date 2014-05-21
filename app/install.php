@@ -23,20 +23,16 @@ use BLW\Model\Config\Generic as Config;
 use BLW\Model\Stream\Handle;
 use BLW\Model\Command\Shell as ShellCommand;
 use BLW\Model\Command\Input\Generic as Input;
-use BLW\Model\Command\Option\Generic as Option;
 
 Application::configure();
 
-Application::run(function (BLW\Type\Command\IInput $Input, BLW\Type\Command\IOutput $Output, BLW\Type\Command\ICommand $Command)
-{
-    $Print = function($Message) use(&$Output, &$Command)
-    {
+Application::run(function (BLW\Type\Command\IInput $Input, BLW\Type\Command\IOutput $Output, BLW\Type\Command\ICommand $Command) {
+    $Print = function ($Message) use (&$Output, &$Command) {
         $Output->write("$Message\r\n");
         $Command->Config['Logger']->debug($Message);
     };
 
-    $Empty = function ($Dir) use (&$Empty)
-    {
+    $Empty = function ($Dir) use (&$Empty) {
         foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($Dir), RecursiveIteratorIterator::CHILD_FIRST) as $path) {
 
             if ($path->isDir() && $path->getBasename() != '.' && $path->getBasename() != '..')
@@ -51,8 +47,7 @@ Application::run(function (BLW\Type\Command\IInput $Input, BLW\Type\Command\IOut
         rmdir($Dir);
     };
 
-    $Copy = function ($Src, $Dest) use(&$Copy)
-    {
+    $Copy = function ($Src, $Dest) use (&$Copy) {
         $Src  = rtrim($Src,  DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         $Dest = rtrim($Dest, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
@@ -145,24 +140,24 @@ Application::run(function (BLW\Type\Command\IInput $Input, BLW\Type\Command\IOut
     $Output->overwrite('[=-------------------------------------------------]');
 
     // Compile files
-    $Compiler->onAdvance(function($Event) use (&$Output) {
-    	static $Total   = 0;
-    	static $Percent = 1;
+    $Compiler->onAdvance(function ($Event) use (&$Output) {
+        static $Total   = 0;
+        static $Percent = 1;
 
-    	// Add count
-    	$Total += $Event->Steps;
+        // Add count
+        $Total += $Event->Steps;
 
-    	// Check count
-    	if ($Total > 100) {
+        // Check count
+        if ($Total > 100) {
 
-    	    // Reset
-    	    $Total = $Total % 100;
+            // Reset
+            $Total = $Total % 100;
 
-    	    // Advance
-    	    $Percent++;
+            // Advance
+            $Percent++;
 
-    	    $Output->overwrite(substr_replace('[--------------------------------------------------]', str_repeat('=', $Percent), 1, $Percent));
-    	}
+            $Output->overwrite(substr_replace('[--------------------------------------------------]', str_repeat('=', $Percent), 1, $Percent));
+        }
     });
 
     $Output->overwrite('-Packaging files');
@@ -194,24 +189,24 @@ Application::run(function (BLW\Type\Command\IInput $Input, BLW\Type\Command\IOut
     );
 
     $Archiver->addDir(new GenericFile($TempBuild), '*');
-    $Archiver->onAdvance(function($Event) use (&$Output) {
-    	static $Total   = 0;
-    	static $Percent = 0;
+    $Archiver->onAdvance(function ($Event) use (&$Output) {
+        static $Total   = 0;
+        static $Percent = 0;
 
-    	// Add count
-    	$Total += $Event->Steps;
+        // Add count
+        $Total += $Event->Steps;
 
-    	// Check count
-    	if ($Total > 100) {
+        // Check count
+        if ($Total > 100) {
 
-    	    // Reset
-    	    $Total = $Total % 100;
+            // Reset
+            $Total = $Total % 100;
 
-    	    // Advance
-    	    $Percent++;
+            // Advance
+            $Percent++;
 
-    	    $Output->overwrite(substr_replace('[=========================================---------]', str_repeat('=', $Percent), 41, $Percent));
-    	}
+            $Output->overwrite(substr_replace('[=========================================---------]', str_repeat('=', $Percent), 41, $Percent));
+        }
     });
     $Archiver->compile('BLW');
 

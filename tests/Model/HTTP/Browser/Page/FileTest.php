@@ -20,7 +20,6 @@ namespace BLW\Model\HTTP\Browser\Page;
 use BLW\Model\HTTP\Browser\Page\File as Page;
 use BLW\Model\GenericFile;
 use BLW\Model\MIME\Head\RFC2616 as Head;
-use BLW\Model\MIME\Body\RFC2616 as Body;
 use BLW\Model\GenericURI;
 use BLW\Model\Mediator\Symfony as Mediator;
 

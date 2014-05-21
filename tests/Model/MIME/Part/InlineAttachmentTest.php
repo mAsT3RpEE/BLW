@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME\Part;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\Part\InlineAttachment;
 use BLW\Model\GenericFile;
 use BLW\Model\FileException;
 
@@ -64,9 +63,7 @@ class InlineAttachmentTest extends \PHPUnit_Framework_TestCase
         try {
             $this->InlineAttachment->format(0, 50);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -96,9 +93,7 @@ class InlineAttachmentTest extends \PHPUnit_Framework_TestCase
         try {
             new InlineAttachment(new GenericFile('z:\\undefined\\!!!'), 'Test.png', 'image/png-test');
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (FileException $e) {}
+        } catch (FileException $e) {}
     }
 
     /**
@@ -124,9 +119,7 @@ EOT;
         try {
             $this->InlineAttachment['Content-Type'] = 'foo';
             $this->fail('Failed generating warning on readonly offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
@@ -136,9 +129,7 @@ EOT;
         try {
             $this->InlineAttachment['Content-Transfer-Encoding'] = 'foo';
             $this->fail('Failed generating warning on readonly offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
@@ -148,9 +139,7 @@ EOT;
         try {
             $this->InlineAttachment['Content-Disposition'] = 'foo';
             $this->fail('Failed generating warning on readonly offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
@@ -160,9 +149,7 @@ EOT;
         try {
             $this->InlineAttachment['Content-ID'] = 'foo';
             $this->fail('Failed generating warning on readonly offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
@@ -172,9 +159,7 @@ EOT;
         try {
             $this->InlineAttachment['Content-Location'] = 'foo';
             $this->fail('Failed generating warning on readonly offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
@@ -184,9 +169,7 @@ EOT;
         try {
             $this->InlineAttachment['Content-Base'] = 'foo';
             $this->fail('Failed generating warning on readonly offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
@@ -196,9 +179,7 @@ EOT;
         try {
             $this->InlineAttachment['Content'] = 'foo';
             $this->fail('Failed generating warning on readonly offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 

@@ -18,7 +18,6 @@
 namespace BLW\Model\HTTP;
 
 use stdClass;
-use BLW\Model\HTTP\Event;
 
 
 /**

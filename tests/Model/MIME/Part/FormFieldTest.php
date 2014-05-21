@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME\Part;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\Part\FormField;
 
 
 /**
@@ -59,9 +58,7 @@ class FormFieldTest extends \PHPUnit_Framework_TestCase
         try {
             $this->FormField->format(null, 50);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -87,9 +84,7 @@ class FormFieldTest extends \PHPUnit_Framework_TestCase
         try {
             new FormField('foo', 'text/plain', null);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -126,9 +121,7 @@ EOT;
         try {
             $this->FormField['Content-Type'] = 'foo';
             $this->fail('Failed generating warning on readonly offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
@@ -138,9 +131,7 @@ EOT;
         try {
             $this->FormField['Content-Disposition'] = 'foo';
             $this->fail('Failed generating warning on readonly offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
@@ -150,9 +141,7 @@ EOT;
         try {
             $this->FormField['Content-Transfer-Encoding'] = 'foo';
             $this->fail('Failed generating warning on readonly offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
@@ -162,9 +151,7 @@ EOT;
         try {
             $this->FormField['Content'] = 'foo';
             $this->fail('Failed generating warning on readonly offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 

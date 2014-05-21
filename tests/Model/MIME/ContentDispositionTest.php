@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\ContentDisposition;
 
 
 /**
@@ -45,7 +44,7 @@ class ContentDispositionTest extends \PHPUnit_Framework_TestCase
         $this->Header      = new ContentDisposition('inline', array('filename' => 'test.png'));
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -61,7 +60,7 @@ class ContentDispositionTest extends \PHPUnit_Framework_TestCase
     public function generateValidDispositions()
     {
         return array(
-        	 array('inline', 'inline')
+             array('inline', 'inline')
             ,array('test', 'test')
         );
     }
@@ -69,11 +68,11 @@ class ContentDispositionTest extends \PHPUnit_Framework_TestCase
     public function generateInvalidDispositions()
     {
         return array(
-        	 array('pre-;-post', 'attachment')
+             array('pre-;-post', 'attachment')
             ,array('pre-?-post', 'attachment')
             ,array('pre-(-post', 'attachment')
             ,array('pre-)-post', 'attachment')
-        	,array(false, 'attachment')
+            ,array(false, 'attachment')
         );
     }
 
@@ -83,14 +82,14 @@ class ContentDispositionTest extends \PHPUnit_Framework_TestCase
     public function test_parseDisposition()
     {
         # Valid type
-        foreach($this->generateValidDispositions() as $Parameters) {
+        foreach ($this->generateValidDispositions() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseDisposition($Original), 'ContentDisposition::parseDisposition() returned an invalid format');
         }
 
         # Invalid type
-        foreach($this->generateInvalidDispositions() as $Parameters) {
+        foreach ($this->generateInvalidDispositions() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseDisposition($Original), 'ContentDisposition::parseDisposition() returned an invalid format');
@@ -111,9 +110,7 @@ class ContentDispositionTest extends \PHPUnit_Framework_TestCase
         try {
             new ContentDisposition(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
 
         # No parameters
         $this->Header = new ContentDisposition('inline');
@@ -123,9 +120,7 @@ class ContentDispositionTest extends \PHPUnit_Framework_TestCase
         try {
             new ContentDisposition('inline', array('???' => '???'));
             $this->fail('Failed to generate notice with invalid arguments');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
     }
 
     /**

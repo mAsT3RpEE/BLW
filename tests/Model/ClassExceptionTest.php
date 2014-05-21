@@ -17,7 +17,6 @@
  */
 namespace BLW\Model;
 
-use BLW\Model\ClassException;
 
 
 /**
@@ -38,9 +37,7 @@ class ClassExceptionTest extends \PHPUnit_Framework_TestCase
     {
         try {
             throw new ClassException(-1);
-        }
-
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             $this->Exception = $e;
         }
 

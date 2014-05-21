@@ -18,7 +18,6 @@
  */
 namespace BLW\Type\MIME;
 
-use BLW\Type\MIME\IHeader;
 
 // @codeCoverageIgnoreStart
 if (! defined('BLW')) {

@@ -17,7 +17,6 @@
  */
 namespace BLW\Model\DOM;
 
-use ReflectionProperty;
 use ReflectionMethod;
 use DOMElement;
 use DOMAttr;
@@ -25,10 +24,8 @@ use DOMText;
 use DOMCdataSection;
 use DOMDocument;
 
-use BLW\Model\DOM\Document;
 use BLW\Model\DOM\Exception as DOMException;
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\DOM\Element;
 
 
 /**
@@ -73,7 +70,7 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
     public function generateValidHTML()
     {
         return array(
-        	 array(self::HTML, 'html')
+             array(self::HTML, 'html')
             ,array("<DOCTYPE html>".self::HTML, 'html')
             ,array('<div><span>foo</span><span>bar</bar></div>', 'div')
             ,array('<span>foo</span><span>bar</bar>', 'span')
@@ -86,7 +83,7 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
     public function test_createFromString()
     {
         # Valid HTML
-        foreach($this->generateValidHTML() as $Arguments) {
+        foreach ($this->generateValidHTML() as $Arguments) {
             list($HTML, $Tag) = $Arguments;
 
             $Element = $this->Element->createFromString($HTML);
@@ -101,17 +98,13 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Element->createFromString("\xFF");
             $this->fail('Failed to generate exception with bad encoding');
-        }
-
-        catch(DOMException $e) {}
+        } catch (DOMException $e) {}
 
         # Invalid HTML
         try {
             $this->Element->createFromString(array());
             $this->fail('Failed to generate exception with invalid HTML');
-        }
-
-        catch(InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -140,9 +133,7 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Element->getDocument(new DOMDocument('1.0'));
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (DOMException $e) {}
+        } catch (DOMException $e) {}
     }
 
     /**
@@ -178,9 +169,7 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Element->setInnerHTML("\xFF");
             $this->fail('Failed to generate exception with invalid HTML');
-        }
-
-        catch (DOMException $e) {}
+        } catch (DOMException $e) {}
 
         # Invalid HTML
 
@@ -192,9 +181,7 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
         try {
             $Element->setInnerHTML('<foo>bar</foo>');
             $this->fail('Failed to generate exception with readonly element');
-        }
-
-        catch (DOMException $e) {}
+        } catch (DOMException $e) {}
     }
 
     /**
@@ -226,9 +213,7 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Element->setOuterHTML("\xFF");
             $this->fail('Failed to generate exception with invalid HTML');
-        }
-
-        catch (DOMException $e) {}
+        } catch (DOMException $e) {}
 
         # Invalid HTML
         $this->assertFalse($this->Element->setOuterHTML(''), 'IElement::setOuterHTML() should return FALSE');
@@ -236,9 +221,7 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Element->setOuterHTML(NULL);
             $this->fail('Failed to generate exception with invalid HTML');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
 
         # No owner document
         $Element = new Element('span', 'foo');
@@ -246,9 +229,7 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
         try {
             $Element->setOuterHTML('<foo>bar</foo>');
             $this->fail('Failed to generate exception with readonly element');
-        }
-
-        catch (DOMException $e) {}
+        } catch (DOMException $e) {}
     }
 
     /**
@@ -268,9 +249,7 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
         try {
             $Element->append($Node);
             $this->fail('Failed to generate exception with readonly element');
-        }
-
-        catch (DOMException $e) {}
+        } catch (DOMException $e) {}
     }
 
     /**
@@ -297,9 +276,7 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
         try {
             $Element->prepend($Node);
             $this->fail('Failed to generate exception with readonly element');
-        }
-
-        catch (DOMException $e) {}
+        } catch (DOMException $e) {}
     }
 
     /**
@@ -323,9 +300,7 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
         try {
             $Element->replace($Node);
             $this->fail('Failed to generate exception with readonly element');
-        }
-
-        catch (DOMException $e) {}
+        } catch (DOMException $e) {}
     }
 
     /**
@@ -349,9 +324,7 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
         try {
             $Element->wrapInner($Element);
             $this->fail('Failed to generate exception with readonly element');
-        }
-
-        catch (DOMException $e) {}
+        } catch (DOMException $e) {}
     }
 
     /**
@@ -376,9 +349,7 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
         try {
             $Element->wrapOuter($Element);
             $this->fail('Failed to generate exception with readonly element');
-        }
-
-        catch (DOMException $e) {}
+        } catch (DOMException $e) {}
     }
 
     /**
@@ -438,9 +409,7 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Element->Document = new \DOMDocument('1.0', 'UTF-8');
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
    }

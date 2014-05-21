@@ -18,8 +18,6 @@
 namespace BLW\Model\MIME;
 
 use DateTime;
-use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\Expires;
 
 
 /**
@@ -55,9 +53,9 @@ class ExpiresTest extends \PHPUnit_Framework_TestCase
     public function generateValidDates()
     {
         return array(
-        	 array(new DateTime('tomorrow'))
-        	,array(new DateTime('+1week'))
-        	,array(new DateTime('last year'))
+             array(new DateTime('tomorrow'))
+            ,array(new DateTime('+1week'))
+            ,array(new DateTime('last year'))
         );
     }
 
@@ -71,7 +69,7 @@ class ExpiresTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeSame($this->Expires->format(Expires::FORMAT), '_Value', $this->Header, 'Expires::__construct() failed to set $_Value');
 
         # Valid arguments
-        foreach($this->generateValidDates() as $Arguments) {
+        foreach ($this->generateValidDates() as $Arguments) {
             list($Expires) = $Arguments;
 
             $this->Header = new Expires($Expires);

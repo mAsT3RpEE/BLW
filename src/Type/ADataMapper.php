@@ -196,6 +196,7 @@ abstract class ADataMapper extends \ArrayObject implements \BLW\Type\IDataMapper
         // For format look @ __setField().
         return function ($value) use (&$variable) {
             $variable = $value;
+
             return IDataMapper::UPDATED;
         };
     }
@@ -327,8 +328,7 @@ abstract class ADataMapper extends \ArrayObject implements \BLW\Type\IDataMapper
      */
     public static function getErrorInfo($result, $class, $name)
     {
-        switch ($result)
-        {
+        switch ($result) {
             // Writeonly property
             case IDataMapper::WRITEONLY:
                 $Message = sprintf('Cannot modify writeonly property: %s::$%s', $class, $name);

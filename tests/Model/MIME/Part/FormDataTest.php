@@ -18,8 +18,6 @@
 namespace BLW\Model\MIME\Part;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\Part\FormData;
-use BLW\Model\MIME\Part\FormField;
 
 
 /**
@@ -72,9 +70,7 @@ class FormDataTest extends \PHPUnit_Framework_TestCase
         try {
             $this->FormData->format(null, 50);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -116,9 +112,7 @@ EOT;
         try {
             $this->FormData['Content'] = 'foo';
             $this->fail('Failed generating warning on readonly offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 

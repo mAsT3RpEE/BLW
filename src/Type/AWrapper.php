@@ -193,6 +193,7 @@ abstract class AWrapper extends \BLW\Type\ASerializable implements \BLW\Type\IWr
 
             // Update parent
             $this->_Parent = $Parent;
+
             return IDataMapper::UPDATED;
 
         // Else dont update parent
@@ -212,6 +213,7 @@ abstract class AWrapper extends \BLW\Type\ASerializable implements \BLW\Type\IWr
     final public function clearParent()
     {
         $this->_Parent = null;
+
         return IDataMapper::UPDATED;
     }
 

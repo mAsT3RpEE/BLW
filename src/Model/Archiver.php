@@ -85,7 +85,7 @@ class Archiver extends \BLW\Model\Compiler
         @unlink($TAR);
         @unlink("$TAR.gz");
 
-        $TAR = new PharData($TAR, FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::KEY_AS_FILENAME, "$Project.tar");
+        $TAR = new PharData($TAR, FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::KEY_AS_FILENAME);
 
         $TAR->startBuffering();
 

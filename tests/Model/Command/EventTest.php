@@ -19,7 +19,6 @@ namespace BLW\Model\Command;
 
 use stdClass;
 use BLW\Type\Command\ICommand;
-use BLW\Model\Command\Event;
 
 
 /**

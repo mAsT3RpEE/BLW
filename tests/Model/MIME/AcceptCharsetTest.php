@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\AcceptCharset;
 
 
 /**
@@ -45,7 +44,7 @@ class AcceptCharsetTest extends \PHPUnit_Framework_TestCase
         $this->Header      = new AcceptCharset('unicode-1-1; q=1');
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -61,17 +60,17 @@ class AcceptCharsetTest extends \PHPUnit_Framework_TestCase
     public function generateValidTypes()
     {
         return array(
-        	 array('iso-8859-5', 'iso-8859-5')
-        	,array(';;iso-8859-5, ;;; unicode-1-1;;', 'iso-8859-5')
-        	,array('"iso-8859-5"', 'iso-8859-5')
+             array('iso-8859-5', 'iso-8859-5')
+            ,array(';;iso-8859-5, ;;; unicode-1-1;;', 'iso-8859-5')
+            ,array('"iso-8859-5"', 'iso-8859-5')
         );
     }
 
     public function generateInvalidTypes()
     {
         return array(
-        	 array(false, '*')
-        	,array(new \stdClass, '*')
+             array(false, '*')
+            ,array(new \stdClass, '*')
             ,array(array(), '*')
         );
     }
@@ -82,14 +81,14 @@ class AcceptCharsetTest extends \PHPUnit_Framework_TestCase
     public function test_parseCharset()
     {
         # Valid type
-        foreach($this->generateValidTypes() as $Parameters) {
+        foreach ($this->generateValidTypes() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseCharset($Original), 'AcceptCharset::parseCharset() returned an invalid format');
         }
 
         # Invalid type
-        foreach($this->generateInvalidTypes() as $Parameters) {
+        foreach ($this->generateInvalidTypes() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseCharset($Original), 'AcceptCharset::parseCharset() returned an invalid format');
@@ -113,9 +112,7 @@ class AcceptCharsetTest extends \PHPUnit_Framework_TestCase
         try {
             new AcceptCharset(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

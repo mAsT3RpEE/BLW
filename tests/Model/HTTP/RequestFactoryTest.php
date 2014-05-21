@@ -17,16 +17,12 @@
  */
 namespace BLW\Model\HTTP;
 
-use ReflectionProperty;
-use ReflectionMethod;
 
 use BLW\Model\InvalidArgumentException;
 
-use BLW\Model\HTTP\RequestFactory;
 use BLW\Model\HTTP\Request\Generic as Request;
 use BLW\Model\GenericContainer;
 use BLW\Model\MIME\Generic;
-use BLW\Model\MIME\AcceptCharset;
 use BLW\Model\MIME\AcceptEncoding;
 use BLW\Model\MIME\AcceptLanguage;
 use BLW\Model\MIME\Accept;
@@ -34,7 +30,6 @@ use BLW\Model\GenericURI;
 use BLW\Type\HTTP\IRequest;
 use BLW\Model\GenericFile;
 use BLW\Model\MIME\Part\FormField;
-use BLW\Model\MIME\Part\FormFieldTest;
 use BLW\Model\MIME\Part\FormFile;
 
 
@@ -78,7 +73,7 @@ class RequestFactoryTest  extends \PHPUnit_Framework_TestCase
     public function generateInvalidArgs()
     {
         return array(
-        	 array('UndefinedClass')
+             array('UndefinedClass')
             ,array('stdClass')
             ,array(array(1))
             ,array(new \stdClass)
@@ -98,14 +93,12 @@ class RequestFactoryTest  extends \PHPUnit_Framework_TestCase
 
         $this->assertAttributeSame($Expected, '_RequestClass', $this->Factory, 'IFactory::__construct() Failed to set $_RequestClass');
 
-        for($args=$this->generateInvalidArgs(); list($k, list($Input)) = each($args);) {
+        for ($args=$this->generateInvalidArgs(); list($k, list($Input)) = each($args);) {
 
             try {
                 new RequestFactory($Input);
                 $this->fail('Failed to generate exception with invalid arguments');
-            }
-
-            catch (InvalidArgumentException $e) {}
+            } catch (InvalidArgumentException $e) {}
         }
     }
 
@@ -120,8 +113,8 @@ class RequestFactoryTest  extends \PHPUnit_Framework_TestCase
     public function generateInvalidGET()
     {
         return array(
-        	 array(new GenericURI('http://foo.com'), new GenericURI('about:nothing'), NULL)    // Invalid Headers
-        	,array(new GenericURI(''), new GenericURI('about:nothing'), array())               // Invalid URI
+             array(new GenericURI('http://foo.com'), new GenericURI('about:nothing'), NULL)    // Invalid Headers
+            ,array(new GenericURI(''), new GenericURI('about:nothing'), array())               // Invalid URI
 //        	,array(new GenericURI('about:foo'), new GenericURI('about:nothing'), NULL)         // Relative URI
         );
     }
@@ -145,14 +138,12 @@ EOT;
         $this->assertEquals($Expected, strval($Request), 'IFactory::createGET() Produced an invalid request');
 
         # Invalid arguments
-        for($args=$this->generateInvalidGET(); list($k,list($URI,$BaseURI,$Headers)) = each($args);) {
+        for ($args=$this->generateInvalidGET(); list($k,list($URI,$BaseURI,$Headers)) = each($args);) {
 
             try {
                 $this->Factory->createGET($URI, $BaseURI, $Headers);
                 $this->fail('Failed to generate exception with invalid arguments');
-            }
-
-            catch (InvalidArgumentException $e) {}
+            } catch (InvalidArgumentException $e) {}
         }
     }
 
@@ -175,24 +166,22 @@ EOT;
         $this->assertEquals($Expected, strval($Request), 'IFactory::createHEAD() Produced an invalid request');
 
         # Invalid Arguments
-        for($args=$this->generateInvalidGET(); list($k,list($URI,$BaseURI,$Headers)) = each($args);) {
+        for ($args=$this->generateInvalidGET(); list($k,list($URI,$BaseURI,$Headers)) = each($args);) {
 
             try {
                 $this->Factory->createHEAD($URI, $BaseURI, $Headers);
                 $this->fail('Failed to generate exception with invalid arguments');
-            }
-
-            catch (InvalidArgumentException $e) {}
+            } catch (InvalidArgumentException $e) {}
         }
     }
 
     public function generateInvalidPOST()
     {
         return array(
-        	 array(new GenericURI('http://foo.com'), new GenericURI('about:nothing'), array(), NULL)   // Invalid Headers
-        	,array(new GenericURI(''), new GenericURI('about:nothing'), array(), $this->Headers)       // Invalid URI
+             array(new GenericURI('http://foo.com'), new GenericURI('about:nothing'), array(), NULL)   // Invalid Headers
+            ,array(new GenericURI(''), new GenericURI('about:nothing'), array(), $this->Headers)       // Invalid URI
 //        	,array(new GenericURI('about:foo'), new GenericURI('about:nothing'), $this->Headers)       // Relative URI
-        	,array(new GenericURI(''), new GenericURI('about:nothing'), NULL,  $this->Headers)         // Invalid Data
+            ,array(new GenericURI(''), new GenericURI('about:nothing'), NULL,  $this->Headers)         // Invalid Data
         );
     }
 
@@ -248,14 +237,12 @@ EOT;
         // file_put_contents($File, str_replace($Boundary, '%1$s', strval($Request)));
 
         # Invalid Arguments
-        for($args=$this->generateInvalidPOST(); list($k,list($URI,$BaseURI,$Data, $Headers)) = each($args);) {
+        for ($args=$this->generateInvalidPOST(); list($k,list($URI,$BaseURI,$Data, $Headers)) = each($args);) {
 
             try {
                 $this->Factory->createPOST($URI, $BaseURI, $Data, $Headers);
                 $this->fail('Failed to generate exception with invalid arguments');
-            }
-
-            catch (InvalidArgumentException $e) {}
+            } catch (InvalidArgumentException $e) {}
         }
     }
 }

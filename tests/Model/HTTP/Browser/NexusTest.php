@@ -17,8 +17,6 @@
  */
 namespace BLW\Model\HTTP\Browser;
 
-use ReflectionProperty;
-use ReflectionMethod;
 
 use BLW\Model\HTTP\Client\Mock as Client;
 use BLW\Model\HTTP\Browser\Nexus as Browser;
@@ -91,7 +89,7 @@ class NexusTest  extends \PHPUnit_Framework_TestCase
     {
         $Called = 0;
 
-        $this->Browser->_on('Headers', function() use(&$Called) {$Called++;});
+        $this->Browser->_on('Headers', function () use (&$Called) {$Called++;});
 
         $Headers = $this->Browser->createHeaders();
 

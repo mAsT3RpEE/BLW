@@ -17,13 +17,9 @@
  */
 namespace BLW\Model\MIME\Head;
 
-use ReflectionMethod;
-use ReflectionProperty;
 
 use BLW\Model\InvalidArgumentException;
 
-use BLW\Model\MIME\MIMEVersion;
-use BLW\Model\MIME\Section;
 
 use BLW\Model\MIME\Head\RFC2616 as Head;
 use BLW\Model\MIME\Generic as GenericHeader;
@@ -95,9 +91,7 @@ class RFC2616Test extends \PHPUnit_Framework_TestCase
         try {
             $this->Head->getHeader(null);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

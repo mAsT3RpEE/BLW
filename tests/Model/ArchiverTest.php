@@ -17,15 +17,9 @@
  */
 namespace BLW\Model;
 
-use ReflectionProperty;
-use ReflectionMethod;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
 
-use BLW\Model\GenericFile;
-use BLW\Model\Archiver;
-use BLW\Model\InvalidArgumentException;
-use BLW\Model\FileException;
 use BLW\Model\Mediator\Symfony as Mediator;
 
 
@@ -50,7 +44,7 @@ class ArchiverTest extends \PHPUnit_Framework_TestCase
         @mkdir($Temp);
 
         $this->Archiver = new Archiver(
-	       new GenericFile($Temp),
+           new GenericFile($Temp),
            new GenericFile(dirname(dirname(__DIR__))),
            null,
            new Mediator
@@ -87,8 +81,6 @@ class ArchiverTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Archiver->compile(NULL);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch(InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 }

@@ -17,13 +17,9 @@
  */
 namespace BLW\Model\HTTP\Response;
 
-use ReflectionProperty;
-use ReflectionMethod;
 
-use BLW\Type\IDataMapper;
 use BLW\Type\HTTP\IResponse;
 
-use BLW\Model\Config\Generic as GenericConfig;
 use BLW\Model\HTTP\Response\Generic as Response;
 
 

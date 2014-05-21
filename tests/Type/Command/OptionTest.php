@@ -19,7 +19,6 @@ namespace BLW\Type\Command;
 
 use ReflectionMethod;
 use BLW\Model\GenericContainer;
-use BLW\Type\Command\IOption;
 use BLW\Model\InvalidArgumentException;
 
 /**
@@ -60,7 +59,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers ::__construct
      */
-    public function test_construct ()
+    public function test_construct()
     {
         $this->Option = $this->getMockForAbstractClass('\BLW\Type\Command\AOption', array('test', 'test option'));
 
@@ -75,18 +74,14 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 
         # Invalid arguments
         try {
-        	$this->getMockForAbstractClass('\\BLW\\Type\\Command\\AOption', array(NULL, 'foo'));
-        	$this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+            $this->getMockForAbstractClass('\\BLW\\Type\\Command\\AOption', array(NULL, 'foo'));
+            $this->fail('Failed to generate exception with invalid arguments');
+        } catch (InvalidArgumentException $e) {}
 
         try {
-        	$this->getMockForAbstractClass('\\BLW\\Type\\Command\\AOption', array('foo', NULL));
-        	$this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+            $this->getMockForAbstractClass('\\BLW\\Type\\Command\\AOption', array('foo', NULL));
+            $this->fail('Failed to generate exception with invalid arguments');
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -153,9 +148,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Option->createFromArray(NULL);
             $this->fail('Failedto generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -185,9 +178,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Option->createFromString(NULL);
             $this->fail('Failedto generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -204,11 +195,9 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 
         # Undefined
         try {
-        	$this->Option->undefined;
-        	$this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+            $this->Option->undefined;
+            $this->fail('Failed to generate notice with undefined property');
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
         $this->assertNull(@$this->Option->undefined, 'IOption::$undefined should be NULL');
     }
@@ -240,10 +229,8 @@ class OptionTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Option->Name = '';
             $this->fail('Failed to genereate notice with readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
-        	$this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
+            $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
         @$this->Option->Name = '';
@@ -252,10 +239,8 @@ class OptionTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Option->Value = '';
             $this->fail('Failed to genereate notice with readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
-        	$this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
+            $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
         @$this->Option->Value = '';
@@ -264,9 +249,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Option->undefined = '';
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error $e) {
+        } catch (\PHPUnit_Framework_Error $e) {
             $this->assertContains('non-existant property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -283,10 +266,8 @@ class OptionTest extends \PHPUnit_Framework_TestCase
         try {
             unset($this->Option->Name);
             $this->fail('Failed to generate notice with readonly property');
-        }
-
-          catch (\PHPUnit_Framework_Error_Notice $e) {
-        	$this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
+            $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
         @$this->Option->__unset('Name');
@@ -295,10 +276,8 @@ class OptionTest extends \PHPUnit_Framework_TestCase
         try {
             unset($this->Option->Value);
             $this->fail('Failed to generate notice with readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
-        	$this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
+            $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
         @$this->Option->__unset('Value');

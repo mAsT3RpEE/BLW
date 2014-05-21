@@ -21,7 +21,6 @@ use ReflectionProperty;
 use ReflectionMethod;
 
 use BLW\Type\IDataMapper;
-use BLW\Type\HTTP\IResponse;
 
 use BLW\Model\InvalidArgumentException;
 
@@ -47,8 +46,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $setProp = function($Object, $name, $value)
-        {
+        $setProp = function ($Object, $name, $value) {
             $Property = new ReflectionProperty($Object, $name);
 
             $Property->setAccessible(true);
@@ -83,11 +81,11 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
      */
     public function test_construct()
     {
-        $Property = function($Object, $Property)
-        {
+        $Property = function ($Object, $Property) {
             $Property = new ReflectionProperty($Object, $Property);
 
             $Property->setAccessible(true);
+
             return $Property->getValue($Object);
         };
 
@@ -104,14 +102,12 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\\BLW\\Type\\MIME\\IBody', $Property($Response, '_Body'), 'IResponse::__construct() Failed to set $_Body');
 
 
-        foreach($this->generateInvalidArgs() as $Arguments) {
+        foreach ($this->generateInvalidArgs() as $Arguments) {
 
             try {
                 $this->getMockForAbstractClass('\\BLW\\Type\\HTTP\\AResponse', $Arguments);
                 $this->fail('Failed to generate exception with invalid arguments');
-            }
-
-            catch (InvalidArgumentException $e) {}
+            } catch (InvalidArgumentException $e) {}
         }
     }
 
@@ -131,13 +127,13 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     {
         $test   = file_get_contents(dirname(dirname(__DIR__)). '/Config/response.txt');
         $test   = preg_replace('!\r*\n$!', "\r\n", $test);
-        $Method = function ($Response)
-        {
+        $Method = function ($Response) {
             $Method = new ReflectionMethod($Response, '_parseParts');
             $Args   = func_get_args();
             $Args   = array_slice($Args, 1);
 
             $Method->setAccessible(true);
+
             return $Method->invokeArgs($Response, $Args);
         };
 
@@ -181,17 +177,13 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Response->createFromString('foo');
             $this->fail('Failed to generate exception with short string');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
 
         // Invalid Arguments
         try {
             $this->Response->createFromString(new \stdClass);
             $this->fail('Failed to generate exception with invalid argument');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -247,7 +239,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     public function test_setRequestURI()
     {
         # Valid arguments
-        foreach($this->generateValidURIs() as $Arguments) {
+        foreach ($this->generateValidURIs() as $Arguments) {
 
             list($Input, $Expected) = $Arguments;
 
@@ -256,7 +248,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         }
 
         # Invalid arguments
-        foreach($this->generateInvalidURIs() as $Arguments) {
+        foreach ($this->generateInvalidURIs() as $Arguments) {
 
             list($Input, $Expected) = $Arguments;
 
@@ -280,7 +272,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     public function test_setURI()
     {
         # Valid arguments
-        foreach($this->generateValidURIs() as $Arguments) {
+        foreach ($this->generateValidURIs() as $Arguments) {
 
             list($Input, $Expected) = $Arguments;
 
@@ -289,7 +281,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         }
 
         # Invalid arguments
-        foreach($this->generateInvalidURIs() as $Arguments) {
+        foreach ($this->generateInvalidURIs() as $Arguments) {
 
             list($Input, $Expected) = $Arguments;
 
@@ -330,9 +322,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         try {
             isset($this->Response[array()]);
             $this->fail('Failed to generate error with invalid index');
-        }
-
-        catch (\PHPUnit_Framework_Error $e) {
+        } catch (\PHPUnit_Framework_Error $e) {
             $this->assertContains('array_key_exists', $e->getMessage(), 'Invalid Notice: '. $e->getMessage());
         }
     }
@@ -349,9 +339,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Response['bar'];
             $this->fail('Failed to generate notice with undefined index');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Undefined index', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -359,9 +347,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Response[array()];
             $this->fail('Failed to generate error with invalid index');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Undefined index', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -392,9 +378,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Response[array()] = 1;
             $this->fail('Failed to generage notice with invalid index');
-        }
-
-        catch (\OutOfRangeException $e) {}
+        } catch (\OutOfRangeException $e) {}
 
         // Invalid value valid index
 
@@ -475,9 +459,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Response->undefined;
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
         @$this->Response->undefined;
     }
@@ -532,9 +514,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Response->URI = null;
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -548,9 +528,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Response->RequestURI = null;
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -560,9 +538,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Response->Protocol = NULL;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -572,9 +548,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Response->Version = NULL;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -584,9 +558,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Response->Status = NULL;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -596,9 +568,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Response->Header = NULL;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -608,9 +578,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Response->Body = NULL;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -620,9 +588,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Response->undefined = '';
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error $e) {
+        } catch (\PHPUnit_Framework_Error $e) {
             $this->assertContains('non-existant property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 

@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\Location;
 
 
 /**
@@ -45,7 +44,7 @@ class LocationTest extends \PHPUnit_Framework_TestCase
         $this->Header      = new Location($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('ftp://example.com')));
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -61,17 +60,17 @@ class LocationTest extends \PHPUnit_Framework_TestCase
     public function generateValidBases()
     {
         return array(
-        	 array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('http://foo.com')), 'http://foo.com')
-        	,array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('http://www.example.com/test/')), 'http://www.example.com/test/')
+             array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('http://foo.com')), 'http://foo.com')
+            ,array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('http://www.example.com/test/')), 'http://www.example.com/test/')
         );
     }
 
     public function generateInvalidBases()
     {
         return array(
-        	 array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('')), '')
+             array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('')), '')
             ,array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('"""')), '')
-        	,array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('folder/test.png')), '')
+            ,array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('folder/test.png')), '')
         );
     }
 
@@ -85,7 +84,7 @@ class LocationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('ftp://example.com', $this->Properties['Value']->getValue($this->Header), 'Location::__construct() failed to set $_Value');
 
         # Valid Base
-        foreach($this->generateValidBases() as $Parameters) {
+        foreach ($this->generateValidBases() as $Parameters) {
             list($Input, $Expected) = $Parameters;
 
             $this->Header = new Location($Input);
@@ -94,15 +93,13 @@ class LocationTest extends \PHPUnit_Framework_TestCase
         }
 
         # Invalid Base
-        foreach($this->generateInvalidBases() as $Parameters) {
+        foreach ($this->generateInvalidBases() as $Parameters) {
             list($Input, $Expected) = $Parameters;
 
             try {
                 new Location($Input);
                 $this->fail('Failed to generate exception with invalid parameters');
-            }
-
-            catch (InvalidArgumentException $e) {}
+            } catch (InvalidArgumentException $e) {}
         }
     }
 

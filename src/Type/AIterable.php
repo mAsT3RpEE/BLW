@@ -127,6 +127,7 @@ abstract class AIterable implements \BLW\Type\IIterable
 
             // Update parent
             $this->_Parent = $Parent;
+
             return IDataMapper::UPDATED;
         }
 
@@ -147,6 +148,7 @@ abstract class AIterable implements \BLW\Type\IIterable
     final public function clearParent()
     {
         $this->_Parent = null;
+
         return IDataMapper::UPDATED;
     }
 

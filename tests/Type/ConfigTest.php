@@ -17,9 +17,7 @@
  */
 namespace BLW\Type;
 
-use DOMElement;
 use ArrayObject;
-use BadMethodCallException;
 
 use BLW\Model\InvalidArgumentException;
 
@@ -40,7 +38,7 @@ class ConfigTest extends \BLW\Type\SerializableTest
     protected function setUp()
     {
         $this->Config = $this->getMockForAbstractClass('\\BLW\\Type\\AConfig', array(array(
-        	 'foo'    => 1
+             'foo'    => 1
             ,'bar'    => 1
             ,'object' => new ArrayObject(array('foo' => 1))
         )));
@@ -72,9 +70,7 @@ class ConfigTest extends \BLW\Type\SerializableTest
         try {
             $this->getMockForAbstractClass('\\BLW\\Type\\AConfig', array(null));
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -84,7 +80,7 @@ class ConfigTest extends \BLW\Type\SerializableTest
     {
         # Test valid
         $Test = new ArrayObject(array(
-        	 'foo'    => 1
+             'foo'    => 1
             ,'bar'    => 1
             ,'object' => new ArrayObject(array('foo' => 1))
         ));
@@ -102,9 +98,7 @@ class ConfigTest extends \BLW\Type\SerializableTest
         try {
             $this->Config['test'] = array();
             $this->fail('Unable to generate exception with invalid value');
-        }
-
-        catch(\UnexpectedValueException $e) {
+        } catch (\UnexpectedValueException $e) {
             $this->assertContains('Instance of ArrayAccess expected', $e->getMessage(), 'Invalid exception: '.$e->getMessage());
         }
     }
@@ -116,7 +110,7 @@ class ConfigTest extends \BLW\Type\SerializableTest
     {
         # Test valid
         $Test = new ArrayObject(array(
-        	 'foo'    => 1
+             'foo'    => 1
             ,'bar'    => 1
             ,'object' => new ArrayObject(array('foo' => 1))
         ));
@@ -134,9 +128,7 @@ class ConfigTest extends \BLW\Type\SerializableTest
         try {
             $this->Config->append(array());
             $this->fail('Unable to generate exception with invalid value');
-        }
-
-        catch(\UnexpectedValueException $e) {
+        } catch (\UnexpectedValueException $e) {
             $this->assertContains('Instance of ArrayAccess expected', $e->getMessage(), 'Invalid exception: '.$e->getMessage());
         }
     }

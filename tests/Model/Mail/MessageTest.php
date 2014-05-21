@@ -27,8 +27,6 @@ use BLW\Model\GenericFile;
 use BLW\Model\GenericContainer;
 use BLW\Model\FileException;
 use BLW\Model\ClassException;
-use BLW\Model\Mail\MIME\Message as MIMEMessage;
-use BLW\Model\Mail\GenericMessage;
 use BLW\Model\Mail\Transport\Mock as Transport;
 
 
@@ -136,21 +134,21 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
     public function generateSubjects()
     {
         return array(
-        	 array('pre-(-post','pre--post')
-        	,array('pre-)-post','pre--post')
-        	,array('pre-<-post','pre--post')
-        	,array('pre->-post','pre--post')
-        	,array('pre-@-post','pre--post')
-        	,array('pre-,-post','pre--post')
-        	,array('pre-;-post','pre--post')
-        	,array('pre-:-post','pre--post')
-        	,array('pre-\-post','pre--post')
-        	,array('pre-"-post','pre--post')
-        	,array('pre-/-post','pre--post')
-        	,array('pre-[-post','pre--post')
-        	,array('pre-]-post','pre--post')
-        	,array('pre-?-post','pre--post')
-        	,array('pre-=-post','pre--post')
+             array('pre-(-post','pre--post')
+            ,array('pre-)-post','pre--post')
+            ,array('pre-<-post','pre--post')
+            ,array('pre->-post','pre--post')
+            ,array('pre-@-post','pre--post')
+            ,array('pre-,-post','pre--post')
+            ,array('pre-;-post','pre--post')
+            ,array('pre-:-post','pre--post')
+            ,array('pre-\-post','pre--post')
+            ,array('pre-"-post','pre--post')
+            ,array('pre-/-post','pre--post')
+            ,array('pre-[-post','pre--post')
+            ,array('pre-]-post','pre--post')
+            ,array('pre-?-post','pre--post')
+            ,array('pre-=-post','pre--post')
         );
     }
     /**
@@ -170,7 +168,7 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
         $this->assertEquals(IDataMapper::INVALID, $this->Message->setSubject(NULL), 'IMessage::setText() should return IDataMapper::INVALID');
 
         # Subject Filtering
-        foreach($this->generateSubjects() as $Arguments) {
+        foreach ($this->generateSubjects() as $Arguments) {
 
             list($Original, $Filtered) = $Arguments;
 
@@ -194,9 +192,7 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
         try {
             $this->Message->addAttachment(new GenericFile('z:\\undefined\\!!!'));
             $this->fail('Failed to generate exception on invalid file');
-        }
-
-        catch (FileException $e) {}
+        } catch (FileException $e) {}
     }
 
     /**
@@ -231,9 +227,7 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
         try {
             $this->Message->InlineAttachment(new GenericFile('X:\\undefined'));
             $this->fail('Failed to generate notice on invalid file');
-        }
-
-        catch(FileException $e) {}
+        } catch (FileException $e) {}
     }
 
     /**
@@ -282,16 +276,16 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
         $this->generateMessage();
 
         # Make property readable / writable
-	    $Status = new ReflectionProperty($this->Message, '_Status');
-	    $Status->setAccessible(true);
+        $Status = new ReflectionProperty($this->Message, '_Status');
+        $Status->setAccessible(true);
 
-	    # Status
+        # Status
         $this->assertSame($this->Message->Status, $Status->getValue($this->Message), 'IMessage::$Status should equal IMessage::_Status');
 
-	    # Serializer
-	    $this->assertSame($this->Message->Serializer, $this->Message->getSerializer(), 'IMessage::$Serializer should equal IMessage::getSerializer()');
+        # Serializer
+        $this->assertSame($this->Message->Serializer, $this->Message->getSerializer(), 'IMessage::$Serializer should equal IMessage::getSerializer()');
 
-	    # Parent
+        # Parent
         $this->assertInstanceOf('\\BLW\\Type\\IObject', $this->Message->Parent, 'IMessage::$Parent should be an instance of IObject');
 
         # ID
@@ -336,9 +330,7 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
         try {
             $this->Message->undefined;
             $this->fail('Failed to generate notice on undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Undefined property', $e->getMessage(), 'Message::$undefined is undefined and should raise a notice');
         }
 
@@ -360,13 +352,13 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
         # Status
         $this->assertTrue(isset($this->Message->Serializer), 'IObject::$Status should exist');
 
-	    # Serializer
-	    $this->assertTrue(isset($this->Message->Serializer), 'IObject::$Serializer should exist');
+        # Serializer
+        $this->assertTrue(isset($this->Message->Serializer), 'IObject::$Serializer should exist');
 
-	    # Parent
+        # Parent
         $this->assertTrue(isset($this->Message->Parent), 'IObject::$Parent should not exist');
 
-	    # ID
+        # ID
         $this->assertTrue(isset($this->Message->ID), 'IObject::$ID should exist');
 
         # Mediator
@@ -413,9 +405,7 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
         try {
             $this->Message->Status = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -425,9 +415,7 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
         try {
             $this->Message->Serializer = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -438,7 +426,7 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
         $this->Message->Parent = $Expected;
         $this->assertSame($Expected, $this->Message->Parent, 'IObject::$Parent should equal IObject::setParent()');
 
-	    # ID
+        # ID
         $this->Message->ID = 'foo';
         $this->assertSame('foo', $this->Message->ID, 'IObject::$ID should equal `foo');
 
@@ -451,9 +439,7 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
         try {
             $this->Message->MediatorID = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -466,9 +452,7 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
         try {
             $this->Message->To = 'foo';
             $this->fail('Failed to generate notice on invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -481,9 +465,7 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
         try {
             $this->Message->From = 'foo';
             $this->fail('Failed to generate notice on invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -496,9 +478,7 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
         try {
             $this->Message->ReplyTo = 'foo';
             $this->fail('Failed to generate notice on invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -511,9 +491,7 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
         try {
             $this->Message->CC = 'foo';
             $this->fail('Failed to generate notice on invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -526,9 +504,7 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
         try {
             $this->Message->BCC = 'foo';
             $this->fail('Failed to generate notice on invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -542,9 +518,7 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
         try {
             $this->Message->HTML = 'foo';
             $this->fail('Failed to generate notice on invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -558,9 +532,7 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
         try {
             $this->Message->HTML = 1.1;
             $this->fail('Failed to generate notice on invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -574,9 +546,7 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
         try {
             $this->Message->Subject = 1.1;
             $this->fail('Failed to generate notice on invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -599,7 +569,7 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
     {
         $this->generateMessage();
 
-	    # Parent
+        # Parent
         unset($this->Message->Parent);
         $this->assertFalse(isset($this->Message->Parent), 'IObject::$Parent should not exist');
 
@@ -656,9 +626,7 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
         try {
             $this->Message->createMimeMessage();
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (FileException $e) {}
+        } catch (FileException $e) {}
 
         # No recipient
         $x = $this->Message->To[0];
@@ -667,9 +635,7 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
         try {
             $this->Message->createMimeMessage();
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (ClassException $e) {}
+        } catch (ClassException $e) {}
 
         # No sender
         $this->Message->To[0] = $x;
@@ -679,9 +645,7 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
         try {
             $this->Message->createMimeMessage();
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (ClassException $e) {}
+        } catch (ClassException $e) {}
 
         # No subject
         $this->Message->From[0] = $x;
@@ -691,9 +655,7 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
         try {
             $this->Message->createMimeMessage();
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (ClassException $e) {}
+        } catch (ClassException $e) {}
 
         # No Body
         $this->Message->Subject = $x;
@@ -703,9 +665,7 @@ class MessageTest extends \BLW\Type\Mail\AddressHandlerTest
         try {
             $this->Message->createMimeMessage();
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (ClassException $e) {}
+        } catch (ClassException $e) {}
     }
 
     /**

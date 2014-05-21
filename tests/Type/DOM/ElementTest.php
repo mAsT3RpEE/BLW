@@ -18,7 +18,6 @@
 namespace BLW\Type\DOM;
 
 use ReflectionProperty;
-use ReflectionMethod;
 use DOMNode;
 use DOMDocument;
 use BLW\Type\IDataMapper;
@@ -115,11 +114,9 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
 
         # Invalid offset
         try {
-        	$this->Element->offsetExists('foo');
-        	$this->fail('Failed to generate exception with invalid offset');
-        }
-
-        catch (\OutOfBoundsException $e) {}
+            $this->Element->offsetExists('foo');
+            $this->fail('Failed to generate exception with invalid offset');
+        } catch (\OutOfBoundsException $e) {}
 
         # undefined offset
         $this->assertFalse($this->Element->offsetExists(100), 'IElement[100] should not exist');
@@ -139,19 +136,15 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
 
         # Invalid offset
         try {
-        	$this->Element->offsetGet('foo');
-        	$this->fail('Failed to generate exception with invalid offset');
-        }
-
-        catch (\OutOfBoundsException $e) {}
+            $this->Element->offsetGet('foo');
+            $this->fail('Failed to generate exception with invalid offset');
+        } catch (\OutOfBoundsException $e) {}
 
         # undefined offset
         try {
-        	$this->Element->offsetGet(100);
-        	$this->fail('Failed to generate notice with undefined offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+            $this->Element->offsetGet(100);
+            $this->fail('Failed to generate notice with undefined offset');
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
         $this->assertNull(@$this->Element->offsetGet(100), 'IElement[undefined] should be NULL');
     }
@@ -230,7 +223,7 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
             $Element[] = $NewElement;
             $this->fail('Failed to generate exception with readonly element');
 
-        } catch (ClassException $e){
+        } catch (ClassException $e) {
 
         }
     }
@@ -254,9 +247,7 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
         try {
             unset($this->Element['foo']);
             $this->fail('Failed to generate exception with invalid index');
-        }
-
-        catch (\OutOfBoundsException $e) {}
+        } catch (\OutOfBoundsException $e) {}
 
         # Readonly Node
         $Element = get_class($this->Element);
@@ -266,7 +257,7 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
             unset($Element[0]);
             $this->fail('Failed to generate exception with readonly element');
 
-        } catch (ClassException $e){
+        } catch (ClassException $e) {
 
         }
     }
@@ -354,11 +345,9 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
 
         # Undefined
         try {
-        	$this->Element->undefined;
-        	$this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+            $this->Element->undefined;
+            $this->fail('Failed to generate notice with undefined property');
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
         $this->assertNull(@$this->Element->undefined, 'IElement::$undefined should be NULL');
     }
@@ -431,9 +420,7 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Element->Parent = null;
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -442,9 +429,7 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Element->Parent = $Parent;
             $this->fail('Failed to generate notice with oneshot value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -458,9 +443,7 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Element->ID = null;
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -480,9 +463,7 @@ class ElementTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Element->undefined = '';
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error $e) {
+        } catch (\PHPUnit_Framework_Error $e) {
             $this->assertContains('non-existant property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 

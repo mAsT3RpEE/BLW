@@ -17,12 +17,10 @@
  */
 namespace BLW\Model\MIME\Body;
 
-use ReflectionMethod;
 use ReflectionProperty;
 
 use BLW\Type\MIME\IHeader;
 
-use BLW\Model\InvalidArgumentException;
 use BLW\Model\GenericFile;
 
 use BLW\Model\MIME\Body\RFC822 as Body;
@@ -160,9 +158,7 @@ class RFC822Test extends \PHPUnit_Framework_TestCase
         try {
             $this->Body->addPart(NULL);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (\PHPUnit_Framework_Error $e) {}
+        } catch (\PHPUnit_Framework_Error $e) {}
 
         # Empty sections
         $this->assertTrue($this->Body->endSection(), 'Body::endSection() should return true');

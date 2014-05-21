@@ -41,9 +41,9 @@ class AddressHandlerTest extends \PHPUnit_Framework_TestCase
         $this->AddressHandler = $this->getMockForAbstractClass('\\BLW\\Type\\Mail\\AAddressHandler');
 
         $Properties     = array(
-        	'To'       => new \ReflectionProperty($this->AddressHandler, '_To')
-        	,'From'    => new \ReflectionProperty($this->AddressHandler, '_From')
-        	,'ReplyTo' => new \ReflectionProperty($this->AddressHandler, '_ReplyTo')
+            'To'       => new \ReflectionProperty($this->AddressHandler, '_To')
+            ,'From'    => new \ReflectionProperty($this->AddressHandler, '_From')
+            ,'ReplyTo' => new \ReflectionProperty($this->AddressHandler, '_ReplyTo')
             ,'CC'      => new \ReflectionProperty($this->AddressHandler, '_CC')
             ,'BCC'     => new \ReflectionProperty($this->AddressHandler, '_BCC')
         );

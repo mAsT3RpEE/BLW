@@ -17,7 +17,6 @@
  */
 namespace BLW\Model\Mediator;
 
-use BLW\Model\Mediator\SubscriberContainer;
 use BLW\Model\Mediator\Symfony as Mediator;
 
 
@@ -79,9 +78,7 @@ class SubscriberContainerTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Container[] = null;
             $this->fail('Failed to generate exception with invalid value');
-        }
-
-        catch (\UnexpectedValueException $e) {}
+        } catch (\UnexpectedValueException $e) {}
     }
 
     /**
@@ -100,9 +97,7 @@ class SubscriberContainerTest  extends \PHPUnit_Framework_TestCase
         try {
             $this->Container->append(null);
             $this->fail('Failed to generate exception with invalid value');
-        }
-
-        catch (\UnexpectedValueException $e) {}
+        } catch (\UnexpectedValueException $e) {}
     }
 
     /**

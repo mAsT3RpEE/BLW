@@ -18,7 +18,6 @@
 namespace BLW\Type;
 
 use ReflectionProperty;
-use BLW\Type\IDataMapper;
 
 
 /**

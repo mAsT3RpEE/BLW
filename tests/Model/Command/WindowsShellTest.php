@@ -17,8 +17,6 @@
  */
 namespace BLW\Model\Command;
 
-use ReflectionProperty;
-use ReflectionMethod;
 
 use BLW\Type\Command\IOutput;
 
@@ -81,7 +79,7 @@ class WindowsShellTest extends \PHPUnit_Framework_TestCase
         $this->Output   = new GenericOutput(new HandleStream(fopen(self::OUTPUT, 'w')), new HandleStream(fopen(self::OUTPUT, 'w')));
         $this->Mediator = new SymfonyMediator;
         $this->Config   = new GenericConfig(array(
-        	 'Timeout'     => 10
+             'Timeout'     => 10
             ,'Callback'    => array($this, 'mock_Callback')
             ,'CWD'         => NULL
             ,'Environment' => NULL

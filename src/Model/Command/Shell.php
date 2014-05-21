@@ -238,14 +238,14 @@ class Shell extends \BLW\Type\Command\ACommand implements \BLW\Type\IFactory
      *            Command to run.
      * @param IConfig $Config
      *            Command configuration.
-	 *
+     *
      * <ul>
      * <li><b>Timeout</b>: <i>int</i> Timeout in seconds for a response from shellcommand.</li>
      * <li><b>CWD</b>: <i>string</i> Path to directory to use as native path of shellcommand.</li>
      * <li><b>Enviroment</b>: <i>array</i> Enviroment variables.</li>
      * <li><b>Extras</b>: <i>array</i> Extras passed to <code>proc_open()</code>.</li>
      * </ul>
-	 *
+     *
      * @param IMediator $Mediator
      *            Mediator for command.
      * @param string $ID
@@ -254,13 +254,10 @@ class Shell extends \BLW\Type\Command\ACommand implements \BLW\Type\IFactory
     public function __construct($Command, IConfig $Config, IMediator $Mediator = null, $ID = null)
     {
         // Check proc_open and proc_close
-
-        // @codeCoverageIgnoreStart
-
         if (! is_callable('proc_open') || ! is_callable('proc_close')) {
+            // @codeCoverageIgnoreStart
             throw new CommandException('Unable to create shell command. Either proc_open() or proc_close() have been disabled.');
-
-        // @codeCoverageIgnoreEnd
+            // @codeCoverageIgnoreEnd
 
         // CheckConfig
         } elseif (! $Config->offsetExists('Timeout')) {
@@ -338,7 +335,7 @@ class Shell extends \BLW\Type\Command\ACommand implements \BLW\Type\IFactory
         // @codeCoverageIgnoreStart
 
         // Forward exceptions
-        } catch(CommandException $e) {
+        } catch (CommandException $e) {
             throw new CommandException('%header% Error: ' . $e->getMessage(), $e->getCode(), $e);
         }
 
@@ -376,22 +373,18 @@ class Shell extends \BLW\Type\Command\ACommand implements \BLW\Type\IFactory
         $fp = proc_open($CommandLine, $this->createDescriptors(), $Pipes, $CWD, $Environment, $Extras);
 
         // Check result
-        if (is_resource($fp)) {
-
-            // Update process resource / pipes
-            $this->_fp    = $fp;
-            $this->_Pipes = $Pipes;
-
-            // Success
-            return true;
-
-        // @codeCoverageIgnoreStart
-
-        } else {
+        if (! is_resource($fp)) {
+            // @codeCoverageIgnoreStart
             return false;
+            // @codeCoverageIgnoreEnd
         }
 
-        // @codeCoverageIgnoreEnd
+        // Update process resource / pipes
+        $this->_fp    = $fp;
+        $this->_Pipes = $Pipes;
+
+        // Success
+        return true;
     }
 
     /**

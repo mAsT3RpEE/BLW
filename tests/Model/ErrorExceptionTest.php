@@ -17,7 +17,6 @@
  */
 namespace BLW\Model;
 
-use BLW\Model\ErrorException;
 
 
 /**
@@ -39,9 +38,7 @@ class ErrorExceptionTest extends \PHPUnit_Framework_TestCase
         try {
             @trigger_error('Warning!', E_USER_WARNING);
             throw new ErrorException(error_get_last());
-        }
-
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             $this->Exception = $e;
         }
 

@@ -18,8 +18,6 @@
 namespace BLW\Type;
 
 use SplFileInfo;
-use BLW\Type\IDataMapper;
-use BLW\Type\ADataMapper;
 
 use BLW\Model\InvalidArgumentException;
 
@@ -130,9 +128,7 @@ class DataMapperTest extends \PHPUnit_Framework_TestCase
             try {
                 $this->DataMapper->__setField($name, $read, $write, $flags);
                 $this->fail('Failed to generate exception with invalid parameter');
-            }
-
-            catch (InvalidArgumentException $e) {}
+            } catch (InvalidArgumentException $e) {}
         }
     }
 
@@ -159,20 +155,18 @@ class DataMapperTest extends \PHPUnit_Framework_TestCase
         try {
             $this->DataMapper->__loadFields($Invalid);
             $this->fail('Failed to generate exception with invalid parameter');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     public function generateFields(&$called)
     {
-        $Empty     = function(){return true;};
-        $Updated   = function() use (&$called) {$called++; return IDataMapper::UPDATED;};
-        $Readonly  = function() use (&$called) {$called++; return IDataMapper::READONLY;};
-        $WriteOnly = function() use (&$called) {$called++; return IDataMapper::WRITEONLY;};
-        $OneShot   = function() use (&$called) {$called++; return IDataMapper::ONESHOT;};
-        $Invalid   = function() use (&$called) {$called++; return IDataMapper::INVALID;};
-        $Undefined = function() use (&$called) {return IDataMapper::UNDEFINED;};
+        $Empty     = function () {return true;};
+        $Updated   = function () use (&$called) {$called++; return IDataMapper::UPDATED;};
+        $Readonly  = function () use (&$called) {$called++; return IDataMapper::READONLY;};
+        $WriteOnly = function () use (&$called) {$called++; return IDataMapper::WRITEONLY;};
+        $OneShot   = function () use (&$called) {$called++; return IDataMapper::ONESHOT;};
+        $Invalid   = function () use (&$called) {$called++; return IDataMapper::INVALID;};
+        $Undefined = function () use (&$called) {return IDataMapper::UNDEFINED;};
 
         return array(
              array('foo1', $Empty, $Updated)
@@ -212,8 +206,8 @@ class DataMapperTest extends \PHPUnit_Framework_TestCase
     public function test_offsetGet()
     {
         # Load test data
-        $Empty  = function(){};
-        $Read   = function() use (&$called) {$called = true; return 'test';};
+        $Empty  = function () {};
+        $Read   = function () use (&$called) {$called = true; return 'test';};
         $Fields = array(
             array('foo', $Read, $Empty)
         );
@@ -290,9 +284,7 @@ class DataMapperTest extends \PHPUnit_Framework_TestCase
         try {
             $this->DataMapper->offsetUnset('undefined');
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
     }
 
     public function generateErrors()
@@ -311,7 +303,7 @@ class DataMapperTest extends \PHPUnit_Framework_TestCase
      */
     public function test_getErrorInfo()
     {
-        foreach($this->generateErrors() as $Arguments) {
+        foreach ($this->generateErrors() as $Arguments) {
 
             list ($Input, $Expected) = $Arguments;
             list ($Messge, $Level) = $this->DataMapper->getErrorInfo($Input, 'foo', 'bar');

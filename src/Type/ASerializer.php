@@ -141,6 +141,7 @@ abstract class ASerializer extends \BLW\Type\ASerializable implements \BLW\Type\
 
             // Update parent
             $this->_Parent = $Parent;
+
             return IDataMapper::UPDATED;
 
 
@@ -161,6 +162,7 @@ abstract class ASerializer extends \BLW\Type\ASerializable implements \BLW\Type\
     final public function clearParent()
     {
         $this->_Parent = null;
+
         return IDataMapper::UPDATED;
     }
 
@@ -300,9 +302,7 @@ abstract class ASerializer extends \BLW\Type\ASerializable implements \BLW\Type\
 
                     // Update count
                     $count += 1;
-                }
-
-                catch (\Exception $e) {
+                } catch (\Exception $e) {
 
                 }
             }

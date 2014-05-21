@@ -18,14 +18,9 @@
 namespace BLW\Model;
 
 use ReflectionProperty;
-use ReflectionMethod;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
 
-use BLW\Model\GenericFile;
-use BLW\Model\Compiler;
-use BLW\Model\InvalidArgumentException;
-use BLW\Model\FileException;
 use BLW\Model\Mediator\Symfony as Mediator;
 
 
@@ -50,7 +45,7 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
         @mkdir($Temp);
 
         $this->Compiler = new Compiler(
-	       new GenericFile($Temp),
+           new GenericFile($Temp),
            new GenericFile(dirname(dirname(__DIR__))),
            null,
            new Mediator
@@ -74,7 +69,7 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
     public function generateInvalidArgs()
     {
         return array(
-        	array(NULL, NULL, NULL),
+            array(NULL, NULL, NULL),
             array(sys_get_temp_dir(), sys_get_temp_dir(), sys_get_temp_dir()),
             array(array(), new GenericFile(sys_get_temp_dir()), new GenericFile(sys_get_temp_dir())),
             array(new GenericFile(sys_get_temp_dir()), array(), new GenericFile(sys_get_temp_dir())),
@@ -122,11 +117,7 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
             try {
                 $Compiler = new Compiler($Build, $Root, $Temp);
                 $this->fail('Failed to generate error with invalid arguments');
-            }
-
-            catch (InvalidArgumentException $e) {}
-
-            catch (\PHPUnit_Framework_Error $e) {}
+            } catch (InvalidArgumentException $e) {} catch (\PHPUnit_Framework_Error $e) {}
         }
     }
 
@@ -140,7 +131,7 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
         $Called    = 0;
         $Arguments = array();
 
-        $this->Compiler->_on('Advance', function() use (&$Called, &$Arguments) {
+        $this->Compiler->_on('Advance', function () use (&$Called, &$Arguments) {
             $Called++;
             $Arguments = func_get_args();
         });
@@ -156,9 +147,7 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Compiler->doAdvance(NULL);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
 
         # No mediator
         $this->Compiler->clearMediator();
@@ -176,8 +165,7 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
         $Steps  = 0;
 
         // Valid arguments
-        $this->Compiler->onAdvance(function ($Event) use(&$Called, &$Steps)
-        {
+        $this->Compiler->onAdvance(function ($Event) use (&$Called, &$Steps) {
             $Called ++;
             $Steps = $Event->Steps;
         });
@@ -191,14 +179,12 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Compiler->onAdvance(NULL);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
 
         // No mediator
         $this->Compiler->clearMediator();
 
-        $this->Compiler->onAdvance(function(){});
+        $this->Compiler->onAdvance(function () {});
         $this->assertEquals(1, $Called, 'Compiler::onAdvance() Failed to register callback');
     }
 
@@ -207,9 +193,9 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
         $Config = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Config' . DIRECTORY_SEPARATOR;
 
         return array(
-        	array(__FILE__, 0.75),
+            array(__FILE__, 0.75),
             array("{$Config}jquery.fancybox.js", 0.75),
-        	array("{$Config}style.css", 0.85),
+            array("{$Config}style.css", 0.85),
         );
     }
 
@@ -220,7 +206,7 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
     public function test_optimize()
     {
         // Valid arguments
-        foreach($this->generateOptimizations() as $Arguments) {
+        foreach ($this->generateOptimizations() as $Arguments) {
 
             list ($Input, $Expected) = $Arguments;
 
@@ -233,11 +219,9 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
 
         // Invalid arguments
         try {
-        	$this->Compiler->optimize(NULL);
-        	$this->fail('Failed generating exception with invalid arguments');
-        }
-
-        catch (FileException $e) {}
+            $this->Compiler->optimize(NULL);
+            $this->fail('Failed generating exception with invalid arguments');
+        } catch (FileException $e) {}
 
         // Unoptimmizable file
         $this->Compiler->optimize(BLW_DIR . DIRECTORY_SEPARATOR . 'LICENSE.md');
@@ -249,8 +233,7 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
      */
     public function test_addFile()
     {
-        $getFiles = function ($Compiler)
-        {
+        $getFiles = function ($Compiler) {
             $Property = new ReflectionProperty($Compiler, '_Files');
 
             $Property->setAccessible(true);
@@ -271,9 +254,7 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Compiler->addFile(new GenericFile(__DIR__));
             $this->fail('Failed generating exception with invalid arguments');
-        }
-
-        catch (FileException $e) {}
+        } catch (FileException $e) {}
     }
 
     public function getInvalidDirs()
@@ -303,8 +284,7 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
      */
     public function test_addDir()
     {
-        $getFiles = function ($Compiler)
-        {
+        $getFiles = function ($Compiler) {
             $Property = new ReflectionProperty($Compiler, '_Files');
 
             $Property->setAccessible(true);
@@ -346,13 +326,7 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
             try {
                 $this->Compiler->addDir($Dir, $Ext);
                 $this->fail('Failed to generate message with invalid arguments');
-            }
-
-            catch (FileException $e) {}
-
-            catch (InvalidArgumentException $e) {}
-
-            catch (\PHPUnit_Framework_Error $e) {}
+            } catch (FileException $e) {} catch (InvalidArgumentException $e) {} catch (\PHPUnit_Framework_Error $e) {}
         }
     }
 
@@ -374,8 +348,6 @@ class CompilerTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Compiler->compile(NULL);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch(InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 }

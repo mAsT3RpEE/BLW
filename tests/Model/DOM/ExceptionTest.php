@@ -17,7 +17,6 @@
  */
 namespace BLW\Model\DOM;
 
-use BLW\Model\DOM\Exception;
 
 
 /**
@@ -38,9 +37,7 @@ class ExceptionTest extends \PHPUnit_Framework_TestCase
     {
         try {
             throw new Exception('Mock Error');
-        }
-
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             $this->Exception = $e;
         }
 

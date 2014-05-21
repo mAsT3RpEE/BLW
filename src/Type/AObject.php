@@ -176,6 +176,7 @@ abstract class AObject extends \BLW\Type\ASerializable implements \BLW\Type\IObj
 
             // Update parent
             $this->_Parent = $Parent;
+
             return IDataMapper::UPDATED;
         }
 
@@ -196,6 +197,7 @@ abstract class AObject extends \BLW\Type\ASerializable implements \BLW\Type\IObj
     final public function clearParent()
     {
         $this->_Parent = null;
+
         return IDataMapper::UPDATED;
     }
 

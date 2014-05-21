@@ -19,11 +19,9 @@ namespace BLW\Type;
 
 use DOMDocument;
 use ReflectionProperty;
-use ReflectionMethod;
 use PHPUnit_Framework_Error_Notice;
 use BadMethodCallException;
 
-use BLW\Type\IDataMapper;
 
 class MockComponent2073
 {
@@ -118,9 +116,7 @@ class WrapperTest extends \BLW\Type\IterableTest
         try {
             $this->Wrapper->undefined();
             $this->fail('Unable to raise exception on undefined function');
-        }
-
-        catch (BadMethodCallException $e) {}
+        } catch (BadMethodCallException $e) {}
     }
 
     /**
@@ -151,9 +147,7 @@ class WrapperTest extends \BLW\Type\IterableTest
         try {
             $this->Wrapper->undefined;
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Undefined property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -197,9 +191,7 @@ class WrapperTest extends \BLW\Type\IterableTest
         try {
             $this->Wrapper->Status = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -209,9 +201,7 @@ class WrapperTest extends \BLW\Type\IterableTest
         try {
             $this->Wrapper->Serializer = 0;
             $this->fail('Failed to generate notice on readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '.$e->getMessage());
         }
 
@@ -226,9 +216,7 @@ class WrapperTest extends \BLW\Type\IterableTest
         try {
             $this->Wrapper->Parent = null;
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Invalid value', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -237,9 +225,7 @@ class WrapperTest extends \BLW\Type\IterableTest
         try {
             $this->Wrapper->Parent = $Parent;
             $this->fail('Failed to generate notice with oneshot value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -247,9 +233,7 @@ class WrapperTest extends \BLW\Type\IterableTest
         try {
             $this->Wrapper->ID = 'foo';
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -259,9 +243,7 @@ class WrapperTest extends \BLW\Type\IterableTest
         try {
             $this->Wrapper->Component = null;
             $this->fail('Failed to generate notice with invalid value');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
             $this->assertContains('Cannot modify readonly', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -275,9 +257,7 @@ class WrapperTest extends \BLW\Type\IterableTest
         try {
             $this->Wrapper->undefined = 1;
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {}
+        } catch (\PHPUnit_Framework_Error_Warning $e) {}
 
         @$this->Wrapper->undefined = 1;
     }

@@ -17,7 +17,6 @@
  */
 namespace BLW\Model;
 
-use BLW\Model\FileException;
 
 
 /**
@@ -38,9 +37,7 @@ class FileExceptionTest extends \PHPUnit_Framework_TestCase
     {
         try {
             throw new FileException(__FILE__);
-        }
-
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             $this->Exception = $e;
         }
 

@@ -20,7 +20,6 @@ namespace BLW\Model\MIME;
 use ReflectionMethod;
 use ReflectionProperty;
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\Section;
 
 
 /**
@@ -92,7 +91,7 @@ class SectionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('0-00000:=00000', $Boundary->getValue($this->Section), 'Section::__construct() failed to set $_Section');
 
         # Valid arguments
-        foreach($this->generateValidArguments() as $Arguments) {
+        foreach ($this->generateValidArguments() as $Arguments) {
             list ($InputType, $InputBoundary) = $Arguments;
 
             $this->Section = new Section($InputType, $InputBoundary);
@@ -102,7 +101,7 @@ class SectionTest extends \PHPUnit_Framework_TestCase
         }
 
         # Invalid arguments
-        foreach($this->generateInvalidArguments() as $Arguments) {
+        foreach ($this->generateInvalidArguments() as $Arguments) {
             list ($InputType, $InputBoundary) = $Arguments;
 
             // No warning prior to 5.4
@@ -112,11 +111,7 @@ class SectionTest extends \PHPUnit_Framework_TestCase
             try {
                 new Section($InputType, $InputBoundary);
                 $this->fail(sprintf('Failed to generate exception with invalid arguments: %s', print_r($Arguments, true)));
-            }
-
-            catch (InvalidArgumentException $e) {}
-
-            catch (\PHPUnit_Framework_Error $e) {}
+            } catch (InvalidArgumentException $e) {} catch (\PHPUnit_Framework_Error $e) {}
         }
     }
 

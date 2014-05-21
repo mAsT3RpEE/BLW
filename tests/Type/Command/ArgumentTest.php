@@ -19,7 +19,6 @@ namespace BLW\Type\Command;
 
 use ReflectionMethod;
 use BLW\Model\GenericContainer;
-use BLW\Type\Command\IArgument;
 use BLW\Model\InvalidArgumentException;
 
 /**
@@ -61,18 +60,16 @@ class ArgumentTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers ::__construct
      */
-    public function test_construct ()
+    public function test_construct()
     {
         # Check properties
         $this->assertAttributeSame('test argument', '_Value', $this->Argument, 'IArgument::__construct() failed to set $_Value');
 
         # Invalid arguments
         try {
-        	$this->getMockForAbstractClass('\\BLW\\Type\\Command\\AArgument', array(NULL));
-        	$this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+            $this->getMockForAbstractClass('\\BLW\\Type\\Command\\AArgument', array(NULL));
+            $this->fail('Failed to generate exception with invalid arguments');
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -127,9 +124,7 @@ class ArgumentTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Argument->createFromArray(NULL);
             $this->fail('Failedto generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -160,9 +155,7 @@ class ArgumentTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Argument->createFromString(NULL);
             $this->fail('Failedto generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -176,11 +169,9 @@ class ArgumentTest extends \PHPUnit_Framework_TestCase
 
         # Undefined
         try {
-        	$this->Argument->undefined;
-        	$this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {}
+            $this->Argument->undefined;
+            $this->fail('Failed to generate notice with undefined property');
+        } catch (\PHPUnit_Framework_Error_Notice $e) {}
 
         $this->assertNull(@$this->Argument->undefined, 'IArgument::__get() Should return NULL for undefined value');
     }
@@ -209,10 +200,8 @@ class ArgumentTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Argument->Value = '';
             $this->fail('Failed to generate notice with readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
-        	$this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
+            $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
         @$this->Argument->Value = '';
@@ -221,9 +210,7 @@ class ArgumentTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Argument->undefined = '';
             $this->fail('Failed to generate notice with undefined property');
-        }
-
-        catch (\PHPUnit_Framework_Error $e) {
+        } catch (\PHPUnit_Framework_Error $e) {
             $this->assertContains('non-existant property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
@@ -240,10 +227,8 @@ class ArgumentTest extends \PHPUnit_Framework_TestCase
         try {
             unset($this->Argument->Value);
             $this->fail('Failed to generate notice with readonly property');
-        }
-
-        catch (\PHPUnit_Framework_Error_Notice $e) {
-        	$this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
+        } catch (\PHPUnit_Framework_Error_Notice $e) {
+            $this->assertContains('Cannot modify readonly property', $e->getMessage(), 'Invalid notice: '. $e->getMessage());
         }
 
         @$this->Argument->__unset('Value');

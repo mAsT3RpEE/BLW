@@ -17,13 +17,9 @@
  */
 namespace BLW\Model\HTTP\Request;
 
-use ReflectionProperty;
-use ReflectionMethod;
 
-use BLW\Type\IDataMapper;
 use BLW\Type\HTTP\IRequest;
 
-use BLW\Model\Config\Generic as GenericConfig;
 use BLW\Model\HTTP\Request\Generic as Request;
 
 

@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\Referer;
 
 
 /**
@@ -45,7 +44,7 @@ class RefererTest extends \PHPUnit_Framework_TestCase
         $this->Header      = new Referer($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('ftp://example.com')));
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -61,16 +60,16 @@ class RefererTest extends \PHPUnit_Framework_TestCase
     public function generateValidReferers()
     {
         return array(
-        	 array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('http://foo.com')), 'http://foo.com')
-        	,array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('http://www.example.com/test/')), 'http://www.example.com/test/')
-        	,array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('folder/test.png')), 'folder/test.png')
+             array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('http://foo.com')), 'http://foo.com')
+            ,array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('http://www.example.com/test/')), 'http://www.example.com/test/')
+            ,array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('folder/test.png')), 'folder/test.png')
         );
     }
 
     public function generateInvalidReferers()
     {
         return array(
-        	 array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('')), '')
+             array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('')), '')
             ,array($this->getMockForAbstractClass('\\BLW\\Type\\AURI', array('"""')), '')
         );
     }
@@ -87,7 +86,7 @@ class RefererTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('ftp://example.com', $this->Properties['Value']->getValue($this->Header), 'Referer::__construct() failed to set $_Value');
 
         # Valid Base
-        foreach($this->generateValidReferers() as $Parameters) {
+        foreach ($this->generateValidReferers() as $Parameters) {
             list($Input, $Expected) = $Parameters;
 
             $this->Header = new Referer($Input);
@@ -96,15 +95,13 @@ class RefererTest extends \PHPUnit_Framework_TestCase
         }
 
         # Invalid Base
-        foreach($this->generateInvalidReferers() as $Parameters) {
+        foreach ($this->generateInvalidReferers() as $Parameters) {
             list($Input, $Expected) = $Parameters;
 
             try {
                 new Referer($Input);
                 $this->fail('Failed to generate exception with invalid parameters');
-            }
-
-            catch (InvalidArgumentException $e) {}
+            } catch (InvalidArgumentException $e) {}
         }
     }
 

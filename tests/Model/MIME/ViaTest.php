@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\Via;
 
 
 /**
@@ -45,7 +44,7 @@ class ViaTest extends \PHPUnit_Framework_TestCase
         $this->Header      = new Via('1.0 fred, 1.1 nowhere.com (Apache/1.1)');
         $this->Properties  = array(
              'Type'  => new \ReflectionProperty($this->Header, '_Type')
-        	,'Value' => new \ReflectionProperty($this->Header, '_Value')
+            ,'Value' => new \ReflectionProperty($this->Header, '_Value')
         );
 
         $this->Properties['Type']->setAccessible(true);
@@ -61,9 +60,9 @@ class ViaTest extends \PHPUnit_Framework_TestCase
     public function generateValidGateways()
     {
         return array(
-        	 array('1.0 fred', '1.0 fred')
-        	,array('1.1 example.com, ;;; unicode-1-1;;', '1.1 example.com')
-        	,array('"1.0 nowhere.com (Apache/1.1)"', '1.0 nowhere.com (Apache/1.1)')
+             array('1.0 fred', '1.0 fred')
+            ,array('1.1 example.com, ;;; unicode-1-1;;', '1.1 example.com')
+            ,array('"1.0 nowhere.com (Apache/1.1)"', '1.0 nowhere.com (Apache/1.1)')
         );
     }
 
@@ -71,7 +70,7 @@ class ViaTest extends \PHPUnit_Framework_TestCase
     {
         return array(
              array(false, '')
-        	,array(new \stdClass, '')
+            ,array(new \stdClass, '')
             ,array(array(), '')
         );
     }
@@ -82,14 +81,14 @@ class ViaTest extends \PHPUnit_Framework_TestCase
     public function test_parseVia()
     {
         # Valid type
-        foreach($this->generateValidGateways() as $Parameters) {
+        foreach ($this->generateValidGateways() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseVia($Original), 'Via::parseVia() returned an invalid format');
         }
 
         # Invalid type
-        foreach($this->generateInvalidGateways() as $Parameters) {
+        foreach ($this->generateInvalidGateways() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseVia($Original), 'Via::parseVia() returned an invalid format');
@@ -113,9 +112,7 @@ class ViaTest extends \PHPUnit_Framework_TestCase
         try {
             new Via(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

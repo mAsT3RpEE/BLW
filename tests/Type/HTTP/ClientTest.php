@@ -94,7 +94,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         unset($NoCookies->Config['EnableCookies']);
 
         return array(
-        	 array(new Request)
+             array(new Request)
             ,array($NoTimeout)
             ,array($NoRedirects)
             ,array($NoCookies)
@@ -149,8 +149,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     {
         $Called   = 0;
 
-        $this->Client->_on('Request.New', function() use(&$Called)
-        {
+        $this->Client->_on('Request.New', function () use (&$Called) {
             $Called++;
         });
 
@@ -174,9 +173,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             try {
                 $this->Client->attach($Request, $Response);
                 $this->fail('Failed to generate exception with invalid arguments');
-            }
-
-            catch (InvalidArgumentException $e) {}
+            } catch (InvalidArgumentException $e) {}
         }
     }
 
@@ -188,8 +185,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     {
         $Called = 0;
 
-        $this->Client->_on('Request.Remove', function() use(&$Called)
-        {
+        $this->Client->_on('Request.Remove', function () use (&$Called) {
             $Called++;
         });
 
@@ -220,7 +216,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     {
         $Tempfile = NULL;
 
-        foreach(scandir(sys_get_temp_dir()) as $File) {
+        foreach (scandir(sys_get_temp_dir()) as $File) {
             $File = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $File;
 
             if (is_file($File) && !is_dir($File)) $Tempfile = $File;
@@ -229,7 +225,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $Tempfile =  $Tempfile ?: tempnam(sys_get_temp_dir(), 'foo');
 
         return array(
-        	 array(NULL)
+             array(NULL)
             ,array(new GenericFile(sys_get_temp_dir()))
             ,array(new GenericFile($Tempfile))
         );
@@ -238,7 +234,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function generateInvalidTempDirs()
     {
         return array(
-        	 array(dirname(__FILE__))
+             array(dirname(__FILE__))
             ,array(false)
             ,array(array())
             ,array(new \stdClass)
@@ -267,10 +263,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             try {
                 $this->Client->createCookieFile($TempDir);
                 $this->fail('Failed to genereate notice with invalid arguments');
-            }
-
-            catch (InvalidArgumentException $e) {}
-            catch (\PHPUnit_Framework_Error $e) {}
+            } catch (InvalidArgumentException $e) {} catch (\PHPUnit_Framework_Error $e) {}
         }
     }
 
@@ -297,10 +290,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             try {
                 $this->Client->send($Request);
                 $this->fail('Failed to genereate notice with invalid arguments');
-            }
-
-            catch (InvalidArgumentException $e) {}
-            catch (\PHPUnit_Framework_Error $e) {}
+            } catch (InvalidArgumentException $e) {} catch (\PHPUnit_Framework_Error $e) {}
         }
     }
 
@@ -334,18 +324,14 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         try {
             $this->Client->sendAll($Array);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
 
         $this->assertCount(7, $this->Client, 'IClient Should contain 7 items');
 
         try {
             $this->Client->sendAll(NULL);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
 
         $this->assertCount(7, $this->Client, 'IClient Should contain 7 items');
     }

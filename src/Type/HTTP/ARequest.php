@@ -210,7 +210,7 @@ abstract class ARequest extends \BLW\Type\MIME\AMessage implements \BLW\Type\HTT
      *            [optional] Request type.
      * @param IConfig $Config
      *            [optional] Request configuration:
-	 *
+     *
      * <ul>
      * <li><b>Timeout</b>: <i>int</i> Time in seconds to wait befor timing out request</li>
      * <li><b>Proxy</b>: <i>string</i> Proxy server to use formatted as [username[:password]@]host[:port]
@@ -256,7 +256,7 @@ abstract class ARequest extends \BLW\Type\MIME\AMessage implements \BLW\Type\HTT
      *
      * @param string $Type
      *            New Type:
-	 *
+     *
      * <ul>
      * <li><b>GET</b>: <i>'GET'</i></li>
      * <li><b>POST</b>: <i>'POST'</i></li>
@@ -264,8 +264,8 @@ abstract class ARequest extends \BLW\Type\MIME\AMessage implements \BLW\Type\HTT
      * <li><b>OPTIONS</b>: <i>'OPTIONS'</i></li>
      * <li><b>CONNECT</b>: <i>'CONNECT'</i></li>
      * <li><b>DELETE</b>: <i>'DELETE'</i></li>
-	 * </ul>
-	 *
+     * </ul>
+     *
      * @return integer Returns a <code>DataMapper</code> status code.
      */
     public function setType($Type)

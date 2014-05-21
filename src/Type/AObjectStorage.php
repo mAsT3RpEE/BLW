@@ -125,7 +125,6 @@ abstract class AObjectStorage extends \SplObjectStorage implements \BLW\Type\IOb
         }
 
         // @codeCoverageIgnoreEnd
-
         return $BLW_Serializer;
     }
 
@@ -232,6 +231,7 @@ abstract class AObjectStorage extends \SplObjectStorage implements \BLW\Type\IOb
 
             // Update parent
             $this->_Parent = $Parent;
+
             return IDataMapper::UPDATED;
 
         // Else dont update parent
@@ -251,6 +251,7 @@ abstract class AObjectStorage extends \SplObjectStorage implements \BLW\Type\IOb
     final public function clearParent()
     {
         $this->_Parent = null;
+
         return IDataMapper::UPDATED;
     }
 
@@ -296,8 +297,7 @@ abstract class AObjectStorage extends \SplObjectStorage implements \BLW\Type\IOb
      */
     public function __get($name)
     {
-        switch($name)
-        {
+        switch ($name) {
             // ISerializable
             case 'Status':
                 return $this->_Status;
@@ -322,8 +322,7 @@ abstract class AObjectStorage extends \SplObjectStorage implements \BLW\Type\IOb
      */
     public function __isset($name)
     {
-        switch($name)
-        {
+        switch ($name) {
             // ISerializable
             case 'Status':
             case 'Serializer':
@@ -348,8 +347,7 @@ abstract class AObjectStorage extends \SplObjectStorage implements \BLW\Type\IOb
     public function __set($name, $value)
     {
         // Try to set property
-        switch($name)
-        {
+        switch ($name) {
             // ISerializable
             case 'Status':
             case 'Serializer':
@@ -379,8 +377,7 @@ abstract class AObjectStorage extends \SplObjectStorage implements \BLW\Type\IOb
     public function __unset($name)
     {
         // Try to set property
-        switch($name)
-        {
+        switch ($name) {
             // ISerializable
             case 'Status':
                 $this->clearStatus();

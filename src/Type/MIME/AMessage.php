@@ -178,8 +178,7 @@ abstract class AMessage implements \BLW\Type\MIME\IMessage
             // Normalize Type
             $Type = self::normalizeHeaderType($Type);
 
-            switch (strval($Type))
-            {
+            switch (strval($Type)) {
                 case 'Accept':
                     return new Accept($Value);
                 case 'Accept-Charset':

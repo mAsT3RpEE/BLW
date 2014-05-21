@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME\Part;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\Part\FormFile;
 use BLW\Model\GenericFile;
 use BLW\Model\FileException;
 
@@ -60,9 +59,7 @@ class FormFileTest extends \PHPUnit_Framework_TestCase
         try {
             $this->FormFile->format(null, 50);
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
@@ -88,17 +85,13 @@ class FormFileTest extends \PHPUnit_Framework_TestCase
         try {
             new FormFile(null, new GenericFile(self::FILE));
             $this->fail('Failed to generate exception with invalid arguments');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
 
         # Unreadable file
         try {
             new FormFile('foo', new GenericFile('z:\\undefined\\!!!'));
             $this->fail('Failed to generate exception with inalid arguments');
-        }
-
-        catch (FileException $e) {}
+        } catch (FileException $e) {}
     }
 
     /**
@@ -122,9 +115,7 @@ EOT;
         try {
             $this->FormFile['Content-Disposition'] = 'foo';
             $this->fail('Failed generating warning on readonly offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
@@ -134,9 +125,7 @@ EOT;
         try {
             $this->FormFile['Content-Type'] = 'foo';
             $this->fail('Failed generating warning on readonly offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
@@ -146,9 +135,7 @@ EOT;
         try {
             $this->FormFile['Content-Transfer-Encoding'] = 'foo';
             $this->fail('Failed generating warning on readonly offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 
@@ -158,9 +145,7 @@ EOT;
         try {
             $this->FormFile['Content'] = 'foo';
             $this->fail('Failed generating warning on readonly offset');
-        }
-
-        catch (\PHPUnit_Framework_Error_Warning $e) {
+        } catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertContains('Cannot modify readonly offset', $e->getMessage(), 'Invalid warning: '.$e->getMessage());
         }
 

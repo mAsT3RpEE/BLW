@@ -18,7 +18,6 @@
 namespace BLW\Model\MIME;
 
 use BLW\Model\InvalidArgumentException;
-use BLW\Model\MIME\Connection;
 
 
 /**
@@ -48,7 +47,7 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
     public function generateValidConnections()
     {
         return array(
-        	 array('keep-alive', 'keep-alive')
+             array('keep-alive', 'keep-alive')
             ,array('drop', 'drop')
         );
     }
@@ -56,8 +55,8 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
     public function generateInvalidConnections()
     {
         return array(
-        	 array('????', '')
-        	,array(false, '')
+             array('????', '')
+            ,array(false, '')
             ,array(new \stdClass, '')
             ,array(array(), '')
         );
@@ -69,14 +68,14 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
     public function test_parseConnection()
     {
         # Valid Connection
-        foreach($this->generateValidConnections() as $Parameters) {
+        foreach ($this->generateValidConnections() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseConnection($Original), 'Connection::parseConnection() returned an invalid format');
         }
 
         # Invalid Connection
-        foreach($this->generateInvalidConnections() as $Parameters) {
+        foreach ($this->generateInvalidConnections() as $Parameters) {
             list($Original, $Expected) = $Parameters;
 
             $this->assertEquals($Expected, $this->Header->parseConnection($Original), 'Connection::parseConnection() returned an invalid format');
@@ -99,9 +98,7 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
         try {
             new Connection(NULL);
             $this->fail('Failed to generate exception with invalid parameters');
-        }
-
-        catch (InvalidArgumentException $e) {}
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**

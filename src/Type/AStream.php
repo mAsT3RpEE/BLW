@@ -429,7 +429,7 @@ abstract class AStream extends \BLW\Type\ASerializable implements \BLW\Type\IStr
                 return $this->_fp !== null;
             // Undefined property
             default:
-                false;
+                return false;
         }
     }
 

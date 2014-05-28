@@ -75,6 +75,20 @@ class Mock extends \BLW\Type\HTTP\AClient
     public $Timeout = false;
 
     /**
+     * Whether to do a 307 moved temporarily.
+     *
+     * @var bool $Redirect
+     */
+    public $Redirect = false;
+
+    /**
+     * Whether to do a 0 Invalid.
+     *
+     * @var bool $Invalid
+     */
+    public $Invalid = false;
+
+    /**
      * Constructor
      *
      * @codeCoverageIgnore
@@ -146,6 +160,33 @@ Content-Encoding: gzip
 </html>
 EOT;
 
+        static $RawInvalidResponse = <<<EOT
+HTTP/1.1 0 INVALID
+Server: nginx
+Date: Thu, 10 Apr 2014 00:00:00 GMT
+Content-Type: text/html; charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Vary: Accept-Encoding, Cookie
+X-Frame-Options: SAMEORIGIN
+Content-Encoding: gzip
+
+EOT;
+
+        static $RawRedirectResponse = <<<EOT
+HTTP/1.1 307 Temporary Redirect
+Server: nginx
+Date: Thu, 10 Apr 2014 00:00:00 GMT
+Content-Type: text/html; charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Vary: Accept-Encoding, Cookie
+X-Frame-Options: SAMEORIGIN
+Content-Encoding: gzip
+Location: http://example.com
+
+EOT;
+
         // Number of requests finished
         $return = 0;
 
@@ -156,11 +197,24 @@ EOT;
                 // Response not finished
                 if (! isset($Response['Finished']) ?  : ! $Response['Finished']) {
 
+                    // Redirect?
+                    if ($this->Redirect) {
+                        $this->Redirect = false;
+                        $Response       = $RawRedirectResponse;
+                    } elseif ($this->Invalid) {
+                        $this->Invalid  = false;
+                        $Response       = $RawInvalidResponse;
+                    } else {
+                        $Response       = $RawResponse;
+                    }
+
                     // Finish request
-                    $Response = Response::createFromString($RawResponse);
-                    $Response['Running'] = $this->Timeout;
+                    $Response             = Response::createFromString($Response);
+                    $Response->URI        = $Request->URI;
+                    $Response->RequestURI = $Request->URI;
+                    $Response['Running']  = $this->Timeout;
                     $Response['Finished'] = ! $this->Timeout;
-                    $this[$Request] = $Response;
+                    $this[$Request]       = $Response;
 
                     // Upadte count
                     $return ++;

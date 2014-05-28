@@ -115,6 +115,8 @@ if (! defined('BLW')) {
  * @property mixed $Command [readonly] $_Command
  * @property \BLW\Type\IConfig $Config [readonly] $_Config
  * @property integer $Timeout [dynamic] $_Command[Timeout]
+ * @property $Mediator \BLW\Type\IMediator [dynamic] Invokes setMediator() and getMediator().
+ * @property $MediatorID string [readonly] Invokes getMediator().
  */
 abstract class ACommand extends \BLW\Type\AMediatableObject implements \BLW\Type\Command\ICommand
 {
@@ -512,7 +514,7 @@ abstract class ACommand extends \BLW\Type\AMediatableObject implements \BLW\Type
                 return true;
             // Undefined property
             default:
-                false;
+                return false;
         }
     }
 

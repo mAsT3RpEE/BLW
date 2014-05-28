@@ -226,7 +226,7 @@ abstract class ARequest extends \BLW\Type\MIME\AMessage implements \BLW\Type\HTT
         // Properties
         $this->_URI     = null;
         $this->_Referer = null;
-        $this->_Config  = $Config ?  : new GenericConfig(array(
+        $this->_Config  = $Config ?: new GenericConfig(array(
             'Timeout'       => 30,
             'MaxRedirects'  => 10,
             'EnableCookies' => true
@@ -440,7 +440,7 @@ abstract class ARequest extends \BLW\Type\MIME\AMessage implements \BLW\Type\HTT
                 return $this->getBody() !== null;
             // Undefined property
             default:
-                false;
+                return false;
         }
     }
 

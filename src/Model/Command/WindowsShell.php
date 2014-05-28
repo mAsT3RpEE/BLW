@@ -55,6 +55,12 @@ if (! defined('BLW')) {
  * @api BLW
  * @since   1.0.0
  * @author  mAsT3RpEE <wotsyula@mast3rpee.tk>
+ *
+ * @property mixed $Command [readonly] $_Command
+ * @property \BLW\Type\IConfig $Config [readonly] $_Config
+ * @property integer $Timeout [dynamic] $_Command[Timeout]
+ * @property $Mediator \BLW\Type\IMediator [dynamic] Invokes setMediator() and getMediator().
+ * @property $MediatorID string [readonly] Invokes getMediator().
  */
 final class WindowsShell extends \BLW\Model\Command\Shell
 {

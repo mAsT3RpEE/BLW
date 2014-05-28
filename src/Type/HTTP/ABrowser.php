@@ -821,10 +821,23 @@ abstract class ABrowser extends \BLW\Type\AWrapper implements \BLW\Type\HTTP\IBr
 
             $this->debug(sprintf('Response for (%s) answered with code (%d).', $Request->URI, $Response->Status));
 
-            // Create page
-            $Page = $this->createPage($Request, $Response);
+            switch ($Response->Status) {
+                // Redirect requests
+                case 301:
+                case 302:
+                case 307:
+                case 308:
+                    $Location        = $Response->Header->getHeader('Location')->getValue();
+                    $Event->Request  = $this->_RequestFactory->createGET(new GenericURI($Location), $Response->URI, $this->createHeaders());
 
-        // @codeCoverageIgnoreStart
+                    $this->debug(sprintf('Redirecting to (%s).', $Location));
+
+                    return $this->doPageDownload($Event);
+
+                // Create page
+                default:
+                    $Page = $this->createPage($Request, $Response);
+            }
 
         // Unkown response
         } else {
@@ -834,7 +847,6 @@ abstract class ABrowser extends \BLW\Type\AWrapper implements \BLW\Type\HTTP\IBr
             // Create page
             $Page = $this->createUnknownPage();
         }
-        // @codeCoverageIgnoreEnd
 
         // Update page
         $this->setPage($Page);

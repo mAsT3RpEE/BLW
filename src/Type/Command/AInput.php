@@ -394,7 +394,7 @@ abstract class AInput extends \BLW\Type\AMediatable implements \BLW\Type\Command
                 return $this->_InStream !== null;
             // Undefined property
             default:
-                false;
+                return false;
         }
     }
 

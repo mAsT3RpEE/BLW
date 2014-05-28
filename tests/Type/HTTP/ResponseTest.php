@@ -78,6 +78,8 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers ::__construct
+     * @covers ::_parseProtocol
+     * @covers ::_parseVersion
      */
     public function test_construct()
     {
@@ -90,24 +92,36 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         };
 
         // Valid arguments
+        $Response = $this->getMockForAbstractClass('\\BLW\\Type\\HTTP\\AResponse');
+
+        $this->assertAttributeSame('HTTP', '_Protocol', $Response, 'IResponse::__construct() Failed to set $_Protocol');
+        $this->assertAttributeSame('1.1', '_Version', $Response, 'IResponse::__construct() Failed to set $_Version');
+        $this->assertAttributeSame(0, '_Status', $Response, 'IResponse::__construct() Failed to set $_Status');
+        $this->assertAttributeSame(null, '_URI', $Response, 'IResponse::__construct() Failed to set $_Status');
+        $this->assertAttributeSame(null, '_RequestURI', $Response, 'IResponse::__construct() Failed to set $_Status');
+        $this->assertAttributeSame(array(), '_Storage', $Response, 'IResponse::__construct() Failed to set $_Status');
+
         $Response = $this->getMockForAbstractClass('\\BLW\\Type\\HTTP\\AResponse', array('FOO', '2.0', '100'));
 
-        $this->assertSame('FOO', $Property($Response, '_Protocol'), 'IResponse::__construct() Failed to set $_Protocol');
-        $this->assertSame('2.0', $Property($Response, '_Version'), 'IResponse::__construct() Failed to set $_Version');
-        $this->assertSame(100, $Property($Response, '_Status'), 'IResponse::__construct() Failed to set $_Status');
-        $this->assertSame(null, $Property($Response, '_URI'), 'IResponse::__construct() Failed to set $_URI');
-        $this->assertSame(null, $Property($Response, '_RequestURI'), 'IResponse::__construct() Failed to set $_RequestURI');
-        $this->assertSame(array(), $Property($Response, '_Storage'), 'IResponse::__construct() Failed to set $_Storage');
-        $this->assertInstanceOf('\\BLW\\Type\\MIME\\IHead', $Property($Response, '_Head'), 'IResponse::__construct() Failed to set $_Head');
-        $this->assertInstanceOf('\\BLW\\Type\\MIME\\IBody', $Property($Response, '_Body'), 'IResponse::__construct() Failed to set $_Body');
+        $this->assertAttributeSame('FOO', '_Protocol', $Response, 'IResponse::__construct() Failed to set $_Protocol');
+        $this->assertAttributeSame('2.0', '_Version', $Response, 'IResponse::__construct() Failed to set $_Version');
+        $this->assertAttributeSame(100, '_Status', $Response, 'IResponse::__construct() Failed to set $_Status');
+        $this->assertAttributeSame(null, '_URI', $Response, 'IResponse::__construct() Failed to set $_Status');
+        $this->assertAttributeSame(null, '_RequestURI', $Response, 'IResponse::__construct() Failed to set $_Status');
+        $this->assertAttributeSame(array(), '_Storage', $Response, 'IResponse::__construct() Failed to set $_Status');
 
+        $this->assertAttributeInstanceOf('\\BLW\\Type\\MIME\\IHead', '_Head', $Response, 'IResponse::__construct() Failed to set $_Head');
+        $this->assertAttributeInstanceOf('\\BLW\\Type\\MIME\\IBody', '_Body', $Response, 'IResponse::__construct() Failed to set $_Body');
 
+        # Invalid arguments
         foreach ($this->generateInvalidArgs() as $Arguments) {
 
             try {
                 $this->getMockForAbstractClass('\\BLW\\Type\\HTTP\\AResponse', $Arguments);
                 $this->fail('Failed to generate exception with invalid arguments');
-            } catch (InvalidArgumentException $e) {}
+            } catch (InvalidArgumentException $e) {
+
+            }
         }
     }
 

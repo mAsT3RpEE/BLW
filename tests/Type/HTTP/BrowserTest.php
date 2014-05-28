@@ -355,21 +355,48 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         $this->assertEquals('http://example.com', strval($this->Browser->Base), 'IBrowser::doGo() Did not navigate to the page specified');
         $this->assertEquals('Heading', $this->Browser->filter('h1')->offsetGet(0)->textContent, 'IBrowser::doGo() Did not load page');
 
-        # Timeout
-        $this->Client->Timeout = true;
+        # Redirect
+        $this->Client->Redirect = true;
 
         $this->Browser->doPageDownload($Event);
 
         $this->assertCount(2, $this->History, 'IBrowser::doPost() Failed to update $_History');
         $this->assertEquals('http://example.com', strval($this->Browser->Base), 'IBrowser::doPost() Did not navigate to the page specified');
-        $this->assertEquals('408 Request Timeout', $this->Browser->filter('h1')->offsetGet(0)->textContent, 'IBrowser::doPost() Did not load page');
+        $this->assertEquals('Heading', $this->Browser->filter('h1')->offsetGet(0)->textContent, 'IBrowser::doGo() Did not load page');
 
-        # Invalid request
-        $Event        = new Event($this->Browser, array('Request' => null));
+        # Invalid
+        $this->Client->Invalid = true;
 
         $this->Browser->doPageDownload($Event);
 
-        $this->assertSame(1, $called, 'IBrowser::doPost() Failed to raise warning with invalid arguments');
+        $this->assertCount(3, $this->History, 'IBrowser::doPost() Failed to update $_History');
+        $this->assertEquals('about:none', strval($this->Browser->Base), 'IBrowser::doPost() Did not navigate to the page specified');
+        $this->assertEquals('Untitled', $this->Browser->filter('title')->offsetGet(0)->textContent, 'IBrowser::createUnknownPage() Returned an invalid IPage');
+
+        # Timeout
+        $this->Client->Timeout = true;
+
+        $this->Browser->doPageDownload($Event);
+
+        $this->assertCount(4, $this->History, 'IBrowser::doPost() Failed to update $_History');
+        $this->assertEquals('http://example.com', strval($this->Browser->Base), 'IBrowser::doPost() Did not navigate to the page specified');
+        $this->assertEquals('408 Request Timeout', $this->Browser->filter('h1')->offsetGet(0)->textContent, 'IBrowser::doPost() Did not load page');
+
+        # Unkown Response
+        $Event = new Event($this->Browser, array('Request' => new Request()));
+
+        $this->Browser->doPageDownload($Event);
+
+        $this->assertCount(4, $this->History, 'IBrowser::doPost() Failed to update $_History');
+        $this->assertEquals('http://example.com', strval($this->Browser->Base), 'IBrowser::doPost() Did not navigate to the page specified');
+        $this->assertEquals('408 Request Timeout', $this->Browser->filter('h1')->offsetGet(0)->textContent, 'IBrowser::doPost() Did not load page');
+
+        # Invalid request
+        $Event = new Event($this->Browser, array('Request' => null));
+
+        $this->Browser->doPageDownload($Event);
+
+        $this->assertSame(2, $called, 'IBrowser::doPost() Failed to raise warning with invalid arguments');
     }
 
     /**

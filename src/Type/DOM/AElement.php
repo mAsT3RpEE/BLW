@@ -499,7 +499,7 @@ abstract class AElement extends \DOMElement implements \BLW\Type\DOM\IElement
                 return true;
             // Undefined property
             default:
-                false;
+                return false;
         }
     }
 

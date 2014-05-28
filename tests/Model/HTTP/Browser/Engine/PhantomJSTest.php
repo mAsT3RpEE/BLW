@@ -451,10 +451,16 @@ EOT;
     public function test_doPageDownload()
     {
         $this->Browser->_on('go', array($this->Browser, 'doGo'));
+        $this->Browser->_on('post', array($this->Browser, 'doPost'));
 
         $this->Browser->go('about:blank');
 
         $this->assertInstanceOf('DOMNode', $this->Browser->filter('body')->offsetGet(0), 'PhantomJS.doPageDownload() Failed to update IBrowser');
+
+        # Redirect
+        $this->Browser->post('http://jigsaw.w3.org/HTTP/300/Go_307', array('foo' => 'bar'));
+
+        $this->assertSame('http://jigsaw.w3.org/HTTP/300/303_ok.html', strval($this->Browser->Base), 'PhantomJS.doPageDownload() Failed to handle redirect');
 
         # Invalid request
         $called = 0;

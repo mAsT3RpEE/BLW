@@ -301,7 +301,7 @@ abstract class AOutput extends \BLW\Type\AMediatable implements \BLW\Type\Comman
                 return $this->_ErrStream !== null;
             // Undefined property
             default:
-                false;
+                return false;
         }
     }
 

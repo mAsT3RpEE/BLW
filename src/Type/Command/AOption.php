@@ -570,7 +570,7 @@ abstract class AOption implements \BLW\Type\Command\IOption
                 return true;
             // Undefined property
             default:
-                false;
+                return false;
         }
     }
 

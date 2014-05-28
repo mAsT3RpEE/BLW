@@ -1031,7 +1031,7 @@ EOT;
                 if ($HAR->response->redirectURL) {
 
                     // Update $URL
-                    $URI = $HAR->response->redirectURL;
+-                    $URI = $HAR->response->redirectURL;
 
                     // Restart
                     reset($Result->log->entries);

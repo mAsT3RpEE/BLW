@@ -696,7 +696,7 @@ abstract class AURI extends \BLW\Type\ASerializable implements \BLW\Type\IURI
      *            The index with the value.
      * @return mixed The value at the specified index or <code>FALSE</code>.
      */
-    public function offsetGet($index)
+    public function & offsetGet($index)
     {
         if (isset($this->_Storage[$index])) {
             return $this->_Storage[$index];

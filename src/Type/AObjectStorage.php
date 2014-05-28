@@ -334,7 +334,7 @@ abstract class AObjectStorage extends \SplObjectStorage implements \BLW\Type\IOb
                 return $this->getID() !== null;
             // Undefined property
             default:
-                false;
+                return false;
         }
     }
 

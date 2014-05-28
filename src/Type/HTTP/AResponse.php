@@ -449,6 +449,52 @@ abstract class AResponse extends \BLW\Type\MIME\AMessage implements \BLW\Type\HT
 #############################################################################################
 
     /**
+     * Parses protocol.
+     *
+     * @ignore
+     * @param string|null $Protocol
+     * @return string|boolean
+     */
+    private function _parseProtocol($Protocol)
+    {
+        if (is_null($Protocol)) {
+            return 'HTTP';
+
+        } elseif (is_string($Protocol) ?: is_callable(array(
+            $Protocol,
+            '__toString'
+        ))) {
+            return @substr($Protocol, 0, 128);
+
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Parses version.
+     *
+     * @ignore
+     * @param string|null $Version
+     * @return string|boolean
+     */
+    private function _parseVersion($Version)
+    {
+        if (is_null($Version)) {
+            return '1.1';
+
+        } elseif (is_string($Version) ?: is_callable(array(
+            $Version,
+            '__toString'
+        ))) {
+            return @substr($Version, 0, 128);
+
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Constructor
      *
      * @codecoverageIgnore
@@ -470,33 +516,28 @@ abstract class AResponse extends \BLW\Type\MIME\AMessage implements \BLW\Type\HT
     public function __construct($Protocol = null, $Version = null, $Status = null)
     {
         // Validate params
-        if (! is_null($Protocol) && ! is_string($Protocol) && ! is_callable(array(
-            $Protocol,
-            '__toString'
-        ))) {
+        if (! $Protocol = $this->_parseProtocol($Protocol)) {
             throw new InvalidArgumentException(0);
 
-        } elseif (! is_null($Version) && ! is_string($Version) && ! is_callable(array(
-            $Version,
-            '__toString'
-        ))) {
+        } elseif (! $Version = $this->_parseVersion($Version)) {
             throw new InvalidArgumentException(1);
 
+        // All okay
         } else {
 
             // Set up params
-            $this->_Protocol   = @substr($Protocol, 0, 128) ?: 'HTTP';
-            $this->_Version    = @substr($Version, 0, 128) ?: '1.1';
+            $this->_Protocol   = $Protocol;
+            $this->_Version    = $Version;
             $this->_Status     = @intval($Status);
             $this->_RequestURI = null;
             $this->_URI        = null;
             $this->_Storage    = array();
 
             // Header
-            $this->_Head = new Head();
+            $this->_Head       = new Head();
 
             // Body
-            $this->_Body = new Body();
+            $this->_Body       = new Body();
         }
     }
 
@@ -700,7 +741,7 @@ abstract class AResponse extends \BLW\Type\MIME\AMessage implements \BLW\Type\HT
                 return $this->getBody() !== null;
             // Undefined property
             default:
-                false;
+                return false;
         }
     }
 

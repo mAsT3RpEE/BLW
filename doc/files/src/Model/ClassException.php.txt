@@ -57,8 +57,8 @@ final class ClassException extends \BLW\Type\ALogicException
      * @param integer $status
      *            Current status of the class.
      * @param string $message
-	 *            Formatted exception string:
-	 *
+     *            Formatted exception string:
+     *
      * <ul>
      * <li><b>%header%</b>: <code>class::function(arguments):</code> </li>
      * <li><b>%status%</b>: Status code of current object.</li>
@@ -66,7 +66,7 @@ final class ClassException extends \BLW\Type\ALogicException
      * <li><b>%class%</b>: Class of of function.</li>
      * <li><b>%func%</b>: Function with invalid argument.</li>
      * </ul>
-	 *
+     *
      * @param integer $code
      *            Exception code.
      * @param \Exception $previous

@@ -147,7 +147,6 @@ class Document extends \DOMDocument implements \BLW\Type\DOM\IDocument
         }
 
         // @codeCoverageIgnoreEnd
-
         return $BLW_Serializer;
     }
 
@@ -303,6 +302,7 @@ class Document extends \DOMDocument implements \BLW\Type\DOM\IDocument
 
             // Update parent
             $this->_Parent = $Parent;
+
             return IDataMapper::UPDATED;
 
         // Else dont update parent
@@ -351,7 +351,7 @@ class Document extends \DOMDocument implements \BLW\Type\DOM\IDocument
      *            [optional] The version number of the document as part of the XML declaration.
      * @param string $encoding
      *            [optional] The encoding of the document as part of the XML declaration.
-     * @param sring $element
+     * @param string $element
      *            [optional] Class used to create elements in the document. Must extend <code>DOMElement</code>.
      */
     public function __construct($version = '1.0', $encoding = 'UTF-8', $element = null)

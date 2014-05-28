@@ -416,7 +416,6 @@ abstract class AOption implements \BLW\Type\Command\IOption
         // Explode string and filter empty items
         $nowsctrl  = self::$_NOWS_CTRL;
         $Arguments = array_filter(explode($split, $Arguments), function ($v) use ($nowsctrl) {
-
             return ! empty($v)
                 ? ! in_array($v, $nowsctrl)
                 : false;
@@ -431,7 +430,7 @@ abstract class AOption implements \BLW\Type\Command\IOption
      *
      * @throws \BLW\Model\InvalidArgumentException If <code>$Arguments</code> is not a <code>string</code>.
      *
-     * @param strig $Arguments
+     * @param string $Arguments
      *            String containing commandline.
      * @param array $NoValue
      *            Array of options that have no value.
@@ -462,7 +461,7 @@ abstract class AOption implements \BLW\Type\Command\IOption
      *
      * @param string $Name
      *            Label of option.
-     * @param string $Value
+     * @param string|bool $Value
      *            Value of option.
      */
     public function __construct($Name, $Value)
@@ -589,7 +588,7 @@ abstract class AOption implements \BLW\Type\Command\IOption
         // Try to set property
         switch ($name) {
             // IOption
-        	case 'Name':
+            case 'Name':
             case 'Value':
                 $result = IDataMapper::READONLY;
                 break;
@@ -616,7 +615,7 @@ abstract class AOption implements \BLW\Type\Command\IOption
         // Try to set property
         switch ($name) {
             // IOption
-        	case 'Name':
+            case 'Name':
             case 'Value':
                 trigger_error(sprintf('Cannot modify readonly property: %s::$%s', get_class($this), $name), E_USER_NOTICE);
                 break;

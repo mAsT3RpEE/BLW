@@ -114,9 +114,12 @@ class Nexus extends \BLW\Type\HTTP\ABrowser implements \BLW\Type\IEventSubscribe
                 'doException',
                 -10
             ),
-
             "$ID.go" => array(
                 'doGo',
+                0
+            ),
+            "$ID.post" => array(
+                'doPost',
                 0
             ),
             "$ID.back" => array(
@@ -126,7 +129,11 @@ class Nexus extends \BLW\Type\HTTP\ABrowser implements \BLW\Type\IEventSubscribe
             "$ID.forward" => array(
                 'doForward',
                 0
-            )
+            ),
+            "$ID.Page.Download" => array(
+                'doPageDownload',
+                -20
+            ),
         );
     }
 

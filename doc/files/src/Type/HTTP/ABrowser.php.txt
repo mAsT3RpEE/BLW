@@ -348,8 +348,7 @@ abstract class ABrowser extends \BLW\Type\AWrapper implements \BLW\Type\HTTP\IBr
             // Test Content-Type
             $ContentType = $Response->Header['Content-Type'];
 
-            switch (1)
-            {
+            switch (1) {
                 // Text document
                 case preg_match('!text/.*!', $ContentType):
 

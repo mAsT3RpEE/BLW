@@ -164,13 +164,13 @@ class Section extends \BLW\Type\AContainer implements \BLW\Type\MIME\ISection
      *
      * @param string $Type
      *            [optional] Content type:
-	 *
+     *
      * <ul>
      * <li>multipart/mixed</li>
      * <li>multipart/alternative</li>
      * <li>multipart/related</li>
      * </ul>
-	 *
+     *
      * @param string $Boundary
      *            [optional] MIME boundary
      */

@@ -143,7 +143,6 @@ abstract class AContainer extends \ArrayObject implements \BLW\Type\IContainer
         }
 
         // @codeCoverageIgnoreEnd
-
         return $BLW_Serializer;
     }
 
@@ -250,6 +249,7 @@ abstract class AContainer extends \ArrayObject implements \BLW\Type\IContainer
 
             // Update parent
             $this->_Parent = $Parent;
+
             return IDataMapper::UPDATED;
         }
 
@@ -270,6 +270,7 @@ abstract class AContainer extends \ArrayObject implements \BLW\Type\IContainer
     final public function clearParent()
     {
         $this->_Parent = null;
+
         return IDataMapper::UPDATED;
     }
 

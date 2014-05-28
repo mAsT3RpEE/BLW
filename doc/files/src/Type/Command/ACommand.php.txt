@@ -24,8 +24,6 @@ use BLW\Type\IDataMapper;
 use BLW\Type\ADataMapper;
 use BLW\Type\IConfig;
 use BLW\Type\IMediator;
-use BLW\Type\Command\IInput;
-use BLW\Type\Command\IOutput;
 use BLW\Model\InvalidArgumentException;
 use BLW\Model\Config\Generic as Config;
 use BLW\Model\Command\Event as CommandEvent;
@@ -167,14 +165,14 @@ abstract class ACommand extends \BLW\Type\AMediatableObject implements \BLW\Type
      *            Command to run.
      * @param IConfig $Config
      *            Command configuration.
-	 *
+     *
      * <ul>
      * <li><b>Timeout</b>: <i>int</i> Timeout to wait while receiving input and output.</li>
      * <li><b>After</b>: <i>callable</i> Callback to call before run starts. (Not supported by most commands).</li>
      * <li><b>Before</b>: <i>callable</i> Callback to call after run has completed. (Not supported by most commands).</li>
      * <li><b>Description</b>: <i>string</i> Description of command.</li>
      * </ul>
-	 *
+     *
      * @param IMediator $Mediator
      *            Mediator for command.
      * @param string $ID
@@ -279,14 +277,14 @@ abstract class ACommand extends \BLW\Type\AMediatableObject implements \BLW\Type
      *
      * @param integer $Type
      *            Type of notification:
-	 *
+     *
      * <ul>
      * <li><b>GENERAL</b>: Gerenic notification.</li>
      * <li><b>RUN</b>: Triggered just before command run.</li>
      * <li><b>SHUTDOWN</b>: Triggered after command run.</li>
      * <li><b>ERROR</b>: Triggered on command error.</li>
      * </ul>
-	 *
+     *
      * @param array $Info
      *            Event context.
      * @return boolean <code>TRUE</code> on success. <code>False</code> otherwise.
@@ -452,8 +450,7 @@ abstract class ACommand extends \BLW\Type\AMediatableObject implements \BLW\Type
      */
     public function __get($name)
     {
-        switch($name)
-        {
+        switch ($name) {
             // ISerializable
             case 'Status':
                 return $this->_Status;
@@ -491,8 +488,7 @@ abstract class ACommand extends \BLW\Type\AMediatableObject implements \BLW\Type
      */
     public function __isset($name)
     {
-        switch($name)
-        {
+        switch ($name) {
             // ISerializable
             case 'Status':
             case 'Serializer':
@@ -529,8 +525,7 @@ abstract class ACommand extends \BLW\Type\AMediatableObject implements \BLW\Type
     public function __set($name, $value)
     {
         // Try to set property
-        switch($name)
-        {
+        switch ($name) {
             // ISerializable
             case 'Status':
             case 'Serializer':
@@ -573,8 +568,7 @@ abstract class ACommand extends \BLW\Type\AMediatableObject implements \BLW\Type
     public function __unset($name)
     {
         // Try to set property
-        switch($name)
-        {
+        switch ($name) {
             // ISerializable
             case 'Status':
                 $this->clearStatus();

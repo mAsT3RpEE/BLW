@@ -120,7 +120,6 @@ abstract class AConfig extends \ArrayObject implements \BLW\Type\IConfig
         }
 
         // @codeCoverageIgnoreEnd
-
         return $BLW_Serializer;
     }
 

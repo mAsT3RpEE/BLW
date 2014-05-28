@@ -318,8 +318,7 @@ abstract class AJob extends \BLW\Type\AMediatableWrapper implements \BLW\Type\Cr
      */
     public function __get($name)
     {
-        switch($name)
-        {
+        switch ($name) {
             // ISerializable
             case 'Status':
                 return $this->_Status;
@@ -364,8 +363,7 @@ abstract class AJob extends \BLW\Type\AMediatableWrapper implements \BLW\Type\Cr
      */
     public function __isset($name)
     {
-        switch($name)
-        {
+        switch ($name) {
             // ISerializable
             case 'Status':
             case 'Serializer':
@@ -402,8 +400,7 @@ abstract class AJob extends \BLW\Type\AMediatableWrapper implements \BLW\Type\Cr
     public function __set($name, $value)
     {
         // Try to set property
-        switch($name)
-        {
+        switch ($name) {
             // ISerializable
             case 'Status':
             case 'Serializer':
@@ -461,8 +458,7 @@ abstract class AJob extends \BLW\Type\AMediatableWrapper implements \BLW\Type\Cr
     public function __unset($name)
     {
         // Try to set property
-        switch($name)
-        {
+        switch ($name) {
             // ISerializable
             case 'Status':
                 $this->clearStatus();

@@ -76,7 +76,7 @@ class PHP extends \BLW\Type\ASerializer
         // PHP < 5.4 Check cache
         if (version_compare(PHP_VERSION, '5.4.0', '<')) {
 
-            if(self::$cache->contains($Object)) {
+            if (self::$cache->contains($Object)) {
 
                 list($count, $cached, $time) = self::$cache[$Object];
 

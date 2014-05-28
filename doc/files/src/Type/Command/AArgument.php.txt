@@ -279,7 +279,7 @@ abstract class AArgument implements \BLW\Type\Command\IArgument
      *
      * @throws \BLW\Model\InvalidArgumentException If <code>$Arguments</code> is not a <code>string</code>.
      *
-     * @param strig $Arguments
+     * @param string $Arguments
      *            String containing commandline.
      * @param array $NoValue
      *            Array of options that have no value.
@@ -373,8 +373,7 @@ abstract class AArgument implements \BLW\Type\Command\IArgument
      */
     public function __get($name)
     {
-        switch ($name)
-        {
+        switch ($name) {
             // IArgument
             case 'Value':
                 return $this->_Value;
@@ -443,8 +442,7 @@ abstract class AArgument implements \BLW\Type\Command\IArgument
     public function __unset($name)
     {
         // Try to set property
-        switch ($name)
-        {
+        switch ($name) {
             // IArgument
             case 'Value':
                 trigger_error(sprintf('Cannot modify readonly property: %s::$%s', get_class($this), $name), E_USER_NOTICE);

@@ -171,6 +171,7 @@ abstract class AEmailAddress extends \BLW\Type\ASerializable implements \BLW\Typ
 
             // Update parent
             $this->_Parent = $Parent;
+
             return IDataMapper::UPDATED;
 
         // Else dont update parent
@@ -190,6 +191,7 @@ abstract class AEmailAddress extends \BLW\Type\ASerializable implements \BLW\Typ
     final public function clearParent()
     {
         $this->_Parent = null;
+
         return IDataMapper::UPDATED;
     }
 
@@ -413,7 +415,7 @@ abstract class AEmailAddress extends \BLW\Type\ASerializable implements \BLW\Typ
      *
      * @param string $Name
      *            Name of regex:
-	 *
+     *
      * <ul>
      * <li><b>addr-spec</b>: Full email address regex</li>
      * <li><b>local-part</b>: mailbox</li>
@@ -427,7 +429,7 @@ abstract class AEmailAddress extends \BLW\Type\ASerializable implements \BLW\Typ
      * <li><b>word</b>: see rfc2882</li>
      * <li><b>comment</b>: see rfc2882</li>
      * </ul>
-	 *
+     *
      * @return string PCRE regex.
      */
     public static function getRegex($Name = 'addr-spec')
@@ -695,6 +697,7 @@ abstract class AEmailAddress extends \BLW\Type\ASerializable implements \BLW\Typ
     {
         $Range = function ($s, $l, $h) {
             $len = @strlen($s);
+
             return ($len >= $l && $len <= $h);
         };
 
@@ -739,9 +742,7 @@ abstract class AEmailAddress extends \BLW\Type\ASerializable implements \BLW\Typ
                 if (intval($m[1]) > 255 || intval($m[2]) > 255 || intval($m[3]) > 255 || intval($m[4]) > 255) {
                     return false;
                 }
-            }
-
-            else {
+            } else {
 
                 // ##################################################################################
                 //
@@ -799,9 +800,7 @@ abstract class AEmailAddress extends \BLW\Type\ASerializable implements \BLW\Typ
                 // WOOPSIE!!
                 return false;
             }
-        }
-
-        else {
+        } else {
 
             // ##################################################################################
             //

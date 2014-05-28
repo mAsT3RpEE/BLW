@@ -490,6 +490,7 @@ abstract class AFile extends \BLW\Type\AWrapper implements \BLW\Type\IFile
 
         // Get mimetype by extention
         } elseif (array_key_exists($Extention = strtolower($this->getExtension()), self::$_MimeTypes))
+
             return self::$_MimeTypes[$Extention];
 
         // Default mimetype

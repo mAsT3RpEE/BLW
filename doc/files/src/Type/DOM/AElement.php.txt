@@ -28,7 +28,6 @@ use BLW\Type\IObject;
 use BLW\Type\IContainer;
 use BLW\Type\IObjectStorage;
 use BLW\Type\IWrapper;
-use BLW\Type\DOM\IElement;
 use BLW\Type\IDataMapper;
 use BLW\Type\ADataMapper;
 use BLW\Model\ClassException;
@@ -150,24 +149,6 @@ abstract class AElement extends \DOMElement implements \BLW\Type\DOM\IElement
     protected $_Parent = null;
 
 #############################################################################################
-# Element Trait
-#############################################################################################
-
-    /**
-     * XPath of Element for object storage.
-     *
-     * @var array() $Stores
-     */
-    private $_XPath = '';
-
-    /**
-     * DOMDocument of Element for object storage.
-     *
-     * @var \BLW\Type\DOM\IDocument $Stores
-     */
-    private $_Document = null;
-
-#############################################################################################
 
 
 
@@ -210,6 +191,7 @@ abstract class AElement extends \DOMElement implements \BLW\Type\DOM\IElement
 
             // Update parent
             $this->_Parent = $Parent;
+
             return IDataMapper::UPDATED;
 
         // Else dont update parent
@@ -229,6 +211,7 @@ abstract class AElement extends \DOMElement implements \BLW\Type\DOM\IElement
     final public function clearParent()
     {
         $this->_Parent = null;
+
         return IDataMapper::UPDATED;
     }
 

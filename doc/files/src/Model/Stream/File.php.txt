@@ -256,8 +256,7 @@ class File extends \BLW\Type\AStream
     public function __unset($name)
     {
         // Try to set property
-        switch($name)
-        {
+        switch ($name) {
             // ISerializable
             case 'Status':
                 $this->clearStatus();

@@ -92,7 +92,7 @@ class Compiler extends \BLW\Type\AMediatableObject
      *
      * @throws \BLW\Model\InvalidArgumentException
      *            If:
-	 *
+     *
      * <ul>
      * <li><code>$BuildPath</code> Is not a writable directory.</li>
      * <li><code>$RootPath</code> Is not a readable directory.</li>
@@ -225,12 +225,12 @@ class Compiler extends \BLW\Type\AMediatableObject
         } else {
 
             // Check type of file
-            switch (true)
-            {
+            switch (true) {
                 case preg_match('!\x2ephp$!i', $File):
                     return php_strip_whitespace($File);
                 case preg_match('!\x2ecss$!i', $File):
                     $Compressor = new CSSmin;
+
                     return $Compressor->run(file_get_contents($File));
                 case preg_match('!\x2ejs$!i', $File):
                     return JSMin::minify(file_get_contents($File));

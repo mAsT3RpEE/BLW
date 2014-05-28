@@ -166,8 +166,7 @@ class QuotedPrintable extends \BLW\Type\AContainer implements \BLW\Type\MIME\IPa
     public function offsetSet($index, $newval)
     {
         // Check index
-        switch ($index)
-        {
+        switch ($index) {
             // Readonly
             case 'Content-Type':
             case 'Content-Transfer-Encoding':

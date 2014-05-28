@@ -62,7 +62,7 @@ class NexusTest  extends \PHPUnit_Framework_TestCase
      */
     public function test_getSubscribedEvents()
     {
-        $this->assertCount(8, $this->Browser->getSubscribedEvents(), 'IBrowser::getSubscribedEvents() Returned an invalid value');
+        $this->assertGreaterThan(8, count($this->Browser->getSubscribedEvents()), 'IBrowser::getSubscribedEvents() Returned an invalid value');
     }
 
     /**

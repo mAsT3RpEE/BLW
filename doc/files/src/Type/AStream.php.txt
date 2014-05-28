@@ -147,6 +147,7 @@ abstract class AStream extends \BLW\Type\ASerializable implements \BLW\Type\IStr
 
             // Update parent
             $this->_Parent = $Parent;
+
             return IDataMapper::UPDATED;
 
         // Else dont update parent
@@ -166,6 +167,7 @@ abstract class AStream extends \BLW\Type\ASerializable implements \BLW\Type\IStr
     final public function clearParent()
     {
         $this->_Parent = null;
+
         return IDataMapper::UPDATED;
     }
 
@@ -296,6 +298,7 @@ abstract class AStream extends \BLW\Type\ASerializable implements \BLW\Type\IStr
         // Is $_fp valid?
         if (! is_resource($this->_fp)) {
             trigger_error('IStream contains invalid resource', E_USER_NOTICE);
+
             return 0;
         }
 

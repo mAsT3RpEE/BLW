@@ -643,6 +643,7 @@ abstract class AURI extends \BLW\Type\ASerializable implements \BLW\Type\IURI
 
             // Update parent
             $this->_Parent = $Parent;
+
             return IDataMapper::UPDATED;
 
         // Else dont update parent
@@ -662,6 +663,7 @@ abstract class AURI extends \BLW\Type\ASerializable implements \BLW\Type\IURI
     final public function clearParent()
     {
         $this->_Parent = null;
+
         return IDataMapper::UPDATED;
     }
 
@@ -910,7 +912,7 @@ abstract class AURI extends \BLW\Type\ASerializable implements \BLW\Type\IURI
      *
      * @param string $Name
      *            Name of regex:
-	 *
+     *
      * <ul>
      * <li><b>scheme</b>: URI scheme</li>
      * <li><b>hier-part</b>: absolute path and userinfo</li>
@@ -927,7 +929,7 @@ abstract class AURI extends \BLW\Type\ASerializable implements \BLW\Type\IURI
      * <li><b>ipv6address</b>: see rfc3986</li>
      * <li><b>ipv4address</b>: see rfc3986</li>
      * </ul>
-	 *
+     *
      * @return string PRCRE expression.
      */
     public static function getRegex($Name = 'uri-spec')
@@ -1270,7 +1272,7 @@ abstract class AURI extends \BLW\Type\ASerializable implements \BLW\Type\IURI
 
                 // path
                 $path           = strval(@$m['path_abempty'] ?: @$m['path_absolute'] ?: @$m['path_rootless'] ?: @$m['path_empty']); /// hehehe  eviiiil!!!
-                $return['path'] = self::removeDotSegments($path, false);
+                $return['path'] = self::removeDotSegments($path);
 
                 // query
                 parse_str(isset($m['query']) ? $m['query'] : '', $return['query']);
@@ -1290,7 +1292,7 @@ abstract class AURI extends \BLW\Type\ASerializable implements \BLW\Type\IURI
                     $return['IPv6Address'] = $m['IPv6Address'];
 
                     // path
-                    $return['path'] = self::removeDotSegments($m['path_abempty'], false);
+                    $return['path'] = self::removeDotSegments($m['path_abempty']);
 
                     // query
                     parse_str(isset($m['query']) ? $m['query'] : '', $return['query']);
@@ -1311,7 +1313,7 @@ abstract class AURI extends \BLW\Type\ASerializable implements \BLW\Type\IURI
                         if (! empty($m['query'])) {
                             parse_str(isset($m['query']) ? $m['query'] : '', $return['query']);
 
-                            // Use base query
+                        // Use base query
                         } else {
                             $return['query'] = $baseURI['query'];
                         }
@@ -1321,12 +1323,12 @@ abstract class AURI extends \BLW\Type\ASerializable implements \BLW\Type\IURI
 
                         // Does path start with "/"
                         if (substr($path, 0, 1) == '/') {
-                            $return['path'] = self::removeDotSegments($path, false);
+                            $return['path'] = self::removeDotSegments($path);
 
                             // path is relative, Merge with base
                         } else {
                             $base = substr($baseURI['path'], 0, strrpos($baseURI['path'], '/') + 1);
-                            $return['path'] = self::removeDotSegments($base . $path, false);
+                            $return['path'] = self::removeDotSegments($base . $path);
                         }
 
                         // query
@@ -1445,12 +1447,12 @@ abstract class AURI extends \BLW\Type\ASerializable implements \BLW\Type\IURI
      *            URI to parse.
      * @param integer $flags
      *            Relove flags.
-	 *
+     *
      * <ul>
      * <li><b>IURI::AS_STRING</b>: Return a string of uri (IURI::createString())
      * <li><b>IURI::AS_ARRAY</b>: Return an array of uri parts (IURI::parse())
      * </ul>
-	 *
+     *
      * @return array string parts. Returns <code>null</code> in case of error.
      */
     public function resolve($URI, $flags = IURI::AS_STRING)

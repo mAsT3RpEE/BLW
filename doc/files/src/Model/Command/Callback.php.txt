@@ -62,14 +62,14 @@ class Callback extends \BLW\Type\Command\ACommand
      *            Command to run.
      * @param IConfig $Config
      *            Command configuration.
-	 *
+     *
      * <ul>
      * <li><b>Timeout</b>: <i>int</i> Timeout to wait while receiving input and output.</li>
      * <li><b>After</b>: <i>callable</i> Callback to call before run starts. (Not supported by most commands).</li>
      * <li><b>Before</b>: <i>callable</i> Callback to call after run has completed. (Not supported by most commands).</li>
      * <li><b>Description</b>: <i>string</i> Description of command.</li>
      * </ul>
-	 *
+     *
      * @param IMediator $Mediator
      *            Mediator for command.
      * @param string $ID

@@ -369,7 +369,7 @@ abstract class AResponse extends \BLW\Type\MIME\AMessage implements \BLW\Type\HT
         $Status   = 0;
         $Protocol = 'HTTP';
         $Version  = '1.0';
-        $Body     = '';
+        $Body     = array();
         $Headers  = array();
 
         // Retrieve 1st line

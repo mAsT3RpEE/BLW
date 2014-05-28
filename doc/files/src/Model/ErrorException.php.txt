@@ -57,8 +57,8 @@ final class ErrorException extends \BLW\Type\ARuntimeException
      * @param array $Error
      *            Array returned by <code>get_last_error()</code>.
      * @param string $message
-	 *            Formated exception string.
-	 *
+     *            Formated exception string.
+     *
      * <ul>
      * <li><b>%header%</b>: <code>class::function(arguments):</code>.</li>
      * <li><b>%message%</b>: Error message.</li>
@@ -66,7 +66,7 @@ final class ErrorException extends \BLW\Type\ARuntimeException
      * <li><b>%args%</b>: All arguments as a string.</li>
      * <li><b>%class%</b>: Class of of function.</li>
      * </ul>
-	 *
+     *
      * @param integer $code
      *            Exception code.
      * @param \Exception $previous

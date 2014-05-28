@@ -137,8 +137,7 @@ class CURL extends \BLW\Type\HTTP\AClient
             if ($Header instanceof IHeader) {
 
                 // Filter out headers cURL should handle
-                switch ($Header->getType())
-                {
+                switch ($Header->getType()) {
                     case 'Content-Length':
                     case 'User-Agent':
                     case 'Referer':

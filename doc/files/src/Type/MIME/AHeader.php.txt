@@ -273,6 +273,7 @@ abstract class AHeader implements \BLW\Type\MIME\IHeader
 
         } else {
             trigger_error('Type or Value not set', E_USER_WARNING);
+
             return '';
         }
     }

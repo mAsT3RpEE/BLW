@@ -55,15 +55,15 @@ final class Exception extends \BLW\Type\ARuntimeException
      * @param string $Error
      *            Array returned by <code>get_last_error()</code>.
      * @param string $message
-	 *            Formated message text.
-	 *
+     *            Formated message text.
+     *
      * <ul>
      * <li><b>%header%</b>: <code>class::function(arguments):</code>.</li>
      * <li><b>%message%</b>: Error message.</li>
      * <li><b>%args%</b>: All arguments as a string.</li>
      * <li><b>%class%</b>: Class of of function.</li>
      * </ul>
-	 *
+     *
      * @param integer $code
      *            Exception code.
      * @param \Exception $previous

@@ -136,7 +136,6 @@ abstract class ASerializable implements \BLW\Type\ISerializable
         }
 
         // @codeCoverageIgnoreEnd
-
         return $BLW_Serializer;
     }
 

@@ -80,7 +80,7 @@ class YAML extends \BLW\Type\AConfig
     public function __construct(IFile $Config, $Options = 0)
     {
         // Is YAML file unreadable? Exception.
-        if (! $Config->isReadable())  {
+        if (! $Config->isReadable()) {
             // Exception
             throw new FileException(strval($Config));
         }

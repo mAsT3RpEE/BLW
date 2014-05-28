@@ -161,7 +161,7 @@ interface IRequest extends \BLW\Type\MIME\IMessage
      *
      * @param string $Type
      *            New Type:
-	 *
+     *
      * <ul>
      * <li><b>GET</b>: <i>'GET'</i></li>
      * <li><b>POST</b>: <i>'POST'</i></li>
@@ -169,8 +169,8 @@ interface IRequest extends \BLW\Type\MIME\IMessage
      * <li><b>OPTIONS</b>: <i>'OPTIONS'</i></li>
      * <li><b>CONNECT</b>: <i>'CONNECT'</i></li>
      * <li><b>DELETE</b>: <i>'DELETE'</i></li>
-	 * </ul>
-	 *
+     * </ul>
+     *
      * @return integer Returns a <code>DataMapper</code> status code.
      */
     public function setType($Type);

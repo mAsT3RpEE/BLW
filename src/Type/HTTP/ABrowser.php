@@ -628,7 +628,7 @@ abstract class ABrowser extends \BLW\Type\AWrapper implements \BLW\Type\HTTP\IBr
      *
      * <h3>Summarry</h3>
      *
-     * <pre>void navigate(string|IURI $Target)</pre>
+     * <pre>void go(string|IURI $Target)</pre>
      *
      * <hr>
      *
@@ -638,21 +638,21 @@ abstract class ABrowser extends \BLW\Type\AWrapper implements \BLW\Type\HTTP\IBr
      * @event Page.Ready Called after request has been loaded into a page.
      *
      * @param \BLW\Type\IEvent $Event
-     *            Event triggered by navigate().
+     *            Event triggered by go().
      * @return void
      */
     public function doGo(IEvent $Event)
     {
         // Validate Arguments
-        if (! isset($Event->Arguments) ?: count($Event->Arguments) < 1) {
+        if (! isset($Event->Arguments) ?: count($Event->Arguments) < 1 ?: !(list ($Target) = $Event->Arguments)) {
 
             // Generate exception
-            $this->exception(sprintf('%s::navigate(string|IURI $Target) Missing argument 1', get_class($this)));
+            $this->exception(sprintf('%s::go(string|IURI $Target) Missing argument 1', get_class($this)));
 
         // Arguments
-        } elseif (!(list ($Target) = $Event->Arguments) ?: !($URI = $this->_getURI($Target))) {
+        } elseif (! $URI = $this->_getURI($Target)) {
             // Generate exception
-            $this->exception(sprintf('%s::navigate(string|IURI $Target) $Target (%s) is invalid', get_class($this), is_object($Target) ? get_class($Target) : gettype($Target)));
+            $this->exception(sprintf('%s::go(string|IURI $Target) $Target (%s) is invalid', get_class($this), is_object($Target) ? get_class($Target) : gettype($Target)));
 
         // Is $URI invalid()
         } elseif (! $URI->isValid()) {
@@ -677,100 +677,173 @@ abstract class ABrowser extends \BLW\Type\AWrapper implements \BLW\Type\HTTP\IBr
             $Request = $this->_RequestFactory->createGET($URI, $this->Base, $this->createHeaders());
 
             // Browser.Page.Download event
-            $Event = new Event($this, array(
+            $this->_do('Page.Download', new Event($this, array(
                 'Request' => &$Request
-            ));
+            )));
+        }
+    }
 
-            $this->_do('Page.Download', $Event);
+    /**
+     * Handles the post() dynamic call.
+     *
+     * <h3>Summarry</h3>
+     *
+     * <pre>void post(string|IURI $Target, array|Traversable $Data)</pre>
+     *
+     * <hr>
+     *
+     * @event Page.Change Called at begining of call when a new page is requested.
+     * @event Page.Download Called before a request is sent to HTTP client.
+     * @event Page.Load Called after request has finised.
+     * @event Page.Ready Called after request has been loaded into a page.
+     *
+     * @param \BLW\Type\IEvent $Event
+     *            Event triggered by post().
+     * @return void
+     */
+    public function doPost(IEvent $Event)
+    {
+        // Validate Arguments
+        if (! isset($Event->Arguments) ?: count($Event->Arguments) < 2 ?: !(list ($Target, $Data) = $Event->Arguments)) {
+            // Generate exception
+            $this->exception(sprintf('%s::post(string|IURI $Target, array|Traversable $Data) Missing argument', get_class($this)));
 
-            // Was Page.Downlad handled by something else? Stop
-            if ($Event->isPropagationStopped()) {
-                return null;
-            }
+        // Arguments
+        } elseif (! $URI = $this->_getURI($Target)) {
+            // Generate exception
+            $this->exception(sprintf('%s::post(string|IURI $Target, array|Traversable $Data) $Target (%s) is invalid', get_class($this), is_object($Target) ? get_class($Target) : gettype($Target)));
 
-            // Send request to client
-            try {
+        } elseif (! is_array($Data) && ! $Data instanceof \Traversable) {
+            // Generate exception
+            $this->exception(sprintf('%s::post(string|IURI $Target, array|Traversable $Data) $Data (%s) is invalid', get_class($this), is_object($Data) ? get_class($Data) : gettype($Data)));
 
-                $this->debug(sprintf('Sending request to (%s)', $URI));
+        // Is $URI invalid()
+        } elseif (! $URI->isValid()) {
 
-                $this->_Client->send($Request);
-                $this->_Client->run($Request->Config['Timeout']);
+            // Error
+            $this->error(sprintf('Invalid URI (%s).', $Target));
 
-            // @codeCoverageIgnoreStart
+            // Error Page
+            $this->setPage($this->createUnknownPage());
 
-            // cURL Errors
-            } catch (RuntimeException $e) {
+        // All okay
+        } else {
 
-                // Exception
-                $this->exception($e->getMessage());
-
-                // Return
-                return null;
-
-            // Invalid $Request
-            } catch (InvalidArgumentException $e) {
-
-                // Error
-                $this->error($e->getMessage());
-
-                // Return
-                return null;
-            }
-
-            // @codeCoverageIgnoreEnd
-
-            // Get response
-            $Response = $this->_Client[$Request];
-
-            // Free up memmory
-            $this->_Client->detach($Request);
-
-            // Browser.Page.Load Event
-            $this->_do('Page.Load', new Event($this, array(
-                'Request'  => &$Request,
-                'Response' => &$Response
+            // Browser.Page.Change event
+            $this->_do('Page.Change', new Event($this, array(
+                'Target'  => &$Target,
+                'URI'     => &$URI,
+                'BaseURI' => &$this->Base
             )));
 
-            // Request still running
-            if ($Response['Running']) {
+            // Create request
+            $Request = $this->_RequestFactory->createPOST($URI, $this->Base, $Data, $this->createHeaders());
 
-                // Timeout
-                $this->notice(sprintf('Request timeout for (%s)', $URI));
-
-                // Create page
-                $Page = $this->createTimeoutPage($Request);
-            }
-
-            // Is response known
-            elseif ($Response->isValidCode($Response->Status)) {
-
-                $this->debug(sprintf('Response for (%s) answered with code (%d).', $Request->URI, $Response->Status));
-
-                // Create page
-                $Page = $this->createPage($Request, $Response);
-            }
-
-            // @codeCoverageIgnoreStart
-
-            // Unkown response
-            else {
-
-                $this->warning(sprintf('Invalid response code (%s) for url (%s).', $Response->Status, $Request->URI));
-
-                // Create page
-                $Page = $this->createUnknownPage();
-            }
-            // @codeCoverageIgnoreEnd
-
-            // Update page
-            $this->setPage($Page);
-
-            // Update History
-            $this->addHistory($Page);
-
-            // Browser.Page.Load Event
-            $this->_do('Page.Ready', new Event($this));
+            // Browser.Page.Download event
+            $this->_do('Page.Download', new Event($this, array(
+                'Request' => &$Request
+            )));
         }
+    }
+
+    /**
+     * Downloads a page into browser.
+     *
+     * @event Page.Ready Called after request has been loaded into a page.
+     *
+     * @param \BLW\Type\IEvent $Event
+     *            Event associated with Page.Download
+     */
+    public function doPageDownload(IEvent $Event)
+    {
+        // Validate event
+        if (!isset($Event->Request) ?: !$Event->Request instanceof IRequest) {
+            $this->warning('Page.Download(Request): Invalid Request');
+            return;
+        }
+
+        $Request = $Event->Request;
+
+        // Send request to client
+        try {
+
+            $this->debug(sprintf('Sending request to (%s)', $Request->URI));
+
+            $this->_Client->send($Request);
+            $this->_Client->run($Request->Config['Timeout']);
+
+        // @codeCoverageIgnoreStart
+
+        // cURL Errors
+        } catch (RuntimeException $e) {
+
+            // Exception
+            $this->exception($e->getMessage());
+
+            // Return
+            return null;
+
+        // Invalid $Request
+        } catch (InvalidArgumentException $e) {
+
+            // Error
+            $this->error($e->getMessage());
+
+            // Return
+            return null;
+        }
+
+        // @codeCoverageIgnoreEnd
+
+        // Get response
+        $Response = $this->_Client[$Request];
+
+        // Free up memmory
+        $this->_Client->detach($Request);
+
+        // Browser.Page.Load Event
+        $this->_do('Page.Load', new Event($this, array(
+            'Request'  => &$Request,
+            'Response' => &$Response
+        )));
+
+        // Request still running
+        if ($Response['Running']) {
+
+            // Timeout
+            $this->notice(sprintf('Request timeout for (%s)', $Request->URI));
+
+            // Create page
+            $Page = $this->createTimeoutPage($Request);
+
+        // Is response known
+        } elseif ($Response->isValidCode($Response->Status)) {
+
+            $this->debug(sprintf('Response for (%s) answered with code (%d).', $Request->URI, $Response->Status));
+
+            // Create page
+            $Page = $this->createPage($Request, $Response);
+
+        // @codeCoverageIgnoreStart
+
+        // Unkown response
+        } else {
+
+            $this->warning(sprintf('Invalid response code (%s) for url (%s).', $Response->Status, $Request->URI));
+
+            // Create page
+            $Page = $this->createUnknownPage();
+        }
+        // @codeCoverageIgnoreEnd
+
+        // Update page
+        $this->setPage($Page);
+
+        // Update History
+        $this->addHistory($Page);
+
+        // Browser.Page.Load Event
+        $this->_do('Page.Ready', new Event($this));
     }
 
     /**

@@ -173,8 +173,7 @@ final class Message extends \BLW\Type\MIME\AMessage
             ? $Type
             : null;
 
-        switch ($Type)
-        {
+        switch ($Type) {
             case 'To':
             case 'From':
             case 'Reply-To':

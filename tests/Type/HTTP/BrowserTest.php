@@ -336,6 +336,44 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::doPageDownload
+     */
+    public function test_doPageDownload()
+    {
+        $called = 0;
+
+        $this->Browser->_on('warning', function () use (&$called) {$called++;});
+
+        $Request      = new Request();
+        $Request->URI = new GenericURI('http://example.com');
+        $Event        = new Event($this->Browser, array('Request' => $Request));
+
+        # Normal request
+        $this->Browser->doPageDownload($Event);
+
+        $this->assertCount(1, $this->History, 'IBrowser::doGo() Failed to update $_History');
+        $this->assertEquals('http://example.com', strval($this->Browser->Base), 'IBrowser::doGo() Did not navigate to the page specified');
+        $this->assertEquals('Heading', $this->Browser->filter('h1')->offsetGet(0)->textContent, 'IBrowser::doGo() Did not load page');
+
+        # Timeout
+        $this->Client->Timeout = true;
+
+        $this->Browser->doPageDownload($Event);
+
+        $this->assertCount(2, $this->History, 'IBrowser::doPost() Failed to update $_History');
+        $this->assertEquals('http://example.com', strval($this->Browser->Base), 'IBrowser::doPost() Did not navigate to the page specified');
+        $this->assertEquals('408 Request Timeout', $this->Browser->filter('h1')->offsetGet(0)->textContent, 'IBrowser::doPost() Did not load page');
+
+        # Invalid request
+        $Event        = new Event($this->Browser, array('Request' => null));
+
+        $this->Browser->doPageDownload($Event);
+
+        $this->assertSame(1, $called, 'IBrowser::doPost() Failed to raise warning with invalid arguments');
+    }
+
+    /**
+     * @depends test_doPageDownload
      * @covers ::doGo
      * @covers ::_getURI
      */
@@ -344,6 +382,7 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         $called = 0;
 
         $this->Browser->_on('go', array($this->Browser, 'doGo'));
+        $this->Browser->_on('Page.Download', array($this->Browser, 'doPageDownload'));
         $this->Browser->_on('Page.Ready', function () use (&$called) {$called++;});
 
         # Normal browsing
@@ -359,15 +398,6 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         $this->assertEquals('http://example.com', strval($this->Browser->Base), 'IBrowser::doGo() Did not navigate to the page specified');
         $this->assertSame(2, $called, 'IBrowser::goGo() Failed to generate Page.Ready event');
 
-        # Timeout
-        $this->Client->Timeout = true;
-
-        $this->Browser->go('http://example.com');
-
-        $this->assertCount(3, $this->History, 'IBrowser::doGo() Failed to update $_History');
-        $this->assertEquals('http://example.com', strval($this->Browser->Base), 'IBrowser::doGo() Did not navigate to the page specified');
-        $this->assertEquals('408 Request Timeout', $this->Browser->filter('h1')->offsetGet(0)->textContent, 'IBrowser::doGo() Did not load page');
-
         # Invalid URI
         $this->Browser->go('');
 
@@ -380,11 +410,49 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         $Event = new Event($this->Browser);
 
         $this->Browser->doGo($Event);
+    }
 
-        # Page>Download stopped propagation
-        $this->Browser->_on('Page.Download', function ($Event) {$Event->stopPropagation();});
-        $this->Browser->go('http://example.com');
-        $this->assertSame(3, $called, 'IBrowser::goGo() Failed to stop with event Page.Download');
+    /**
+     * @depends test_doPageDownload
+     * @covers ::doPost
+     * @covers ::_getURI
+     */
+    public function test_doPost()
+    {
+        $called = 0;
+
+        $this->Browser->_on('post', array($this->Browser, 'doPost'));
+        $this->Browser->_on('Page.Download', array($this->Browser, 'doPageDownload'));
+        $this->Browser->_on('Page.Ready', function () use (&$called) {$called++;});
+
+        # Normal browsing
+        $this->Browser->post('http://example.com', array());
+
+        $this->assertCount(1, $this->History, 'IBrowser::doPost() Failed to update $_History');
+        $this->assertEquals('http://example.com', strval($this->Browser->Base), 'IBrowser::doPost() Did not navigate to the page specified');
+        $this->assertEquals('Heading', $this->Browser->filter('h1')->offsetGet(0)->textContent, 'IBrowser::doPost() Did not load page');
+        $this->assertSame(1, $called, 'IBrowser::goGo() Failed to generate Page.Ready event');
+
+        $this->Browser->post(new GenericURI('http://example.com'), array('foo' => 1));
+        $this->assertCount(2, $this->History, 'IBrowser::doPost() Failed to update $_History');
+        $this->assertEquals('http://example.com', strval($this->Browser->Base), 'IBrowser::doPost() Did not navigate to the page specified');
+        $this->assertSame(2, $called, 'IBrowser::goGo() Failed to generate Page.Ready event');
+
+        # Invalid URI
+        $this->Browser->post('', array());
+
+        $this->assertEquals('about:none', strval($this->Browser->Base), 'IBrowser::doPost() Did not navigate to the page specified');
+        $this->assertEquals('Untitled', $this->Browser->filter('title')->offsetGet(0)->textContent, 'IBrowser::doPost() Did not load page');
+
+        # Invalid Post data
+        $this->Browser->post('http://example.com', null);
+
+        # Invalid arguments
+        $this->Browser->post(NULL, array());
+
+        $Event = new Event($this->Browser);
+
+        $this->Browser->doPost($Event);
     }
 
     /**
@@ -397,6 +465,7 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         $LastDebug  = '';
 
         $this->Browser->_on('go', array($this->Browser, 'doGo'));
+        $this->Browser->_on('Page.Download', array($this->Browser, 'doPageDownload'));
         $this->Browser->_on('back', array($this->Browser, 'doBack'));
         $this->Browser->_on('notice', function ($e) use (&$LastNotice) {$LastNotice = $e->Arguments[0];});
         $this->Browser->_on('debug', function ($e) use (&$LastDebug) {$LastDebug = $e->Arguments[0];});
@@ -451,6 +520,7 @@ class BrowserTest  extends \PHPUnit_Framework_TestCase
         $LastDebug  = '';
 
         $this->Browser->_on('go', array($this->Browser, 'doGo'));
+        $this->Browser->_on('Page.Download', array($this->Browser, 'doPageDownload'));
         $this->Browser->_on('back', array($this->Browser, 'doBack'));
         $this->Browser->_on('forward', array($this->Browser, 'doForward'));
         $this->Browser->_on('notice', function ($e) use (&$LastNotice) {$LastNotice = $e->Arguments[0];});

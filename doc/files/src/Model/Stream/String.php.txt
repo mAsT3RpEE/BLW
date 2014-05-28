@@ -168,7 +168,7 @@ class String extends \BLW\Type\AStream
 
         // $_fp
         try {
-            $this->_getfp($flags, $String);
+            $this->_getfp();
 
         } catch (InvalidArgumentException $e) {
             throw new InvalidArgumentException(1, null, $e->getCode(), $e);
@@ -302,8 +302,7 @@ class String extends \BLW\Type\AStream
     public function __unset($name)
     {
         // Try to set property
-        switch($name)
-        {
+        switch ($name) {
             // ISerializable
             case 'Status':
                 $this->clearStatus();
